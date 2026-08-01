@@ -21,7 +21,7 @@
             background-color: var(--bg); color: var(--text); display: flex; flex-direction: column; 
             height: 100vh; overflow: hidden; align-items: center; 
         }
-        
+
         header { 
             width: 100%; padding: 15px; display: flex; justify-content: space-between; align-items: center;
             background: linear-gradient(90deg, var(--panel), var(--bg)); border-bottom: 1px solid #333; z-index: 10;
@@ -43,7 +43,7 @@
             overflow: hidden; position: relative; box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); border: 2px solid #2a2a40; 
             display: flex; justify-content: center; align-items: center;
         }
-        
+
         video, img, canvas { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1; }
         img { display: none; z-index: 2; }
         canvas { display: none; }
@@ -62,7 +62,7 @@
         
         .bottom-area { width: 100%; flex: 0 0 auto; display: flex; flex-direction: column; justify-content: center; padding-bottom: 10px; }
         .camera-controls { display: flex; justify-content: space-around; align-items: center; width: 100%; }
-        
+
         button.icon-btn { 
             background: var(--panel); color: var(--text); border: 1px solid #333; border-radius: 50%; 
             width: 55px; height: 55px; font-size: 1.2rem; cursor: pointer; transition: all 0.2s ease; 
@@ -90,7 +90,7 @@
             background: linear-gradient(45deg, var(--primary), var(--secondary)); border: none; padding: 12px; 
             border-radius: 10px; color: white; font-weight: bold; cursor: pointer; font-size: 1.1rem; width: 100%;
         }
-        
+
         .mic-btn { 
             position: absolute; bottom: 12px; inset-inline-end: 12px; background: transparent; border: none; color: #888; 
             font-size: 1.3rem; cursor: pointer; transition: 0.3s; width: auto; padding: 0;
@@ -114,7 +114,9 @@
         .cat-fantasy i { color: #bc13fe; }
         .cat-cinema i { color: #ffb800; }
         .cat-pro i { color: #00ff88; }
-        
+        .cat-anime i { color: #ff3366; }
+        .cat-scifi i { color: #00f3ff; }
+
         #resultControls { display: none; width: 100%; flex-direction: column; gap: 10px; }
         .action-btn { 
             width: 100%; padding: 15px; border-radius: 12px; border: none; font-size: 1.1rem; font-weight: bold; 
@@ -125,7 +127,6 @@
         #profileBtn { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
         #rtBtn { background: transparent; border: 1px solid #555; }
 
-        /* חלונות קופצים (מודלים) במקום alerts מכוערים */
         .modal { 
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(0,0,0,0.85); z-index: 100; justify-content: center; align-items: center; padding: 20px;
@@ -141,12 +142,10 @@
             font-size: 1.5rem; cursor: pointer;
         }
 
-        /* גלריה פנימית */
         .gallery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; overflow-y: auto; max-height: 60vh; }
         .gallery-img { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 10px; border: 1px solid #444; }
         .empty-gallery { grid-column: span 2; padding: 40px 0; color: #666; font-style: italic; }
 
-        /* הודעות מתחלפות (Toast) */
         #toastMsg {
             position: fixed; bottom: -50px; left: 50%; transform: translateX(-50%); background: var(--primary); 
             color: #000; padding: 12px 24px; border-radius: 30px; font-weight: bold; z-index: 1000; transition: all 0.3s ease;
@@ -156,7 +155,9 @@
 <body>
 
     <header>
-        <div style="width: 40px;"></div> <!-- שומר על המרכוז -->
+        <div id="creditBadge" style="background: rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 20px; font-weight: bold; color: #ffb800; display: flex; align-items: center; gap: 5px; font-size: 0.95rem; box-shadow: 0 0 10px rgba(255,184,0,0.2); transition: all 0.3s ease;">
+            <i class="fas fa-bolt"></i> <span id="creditCount">3</span>/3
+        </div>
         <h1>VIRAL AVATAR</h1>
         <button id="openGalleryBtn" class="icon-btn" style="width: 40px; height: 40px; font-size: 1rem;"><i class="fas fa-images"></i></button>
     </header>
@@ -176,11 +177,10 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="bottom-area">
             
             <div class="camera-controls" id="cameraControls">
-                <!-- כפתור העלאה מהגלריה -->
                 <button class="icon-btn" id="uploadFileBtn"><i class="fas fa-upload"></i></button>
                 <input type="file" id="uploadInput" accept="image/*" style="display:none">
                 
@@ -209,6 +209,25 @@
                         <div class="style-card cat-cinema" onclick="applyStyle('mafia_boss')"><i class="fas fa-user-tie"></i><span id="mafiaText">בוס מאפיה</span></div>
                     </div>
                 </div>
+                
+                <div class="category">
+                    <div class="category-title">אנימה וקומיקס</div>
+                    <div class="style-scroll">
+                        <div class="style-card cat-anime" onclick="applyStyle('anime_hero')"><i class="fas fa-bolt"></i><span>גיבור אנימה</span></div>
+                        <div class="style-card cat-anime" onclick="applyStyle('pixar_character')"><i class="fas fa-smile"></i><span>פיקסאר 3D</span></div>
+                        <div class="style-card cat-anime" onclick="applyStyle('comic_book')"><i class="fas fa-book-open"></i><span>קומיקס</span></div>
+                    </div>
+                </div>
+
+                <div class="category">
+                    <div class="category-title">פנטזיה ומדע בדיוני</div>
+                    <div class="style-scroll">
+                        <div class="style-card cat-scifi" onclick="applyStyle('cyber_ninja')"><i class="fas fa-user-ninja"></i><span>סייבר-נינג'ה</span></div>
+                        <div class="style-card cat-scifi" onclick="applyStyle('astronaut')"><i class="fas fa-user-astronaut"></i><span>אסטרונאוט</span></div>
+                        <div class="style-card cat-fantasy" onclick="applyStyle('vampire')"><i class="fas fa-moon"></i><span>ערפד אפל</span></div>
+                        <div class="style-card cat-fantasy" onclick="applyStyle('zombie')"><i class="fas fa-skull"></i><span>זומבי</span></div>
+                    </div>
+                </div>
             </div>
             
             <div id="resultControls">
@@ -221,7 +240,6 @@
         </div>
     </div>
 
-    <!-- חלון מגבלת שימוש -->
     <div id="limitModal" class="modal">
         <div class="modal-content">
             <button class="close-modal" onclick="closeModal('limitModal')"><i class="fas fa-times"></i></button>
@@ -231,23 +249,19 @@
         </div>
     </div>
 
-    <!-- חלון הגלריה שלי -->
     <div id="galleryModal" class="modal">
         <div class="modal-content" style="max-height: 85vh;">
             <button class="close-modal" onclick="closeModal('galleryModal')"><i class="fas fa-times"></i></button>
             <h2>הגלריה שלי</h2>
             <p style="font-size: 0.8rem;">האווטארים האחרונים שיצרת</p>
             <div id="galleryGrid" class="gallery-grid">
-                <!-- תמונות יתווספו לכאן דינמית -->
             </div>
         </div>
     </div>
 
-    <!-- הודעות קופצות (Toast) -->
     <div id="toastMsg">הודעה</div>
 
     <script>
-        // מילון שפות אוטומטי
         const dict = {
             'he': {
                 dir: 'rtl', process: "...מעבד יצירת מופת", wait: "זה עשוי לקחת עד חצי דקה",
@@ -268,7 +282,6 @@
         const currentLang = navigator.language.startsWith('he') ? 'he' : 'en';
         const texts = dict[currentLang];
 
-        // החלת השפה על המסך
         document.documentElement.dir = texts.dir;
         document.documentElement.lang = currentLang;
         document.getElementById('processText').innerText = texts.process;
@@ -286,14 +299,12 @@
         document.getElementById('profText').innerText = texts.prof;
         document.getElementById('rtText').innerText = texts.rt;
         
-        // עדכון טקסטים במודלים אם השפה היא אנגלית
         if (currentLang === 'en') {
             document.querySelector('#limitModal h2').innerText = texts.limitTitle;
             document.querySelector('#limitModal p').innerHTML = texts.limitDesc;
             document.querySelector('#galleryModal h2').innerText = "My Gallery";
         }
 
-        // משתני מערכת 
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const resultImg = document.getElementById('resultImg');
@@ -314,7 +325,6 @@
         let capturedImageBase64 = null;
         const API_URL = "https://billowing-shape-1d81.maty-tsoraro.workers.dev";
 
-        // פונקציית הודעות קופצות יפות במקום alert()
         function showToast(msg) {
             const toast = document.getElementById('toastMsg');
             toast.innerText = msg;
@@ -326,12 +336,30 @@
             document.getElementById(id).style.display = 'none';
         }
 
-        // מנגנון מגבלת שימוש יומית (3 ביום)
+        function updateCreditDisplay() {
+            const today = new Date().toDateString();
+            let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 0 };
+            if (usage.date !== today) {
+                usage = { date: today, count: 0 };
+            }
+            const creditsLeft = Math.max(0, 3 - usage.count);
+            document.getElementById('creditCount').innerText = creditsLeft;
+            
+            const badge = document.getElementById('creditBadge');
+            if(creditsLeft === 0) {
+                badge.style.color = '#ff3366';
+                badge.style.boxShadow = '0 0 10px rgba(255,51,102,0.3)';
+            } else {
+                badge.style.color = '#ffb800';
+                badge.style.boxShadow = '0 0 10px rgba(255,184,0,0.2)';
+            }
+        }
+
         function canGenerate() {
             const today = new Date().toDateString();
             let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 0 };
             if (usage.date !== today) {
-                usage = { date: today, count: 0 }; // איפוס ביום חדש
+                usage = { date: today, count: 0 };
             }
             if (usage.count >= 3) {
                 document.getElementById('limitModal').style.display = 'flex';
@@ -345,9 +373,9 @@
             let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 0 };
             usage.count++;
             localStorage.setItem('personaai_usage', JSON.stringify(usage));
+            updateCreditDisplay();
         }
 
-        // מנגנון שמירת תמונות במסד נתונים פנימי (כדי לא להעמיס על localStorage)
         const dbName = "PersonaAIDB";
         const storeName = "Gallery";
         let db;
@@ -381,13 +409,11 @@
                     grid.innerHTML = `<div class="empty-gallery">${texts.galleryEmpty}</div>`;
                     return;
                 }
-                // מציג מהחדש לישן
                 items.reverse().forEach(item => {
                     const img = document.createElement('img');
                     img.src = item.image;
                     img.className = 'gallery-img';
                     img.onclick = () => {
-                        // כשלחצים על תמונה בגלריה, מעבירים אותה למסך התוצאה המרכזי
                         resultImg.src = item.image;
                         resultImg.style.display = 'block';
                         video.style.display = 'none';
@@ -415,7 +441,6 @@
             initCamera();
         });
 
-        // הוספת תמונה מהגלריה!
         uploadFileBtn.addEventListener('click', () => {
             uploadInput.click();
         });
@@ -427,7 +452,6 @@
             reader.onload = (event) => {
                 const img = new Image();
                 img.onload = () => {
-                    // מצייר את התמונה שהועלתה לקנבס כדי להמיר ל-Base64
                     canvas.width = img.width;
                     canvas.height = img.height;
                     const ctx = canvas.getContext('2d');
@@ -460,7 +484,6 @@
             styleMenu.style.display = 'flex';
         });
 
-        // מנגנון זיהוי דיבור (Speech-to-Text)
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (SpeechRecognition) {
             const recognition = new SpeechRecognition();
@@ -488,7 +511,7 @@
         customBtn.addEventListener('click', async () => {
             const val = customInput.value.trim();
             if(!val) { showToast(texts.alertEmpty); return; }
-            if(!canGenerate()) return; // בדיקת מגבלה יומית
+            if(!canGenerate()) return; 
             
             styleMenu.style.display = 'none';
             scanner.style.display = 'flex';
@@ -501,17 +524,15 @@
         });
 
         window.applyStyle = function(styleName) {
-            if(!canGenerate()) return; // בדיקת מגבלה יומית
+            if(!canGenerate()) return; 
             styleMenu.style.display = 'none';
             scanner.style.display = 'flex';
             document.getElementById('processText').innerText = texts.process;
             callAPI(styleName);
         };
 
-        // מנגנון הטמעת סימן מים (Watermark) על התמונה המושלמת שחוזרת מהשרת
         async function fetchAndWatermark(imageUrl) {
             try {
-                // משיכת התמונה כ-Blob כדי לעקוף חסימות אבטחה של קנבס (CORS Tainting)
                 const res = await fetch(imageUrl);
                 const blob = await res.blob();
                 const img = new Image();
@@ -525,20 +546,17 @@
                 const ctx = c.getContext('2d');
                 ctx.drawImage(img, 0, 0);
                 
-                // הוספת סימן מים בפינה התחתונה
-                const fontSize = Math.floor(c.width * 0.035); // גודל פונט יחסי לתמונה
+                const fontSize = Math.floor(c.width * 0.035); 
                 ctx.font = `bold ${fontSize}px "Segoe UI"`;
                 
                 const text = 'Created with PersonaAI';
                 const padding = fontSize;
                 
-                // רקע מוצלל לטקסט
                 ctx.fillStyle = 'rgba(0,0,0,0.6)';
                 ctx.beginPath();
                 ctx.roundRect(c.width - (ctx.measureText(text).width + padding*2), c.height - (fontSize*2.5), ctx.measureText(text).width + padding*2, fontSize*2.5, [15,0,0,0]);
                 ctx.fill();
                 
-                // הטקסט עצמו
                 ctx.fillStyle = '#00f3ff';
                 ctx.textAlign = 'right';
                 ctx.fillText(text, c.width - padding, c.height - padding);
@@ -546,7 +564,7 @@
                 return c.toDataURL('image/jpeg', 0.9);
             } catch(e) {
                 console.error("Watermark failed", e);
-                return imageUrl; // במקרה של שגיאה, מחזירים את התמונה המקורית
+                return imageUrl; 
             }
         }
 
@@ -560,7 +578,6 @@
                 const data = await response.json();
                 if (data.error) throw new Error(data.error);
                 
-                // החלת סימן מים ושמירה
                 const watermarkedImage = await fetchAndWatermark(data.resultUrl);
                 
                 resultImg.onload = () => {
@@ -569,7 +586,6 @@
                 };
                 resultImg.src = watermarkedImage;
                 
-                // עדכון מכסה יומית ושמירה לגלריה המקומית
                 incrementUsage();
                 saveToGalleryDB(watermarkedImage);
                 
@@ -649,9 +665,9 @@
             }
         });
 
+        updateCreditDisplay();
         initCamera();
 
-        // PWA Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./service-worker.js')
