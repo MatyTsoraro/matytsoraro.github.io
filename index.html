@@ -4,55 +4,163 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Viral Avatar Studio</title>
-    <!-- השורה הזו הייתה חסרה והיא הקישור למניפסט! -->
     <link rel="manifest" href="manifest.json">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
     <style>
-        :root { --primary: #00f3ff; --secondary: #bc13fe; --bg: #0a0a12; --panel: #161625; --text: #ffffff; }
+        :root { 
+            --primary: #00f3ff; 
+            --secondary: #bc13fe; 
+            --bg: #0a0a12; 
+            --panel: #161625; 
+            --text: #ffffff; 
+        }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg); color: var(--text); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         
-        header { padding: 15px; text-align: center; background: linear-gradient(90deg, var(--panel), var(--bg)); border-bottom: 1px solid #333; z-index: 10;}
-        h1 { font-size: 1.8rem; background: -webkit-linear-gradient(45deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 2px; margin: 0; font-weight: 900;}
+        body { 
+            background-color: var(--bg); 
+            color: var(--text); 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            overflow: hidden; 
+            align-items: center; /* יישור למרכז למסכי מחשב */
+        }
         
-        .container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 15px; position: relative; gap: 15px;}
-        .viewport { width: 100%; max-width: 400px; flex-grow: 1; background: var(--panel); border-radius: 20px; overflow: hidden; position: relative; box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); border: 2px solid #2a2a40; display: flex; justify-content: center; align-items: center;}
+        header { 
+            width: 100%;
+            padding: 15px; 
+            text-align: center; 
+            background: linear-gradient(90deg, var(--panel), var(--bg)); 
+            border-bottom: 1px solid #333; 
+            z-index: 10;
+        }
         
-        video { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1; }
-        img { display: none; width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 2; }
+        h1 { 
+            font-size: 1.8rem; 
+            background: -webkit-linear-gradient(45deg, var(--primary), var(--secondary)); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            letter-spacing: 2px; 
+            margin: 0; 
+            font-weight: 900;
+        }
+        
+        .container { 
+            width: 100%;
+            max-width: 450px; /* קיבוע רוחב מקסימלי כדי שלא יימתח מדי במחשב */
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            padding: 15px; 
+            position: relative; 
+            gap: 15px;
+            overflow-y: auto; /* מאפשר גלילה חלקה אם התוכן חורג */
+            scrollbar-width: none;
+        }
+        .container::-webkit-scrollbar { display: none; }
+        
+        .viewport { 
+            width: 100%; 
+            flex: 1 1 auto; /* גמישות משופרת - יתפוס מקום אך יאפשר לשאר האלמנטים להופיע */
+            min-height: 250px; /* מניעת קריסה / הפיכה ל-0 פיקסלים */
+            background: var(--panel); 
+            border-radius: 20px; 
+            overflow: hidden; 
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); 
+            border: 2px solid #2a2a40; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+        }
+        
+        video, img, canvas { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            z-index: 1; 
+        }
+        img { display: none; z-index: 2; }
         canvas { display: none; }
         
-        .scanner-container { position: absolute; top:0; left:0; width: 100%; height: 100%; z-index: 3; display: none; background: rgba(0,0,0,0.7); flex-direction: column; justify-content: center; align-items: center;}
-        .spinner { border: 4px solid rgba(255, 255, 255, 0.1); border-top: 4px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 15px;}
+        .scanner-container { 
+            position: absolute; 
+            top: 0; left: 0; width: 100%; height: 100%; 
+            z-index: 3; display: none; 
+            background: rgba(0,0,0,0.7); 
+            flex-direction: column; justify-content: center; align-items: center;
+        }
+        
+        .spinner { 
+            border: 4px solid rgba(255, 255, 255, 0.1); 
+            border-top: 4px solid var(--primary); 
+            border-radius: 50%; width: 40px; height: 40px; 
+            animation: spin 1s linear infinite; margin-bottom: 15px;
+        }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
         .overlay-text { font-weight: bold; color: var(--primary); text-align: center; line-height: 1.5; font-size: 1.2rem;}
-
-        .bottom-area { width: 100%; max-width: 400px; min-height: 120px; display: flex; flex-direction: column; justify-content: center; padding-bottom: 20px;}
+        
+        .bottom-area { 
+            width: 100%; 
+            flex: 0 0 auto; /* האזור התחתון לעולם לא יימעך */
+            display: flex; flex-direction: column; justify-content: center; padding-bottom: 10px;
+        }
         
         .camera-controls { display: flex; justify-content: space-around; align-items: center; width: 100%; }
-        button.icon-btn { background: var(--panel); color: var(--text); border: 1px solid #333; border-radius: 50%; width: 60px; height: 60px; font-size: 1.2rem; cursor: pointer; transition: all 0.2s ease; display: flex; justify-content: center; align-items: center; }
+        
+        button.icon-btn { 
+            background: var(--panel); color: var(--text); border: 1px solid #333; border-radius: 50%; 
+            width: 60px; height: 60px; font-size: 1.2rem; cursor: pointer; transition: all 0.2s ease; 
+            display: flex; justify-content: center; align-items: center; 
+        }
         button.icon-btn:active { transform: scale(0.95); }
         
-        #captureBtn { background: linear-gradient(45deg, var(--primary), var(--secondary)); border: none; width: 85px; height: 85px; font-size: 2.5rem; box-shadow: 0 0 20px rgba(188, 19, 254, 0.4); color: white;}
-
-        #styleMenu { display: none; flex-direction: column; width: 100%; gap: 15px; overflow-y: auto; max-height: 40vh; padding-right: 5px;}
+        #captureBtn { 
+            background: linear-gradient(45deg, var(--primary), var(--secondary)); 
+            border: none; width: 85px; height: 85px; font-size: 2.5rem; 
+            box-shadow: 0 0 20px rgba(188, 19, 254, 0.4); color: white;
+        }
+        
+        #styleMenu { display: none; flex-direction: column; width: 100%; gap: 15px; }
         
         .custom-prompt { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
         .textarea-wrapper { position: relative; width: 100%; }
-        .custom-prompt textarea { width: 100%; padding: 12px; padding-inline-end: 45px; border-radius: 10px; background: #000; border: 1px solid #444; color: white; outline: none; font-size: 0.95rem; resize: vertical; min-height: 70px; font-family: inherit; line-height: 1.4;}
-        .custom-prompt textarea:focus { border-color: var(--primary); }
-        .custom-prompt button { background: linear-gradient(45deg, var(--primary), var(--secondary)); border: none; padding: 12px; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; font-size: 1.1rem; width: 100%;}
         
-        .mic-btn { position: absolute; bottom: 12px; inset-inline-end: 12px; background: transparent; border: none; color: #888; font-size: 1.3rem; cursor: pointer; transition: 0.3s; }
+        .custom-prompt textarea { 
+            width: 100%; padding: 12px; padding-inline-end: 45px; 
+            border-radius: 10px; background: #000; border: 1px solid #444; color: white; 
+            outline: none; font-size: 0.95rem; resize: vertical; min-height: 75px; /* הבטחת גובה מינימלי לתיבת הטקסט */
+            font-family: inherit; line-height: 1.4;
+        }
+        .custom-prompt textarea:focus { border-color: var(--primary); }
+        
+        .custom-prompt button { 
+            background: linear-gradient(45deg, var(--primary), var(--secondary)); border: none; padding: 12px; 
+            border-radius: 10px; color: white; font-weight: bold; cursor: pointer; font-size: 1.1rem; width: 100%;
+        }
+        
+        .mic-btn { 
+            position: absolute; bottom: 12px; inset-inline-end: 12px; background: transparent; 
+            border: none; color: #888; font-size: 1.3rem; cursor: pointer; transition: 0.3s; 
+        }
         .mic-btn.recording { color: red; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
-
+        
         .category { margin-bottom: 5px; }
         .category-title { font-size: 0.9rem; color: #888; margin-bottom: 8px; font-weight: bold;}
         .style-scroll { display: flex; overflow-x: auto; gap: 12px; padding-bottom: 10px; scrollbar-width: none; }
         .style-scroll::-webkit-scrollbar { display: none; }
         
-        .style-card { flex: 0 0 100px; height: 105px; background: var(--panel); border-radius: 15px; border: 2px solid #333; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: all 0.2s; color: white;}
+        .style-card { 
+            flex: 0 0 100px; height: 105px; background: var(--panel); border-radius: 15px; border: 2px solid #333; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; 
+            cursor: pointer; transition: all 0.2s; color: white;
+        }
         .style-card i { font-size: 2rem; }
         .style-card span { font-size: 0.8rem; text-align: center; font-weight: bold; }
         .style-card:active { transform: scale(0.95); border-color: var(--primary); }
@@ -60,9 +168,12 @@
         .cat-fantasy i { color: #bc13fe; }
         .cat-cinema i { color: #ffb800; }
         .cat-pro i { color: #00ff88; }
-
+        
         #resultControls { display: none; width: 100%; flex-direction: column; gap: 10px; }
-        .action-btn { width: 100%; padding: 15px; border-radius: 12px; border: none; font-size: 1.1rem; font-weight: bold; display: flex; justify-content: center; align-items: center; gap: 10px; cursor: pointer; color: white;}
+        .action-btn { 
+            width: 100%; padding: 15px; border-radius: 12px; border: none; font-size: 1.1rem; font-weight: bold; 
+            display: flex; justify-content: center; align-items: center; gap: 10px; cursor: pointer; color: white;
+        }
         #waBtn { background: #25D366; }
         #dlBtn { background: var(--primary); color: #000; }
         #profileBtn { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
@@ -70,11 +181,13 @@
     </style>
 </head>
 <body>
+
     <header>
         <h1>VIRAL AVATAR</h1>
     </header>
     
     <div class="container">
+        
         <div class="viewport" id="viewport">
             <video id="video" autoplay playsinline muted></video>
             <canvas id="canvas"></canvas>
@@ -83,31 +196,32 @@
             <div class="scanner-container" id="scanner">
                 <div class="spinner"></div>
                 <div class="overlay-text">
-                    <span id="processText">מעבד יצירת מופת...</span><br>
+                    <span id="processText">...מעבד יצירת מופת</span><br>
                     <span id="waitText" style="font-size: 0.8rem; color: #fff; font-weight: normal;">זה עשוי לקחת עד חצי דקה</span>
                 </div>
             </div>
         </div>
         
         <div class="bottom-area">
+            
             <div class="camera-controls" id="cameraControls">
                 <button class="icon-btn" id="switchCameraBtn"><i class="fas fa-sync-alt"></i></button>
                 <button id="captureBtn"><i class="fas fa-camera"></i></button>
                 <button class="icon-btn" style="visibility: hidden;"></button>
             </div>
-
+            
             <div id="styleMenu">
                 <div class="category">
-                    <div class="category-title" id="customTitle">יצירה חופשית</div>
+                    <div class="category-title" id="customTitle">יצירה חופשית (הקלד באנגלית בלבד)</div>
                     <div class="custom-prompt">
                         <div class="textarea-wrapper">
-                            <textarea id="customInput" placeholder="תאר את האווטאר שלך..."></textarea>
+                            <textarea id="customInput" placeholder="...תאר את האווטאר שלך"></textarea>
                             <button id="micBtn" class="mic-btn"><i class="fas fa-microphone"></i></button>
                         </div>
                         <button id="customBtn">צור יצירת מופת</button>
                     </div>
                 </div>
-
+                
                 <div class="category">
                     <div class="category-title" id="quickTitle">תבניות מהירות</div>
                     <div class="style-scroll">
@@ -118,32 +232,33 @@
                     </div>
                 </div>
             </div>
-
+            
             <div id="resultControls">
                 <button class="action-btn" id="waBtn"><i class="fab fa-whatsapp"></i> <span id="waText">שתף בווטסאפ</span></button>
                 <button class="action-btn" id="dlBtn"><i class="fas fa-download"></i> <span id="dlText">שמור לגלריה</span></button>
                 <button class="action-btn" id="profileBtn"><i class="fas fa-user-circle"></i> <span id="profText">חתוך כתמונת פרופיל</span></button>
                 <button class="action-btn" id="rtBtn"><i class="fas fa-camera"></i> <span id="rtText">צלם מחדש</span></button>
             </div>
+            
         </div>
     </div>
 
     <script>
-        // --- מילון שפות אוטומטי ---
+        // מילון שפות אוטומטי (Localization)
         const dict = {
             'he': {
-                dir: 'rtl', process: "מעבד יצירת מופת...", wait: "זה עשוי לקחת עד חצי דקה",
-                customTitle: "יצירה חופשית (הקלד או דבר)", placeholder: "תאר את האווטאר שלך בפירוט...", btnCreate: "צור יצירת מופת",
-                quickTitle: "תבניות מהירות", ceo: 'מנכ"ל הייטק', glad: "גלדיאטור", jedi: "אביר ג'דיי", mafia: "בוס מאפיה",
-                wa: "שתף בווטסאפ", dl: "שמור לגלריה", prof: "חתוך כתמונת פרופיל", rt: "צלם מחדש",
-                alertEmpty: "אנא הקלד או הקלט תיאור", translating: "מתרגם לאנגלית...", errCam: "שגיאה במצלמה", errShare: "שגיאה בשיתוף"
+                dir: 'rtl', process: "...מעבד יצירת מופת", wait: "זה עשוי לקחת עד חצי דקה",
+                customTitle: "יצירה חופשית (הקלד או דבר)", placeholder: "...תאר את האווטאר שלך בפירוט", btnCreate: "צור יצירת מופת",
+                quickTitle: "תבניות מהירות", ceo: "מנכ\"ל הייטק", glad: "גלדיאטור", jedi: "אביר ג'דיי", mafia: "בוס מאפיה", wa: "שתף בווטסאפ",
+                dl: "שמור לגלריה", prof: "חתוך כתמונת פרופיל", rt: "צלם מחדש", alertEmpty: "אנא הקלד או הקלט תיאור", translating: "...מתרגם לאנגלית",
+                errCam: "שגיאה במצלמה", errShare: "שגיאה בשיתוף"
             },
             'en': {
                 dir: 'ltr', process: "Processing Masterpiece...", wait: "This may take up to 30 seconds",
                 customTitle: "Free Creation (Type or Speak)", placeholder: "Describe your avatar in detail...", btnCreate: "Create Masterpiece",
-                quickTitle: "Quick Templates", ceo: "Tech CEO", glad: "Gladiator", jedi: "Jedi Master", mafia: "Mafia Boss",
-                wa: "Share on WhatsApp", dl: "Save to Gallery", prof: "Crop for Profile", rt: "Retake Photo",
-                alertEmpty: "Please type or record a description", translating: "Translating to English...", errCam: "Camera Error", errShare: "Share Error"
+                quickTitle: "Quick Templates", ceo: "Tech CEO", glad: "Gladiator", jedi: "Jedi Master", mafia: "Mafia Boss", wa: "Share on WhatsApp",
+                dl: "Save to Gallery", prof: "Crop for Profile", rt: "Retake Photo", alertEmpty: "Please type or record a description", translating: "Translating to English...",
+                errCam: "Camera Error", errShare: "Share Error"
             }
         };
 
@@ -168,7 +283,7 @@
         document.getElementById('profText').innerText = texts.prof;
         document.getElementById('rtText').innerText = texts.rt;
 
-        // --- שאר הלוגיקה של האפליקציה ---
+        // משתני מערכת 
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const resultImg = document.getElementById('resultImg');
@@ -185,8 +300,7 @@
         let currentFacingMode = 'user';
         let stream = null;
         let capturedImageBase64 = null;
-
-        const API_URL = "https://billowing-shape-1d81.maty-tsoraro.workers.dev";
+        const API_URL = "https://billowing-shape-1d81.maty-tsoraro.workers.dev"; // חיבור נכון ל-Cloudflare
 
         async function initCamera() {
             if (stream) stream.getTracks().forEach(track => track.stop());
@@ -209,6 +323,7 @@
             if (currentFacingMode === 'user') { ctx.translate(canvas.width, 0); ctx.scale(-1, 1); }
             ctx.drawImage(video, 0, 0);
             capturedImageBase64 = canvas.toDataURL('image/jpeg', 0.8);
+            
             resultImg.src = capturedImageBase64;
             resultImg.style.display = 'block';
             video.style.display = 'none';
@@ -216,7 +331,7 @@
             styleMenu.style.display = 'flex';
         });
 
-        // --- זיהוי דיבור ---
+        // מנגנון זיהוי דיבור (Speech-to-Text)
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (SpeechRecognition) {
             const recognition = new SpeechRecognition();
@@ -229,12 +344,11 @@
             };
             micBtn.onclick = () => recognition.start();
         } else {
-            micBtn.style.display = 'none'; // מוסתר אם הדפדפן לא תומך
+            micBtn.style.display = 'none'; // הסתרה אם הדפדפן אינו תומך
         }
 
-        // --- פונקציית תרגום אוטומטי ---
         async function translateToEnglish(text) {
-            if (!/[\u0590-\u05FF]/.test(text)) return text; // רק אם יש עברית נתרגם
+            if (!/[\u0590-\u05FF]/.test(text)) return text; 
             try {
                 const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=he|en`);
                 const data = await res.json();
@@ -248,21 +362,19 @@
             
             styleMenu.style.display = 'none';
             scanner.style.display = 'flex';
-            document.getElementById('processText').innerText = texts.translating; // מראה למשתמש שזה מתרגם
+            document.getElementById('processText').innerText = texts.translating; 
             
             const translatedPrompt = await translateToEnglish(val);
-            document.getElementById('processText').innerText = texts.process; // חוזר לטקסט הרגיל
-            
+            document.getElementById('processText').innerText = texts.process; 
             applyStyle(translatedPrompt);
         });
 
         window.applyStyle = async function(styleName) {
-            if (scanner.style.display !== 'flex') { // רק אם באנו מהכפתורים המהירים
+            if (scanner.style.display !== 'flex') {
                 styleMenu.style.display = 'none';
                 scanner.style.display = 'flex';
                 document.getElementById('processText').innerText = texts.process;
             }
-
             try {
                 const response = await fetch(API_URL, {
                     method: "POST",
@@ -271,7 +383,7 @@
                 });
                 const data = await response.json();
                 if (data.error) throw new Error(data.error);
-
+                
                 resultImg.onload = () => {
                     scanner.style.display = 'none';
                     resultControls.style.display = 'flex';
@@ -323,6 +435,7 @@
             }
         });
 
+        // יצירת תמונת פרופיל מרובעת לווטסאפ (1:1)
         document.getElementById('profileBtn').addEventListener('click', () => {
             try {
                 const size = Math.min(resultImg.naturalWidth, resultImg.naturalHeight);
@@ -353,7 +466,7 @@
 
         initCamera();
 
-        // --- רישום Service Worker הנדרש כדי ש-PWABuilder יעבוד חלק ---
+        // הגדרת Service Worker לאופליין (PWA)
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./service-worker.js')
