@@ -18,112 +18,61 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
         body { 
-            background-color: var(--bg); 
-            color: var(--text); 
-            display: flex; 
-            flex-direction: column; 
-            height: 100vh; 
-            overflow: hidden; 
-            align-items: center; /* יישור למרכז למסכי מחשב */
+            background-color: var(--bg); color: var(--text); display: flex; flex-direction: column; 
+            height: 100vh; overflow: hidden; align-items: center; 
         }
         
         header { 
-            width: 100%;
-            padding: 15px; 
-            text-align: center; 
-            background: linear-gradient(90deg, var(--panel), var(--bg)); 
-            border-bottom: 1px solid #333; 
-            z-index: 10;
+            width: 100%; padding: 15px; display: flex; justify-content: space-between; align-items: center;
+            background: linear-gradient(90deg, var(--panel), var(--bg)); border-bottom: 1px solid #333; z-index: 10;
         }
         
         h1 { 
-            font-size: 1.8rem; 
-            background: -webkit-linear-gradient(45deg, var(--primary), var(--secondary)); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-            letter-spacing: 2px; 
-            margin: 0; 
-            font-weight: 900;
+            font-size: 1.8rem; background: -webkit-linear-gradient(45deg, var(--primary), var(--secondary)); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 2px; margin: 0; font-weight: 900;
         }
         
         .container { 
-            width: 100%;
-            max-width: 450px; /* קיבוע רוחב מקסימלי כדי שלא יימתח מדי במחשב */
-            flex: 1; 
-            display: flex; 
-            flex-direction: column; 
-            padding: 15px; 
-            position: relative; 
-            gap: 15px;
-            overflow-y: auto; /* מאפשר גלילה חלקה אם התוכן חורג */
-            scrollbar-width: none;
+            width: 100%; max-width: 450px; flex: 1; display: flex; flex-direction: column; 
+            padding: 15px; position: relative; gap: 15px; overflow-y: auto; scrollbar-width: none;
         }
         .container::-webkit-scrollbar { display: none; }
         
         .viewport { 
-            width: 100%; 
-            flex: 1 1 auto; /* גמישות משופרת - יתפוס מקום אך יאפשר לשאר האלמנטים להופיע */
-            min-height: 250px; /* מניעת קריסה / הפיכה ל-0 פיקסלים */
-            background: var(--panel); 
-            border-radius: 20px; 
-            overflow: hidden; 
-            position: relative;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); 
-            border: 2px solid #2a2a40; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center;
+            width: 100%; flex: 1 1 auto; min-height: 250px; background: var(--panel); border-radius: 20px; 
+            overflow: hidden; position: relative; box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); border: 2px solid #2a2a40; 
+            display: flex; justify-content: center; align-items: center;
         }
         
-        video, img, canvas { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            z-index: 1; 
-        }
+        video, img, canvas { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1; }
         img { display: none; z-index: 2; }
         canvas { display: none; }
         
         .scanner-container { 
-            position: absolute; 
-            top: 0; left: 0; width: 100%; height: 100%; 
-            z-index: 3; display: none; 
-            background: rgba(0,0,0,0.7); 
-            flex-direction: column; justify-content: center; align-items: center;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; display: none; 
+            background: rgba(0,0,0,0.7); flex-direction: column; justify-content: center; align-items: center;
         }
         
         .spinner { 
-            border: 4px solid rgba(255, 255, 255, 0.1); 
-            border-top: 4px solid var(--primary); 
-            border-radius: 50%; width: 40px; height: 40px; 
-            animation: spin 1s linear infinite; margin-bottom: 15px;
+            border: 4px solid rgba(255, 255, 255, 0.1); border-top: 4px solid var(--primary); border-radius: 50%; 
+            width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 15px;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
         .overlay-text { font-weight: bold; color: var(--primary); text-align: center; line-height: 1.5; font-size: 1.2rem;}
         
-        .bottom-area { 
-            width: 100%; 
-            flex: 0 0 auto; /* האזור התחתון לעולם לא יימעך */
-            display: flex; flex-direction: column; justify-content: center; padding-bottom: 10px;
-        }
-        
+        .bottom-area { width: 100%; flex: 0 0 auto; display: flex; flex-direction: column; justify-content: center; padding-bottom: 10px; }
         .camera-controls { display: flex; justify-content: space-around; align-items: center; width: 100%; }
         
         button.icon-btn { 
             background: var(--panel); color: var(--text); border: 1px solid #333; border-radius: 50%; 
-            width: 60px; height: 60px; font-size: 1.2rem; cursor: pointer; transition: all 0.2s ease; 
+            width: 55px; height: 55px; font-size: 1.2rem; cursor: pointer; transition: all 0.2s ease; 
             display: flex; justify-content: center; align-items: center; 
         }
         button.icon-btn:active { transform: scale(0.95); }
         
         #captureBtn { 
-            background: linear-gradient(45deg, var(--primary), var(--secondary)); 
-            border: none; width: 85px; height: 85px; font-size: 2.5rem; 
-            box-shadow: 0 0 20px rgba(188, 19, 254, 0.4); color: white;
+            background: linear-gradient(45deg, var(--primary), var(--secondary)); border: none; width: 85px; height: 85px; 
+            font-size: 2.5rem; box-shadow: 0 0 20px rgba(188, 19, 254, 0.4); color: white;
         }
         
         #styleMenu { display: none; flex-direction: column; width: 100%; gap: 15px; }
@@ -132,10 +81,8 @@
         .textarea-wrapper { position: relative; width: 100%; }
         
         .custom-prompt textarea { 
-            width: 100%; padding: 12px; padding-inline-end: 45px; 
-            border-radius: 10px; background: #000; border: 1px solid #444; color: white; 
-            outline: none; font-size: 0.95rem; resize: vertical; min-height: 75px; /* הבטחת גובה מינימלי לתיבת הטקסט */
-            font-family: inherit; line-height: 1.4;
+            width: 100%; padding: 12px; padding-inline-end: 45px; border-radius: 10px; background: #000; border: 1px solid #444; 
+            color: white; outline: none; font-size: 0.95rem; resize: vertical; min-height: 75px; font-family: inherit; line-height: 1.4;
         }
         .custom-prompt textarea:focus { border-color: var(--primary); }
         
@@ -145,9 +92,8 @@
         }
         
         .mic-btn { 
-            position: absolute; bottom: 12px; inset-inline-end: 12px; background: transparent; 
-            border: none; color: #888; font-size: 1.3rem; cursor: pointer; transition: 0.3s; 
-            width: auto; padding: 0;
+            position: absolute; bottom: 12px; inset-inline-end: 12px; background: transparent; border: none; color: #888; 
+            font-size: 1.3rem; cursor: pointer; transition: 0.3s; width: auto; padding: 0;
         }
         .mic-btn.recording { color: red; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
@@ -159,8 +105,7 @@
         
         .style-card { 
             flex: 0 0 100px; height: 105px; background: var(--panel); border-radius: 15px; border: 2px solid #333; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; 
-            cursor: pointer; transition: all 0.2s; color: white;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; color: white;
         }
         .style-card i { font-size: 2rem; }
         .style-card span { font-size: 0.8rem; text-align: center; font-weight: bold; }
@@ -179,12 +124,41 @@
         #dlBtn { background: var(--primary); color: #000; }
         #profileBtn { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
         #rtBtn { background: transparent; border: 1px solid #555; }
+
+        /* חלונות קופצים (מודלים) במקום alerts מכוערים */
+        .modal { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.85); z-index: 100; justify-content: center; align-items: center; padding: 20px;
+        }
+        .modal-content { 
+            background: var(--panel); border: 2px solid var(--primary); border-radius: 20px; padding: 25px; 
+            width: 100%; max-width: 400px; text-align: center; color: white; position: relative;
+        }
+        .modal-content h2 { margin-bottom: 15px; color: var(--primary); }
+        .modal-content p { margin-bottom: 20px; line-height: 1.5; color: #ccc;}
+        .close-modal { 
+            position: absolute; top: 15px; right: 15px; background: none; border: none; color: #888; 
+            font-size: 1.5rem; cursor: pointer;
+        }
+
+        /* גלריה פנימית */
+        .gallery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; overflow-y: auto; max-height: 60vh; }
+        .gallery-img { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 10px; border: 1px solid #444; }
+        .empty-gallery { grid-column: span 2; padding: 40px 0; color: #666; font-style: italic; }
+
+        /* הודעות מתחלפות (Toast) */
+        #toastMsg {
+            position: fixed; bottom: -50px; left: 50%; transform: translateX(-50%); background: var(--primary); 
+            color: #000; padding: 12px 24px; border-radius: 30px; font-weight: bold; z-index: 1000; transition: all 0.3s ease;
+        }
     </style>
 </head>
 <body>
 
     <header>
+        <div style="width: 40px;"></div> <!-- שומר על המרכוז -->
         <h1>VIRAL AVATAR</h1>
+        <button id="openGalleryBtn" class="icon-btn" style="width: 40px; height: 40px; font-size: 1rem;"><i class="fas fa-images"></i></button>
     </header>
     
     <div class="container">
@@ -206,9 +180,12 @@
         <div class="bottom-area">
             
             <div class="camera-controls" id="cameraControls">
-                <button class="icon-btn" id="switchCameraBtn"><i class="fas fa-sync-alt"></i></button>
+                <!-- כפתור העלאה מהגלריה -->
+                <button class="icon-btn" id="uploadFileBtn"><i class="fas fa-upload"></i></button>
+                <input type="file" id="uploadInput" accept="image/*" style="display:none">
+                
                 <button id="captureBtn"><i class="fas fa-camera"></i></button>
-                <button class="icon-btn" style="visibility: hidden;"></button>
+                <button class="icon-btn" id="switchCameraBtn"><i class="fas fa-sync-alt"></i></button>
             </div>
             
             <div id="styleMenu">
@@ -244,22 +221,47 @@
         </div>
     </div>
 
+    <!-- חלון מגבלת שימוש -->
+    <div id="limitModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('limitModal')"><i class="fas fa-times"></i></button>
+            <h2>הגעת למגבלה היומית!</h2>
+            <p>יצרת כבר 3 תמונות מדהימות היום. <br>השרתים שלנו צריכים קצת מנוחה.<br>חזור מחר להמשך יצירה בחינם!</p>
+            <button class="action-btn" style="background: var(--primary); color: #000; margin-top: 10px;" onclick="closeModal('limitModal')">הבנתי, אחזור מחר</button>
+        </div>
+    </div>
+
+    <!-- חלון הגלריה שלי -->
+    <div id="galleryModal" class="modal">
+        <div class="modal-content" style="max-height: 85vh;">
+            <button class="close-modal" onclick="closeModal('galleryModal')"><i class="fas fa-times"></i></button>
+            <h2>הגלריה שלי</h2>
+            <p style="font-size: 0.8rem;">האווטארים האחרונים שיצרת</p>
+            <div id="galleryGrid" class="gallery-grid">
+                <!-- תמונות יתווספו לכאן דינמית -->
+            </div>
+        </div>
+    </div>
+
+    <!-- הודעות קופצות (Toast) -->
+    <div id="toastMsg">הודעה</div>
+
     <script>
-        // מילון שפות אוטומטי (Localization)
+        // מילון שפות אוטומטי
         const dict = {
             'he': {
                 dir: 'rtl', process: "...מעבד יצירת מופת", wait: "זה עשוי לקחת עד חצי דקה",
                 customTitle: "יצירה חופשית (הקלד או דבר)", placeholder: "...תאר את האווטאר שלך בפירוט", btnCreate: "צור יצירת מופת",
                 quickTitle: "תבניות מהירות", ceo: "מנכ\"ל הייטק", glad: "גלדיאטור", jedi: "אביר ג'דיי", mafia: "בוס מאפיה", wa: "שתף בווטסאפ",
                 dl: "שמור לגלריה", prof: "חתוך כתמונת פרופיל", rt: "צלם מחדש", alertEmpty: "אנא הקלד או הקלט תיאור", translating: "...מתרגם לאנגלית",
-                errCam: "שגיאה במצלמה", errShare: "שגיאה בשיתוף"
+                limitTitle: "הגעת למגבלה היומית!", limitDesc: "יצרת כבר 3 תמונות היום. חזור מחר להמשך יצירה בחינם!", galleryEmpty: "הגלריה שלך ריקה. צור אווטאר כדי למלא אותה!"
             },
             'en': {
                 dir: 'ltr', process: "Processing Masterpiece...", wait: "This may take up to 30 seconds",
                 customTitle: "Free Creation (Type or Speak)", placeholder: "Describe your avatar in detail...", btnCreate: "Create Masterpiece",
                 quickTitle: "Quick Templates", ceo: "Tech CEO", glad: "Gladiator", jedi: "Jedi Master", mafia: "Mafia Boss", wa: "Share on WhatsApp",
                 dl: "Save to Gallery", prof: "Crop for Profile", rt: "Retake Photo", alertEmpty: "Please type or record a description", translating: "Translating to English...",
-                errCam: "Camera Error", errShare: "Share Error"
+                limitTitle: "Daily Limit Reached!", limitDesc: "You have created 3 images today. Come back tomorrow for more free creations!", galleryEmpty: "Your gallery is empty. Create an avatar to fill it up!"
             }
         };
 
@@ -283,6 +285,13 @@
         document.getElementById('dlText').innerText = texts.dl;
         document.getElementById('profText').innerText = texts.prof;
         document.getElementById('rtText').innerText = texts.rt;
+        
+        // עדכון טקסטים במודלים אם השפה היא אנגלית
+        if (currentLang === 'en') {
+            document.querySelector('#limitModal h2').innerText = texts.limitTitle;
+            document.querySelector('#limitModal p').innerHTML = texts.limitDesc;
+            document.querySelector('#galleryModal h2').innerText = "My Gallery";
+        }
 
         // משתני מערכת 
         const video = document.getElementById('video');
@@ -290,6 +299,8 @@
         const resultImg = document.getElementById('resultImg');
         const captureBtn = document.getElementById('captureBtn');
         const switchCameraBtn = document.getElementById('switchCameraBtn');
+        const uploadFileBtn = document.getElementById('uploadFileBtn');
+        const uploadInput = document.getElementById('uploadInput');
         const scanner = document.getElementById('scanner');
         const cameraControls = document.getElementById('cameraControls');
         const styleMenu = document.getElementById('styleMenu');
@@ -301,7 +312,94 @@
         let currentFacingMode = 'user';
         let stream = null;
         let capturedImageBase64 = null;
-        const API_URL = "https://billowing-shape-1d81.maty-tsoraro.workers.dev"; // חיבור נכון ל-Cloudflare
+        const API_URL = "https://billowing-shape-1d81.maty-tsoraro.workers.dev";
+
+        // פונקציית הודעות קופצות יפות במקום alert()
+        function showToast(msg) {
+            const toast = document.getElementById('toastMsg');
+            toast.innerText = msg;
+            toast.style.bottom = '20px';
+            setTimeout(() => { toast.style.bottom = '-50px'; }, 3500);
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        // מנגנון מגבלת שימוש יומית (3 ביום)
+        function canGenerate() {
+            const today = new Date().toDateString();
+            let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 0 };
+            if (usage.date !== today) {
+                usage = { date: today, count: 0 }; // איפוס ביום חדש
+            }
+            if (usage.count >= 3) {
+                document.getElementById('limitModal').style.display = 'flex';
+                return false;
+            }
+            return true;
+        }
+
+        function incrementUsage() {
+            const today = new Date().toDateString();
+            let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 0 };
+            usage.count++;
+            localStorage.setItem('personaai_usage', JSON.stringify(usage));
+        }
+
+        // מנגנון שמירת תמונות במסד נתונים פנימי (כדי לא להעמיס על localStorage)
+        const dbName = "PersonaAIDB";
+        const storeName = "Gallery";
+        let db;
+        const request = indexedDB.open(dbName, 1);
+        
+        request.onupgradeneeded = (e) => {
+            db = e.target.result;
+            db.createObjectStore(storeName, { keyPath: "id", autoIncrement: true });
+        };
+        request.onsuccess = (e) => { db = e.target.result; };
+
+        function saveToGalleryDB(base64Data) {
+            if(!db) return;
+            const tx = db.transaction(storeName, "readwrite");
+            tx.objectStore(storeName).add({ image: base64Data, timestamp: Date.now() });
+        }
+
+        document.getElementById('openGalleryBtn').addEventListener('click', () => {
+            document.getElementById('galleryModal').style.display = 'flex';
+            const grid = document.getElementById('galleryGrid');
+            grid.innerHTML = '';
+            
+            if(!db) return;
+            const tx = db.transaction(storeName, "readonly");
+            const store = tx.objectStore(storeName);
+            const req = store.getAll();
+            
+            req.onsuccess = () => {
+                const items = req.result;
+                if (items.length === 0) {
+                    grid.innerHTML = `<div class="empty-gallery">${texts.galleryEmpty}</div>`;
+                    return;
+                }
+                // מציג מהחדש לישן
+                items.reverse().forEach(item => {
+                    const img = document.createElement('img');
+                    img.src = item.image;
+                    img.className = 'gallery-img';
+                    img.onclick = () => {
+                        // כשלחצים על תמונה בגלריה, מעבירים אותה למסך התוצאה המרכזי
+                        resultImg.src = item.image;
+                        resultImg.style.display = 'block';
+                        video.style.display = 'none';
+                        cameraControls.style.display = 'none';
+                        styleMenu.style.display = 'none';
+                        resultControls.style.display = 'flex';
+                        closeModal('galleryModal');
+                    };
+                    grid.appendChild(img);
+                });
+            };
+        });
 
         async function initCamera() {
             if (stream) stream.getTracks().forEach(track => track.stop());
@@ -309,12 +407,42 @@
                 stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingMode } });
                 video.srcObject = stream;
                 video.onloadedmetadata = () => video.play();
-            } catch (err) { alert(texts.errCam); }
+            } catch (err) { showToast(texts.errCam); }
         }
 
         switchCameraBtn.addEventListener('click', () => {
             currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
             initCamera();
+        });
+
+        // הוספת תמונה מהגלריה!
+        uploadFileBtn.addEventListener('click', () => {
+            uploadInput.click();
+        });
+
+        uploadInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    // מצייר את התמונה שהועלתה לקנבס כדי להמיר ל-Base64
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    capturedImageBase64 = canvas.toDataURL('image/jpeg', 0.8);
+                    
+                    resultImg.src = capturedImageBase64;
+                    resultImg.style.display = 'block';
+                    video.style.display = 'none';
+                    cameraControls.style.display = 'none';
+                    styleMenu.style.display = 'flex';
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
         });
 
         captureBtn.addEventListener('click', () => {
@@ -345,7 +473,7 @@
             };
             micBtn.onclick = () => recognition.start();
         } else {
-            micBtn.style.display = 'none'; // הסתרה אם הדפדפן אינו תומך
+            micBtn.style.display = 'none'; 
         }
 
         async function translateToEnglish(text) {
@@ -359,7 +487,8 @@
 
         customBtn.addEventListener('click', async () => {
             const val = customInput.value.trim();
-            if(!val) { alert(texts.alertEmpty); return; }
+            if(!val) { showToast(texts.alertEmpty); return; }
+            if(!canGenerate()) return; // בדיקת מגבלה יומית
             
             styleMenu.style.display = 'none';
             scanner.style.display = 'flex';
@@ -367,34 +496,88 @@
             
             const translatedPrompt = await translateToEnglish(val);
             document.getElementById('processText').innerText = texts.process; 
-            applyStyle(translatedPrompt);
+            
+            callAPI(translatedPrompt);
         });
 
-        window.applyStyle = async function(styleName) {
-            if (scanner.style.display !== 'flex') {
-                styleMenu.style.display = 'none';
-                scanner.style.display = 'flex';
-                document.getElementById('processText').innerText = texts.process;
+        window.applyStyle = function(styleName) {
+            if(!canGenerate()) return; // בדיקת מגבלה יומית
+            styleMenu.style.display = 'none';
+            scanner.style.display = 'flex';
+            document.getElementById('processText').innerText = texts.process;
+            callAPI(styleName);
+        };
+
+        // מנגנון הטמעת סימן מים (Watermark) על התמונה המושלמת שחוזרת מהשרת
+        async function fetchAndWatermark(imageUrl) {
+            try {
+                // משיכת התמונה כ-Blob כדי לעקוף חסימות אבטחה של קנבס (CORS Tainting)
+                const res = await fetch(imageUrl);
+                const blob = await res.blob();
+                const img = new Image();
+                img.src = URL.createObjectURL(blob);
+                
+                await new Promise(resolve => { img.onload = resolve; });
+                
+                const c = document.createElement('canvas');
+                c.width = img.naturalWidth;
+                c.height = img.naturalHeight;
+                const ctx = c.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                
+                // הוספת סימן מים בפינה התחתונה
+                const fontSize = Math.floor(c.width * 0.035); // גודל פונט יחסי לתמונה
+                ctx.font = `bold ${fontSize}px "Segoe UI"`;
+                
+                const text = 'Created with PersonaAI';
+                const padding = fontSize;
+                
+                // רקע מוצלל לטקסט
+                ctx.fillStyle = 'rgba(0,0,0,0.6)';
+                ctx.beginPath();
+                ctx.roundRect(c.width - (ctx.measureText(text).width + padding*2), c.height - (fontSize*2.5), ctx.measureText(text).width + padding*2, fontSize*2.5, [15,0,0,0]);
+                ctx.fill();
+                
+                // הטקסט עצמו
+                ctx.fillStyle = '#00f3ff';
+                ctx.textAlign = 'right';
+                ctx.fillText(text, c.width - padding, c.height - padding);
+                
+                return c.toDataURL('image/jpeg', 0.9);
+            } catch(e) {
+                console.error("Watermark failed", e);
+                return imageUrl; // במקרה של שגיאה, מחזירים את התמונה המקורית
             }
+        }
+
+        async function callAPI(stylePrompt) {
             try {
                 const response = await fetch(API_URL, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ image: capturedImageBase64, style: styleName })
+                    body: JSON.stringify({ image: capturedImageBase64, style: stylePrompt })
                 });
                 const data = await response.json();
                 if (data.error) throw new Error(data.error);
+                
+                // החלת סימן מים ושמירה
+                const watermarkedImage = await fetchAndWatermark(data.resultUrl);
                 
                 resultImg.onload = () => {
                     scanner.style.display = 'none';
                     resultControls.style.display = 'flex';
                 };
-                resultImg.src = data.resultUrl;
+                resultImg.src = watermarkedImage;
+                
+                // עדכון מכסה יומית ושמירה לגלריה המקומית
+                incrementUsage();
+                saveToGalleryDB(watermarkedImage);
+                
             } catch (err) {
-                alert("Error: " + err.message);
+                showToast("Error: " + err.message);
                 resetCamera();
             }
-        };
+        }
 
         function resetCamera() {
             scanner.style.display = 'none';
@@ -414,9 +597,9 @@
                 const blob = await response.blob();
                 const file = new File([blob], 'Avatar.jpg', { type: 'image/jpeg' });
                 if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    await navigator.share({ files: [file] });
+                    await navigator.share({ files: [file], title: 'My Avatar', text: 'Created with PersonaAI!' });
                 }
-            } catch (err) { alert(texts.errShare); }
+            } catch (err) { showToast(texts.errShare); }
         });
 
         document.getElementById('dlBtn').addEventListener('click', async () => {
@@ -431,12 +614,12 @@
                 link.click();
                 document.body.removeChild(link);
                 window.URL.revokeObjectURL(url);
+                showToast(currentLang === 'he' ? 'התמונה נשמרה בגלריה!' : 'Image saved to gallery!');
             } catch (err) {
-                alert("Please long-press the image to save.");
+                showToast("Please long-press the image to save.");
             }
         });
 
-        // יצירת תמונת פרופיל מרובעת לווטסאפ (1:1)
         document.getElementById('profileBtn').addEventListener('click', () => {
             try {
                 const size = Math.min(resultImg.naturalWidth, resultImg.naturalHeight);
@@ -459,19 +642,19 @@
                     link.click();
                     document.body.removeChild(link);
                     window.URL.revokeObjectURL(url);
+                    showToast(currentLang === 'he' ? 'תמונת הפרופיל נשמרה!' : 'Profile picture saved!');
                 }, 'image/jpeg', 1.0);
             } catch (err) {
-                alert("Please long-press the image to save.");
+                showToast("Please long-press the image to save.");
             }
         });
 
         initCamera();
 
-        // הגדרת Service Worker לאופליין (PWA)
+        // PWA Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./service-worker.js')
-                .then(reg => console.log('Service Worker registered', reg))
                 .catch(err => console.log('Service Worker registration failed', err));
             });
         }
