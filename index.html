@@ -245,6 +245,7 @@
             <button class="close-modal" onclick="closeModal('limitModal')"><i class="fas fa-times"></i></button>
             <h2>הגעת למגבלה היומית!</h2>
             <p>יצרת כבר 3 תמונות מדהימות היום. <br>השרתים שלנו צריכים קצת מנוחה.<br>חזור מחר להמשך יצירה בחינם!</p>
+            <button class="action-btn" id="watchAdBtn" style="background: var(--secondary); color: white; margin-top: 15px;" onclick="simulateAdWatch()"><i class="fas fa-video"></i> <span id="adBtnText">צפה בפרסומת וקבל תמונה</span></button>
             <button class="action-btn" style="background: var(--primary); color: #000; margin-top: 10px;" onclick="closeModal('limitModal')">הבנתי, אחזור מחר</button>
         </div>
     </div>
@@ -268,14 +269,16 @@
                 customTitle: "יצירה חופשית (הקלד או דבר)", placeholder: "...תאר את האווטאר שלך בפירוט", btnCreate: "צור יצירת מופת",
                 quickTitle: "תבניות מהירות", ceo: "מנכ\"ל הייטק", glad: "גלדיאטור", jedi: "אביר ג'דיי", mafia: "בוס מאפיה", wa: "שתף בווטסאפ",
                 dl: "שמור לגלריה", prof: "חתוך כתמונת פרופיל", rt: "צלם מחדש", alertEmpty: "אנא הקלד או הקלט תיאור", translating: "...מתרגם לאנגלית",
-                limitTitle: "הגעת למגבלה היומית!", limitDesc: "יצרת כבר 3 תמונות היום. חזור מחר להמשך יצירה בחינם!", galleryEmpty: "הגלריה שלך ריקה. צור אווטאר כדי למלא אותה!"
+                limitTitle: "הגעת למגבלה היומית!", limitDesc: "יצרת כבר 3 תמונות היום. חזור מחר להמשך יצירה בחינם!", galleryEmpty: "הגלריה שלך ריקה. צור אווטאר כדי למלא אותה!",
+                adBtn: "צפה בפרסומת וקבל תמונה", adWait: "...טוען פרסומת", adSuccess: "קיבלת קרדיט נוסף! צור תמונה"
             },
             'en': {
                 dir: 'ltr', process: "Processing Masterpiece...", wait: "This may take up to 30 seconds",
                 customTitle: "Free Creation (Type or Speak)", placeholder: "Describe your avatar in detail...", btnCreate: "Create Masterpiece",
                 quickTitle: "Quick Templates", ceo: "Tech CEO", glad: "Gladiator", jedi: "Jedi Master", mafia: "Mafia Boss", wa: "Share on WhatsApp",
                 dl: "Save to Gallery", prof: "Crop for Profile", rt: "Retake Photo", alertEmpty: "Please type or record a description", translating: "Translating to English...",
-                limitTitle: "Daily Limit Reached!", limitDesc: "You have created 3 images today. Come back tomorrow for more free creations!", galleryEmpty: "Your gallery is empty. Create an avatar to fill it up!"
+                limitTitle: "Daily Limit Reached!", limitDesc: "You have created 3 images today. Come back tomorrow for more free creations!", galleryEmpty: "Your gallery is empty. Create an avatar to fill it up!",
+                adBtn: "Watch Ad for +1 Avatar", adWait: "Loading Ad...", adSuccess: "Extra credit granted! Create now"
             }
         };
 
@@ -298,6 +301,7 @@
         document.getElementById('dlText').innerText = texts.dl;
         document.getElementById('profText').innerText = texts.prof;
         document.getElementById('rtText').innerText = texts.rt;
+        document.getElementById('adBtnText').innerText = texts.adBtn;
         
         if (currentLang === 'en') {
             document.querySelector('#limitModal h2').innerText = texts.limitTitle;
@@ -374,6 +378,31 @@
             usage.count++;
             localStorage.setItem('personaai_usage', JSON.stringify(usage));
             updateCreditDisplay();
+        }
+
+        function simulateAdWatch() {
+            const btn = document.getElementById('watchAdBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${texts.adWait}`;
+            btn.disabled = true;
+
+            // סימולציה של צפייה בפרסומת במשך 3 שניות
+            setTimeout(() => {
+                const today = new Date().toDateString();
+                let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 3 };
+                
+                // מחזירים למשתמש קרדיט אחד
+                if (usage.count > 0) usage.count--; 
+                
+                localStorage.setItem('personaai_usage', JSON.stringify(usage));
+                
+                updateCreditDisplay();
+                showToast(texts.adSuccess);
+                closeModal('limitModal');
+                
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }, 3000); 
         }
 
         const dbName = "PersonaAIDB";
