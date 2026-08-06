@@ -1,18 +1,19 @@
 {
-  "name": "PersonaAI Viral Avatar Studio",
-  "short_name": "PersonaAI",
-  "description": "Create stunning, viral cyberpunk AI avatars and portraits instantly from your selfies.",
-  "start_url": "./index.html",
-  "display": "standalone",
-  "background_color": "#030207",
-  "theme_color": "#FF3366",
-  "orientation": "portrait",
-  "icons": [
-    {
-      "src": "https://matytsoraro.github.io/persona-ai/PersonaAI_Icon_512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    }
-  ]
+"name": "PersonaAI Viral Avatar Studio",
+"short_name": "PersonaAI",
+"description": "Create stunning, viral cyberpunk AI avatars and portraits instantly from your selfies.",
+"start_url": "/",
+"scope": "/",
+"display": "standalone",
+"background_color": "#030207",
+"theme_color": "#FF3366",
+"orientation": "portrait",
+"icons": [
+{
+"src": "https://cdn-icons-png.flaticon.com/512/8361/8361517.png",
+"sizes": "512x512",
+"type": "image/png",
+"purpose": "any"
+}
+]
 }
