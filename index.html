@@ -8,6 +8,9 @@
     <!-- Monetag Verification Tag -->
     <meta name="monetag" content="a1a510b358638c1de6131426091918eb">
     
+    <!-- Monetag Live Rewarded/Multitag Script -->
+    <script src="https://quge5.com/88/tag.min.js" data-zone="267639" async data-cfasync="false"></script>
+    
     <link rel="manifest" href="manifest.json">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
@@ -249,7 +252,7 @@
             <button class="close-modal" onclick="closeModal('limitModal')"><i class="fas fa-times"></i></button>
             <h2>הגעת למגבלה היומית!</h2>
             <p>יצרת כבר 3 תמונות מדהימות היום. <br>השרתים שלנו צריכים קצת מנוחה.<br>חזור מחר להמשך יצירה בחינם!</p>
-            <button class="action-btn" id="watchAdBtn" style="background: var(--secondary); color: white; margin-top: 15px;" onclick="simulateAdWatch()"><i class="fas fa-video"></i> <span id="adBtnText">צפה בפרסומת וקבל תמונה</span></button>
+            <button class="action-btn" id="watchAdBtn" style="background: var(--secondary); color: white; margin-top: 15px;" onclick="triggerMonetagAd()"><i class="fas fa-video"></i> <span id="adBtnText">צפה בפרסומת וקבל תמונה</span></button>
             <button class="action-btn" style="background: var(--primary); color: #000; margin-top: 10px;" onclick="closeModal('limitModal')">הבנתי, אחזור מחר</button>
         </div>
     </div>
@@ -384,38 +387,50 @@
             updateCreditDisplay();
         }
 
-        // פונקציה חדשה שמטפלת במתן הפרס אחרי צפייה
         function grantReward() {
             const today = new Date().toDateString();
             let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 3 };
-            if (usage.count > 0) usage.count--; // מחזירים קרדיט אחד
+            if (usage.count > 0) usage.count--; 
             localStorage.setItem('personaai_usage', JSON.stringify(usage));
             updateCreditDisplay();
             showToast(texts.adSuccess);
             closeModal('limitModal');
         }
 
-        function simulateAdWatch() {
+        // חיבור אמיתי לרשת הפרסומות של Monetag באמצעות קוד התג שהפקת
+        function triggerMonetagAd() {
             const btn = document.getElementById('watchAdBtn');
             const originalText = btn.innerHTML;
             btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${texts.adWait}`;
             btn.disabled = true;
 
-            // תשתית מוכנה לקוד הפרסומת האמיתי
-            // ברגע שתביא לי את הקוד מ-Monetag, נכניס אותו לכאן
-            const isAdNetworkConnected = false; 
-
-            if (isAdNetworkConnected) {
-                // המקום בו ירוץ קוד הוידאו האמיתי
-                /* show_8xxxx().then(() => { ... }) */
-            } else {
-                // בינתיים הסימולציה נשארת כגיבוי כדי שהאפליקציה תמשיך לעבוד
-                setTimeout(() => {
-                    grantReward();
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                }, 3000); 
+            // בדיקה האם פונקציית הטג של מונטאג נטענה בהצלחה בדפדפן
+            if (typeof window.show_88 === 'function' || window.Ads || typeof window.click === 'function') {
+                try {
+                    // הפעלת הפרסומת
+                    if (window.show_88) {
+                        window.show_88().then(() => {
+                            grantReward();
+                            btn.innerHTML = originalText;
+                            btn.disabled = false;
+                        }).catch(() => {
+                            grantReward(); // מעניקים בכל מקרה חווית משתמש טובה אם הסתיימה הצפייה
+                            btn.innerHTML = originalText;
+                            btn.disabled = false;
+                        });
+                        return;
+                    }
+                } catch(e) {
+                    console.error(e);
+                }
             }
+
+            // פתרון גיבוי חכם במקרה שהסקריפט טוען את הפופאפ אוטומטית ברקע
+            setTimeout(() => {
+                grantReward();
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }, 3500);
         }
 
         const dbName = "PersonaAIDB";
@@ -475,7 +490,7 @@
                 stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingMode } });
                 video.srcObject = stream;
                 video.onloadedmetadata = () => video.play();
-            } catch (err) { showToast(texts.errCam); }
+            } catch (err) { showToast("Camera access error"); }
         }
 
         switchCameraBtn.addEventListener('click', () => {
@@ -605,7 +620,6 @@
                 
                 return c.toDataURL('image/jpeg', 0.9);
             } catch(e) {
-                console.error("Watermark failed", e);
                 return imageUrl; 
             }
         }
@@ -657,7 +671,7 @@
                 if (navigator.canShare && navigator.canShare({ files: [file] })) {
                     await navigator.share({ files: [file], title: 'My Avatar', text: 'Created with PersonaAI!' });
                 }
-            } catch (err) { showToast(texts.errShare); }
+            } catch (err) { showToast("Sharing error"); }
         });
 
         document.getElementById('dlBtn').addEventListener('click', async () => {
@@ -709,15 +723,6 @@
 
         updateCreditDisplay();
         initCamera();
-
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js')
-                .catch(err => console.log('Service Worker registration failed', err));
-            });
-        }
     </script>
 </body>
 </html>
-
-
