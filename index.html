@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Viral Avatar Studio</title>
+    
+    <!-- Monetag Verification Tag -->
+    <meta name="monetag" content="a1a510b358638c1de6131426091918eb">
+    
     <link rel="manifest" href="manifest.json">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
@@ -380,29 +384,38 @@
             updateCreditDisplay();
         }
 
+        // פונקציה חדשה שמטפלת במתן הפרס אחרי צפייה
+        function grantReward() {
+            const today = new Date().toDateString();
+            let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 3 };
+            if (usage.count > 0) usage.count--; // מחזירים קרדיט אחד
+            localStorage.setItem('personaai_usage', JSON.stringify(usage));
+            updateCreditDisplay();
+            showToast(texts.adSuccess);
+            closeModal('limitModal');
+        }
+
         function simulateAdWatch() {
             const btn = document.getElementById('watchAdBtn');
             const originalText = btn.innerHTML;
             btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${texts.adWait}`;
             btn.disabled = true;
 
-            // סימולציה של צפייה בפרסומת במשך 3 שניות
-            setTimeout(() => {
-                const today = new Date().toDateString();
-                let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 3 };
-                
-                // מחזירים למשתמש קרדיט אחד
-                if (usage.count > 0) usage.count--; 
-                
-                localStorage.setItem('personaai_usage', JSON.stringify(usage));
-                
-                updateCreditDisplay();
-                showToast(texts.adSuccess);
-                closeModal('limitModal');
-                
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }, 3000); 
+            // תשתית מוכנה לקוד הפרסומת האמיתי
+            // ברגע שתביא לי את הקוד מ-Monetag, נכניס אותו לכאן
+            const isAdNetworkConnected = false; 
+
+            if (isAdNetworkConnected) {
+                // המקום בו ירוץ קוד הוידאו האמיתי
+                /* show_8xxxx().then(() => { ... }) */
+            } else {
+                // בינתיים הסימולציה נשארת כגיבוי כדי שהאפליקציה תמשיך לעבוד
+                setTimeout(() => {
+                    grantReward();
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }, 3000); 
+            }
         }
 
         const dbName = "PersonaAIDB";
