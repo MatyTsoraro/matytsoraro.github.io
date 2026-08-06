@@ -2,11 +2,11 @@
 "name": "PersonaAI Viral Avatar Studio",
 "short_name": "PersonaAI",
 "description": "Create stunning, viral cyberpunk AI avatars and portraits instantly from your selfies.",
-"start_url": "/",
-"scope": "/",
+"start_url": "./index.html",
+"scope": "./",
 "display": "standalone",
 "background_color": "#030207",
-"theme_color": "#FF3366",
+"theme_color": "THEME_COLOR",
 "orientation": "portrait",
 "icons": [
 {
