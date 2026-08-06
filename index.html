@@ -723,6 +723,15 @@
 
         updateCreditDisplay();
         initCamera();
+
+        // רישום אוטומטי של ה-Service Worker לעבודה במובייל ובאופליין
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then((reg) => { console.log('Service Worker registered successfully', reg); })
+                    .catch((err) => { console.log('Service Worker registration failed', err); });
+            });
+        }
     </script>
 </body>
 </html>
