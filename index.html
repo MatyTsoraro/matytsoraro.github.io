@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Viral Avatar Studio</title>
     
-    <!-- Monetag Verification Tag -->
+    <!-- Monetag Verification & Ad Tag -->
     <meta name="monetag" content="a1a510b358638c1de6131426091918eb">
-    
-    <!-- Monetag Live Rewarded/Multitag Script -->
     <script src="https://quge5.com/88/tag.min.js" data-zone="267639" async data-cfasync="false"></script>
     
     <link rel="manifest" href="manifest.json">
@@ -397,24 +395,22 @@
             closeModal('limitModal');
         }
 
-        // חיבור אמיתי לרשת הפרסומות של Monetag באמצעות קוד התג שהפקת
+        // חיבור פרסומות Monetag
         function triggerMonetagAd() {
             const btn = document.getElementById('watchAdBtn');
             const originalText = btn.innerHTML;
             btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${texts.adWait}`;
             btn.disabled = true;
 
-            // בדיקה האם פונקציית הטג של מונטאג נטענה בהצלחה בדפדפן
             if (typeof window.show_88 === 'function' || window.Ads || typeof window.click === 'function') {
                 try {
-                    // הפעלת הפרסומת
                     if (window.show_88) {
                         window.show_88().then(() => {
                             grantReward();
                             btn.innerHTML = originalText;
                             btn.disabled = false;
                         }).catch(() => {
-                            grantReward(); // מעניקים בכל מקרה חווית משתמש טובה אם הסתיימה הצפייה
+                            grantReward();
                             btn.innerHTML = originalText;
                             btn.disabled = false;
                         });
@@ -425,7 +421,6 @@
                 }
             }
 
-            // פתרון גיבוי חכם במקרה שהסקריפט טוען את הפופאפ אוטומטית ברקע
             setTimeout(() => {
                 grantReward();
                 btn.innerHTML = originalText;
@@ -724,7 +719,6 @@
         updateCreditDisplay();
         initCamera();
 
-        // רישום אוטומטי של ה-Service Worker לעבודה במובייל ובאופליין
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./service-worker.js')
