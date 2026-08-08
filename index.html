@@ -401,7 +401,8 @@
             btn.disabled = true;
 
             // פתיחת הפרסומת (Direct Link) בחלון או טאב חדש כדי לשמור על האפליקציה נקייה
-            window.open('https://omg10.com/4/11520543', '_blank');
+            // שימוש ב- _blank מבטיח שהפרסומת לא "דורסת" את האפליקציה
+            window.open('https://omg10.com/4/11520543', '_blank', 'noopener,noreferrer');
 
             // השהייה של 4 שניות לתת למשתמש זמן לראות את הפרסומת לפני שנותנים לו את הפרס
             setTimeout(() => {
