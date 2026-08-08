@@ -559,7 +559,9 @@
         });
 
         window.applyStyle = function(styleName) {
+            // קריאה לבדיקת המונה לפני שמתחילים ליצור תמונה!
             if(!canGenerate()) return; 
+
             styleMenu.style.display = 'none';
             scanner.style.display = 'flex';
             document.getElementById('processText').innerText = texts.process;
