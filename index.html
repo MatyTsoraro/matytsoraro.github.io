@@ -597,7 +597,11 @@
                 const img = new Image();
                 img.src = URL.createObjectURL(blob);
                 
-                await new Promise(resolve => { img.onload = resolve; });
+                // הוספנו טיפול בשגיאות: אם התמונה פגומה, אל תיתקע לנצח
+                await new Promise((resolve, reject) => { 
+                    img.onload = resolve; 
+                    img.onerror = reject;
+                });
                 
                 const c = document.createElement('canvas');
                 c.width = img.naturalWidth;
@@ -639,14 +643,13 @@
                 
                 let predictionId = startData.id;
                 let status = startData.status;
-                let attempts = 0; // הוספנו מונה ניסיונות
+                let attempts = 0;
 
-                // שלב 2: תור המתנה - שואלים את השרת כל 3 שניות אם מוכן! (מונע קריסה של השרת)
+                // שלב 2: תור המתנה - שואלים את השרת כל 3 שניות אם מוכן!
                 while (status === "starting" || status === "processing") {
                     attempts++;
-                    // אם עברו 40 ניסיונות (בערך 2 דקות), עוצרים הכל!
                     if (attempts > 40) {
-                        refundUsage(); // מחזירים קרדיט
+                        refundUsage();
                         throw new Error("השרת עמוס כרגע, אנא נסה שוב מאוחר יותר");
                     }
 
@@ -662,10 +665,12 @@
                     if (status === "failed") throw new Error("AI generation failed");
                     
                     if (status === "succeeded") {
-                        const finalUrl = statusData.output[statusData.output.length - 1];
+                        // תיקון קריטי: שליפת הלינק בצורה בטוחה בין אם זה מערך ובין אם מחרוזת
+                        const rawOutput = statusData.output;
+                        const finalUrl = Array.isArray(rawOutput) ? rawOutput[rawOutput.length - 1] : rawOutput;
                         
-                        // בדיקה אם התוצאה היא וידאו (.mp4) או תמונה
-                        if(finalUrl.endsWith('.mp4')) {
+                        // בדיקה חכמה האם זה וידאו (לפי השם של הסגנון או הסיומת)
+                        if(stylePrompt === 'super_saiyan' || (typeof finalUrl === 'string' && finalUrl.includes('.mp4'))) {
                             resultVideo.src = finalUrl;
                             resultVideo.style.display = 'block';
                             resultImg.style.display = 'none';
@@ -682,7 +687,6 @@
                             saveToGalleryDB(watermarkedImage);
                         }
                         
-                        // התיקון של המונה: יורד *רק* אחרי שהתוצאה מוכנה בהצלחה והוצגה למשתמש!
                         const today = new Date().toDateString();
                         let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 0 };
                         usage.count++;
