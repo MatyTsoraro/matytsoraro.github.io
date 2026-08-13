@@ -1,4 +1,4 @@
-const CACHE_NAME = 'persona-ai-v5';
+const CACHE_NAME = 'persona-ai-v7';
 const ASSETS = [
   '/',
   '/index.html',
