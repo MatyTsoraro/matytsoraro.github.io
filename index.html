@@ -47,7 +47,7 @@
         .viewport { 
             width: 100%; flex: 1 1 auto; 
             min-height: 250px; 
-            max-height: 42vh; /* הגבלת גובה כדי שהכפתורים למטה לא ייחתכו */
+            max-height: 42vh; 
             background: rgba(0, 0, 0, 0.4); border-radius: 20px; 
             overflow: hidden; position: relative; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); 
             border: 1px solid var(--border); display: flex; justify-content: center; align-items: center;
@@ -130,7 +130,6 @@
         .cat-anime i { color: #ff3366; }
         .cat-scifi i { color: #00f3ff; }
 
-        /* כפתורים מוקטנים קצת כדי שייכנסו למסך אחד */
         #resultControls { display: none; width: 100%; flex-direction: column; gap: 8px; }
         .action-btn { 
             width: 100%; padding: 12px; border-radius: 12px; border: none; font-size: 1.05rem; font-weight: bold; 
@@ -186,7 +185,7 @@
                 <div class="spinner"></div>
                 <div class="overlay-text">
                     <span id="processText">מעבד יצירת מופת...</span><br>
-                    <span id="waitText" style="font-size: 0.8rem; color: #fff; font-weight: normal;">זה עשוי לקחת עד חצי דקה</span>
+                    <span id="waitText" style="font-size: 0.8rem; color: #fff; font-weight: normal;">זה עשוי לקחת קצת זמן</span>
                 </div>
             </div>
         </div>
@@ -226,7 +225,6 @@
                 <div class="category">
                     <div class="category-title">אנימה וקומיקס</div>
                     <div class="style-scroll">
-                        <!-- כפתור הסופר סאייה החדש -->
                         <div class="style-card cat-anime" style="border-color: #ffb800; box-shadow: 0 0 10px rgba(255,184,0,0.4);" onclick="applyStyle('super_saiyan')">
                             <i class="fas fa-bolt" style="color: #ffb800;"></i>
                             <span style="color: #ffb800;">סופר סאייה (PRO)</span>
@@ -321,17 +319,11 @@
         document.getElementById('rtText').innerText = texts.rt;
         document.getElementById('adBtnText').innerText = texts.adBtn;
         
-        if (currentLang === 'en') {
-            document.querySelector('#limitModal h2').innerText = texts.limitTitle;
-            document.querySelector('#limitModal p').innerHTML = texts.limitDesc;
-            document.querySelector('#galleryModal h2').innerText = "My Gallery";
-        }
-
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const resultImg = document.getElementById('resultImg');
         
-        // יצירת אלמנט וידאו לתוצאות שזזות!
+        // יצירת אלמנט וידאו לתוצאות שזזות
         const resultVideo = document.createElement('video'); 
         resultVideo.id = 'resultVideo';
         resultVideo.autoplay = true; resultVideo.loop = true; resultVideo.muted = true; resultVideo.playsInline = true;
@@ -359,19 +351,15 @@
             const toast = document.getElementById('toastMsg');
             toast.innerText = msg;
             toast.style.bottom = '20px';
-            setTimeout(() => { toast.style.bottom = '-50px'; }, 3500);
+            setTimeout(() => { toast.style.bottom = '-50px'; }, 4500); // השהייה ארוכה יותר כדי לקרוא את השגיאה
         }
 
-        function closeModal(id) {
-            document.getElementById(id).style.display = 'none';
-        }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
         function updateCreditDisplay() {
             const today = new Date().toDateString();
             let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 0 };
-            if (usage.date !== today) {
-                usage = { date: today, count: 0 };
-            }
+            if (usage.date !== today) { usage = { date: today, count: 0 }; }
             const creditsLeft = Math.max(0, 3 - usage.count);
             document.getElementById('creditCount').innerText = creditsLeft;
             
@@ -388,9 +376,7 @@
         function canGenerate() {
             const today = new Date().toDateString();
             let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 0 };
-            if (usage.date !== today) {
-                usage = { date: today, count: 0 };
-            }
+            if (usage.date !== today) { usage = { date: today, count: 0 }; }
             if (usage.count >= 3) {
                 document.getElementById('limitModal').style.display = 'flex';
                 return false;
@@ -398,9 +384,7 @@
             return true;
         }
 
-        // פונקציית החזרת קרדיט למקרה של שגיאה
         function refundUsage() {
-            const today = new Date().toDateString();
             let usage = JSON.parse(localStorage.getItem('personaai_usage'));
             if(usage && usage.count > 0) {
                 usage.count--;
@@ -424,9 +408,7 @@
             const originalText = btn.innerHTML;
             btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${texts.adWait}`;
             btn.disabled = true;
-
             window.open('https://omg10.com/4/11520543', '_blank', 'noopener,noreferrer');
-
             setTimeout(() => {
                 grantReward();
                 btn.innerHTML = originalText;
@@ -434,11 +416,8 @@
             }, 4000);
         }
 
-        const dbName = "PersonaAIDB";
-        const storeName = "Gallery";
-        let db;
+        const dbName = "PersonaAIDB"; const storeName = "Gallery"; let db;
         const request = indexedDB.open(dbName, 1);
-        
         request.onupgradeneeded = (e) => {
             db = e.target.result;
             db.createObjectStore(storeName, { keyPath: "id", autoIncrement: true });
@@ -458,8 +437,7 @@
             
             if(!db) return;
             const tx = db.transaction(storeName, "readonly");
-            const store = tx.objectStore(storeName);
-            const req = store.getAll();
+            const req = tx.objectStore(storeName).getAll();
             
             req.onsuccess = () => {
                 const items = req.result;
@@ -491,7 +469,7 @@
                 stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingMode } });
                 video.srcObject = stream;
                 video.onloadedmetadata = () => video.play();
-            } catch (err) { showToast("Camera access error"); }
+            } catch (err) { showToast("שגיאת מצלמה"); }
         }
 
         switchCameraBtn.addEventListener('click', () => {
@@ -499,9 +477,7 @@
             initCamera();
         });
 
-        uploadFileBtn.addEventListener('click', () => {
-            uploadInput.click();
-        });
+        uploadFileBtn.addEventListener('click', () => uploadInput.click());
 
         uploadInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
@@ -510,10 +486,8 @@
             reader.onload = (event) => {
                 const img = new Image();
                 img.onload = () => {
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0);
+                    canvas.width = img.width; canvas.height = img.height;
+                    const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0);
                     capturedImageBase64 = canvas.toDataURL('image/jpeg', 0.8);
                     
                     resultImg.src = capturedImageBase64;
@@ -528,8 +502,7 @@
         });
 
         captureBtn.addEventListener('click', () => {
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
+            canvas.width = video.videoWidth; canvas.height = video.videoHeight;
             const ctx = canvas.getContext('2d');
             if (currentFacingMode === 'user') { ctx.translate(canvas.width, 0); ctx.scale(-1, 1); }
             ctx.drawImage(video, 0, 0);
@@ -542,53 +515,22 @@
             styleMenu.style.display = 'flex';
         });
 
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (SpeechRecognition) {
-            const recognition = new SpeechRecognition();
-            recognition.lang = currentLang === 'he' ? 'he-IL' : 'en-US';
-            recognition.onstart = () => micBtn.classList.add('recording');
-            recognition.onend = () => micBtn.classList.remove('recording');
-            recognition.onresult = (e) => {
-                const transcript = e.results[0][0].transcript;
-                customInput.value += (customInput.value ? " " : "") + transcript;
-            };
-            micBtn.onclick = () => recognition.start();
-        } else {
-            micBtn.style.display = 'none'; 
-        }
-
-        async function translateToEnglish(text) {
-            if (!/[\u0590-\u05FF]/.test(text)) return text; 
-            try {
-                const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=he|en`);
-                const data = await res.json();
-                return data.responseData.translatedText;
-            } catch(e) { return text; }
-        }
-
         window.applyStyle = function(styleName) {
             if(!canGenerate()) return; 
+
+            // מוריד את הקרדיט מיד! (לפי הבקשה שלך)
+            const today = new Date().toDateString();
+            let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 0 };
+            usage.count++;
+            localStorage.setItem('personaai_usage', JSON.stringify(usage));
+            updateCreditDisplay();
 
             styleMenu.style.display = 'none';
             scanner.style.display = 'flex';
             document.getElementById('processText').innerText = texts.process;
+            
             callAPI(styleName);
         };
-
-        customBtn.addEventListener('click', async () => {
-            const val = customInput.value.trim();
-            if(!val) { showToast(texts.alertEmpty); return; }
-            if(!canGenerate()) return; 
-            
-            styleMenu.style.display = 'none';
-            scanner.style.display = 'flex';
-            document.getElementById('processText').innerText = texts.translating; 
-            
-            const translatedPrompt = await translateToEnglish(val);
-            document.getElementById('processText').innerText = texts.process; 
-            
-            callAPI(translatedPrompt);
-        });
 
         async function fetchAndWatermark(imageUrl) {
             try {
@@ -597,21 +539,14 @@
                 const img = new Image();
                 img.src = URL.createObjectURL(blob);
                 
-                // הוספנו טיפול בשגיאות: אם התמונה פגומה, אל תיתקע לנצח
-                await new Promise((resolve, reject) => { 
-                    img.onload = resolve; 
-                    img.onerror = reject;
-                });
+                await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; });
                 
                 const c = document.createElement('canvas');
-                c.width = img.naturalWidth;
-                c.height = img.naturalHeight;
-                const ctx = c.getContext('2d');
-                ctx.drawImage(img, 0, 0);
+                c.width = img.naturalWidth; c.height = img.naturalHeight;
+                const ctx = c.getContext('2d'); ctx.drawImage(img, 0, 0);
                 
                 const fontSize = Math.floor(c.width * 0.035); 
                 ctx.font = `bold ${fontSize}px "Segoe UI"`;
-                
                 const text = 'Created with PersonaAI';
                 const padding = fontSize;
                 
@@ -620,8 +555,7 @@
                 ctx.roundRect(c.width - (ctx.measureText(text).width + padding*2), c.height - (fontSize*2.5), ctx.measureText(text).width + padding*2, fontSize*2.5, [15,0,0,0]);
                 ctx.fill();
                 
-                ctx.fillStyle = '#00f3ff';
-                ctx.textAlign = 'right';
+                ctx.fillStyle = '#00f3ff'; ctx.textAlign = 'right';
                 ctx.fillText(text, c.width - padding, c.height - padding);
                 
                 return c.toDataURL('image/jpeg', 0.9);
@@ -632,44 +566,65 @@
 
         async function callAPI(stylePrompt) {
             try {
-                // שלב 1: שולחים בקשה לשרת ויוצרים "הזמנה"
+                // שלב 1: הזמנת הוידאו/תמונה
                 const response = await fetch(API_URL, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ action: "start", image: capturedImageBase64, style: stylePrompt })
                 });
-                const startData = await response.json();
-                if (startData.error) throw new Error(startData.error);
                 
+                // תפיסת שגיאות רשת חמורות (500)
+                if (!response.ok) {
+                    const errData = await response.json().catch(()=>({}));
+                    throw new Error(errData.detail || errData.error || "שגיאת חיבור לשרת (HTTP " + response.status + ")");
+                }
+
+                const startData = await response.json();
+                
+                // זיהוי שגיאות חכם מ-Replicate (לפעמים מגיע כ-error ולפעמים כ-detail)
+                if (startData.error) throw new Error(startData.error);
+                if (startData.detail) throw new Error(startData.detail);
+                if (!startData.id) throw new Error("לא התקבל מזהה משימה מהשרת. כנראה שהתמונה כבדה מדי.");
+
                 let predictionId = startData.id;
                 let status = startData.status;
                 let attempts = 0;
 
-                // שלב 2: תור המתנה - שואלים את השרת כל 3 שניות אם מוכן!
+                // שלב 2: תור המתנה (פוללינג)
                 while (status === "starting" || status === "processing") {
                     attempts++;
-                    if (attempts > 40) {
-                        refundUsage();
-                        throw new Error("השרת עמוס כרגע, אנא נסה שוב מאוחר יותר");
+                    // 60 ניסיונות של 3 שניות = 3 דקות המתנה גג.
+                    if (attempts > 60) {
+                        throw new Error("השרת עמוס מדי כרגע, האפליקציה עצרה את ההמתנה.");
                     }
 
                     await new Promise(r => setTimeout(r, 3000));
+                    
                     const statusRes = await fetch(API_URL, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ action: "status", id: predictionId })
                     });
+                    
                     const statusData = await statusRes.json();
+                    
+                    if (statusData.error) throw new Error(statusData.error);
+                    if (statusData.detail) throw new Error(statusData.detail);
+                    
                     status = statusData.status;
                     
-                    if (status === "failed") throw new Error("AI generation failed");
+                    if (status === "failed") {
+                        throw new Error("מנוע ה-AI נכשל ביצירת התמונה (התמונה אולי לא תואמת).");
+                    }
                     
                     if (status === "succeeded") {
-                        // תיקון קריטי: שליפת הלינק בצורה בטוחה בין אם זה מערך ובין אם מחרוזת
                         const rawOutput = statusData.output;
+                        // שליפת הלינק הבטוחה
                         const finalUrl = Array.isArray(rawOutput) ? rawOutput[rawOutput.length - 1] : rawOutput;
                         
-                        // בדיקה חכמה האם זה וידאו (לפי השם של הסגנון או הסיומת)
+                        if (!finalUrl) throw new Error("התהליך הסתיים אך לא התקבל קובץ.");
+
+                        // זיהוי אם זה וידאו או תמונה
                         if(stylePrompt === 'super_saiyan' || (typeof finalUrl === 'string' && finalUrl.includes('.mp4'))) {
                             resultVideo.src = finalUrl;
                             resultVideo.style.display = 'block';
@@ -687,17 +642,19 @@
                             saveToGalleryDB(watermarkedImage);
                         }
                         
-                        const today = new Date().toDateString();
-                        let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 0 };
-                        usage.count++;
-                        localStorage.setItem('personaai_usage', JSON.stringify(usage));
-                        updateCreditDisplay();
-                        
-                        return;
+                        return; // הכל הסתיים בהצלחה!
                     }
                 }
+                
+                // אם הגענו לפה, משהו לא צפוי קרה
+                if (status !== "succeeded") {
+                    throw new Error("התהליך הופסק בסטטוס: " + status);
+                }
+
             } catch (err) {
-                showToast("Error: " + err.message);
+                // רדאר השגיאות הופעל!
+                refundUsage(); // מחזיר קרדיט על כישלון
+                showToast("שגיאה: " + err.message);
                 resetCamera();
             }
         }
@@ -710,13 +667,18 @@
             resultControls.style.display = 'none';
             styleMenu.style.display = 'none';
             cameraControls.style.display = 'flex';
-            customInput.value = '';
+            if(customInput) customInput.value = '';
         }
 
         document.getElementById('rtBtn').addEventListener('click', resetCamera);
 
         document.getElementById('waBtn').addEventListener('click', async () => {
             try {
+                // אם זה וידאו, אי אפשר לשתף ישירות כרגע בוואטסאפ דרך הרשת
+                if (resultVideo.style.display === 'block') {
+                    showToast("שמור את הוידאו קודם ואז שתף");
+                    return;
+                }
                 const response = await fetch(resultImg.src);
                 const blob = await response.blob();
                 const file = new File([blob], 'Avatar.jpg', { type: 'image/jpeg' });
@@ -728,28 +690,34 @@
 
         document.getElementById('dlBtn').addEventListener('click', async () => {
             try {
-                const response = await fetch(resultImg.src);
+                const targetSrc = resultVideo.style.display === 'block' ? resultVideo.src : resultImg.src;
+                const isVideo = resultVideo.style.display === 'block';
+                
+                const response = await fetch(targetSrc);
                 const blob = await response.blob();
                 const url = window.URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.href = url;
-                link.download = 'ViralAvatar_' + Date.now() + '.jpg';
+                link.download = 'ViralAvatar_' + Date.now() + (isVideo ? '.mp4' : '.jpg');
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
                 window.URL.revokeObjectURL(url);
-                showToast(currentLang === 'he' ? 'התמונה נשמרה בגלריה!' : 'Image saved to gallery!');
+                showToast(currentLang === 'he' ? 'נשמר בהצלחה!' : 'Saved successfully!');
             } catch (err) {
-                showToast("Please long-press the image to save.");
+                showToast("Please long-press the image/video to save.");
             }
         });
 
         document.getElementById('profileBtn').addEventListener('click', () => {
             try {
+                if (resultVideo.style.display === 'block') {
+                    showToast("אי אפשר לחתוך וידאו לפרופיל");
+                    return;
+                }
                 const size = Math.min(resultImg.naturalWidth, resultImg.naturalHeight);
                 const cropCanvas = document.createElement('canvas');
-                cropCanvas.width = size;
-                cropCanvas.height = size;
+                cropCanvas.width = size; cropCanvas.height = size;
                 const ctx = cropCanvas.getContext('2d');
                 
                 const startX = (resultImg.naturalWidth - size) / 2;
