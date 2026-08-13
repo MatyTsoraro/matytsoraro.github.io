@@ -2,10 +2,10 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Viral Avatar Studio</title>
     
-    <!-- Monetag Verification Only -->
+    <!-- Monetag Verification -->
     <meta name="monetag" content="a1a510b358638c1de6131426091918eb">
     
     <link rel="manifest" href="manifest.json">
@@ -15,224 +15,169 @@
         :root { 
             --primary: #00f3ff; 
             --secondary: #bc13fe; 
-            --bg-gradient-start: #0a0a12;
-            --bg-gradient-end: #1a1a2e;
-            --glass-bg: rgba(22, 22, 37, 0.65);
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent: #ffb800;
+            --bg: #0a0a12; 
+            --panel: rgba(22, 22, 37, 0.7); 
             --text: #ffffff; 
-            --text-muted: #8b8b9e;
+            --border: rgba(255, 255, 255, 0.1);
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
         body { 
-            background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
-            color: var(--text); display: flex; flex-direction: column; 
+            background-color: var(--bg); color: var(--text); display: flex; flex-direction: column; 
             height: 100vh; overflow: hidden; align-items: center; 
         }
 
-        .glass-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        }
-
         header { 
-            width: 100%; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid var(--glass-border); z-index: 10;
-            background: rgba(10, 10, 18, 0.8);
-            backdrop-filter: blur(10px);
+            width: 100%; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center;
+            background: var(--panel); border-bottom: 1px solid var(--border); backdrop-filter: blur(10px); z-index: 10;
         }
         
         h1 { 
-            font-size: 1.5rem; background: -webkit-linear-gradient(45deg, var(--primary), var(--secondary)); 
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 3px; margin: 0; font-weight: 900;
+            font-size: 1.6rem; background: -webkit-linear-gradient(45deg, var(--primary), var(--secondary)); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 2px; margin: 0; font-weight: 900;
         }
         
-        #creditBadge {
-            background: rgba(255, 184, 0, 0.15); border: 1px solid rgba(255, 184, 0, 0.3);
-            padding: 5px 12px; border-radius: 20px; font-weight: bold; color: #ffb800; 
-            display: flex; align-items: center; gap: 5px; font-size: 0.95rem; 
-        }
-
         .container { 
             width: 100%; max-width: 450px; flex: 1; display: flex; flex-direction: column; 
-            padding: 15px; position: relative; gap: 20px; overflow-y: auto; scrollbar-width: none;
+            padding: 12px 15px; position: relative; gap: 12px; overflow-y: auto; scrollbar-width: none;
         }
         .container::-webkit-scrollbar { display: none; }
-
-        /* פס התקדמות בסגנון Lovable */
-        .step-indicator {
-            display: flex; justify-content: center; gap: 8px; margin-top: 5px;
-        }
-        .step-dot {
-            height: 4px; flex: 1; border-radius: 2px; background: rgba(255,255,255,0.1); transition: 0.3s ease;
-        }
-        .step-dot.active { background: linear-gradient(90deg, var(--primary), var(--secondary)); }
         
         .viewport { 
-            width: 100%; flex: 1 1 auto; min-height: 220px; max-height: 42vh; border-radius: 24px; 
-            overflow: hidden; position: relative; display: flex; justify-content: center; align-items: center;
+            width: 100%; flex: 1 1 auto; 
+            min-height: 250px; 
+            max-height: 42vh; /* הגבלת גובה כדי שהכפתורים למטה לא ייחתכו */
+            background: rgba(0, 0, 0, 0.4); border-radius: 20px; 
+            overflow: hidden; position: relative; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); 
+            border: 1px solid var(--border); display: flex; justify-content: center; align-items: center;
         }
 
-        video, img, canvas { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1; border-radius: 24px;}
+        video, img, canvas { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1; }
         img { display: none; z-index: 2; }
         canvas { display: none; }
         
         .scanner-container { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; display: none; 
-            background: rgba(0,0,0,0.75); backdrop-filter: blur(5px); flex-direction: column; justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); flex-direction: column; justify-content: center; align-items: center;
         }
         
         .spinner { 
-            border: 4px solid rgba(255, 255, 255, 0.05); border-top: 4px solid var(--primary); border-radius: 50%; 
-            width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 20px;
+            border: 4px solid rgba(255, 255, 255, 0.1); border-top: 4px solid var(--primary); border-radius: 50%; 
+            width: 45px; height: 45px; animation: spin 1s linear infinite; margin-bottom: 15px;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .overlay-text { font-weight: bold; color: var(--text); text-align: center; line-height: 1.6; font-size: 1.1rem;}
-        .overlay-text span:first-child { color: var(--primary); font-size: 1.3rem;}
+        .overlay-text { font-weight: bold; color: var(--primary); text-align: center; line-height: 1.5; font-size: 1.1rem;}
         
-        .bottom-area { width: 100%; flex: 0 0 auto; display: flex; flex-direction: column; justify-content: center; padding-bottom: max(15px, env(safe-area-inset-bottom)); }
-        
-        .camera-controls { display: flex; justify-content: space-around; align-items: center; width: 100%; padding: 10px; border-radius: 30px; }
+        .bottom-area { width: 100%; flex: 0 0 auto; display: flex; flex-direction: column; justify-content: center; padding-bottom: 10px; }
+        .camera-controls { display: flex; justify-content: space-around; align-items: center; width: 100%; }
 
         button.icon-btn { 
-            background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--glass-border); border-radius: 50%; 
-            width: 55px; height: 55px; font-size: 1.3rem; cursor: pointer; transition: all 0.2s ease; 
-            display: flex; justify-content: center; align-items: center; 
+            background: var(--panel); color: var(--text); border: 1px solid var(--border); border-radius: 50%; 
+            width: 55px; height: 55px; font-size: 1.2rem; cursor: pointer; transition: all 0.2s ease; 
+            display: flex; justify-content: center; align-items: center; backdrop-filter: blur(10px);
         }
-        button.icon-btn:active { transform: scale(0.9); background: rgba(255,255,255,0.1); }
+        button.icon-btn:active { transform: scale(0.95); }
         
         #captureBtn { 
-            background: linear-gradient(135deg, var(--primary), var(--secondary)); border: none; width: 80px; height: 80px; 
-            font-size: 2.2rem; box-shadow: 0 0 25px rgba(188, 19, 254, 0.5); color: white; border-radius: 50%;
-            animation: soft-pulse 2s infinite; cursor: pointer;
+            background: linear-gradient(45deg, var(--primary), var(--secondary)); border: none; width: 80px; height: 80px; 
+            font-size: 2.2rem; box-shadow: 0 0 20px rgba(188, 19, 254, 0.4); color: white; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.2s;
         }
         #captureBtn:active { transform: scale(0.95); }
-
-        @keyframes soft-pulse {
-            0% { box-shadow: 0 0 0 0 rgba(188, 19, 254, 0.4); }
-            70% { box-shadow: 0 0 0 15px rgba(188, 19, 254, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(188, 19, 254, 0); }
-        }
         
-        #styleMenu { display: none; flex-direction: column; width: 100%; gap: 20px; animation: slideUp 0.4s ease-out; }
+        #styleMenu { display: none; flex-direction: column; width: 100%; gap: 12px; }
         
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        .custom-prompt { display: flex; flex-direction: column; gap: 10px; }
+        .custom-prompt { display: flex; flex-direction: column; gap: 8px; margin-bottom: 5px; }
         .textarea-wrapper { position: relative; width: 100%; }
         
         .custom-prompt textarea { 
-            width: 100%; padding: 15px; padding-inline-end: 45px; border-radius: 16px; background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); 
-            color: white; outline: none; font-size: 1rem; resize: vertical; min-height: 80px; font-family: inherit; line-height: 1.5;
-            transition: 0.3s border-color;
+            width: 100%; padding: 12px; padding-inline-end: 45px; border-radius: 12px; background: rgba(0,0,0,0.5); 
+            border: 1px solid var(--border); color: white; outline: none; font-size: 0.95rem; resize: vertical; 
+            min-height: 60px; font-family: inherit; line-height: 1.4;
         }
-        .custom-prompt textarea:focus { border-color: var(--primary); background: rgba(0,0,0,0.6); }
+        .custom-prompt textarea:focus { border-color: var(--primary); }
         
         #customBtn { 
-            background: linear-gradient(45deg, var(--primary), var(--secondary)); border: none; padding: 14px; 
-            border-radius: 14px; color: white; font-weight: bold; cursor: pointer; font-size: 1.1rem; width: 100%;
+            background: linear-gradient(45deg, var(--primary), var(--secondary)); border: none; padding: 10px; 
+            border-radius: 10px; color: white; font-weight: bold; cursor: pointer; font-size: 1rem; width: 100%;
         }
 
         .mic-btn { 
-            position: absolute; bottom: 15px; inset-inline-end: 15px; background: transparent; border: none; color: var(--text-muted); 
-            font-size: 1.4rem; cursor: pointer; transition: 0.3s;
+            position: absolute; bottom: 12px; inset-inline-end: 12px; background: transparent; border: none; color: #888; 
+            font-size: 1.2rem; cursor: pointer; transition: 0.3s; width: auto; padding: 0;
         }
-        .mic-btn.recording { color: #ff3366; animation: recording-pulse 1.5s infinite; }
-        @keyframes recording-pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        .mic-btn.recording { color: red; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
         
-        .category { margin-bottom: 5px; }
-        .category-title { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;}
-        
-        /* עיצוב גריד (רשת) חדש בהשראת Lovable */
-        .style-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .category { margin-bottom: 2px; }
+        .category-title { font-size: 0.85rem; color: #aaa; margin-bottom: 8px; font-weight: bold;}
+        .style-scroll { display: flex; overflow-x: auto; gap: 10px; padding-bottom: 5px; scrollbar-width: none; }
+        .style-scroll::-webkit-scrollbar { display: none; }
         
         .style-card { 
-            aspect-ratio: 1; border-radius: 20px; border: 1px solid var(--glass-border); 
+            flex: 0 0 95px; height: 100px; background: var(--panel); border-radius: 15px; border: 1px solid var(--border); 
             display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; color: white;
-            transition: all 0.2s ease; background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(10px); transition: 0.2s;
         }
-        .style-icon-wrapper {
-            width: 40px; height: 40px; border-radius: 12px; display: flex; justify-content: center; align-items: center;
-            background: rgba(255,255,255,0.05); font-size: 1.2rem;
-        }
-        .style-card span { font-size: 0.75rem; text-align: center; font-weight: 600; padding: 0 5px; line-height: 1.2;}
-        .style-card:active { transform: scale(0.92); border-color: var(--primary); background: rgba(0, 243, 255, 0.1); }
+        .style-card i { font-size: 1.8rem; }
+        .style-card span { font-size: 0.75rem; text-align: center; font-weight: bold; padding: 0 4px;}
+        .style-card:active { transform: scale(0.95); border-color: var(--primary); }
         
-        /* צבעי אייקונים בסגנון Lovable */
-        .cat-fantasy .style-icon-wrapper i { color: #bc13fe; }
-        .cat-cinema .style-icon-wrapper i { color: #ffb800; }
-        .cat-pro .style-icon-wrapper i { color: #00ff88; }
-        .cat-anime .style-icon-wrapper i { color: #ff3366; }
-        .cat-scifi .style-icon-wrapper i { color: #00f3ff; }
+        .cat-fantasy i { color: #bc13fe; }
+        .cat-cinema i { color: #ffb800; }
+        .cat-pro i { color: #00ff88; }
+        .cat-anime i { color: #ff3366; }
+        .cat-scifi i { color: #00f3ff; }
 
-        #resultControls { display: none; width: 100%; flex-direction: column; gap: 10px; animation: slideUp 0.4s ease-out; padding-bottom: 15px;}
+        /* כפתורים מוקטנים קצת כדי שייכנסו למסך אחד */
+        #resultControls { display: none; width: 100%; flex-direction: column; gap: 8px; }
         .action-btn { 
-            width: 100%; padding: 14px; border-radius: 16px; border: none; font-size: 1.05rem; font-weight: bold; 
+            width: 100%; padding: 12px; border-radius: 12px; border: none; font-size: 1.05rem; font-weight: bold; 
             display: flex; justify-content: center; align-items: center; gap: 10px; cursor: pointer; color: white;
-            transition: transform 0.2s;
         }
-        .action-btn:active { transform: scale(0.97); }
-        #waBtn { background: #25D366; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);}
-        #dlBtn { background: var(--primary); color: #000; box-shadow: 0 4px 15px rgba(0, 243, 255, 0.3);}
+        #waBtn { background: #25D366; }
+        #dlBtn { background: var(--primary); color: #000; }
         #profileBtn { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
-        
-        .secondary-actions { display: flex; gap: 10px; }
-        .secondary-actions button { flex: 1; padding: 12px; border-radius: 14px; background: transparent; border: 1px solid var(--glass-border); color: white; font-weight: bold; cursor: pointer; display: flex; justify-content: center; gap: 8px;}
-        .secondary-actions button:active { background: rgba(255,255,255,0.05); }
+        #rtBtn { background: transparent; border: 1px solid var(--border); }
 
         .modal { 
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.85); z-index: 100; justify-content: center; align-items: center; padding: 20px;
-            backdrop-filter: blur(8px);
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 100; justify-content: center; align-items: center; padding: 20px;
         }
         .modal-content { 
-            border-radius: 24px; padding: 30px; 
-            width: 100%; max-width: 400px; text-align: center; color: white; position: relative;
-            animation: slideUp 0.3s ease-out;
+            background: var(--bg); border: 1px solid var(--border); box-shadow: 0 0 30px rgba(0,243,255,0.2); 
+            border-radius: 20px; padding: 25px; width: 100%; max-width: 350px; text-align: center; color: white; position: relative;
         }
-        .modal-content h2 { margin-bottom: 15px; color: var(--primary); font-size: 1.5rem;}
-        .modal-content p { margin-bottom: 25px; line-height: 1.6; color: var(--text-muted);}
+        .modal-content h2 { margin-bottom: 10px; color: var(--primary); font-size: 1.4rem;}
+        .modal-content p { margin-bottom: 20px; line-height: 1.5; color: #ccc; font-size: 0.9rem;}
         .close-modal { 
-            position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.1); border: none; color: white; 
-            width: 30px; height: 30px; border-radius: 50%; font-size: 1rem; cursor: pointer; display: flex; justify-content: center; align-items: center;
+            position: absolute; top: 15px; right: 15px; background: none; border: none; color: #888; 
+            font-size: 1.5rem; cursor: pointer;
         }
 
-        .gallery-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; overflow-y: auto; max-height: 55vh; margin-top: 15px; padding-bottom: 10px;}
-        .gallery-grid::-webkit-scrollbar { display: none; }
-        .gallery-img { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 12px; border: 1px solid var(--glass-border); transition: 0.2s;}
-        .gallery-img:active { transform: scale(0.95); border-color: var(--primary);}
-        .empty-gallery { grid-column: span 3; padding: 50px 0; color: var(--text-muted); font-style: italic; font-size: 0.9rem;}
+        .gallery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; overflow-y: auto; max-height: 60vh; }
+        .gallery-img { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 10px; border: 1px solid #444; }
+        .empty-gallery { grid-column: span 2; padding: 40px 0; color: #666; font-style: italic; }
 
         #toastMsg {
-            position: fixed; bottom: -60px; left: 50%; transform: translateX(-50%); background: white; 
-            color: #000; padding: 12px 24px; border-radius: 30px; font-weight: bold; z-index: 1000; transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5); font-size: 0.9rem;
+            position: fixed; bottom: -50px; left: 50%; transform: translateX(-50%); background: var(--primary); 
+            color: #000; padding: 12px 24px; border-radius: 30px; font-weight: bold; z-index: 1000; transition: all 0.3s ease;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div id="creditBadge">
+        <div id="creditBadge" style="background: rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 20px; font-weight: bold; color: #ffb800; display: flex; align-items: center; gap: 5px; font-size: 0.95rem; box-shadow: 0 0 10px rgba(255,184,0,0.2); transition: all 0.3s ease;">
             <i class="fas fa-bolt"></i> <span id="creditCount">3</span>/3
         </div>
         <h1>VIRAL AVATAR</h1>
-        <button id="openGalleryBtn" class="icon-btn" style="width: 40px; height: 40px; font-size: 1.1rem; border:none; background:transparent;"><i class="fas fa-images"></i></button>
+        <button id="openGalleryBtn" class="icon-btn" style="width: 40px; height: 40px; font-size: 1rem;"><i class="fas fa-images"></i></button>
     </header>
     
     <div class="container">
-        
-        <!-- פס התקדמות ויזואלי -->
-        <div class="step-indicator">
-            <div class="step-dot active" id="step1"></div>
-            <div class="step-dot" id="step2"></div>
-            <div class="step-dot" id="step3"></div>
-        </div>
-
-        <div class="viewport glass-panel" id="viewport">
+        <div class="viewport" id="viewport">
             <video id="video" autoplay playsinline muted></video>
             <canvas id="canvas"></canvas>
             <img id="resultImg" alt="AI Result" crossorigin="anonymous">
@@ -240,15 +185,15 @@
             <div class="scanner-container" id="scanner">
                 <div class="spinner"></div>
                 <div class="overlay-text">
-                    <span id="processText">...מעבד יצירת מופת</span><br>
-                    <span id="waitText" style="font-size: 0.85rem; color: #aaa; font-weight: normal; margin-top: 5px; display: block;">זה עשוי לקחת עד חצי דקה</span>
+                    <span id="processText">מעבד יצירת מופת...</span><br>
+                    <span id="waitText" style="font-size: 0.8rem; color: #fff; font-weight: normal;">זה עשוי לקחת עד חצי דקה</span>
                 </div>
             </div>
         </div>
 
         <div class="bottom-area">
             
-            <div class="camera-controls glass-panel" id="cameraControls">
+            <div class="camera-controls" id="cameraControls">
                 <button class="icon-btn" id="uploadFileBtn"><i class="fas fa-upload"></i></button>
                 <input type="file" id="uploadInput" accept="image/*" style="display:none">
                 
@@ -257,11 +202,11 @@
             </div>
             
             <div id="styleMenu">
-                <div class="glass-panel" style="padding: 15px; border-radius: 20px;">
-                    <div class="category-title" id="customTitle">יצירה חופשית (אנגלית)</div>
+                <div class="category">
+                    <div class="category-title" id="customTitle">יצירה חופשית (הקלד באנגלית בלבד)</div>
                     <div class="custom-prompt">
                         <div class="textarea-wrapper">
-                            <textarea id="customInput" placeholder="...תאר את האווטאר שלך"></textarea>
+                            <textarea id="customInput" placeholder="תאר את האווטאר שלך..."></textarea>
                             <button id="micBtn" class="mic-btn"><i class="fas fa-microphone"></i></button>
                         </div>
                         <button id="customBtn">צור יצירת מופת</button>
@@ -269,46 +214,65 @@
                 </div>
                 
                 <div class="category">
-                    <div class="category-title" id="quickTitle">תבניות נבחרות</div>
-                    <div class="style-grid">
-                        <div class="style-card cat-pro glass-panel" onclick="applyStyle('tech_ceo')"><div class="style-icon-wrapper"><i class="fas fa-briefcase"></i></div><span id="ceoText">מנכ"ל הייטק</span></div>
-                        <div class="style-card cat-cinema glass-panel" onclick="applyStyle('gladiator')"><div class="style-icon-wrapper"><i class="fas fa-shield-alt"></i></div><span id="gladText">גלדיאטור</span></div>
-                        <div class="style-card cat-fantasy glass-panel" onclick="applyStyle('jedi_master')"><div class="style-icon-wrapper"><i class="fab fa-jedi-order"></i></div><span id="jediText">אביר ג'דיי</span></div>
-                        <div class="style-card cat-cinema glass-panel" onclick="applyStyle('mafia_boss')"><div class="style-icon-wrapper"><i class="fas fa-user-tie"></i></div><span id="mafiaText">בוס מאפיה</span></div>
-                        <div class="style-card cat-anime glass-panel" onclick="applyStyle('pixar_character')"><div class="style-icon-wrapper"><i class="fas fa-smile"></i></div><span>פיקסאר 3D</span></div>
-                        <div class="style-card cat-scifi glass-panel" onclick="applyStyle('cyber_ninja')"><div class="style-icon-wrapper"><i class="fas fa-user-ninja"></i></div><span>סייבר-נינג'ה</span></div>
+                    <div class="category-title" id="quickTitle">תבניות מהירות</div>
+                    <div class="style-scroll">
+                        <div class="style-card cat-pro" onclick="applyStyle('tech_ceo')"><i class="fas fa-briefcase"></i><span id="ceoText">מנכ"ל הייטק</span></div>
+                        <div class="style-card cat-cinema" onclick="applyStyle('gladiator')"><i class="fas fa-shield-alt"></i><span id="gladText">גלדיאטור</span></div>
+                        <div class="style-card cat-fantasy" onclick="applyStyle('jedi_master')"><i class="fab fa-jedi-order"></i><span id="jediText">אביר ג'דיי</span></div>
+                        <div class="style-card cat-cinema" onclick="applyStyle('mafia_boss')"><i class="fas fa-user-tie"></i><span id="mafiaText">בוס מאפיה</span></div>
+                    </div>
+                </div>
+                
+                <div class="category">
+                    <div class="category-title">אנימה וקומיקס</div>
+                    <div class="style-scroll">
+                        <!-- כפתור הסופר סאייה החדש -->
+                        <div class="style-card cat-anime" style="border-color: #ffb800; box-shadow: 0 0 10px rgba(255,184,0,0.4);" onclick="applyStyle('super_saiyan')">
+                            <i class="fas fa-bolt" style="color: #ffb800;"></i>
+                            <span style="color: #ffb800;">סופר סאייה (PRO)</span>
+                        </div>
+                        <div class="style-card cat-anime" onclick="applyStyle('anime_hero')"><i class="fas fa-user-astronaut"></i><span>גיבור אנימה</span></div>
+                        <div class="style-card cat-anime" onclick="applyStyle('pixar_character')"><i class="fas fa-smile"></i><span>פיקסאר 3D</span></div>
+                        <div class="style-card cat-anime" onclick="applyStyle('comic_book')"><i class="fas fa-book-open"></i><span>קומיקס</span></div>
+                    </div>
+                </div>
+
+                <div class="category">
+                    <div class="category-title">פנטזיה ומדע בדיוני</div>
+                    <div class="style-scroll">
+                        <div class="style-card cat-scifi" onclick="applyStyle('cyber_ninja')"><i class="fas fa-user-ninja"></i><span>סייבר-נינג'ה</span></div>
+                        <div class="style-card cat-scifi" onclick="applyStyle('astronaut')"><i class="fas fa-rocket"></i><span>אסטרונאוט</span></div>
+                        <div class="style-card cat-fantasy" onclick="applyStyle('vampire')"><i class="fas fa-moon"></i><span>ערפד אפל</span></div>
+                        <div class="style-card cat-fantasy" onclick="applyStyle('zombie')"><i class="fas fa-skull"></i><span>זומבי</span></div>
                     </div>
                 </div>
             </div>
             
             <div id="resultControls">
                 <button class="action-btn" id="waBtn"><i class="fab fa-whatsapp"></i> <span id="waText">שתף בווטסאפ</span></button>
-                <button class="action-btn" id="dlBtn"><i class="fas fa-download"></i> <span id="dlText">שמור לגלריה</span></button>
-                <button class="action-btn" id="profileBtn"><i class="fas fa-user-circle"></i> <span id="profText">חתוך כתמונת פרופיל</span></button>
-                <div class="secondary-actions">
-                    <button id="rtBtn"><i class="fas fa-camera"></i> <span id="rtText">צלם מחדש</span></button>
-                    <button onclick="document.getElementById('resultControls').style.display='none'; document.getElementById('styleMenu').style.display='flex'; updateSteps(2);"><i class="fas fa-sparkles"></i> סגנון אחר</button>
-                </div>
+                <button class="action-btn" id="dlBtn"><i class="fas fa-download"></i> <span id="dlText">שמור תמונה</span></button>
+                <button class="action-btn" id="profileBtn"><i class="fas fa-user-circle"></i> <span id="profText">חתוך לפרופיל</span></button>
+                <button class="action-btn" id="rtBtn"><i class="fas fa-camera"></i> <span id="rtText">צלם מחדש</span></button>
             </div>
             
         </div>
     </div>
 
     <div id="limitModal" class="modal">
-        <div class="modal-content glass-panel">
+        <div class="modal-content">
             <button class="close-modal" onclick="closeModal('limitModal')"><i class="fas fa-times"></i></button>
-            <i class="fas fa-bolt" style="font-size: 3rem; color: #ffb800; margin-bottom: 15px;"></i>
-            <h2>הגעת למגבלה!</h2>
+            <h2>הגעת למגבלה היומית!</h2>
             <p>יצרת כבר 3 תמונות מדהימות היום. <br>השרתים שלנו צריכים קצת מנוחה.<br>חזור מחר להמשך יצירה בחינם!</p>
-            <button class="action-btn" id="watchAdBtn" style="background: linear-gradient(45deg, var(--secondary), #ff3366); margin-top: 10px;" onclick="triggerMonetagAd()"><i class="fas fa-video"></i> <span id="adBtnText">צפה בפרסומת וקבל תמונה</span></button>
+            <button class="action-btn" id="watchAdBtn" style="background: var(--secondary); color: white; margin-top: 15px;" onclick="triggerMonetagAd()"><i class="fas fa-video"></i> <span id="adBtnText">צפה בפרסומת וקבל תמונה</span></button>
+            <button class="action-btn" style="background: transparent; border: 1px solid var(--border); color: white; margin-top: 10px;" onclick="closeModal('limitModal')">הבנתי, אחזור מחר</button>
         </div>
     </div>
 
     <div id="galleryModal" class="modal">
-        <div class="modal-content glass-panel" style="max-width: 90%; padding: 20px;">
+        <div class="modal-content" style="max-height: 85vh;">
             <button class="close-modal" onclick="closeModal('galleryModal')"><i class="fas fa-times"></i></button>
-            <h2 style="font-size: 1.2rem; margin-bottom: 5px; text-align: right;">הגלריה שלי</h2>
-            <p style="font-size: 0.8rem; text-align: right; margin-bottom: 10px;">הקש על תמונה כדי לפתוח אותה</p>
+            <h2>הגלריה שלי</h2>
+            <p style="font-size: 0.8rem; margin-bottom: 15px;">האווטארים האחרונים שיצרת</p>
             <div id="galleryGrid" class="gallery-grid">
             </div>
         </div>
@@ -319,19 +283,19 @@
     <script>
         const dict = {
             'he': {
-                dir: 'rtl', process: "...מעבד יצירת מופת", wait: "זה עשוי לקחת עד חצי דקה",
-                customTitle: "יצירה חופשית (אנגלית)", placeholder: "...תאר את האווטאר שלך בפירוט", btnCreate: "צור יצירת מופת",
-                quickTitle: "תבניות נבחרות", ceo: "מנכ\"ל הייטק", glad: "גלדיאטור", jedi: "אביר ג'דיי", mafia: "בוס מאפיה", wa: "שתף בווטסאפ",
-                dl: "שמור תמונה", prof: "חתוך לפרופיל", rt: "צלם מחדש", alertEmpty: "אנא הקלד או הקלט תיאור", translating: "...מתרגם לאנגלית",
-                limitTitle: "הגעת למגבלה!", limitDesc: "יצרת כבר 3 תמונות היום. חזור מחר להמשך יצירה בחינם!", galleryEmpty: "עדיין לא יצרת אווטארים. הגלריה ריקה!",
-                adBtn: "צפה בפרסומת וקבל תמונה", adWait: "...טוען", adSuccess: "קיבלת קרדיט נוסף! צור תמונה"
+                dir: 'rtl', process: "מעבד יצירת מופת...", wait: "זה עשוי לקחת עד חצי דקה",
+                customTitle: "יצירה חופשית (הקלד או דבר)", placeholder: "תאר את האווטאר שלך בפירוט...", btnCreate: "צור יצירת מופת",
+                quickTitle: "תבניות מהירות", ceo: "מנכ\"ל הייטק", glad: "גלדיאטור", jedi: "אביר ג'דיי", mafia: "בוס מאפיה", wa: "שתף בווטסאפ",
+                dl: "שמור תמונה", prof: "חתוך לפרופיל", rt: "צלם מחדש", alertEmpty: "אנא הקלד או הקלט תיאור", translating: "מתרגם לאנגלית...",
+                limitTitle: "הגעת למגבלה היומית!", limitDesc: "יצרת כבר 3 תמונות היום. חזור מחר להמשך יצירה בחינם!", galleryEmpty: "הגלריה שלך ריקה. צור אווטאר כדי למלא אותה!",
+                adBtn: "צפה בפרסומת וקבל תמונה", adWait: "טוען...", adSuccess: "קיבלת קרדיט נוסף! צור תמונה"
             },
             'en': {
                 dir: 'ltr', process: "Processing Masterpiece...", wait: "This may take up to 30 seconds",
-                customTitle: "Free Creation (Type/Speak)", placeholder: "Describe your avatar in detail...", btnCreate: "Create Masterpiece",
-                quickTitle: "Top Templates", ceo: "Tech CEO", glad: "Gladiator", jedi: "Jedi Master", mafia: "Mafia Boss", wa: "Share on WhatsApp",
-                dl: "Save Image", prof: "Crop for Profile", rt: "Retake Photo", alertEmpty: "Please type or record a description", translating: "Translating...",
-                limitTitle: "Daily Limit Reached!", limitDesc: "You have created 3 images today. Come back tomorrow for more free creations!", galleryEmpty: "Your gallery is empty. Create an avatar!",
+                customTitle: "Free Creation (Type or Speak)", placeholder: "Describe your avatar in detail...", btnCreate: "Create Masterpiece",
+                quickTitle: "Quick Templates", ceo: "Tech CEO", glad: "Gladiator", jedi: "Jedi Master", mafia: "Mafia Boss", wa: "Share on WhatsApp",
+                dl: "Save to Gallery", prof: "Crop for Profile", rt: "Retake Photo", alertEmpty: "Please type or record a description", translating: "Translating to English...",
+                limitTitle: "Daily Limit Reached!", limitDesc: "You have created 3 images today. Come back tomorrow for more free creations!", galleryEmpty: "Your gallery is empty. Create an avatar to fill it up!",
                 adBtn: "Watch Ad for +1 Avatar", adWait: "Loading...", adSuccess: "Extra credit granted! Create now"
             }
         };
@@ -383,17 +347,11 @@
         let capturedImageBase64 = null;
         const API_URL = "https://billowing-shape-1d81.maty-tsoraro.workers.dev";
 
-        function updateSteps(step) {
-            document.getElementById('step1').className = step >= 1 ? 'step-dot active' : 'step-dot';
-            document.getElementById('step2').className = step >= 2 ? 'step-dot active' : 'step-dot';
-            document.getElementById('step3').className = step >= 3 ? 'step-dot active' : 'step-dot';
-        }
-
         function showToast(msg) {
             const toast = document.getElementById('toastMsg');
             toast.innerText = msg;
-            toast.style.bottom = '40px';
-            setTimeout(() => { toast.style.bottom = '-60px'; }, 3500);
+            toast.style.bottom = '20px';
+            setTimeout(() => { toast.style.bottom = '-50px'; }, 3500);
         }
 
         function closeModal(id) {
@@ -403,26 +361,28 @@
         function updateCreditDisplay() {
             const today = new Date().toDateString();
             let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 0 };
-            if (usage.date !== today) { usage = { date: today, count: 0 }; }
+            if (usage.date !== today) {
+                usage = { date: today, count: 0 };
+            }
             const creditsLeft = Math.max(0, 3 - usage.count);
             document.getElementById('creditCount').innerText = creditsLeft;
             
             const badge = document.getElementById('creditBadge');
             if(creditsLeft === 0) {
                 badge.style.color = '#ff3366';
-                badge.style.borderColor = 'rgba(255,51,102,0.3)';
-                badge.style.background = 'rgba(255,51,102,0.1)';
+                badge.style.boxShadow = '0 0 10px rgba(255,51,102,0.3)';
             } else {
                 badge.style.color = '#ffb800';
-                badge.style.borderColor = 'rgba(255,184,0,0.3)';
-                badge.style.background = 'rgba(255,184,0,0.1)';
+                badge.style.boxShadow = '0 0 10px rgba(255,184,0,0.2)';
             }
         }
 
         function canGenerate() {
             const today = new Date().toDateString();
             let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 0 };
-            if (usage.date !== today) { usage = { date: today, count: 0 }; }
+            if (usage.date !== today) {
+                usage = { date: today, count: 0 };
+            }
             if (usage.count >= 3) {
                 document.getElementById('limitModal').style.display = 'flex';
                 return false;
@@ -430,12 +390,15 @@
             return true;
         }
 
-        function incrementUsage() {
+        // פונקציית החזרת קרדיט למקרה של שגיאה
+        function refundUsage() {
             const today = new Date().toDateString();
-            let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 0 };
-            usage.count++;
-            localStorage.setItem('personaai_usage', JSON.stringify(usage));
-            updateCreditDisplay();
+            let usage = JSON.parse(localStorage.getItem('personaai_usage'));
+            if(usage && usage.count > 0) {
+                usage.count--;
+                localStorage.setItem('personaai_usage', JSON.stringify(usage));
+                updateCreditDisplay();
+            }
         }
 
         function grantReward() {
@@ -507,7 +470,6 @@
                         cameraControls.style.display = 'none';
                         styleMenu.style.display = 'none';
                         resultControls.style.display = 'flex';
-                        updateSteps(3);
                         closeModal('galleryModal');
                     };
                     grid.appendChild(img);
@@ -521,7 +483,6 @@
                 stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingMode } });
                 video.srcObject = stream;
                 video.onloadedmetadata = () => video.play();
-                updateSteps(1);
             } catch (err) { showToast("Camera access error"); }
         }
 
@@ -534,34 +495,27 @@
             uploadInput.click();
         });
 
-        function handleImageCapture(imageSrc) {
-            const img = new Image();
-            img.onload = () => {
-                canvas.width = img.width;
-                canvas.height = img.height;
-                const ctx = canvas.getContext('2d');
-                if (currentFacingMode === 'user' && !imageSrc.startsWith('data')) {
-                   // Only mirror if it came directly from user camera, not upload
-                   ctx.translate(canvas.width, 0); ctx.scale(-1, 1);
-                }
-                ctx.drawImage(img, 0, 0);
-                capturedImageBase64 = canvas.toDataURL('image/jpeg', 0.8);
-                
-                resultImg.src = capturedImageBase64;
-                resultImg.style.display = 'block';
-                video.style.display = 'none';
-                cameraControls.style.display = 'none';
-                styleMenu.style.display = 'flex';
-                updateSteps(2);
-            };
-            img.src = imageSrc;
-        }
-
         uploadInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if(!file) return;
             const reader = new FileReader();
-            reader.onload = (event) => handleImageCapture(event.target.result);
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    capturedImageBase64 = canvas.toDataURL('image/jpeg', 0.8);
+                    
+                    resultImg.src = capturedImageBase64;
+                    resultImg.style.display = 'block';
+                    video.style.display = 'none';
+                    cameraControls.style.display = 'none';
+                    styleMenu.style.display = 'flex';
+                };
+                img.src = event.target.result;
+            };
             reader.readAsDataURL(file);
         });
 
@@ -578,7 +532,6 @@
             video.style.display = 'none';
             cameraControls.style.display = 'none';
             styleMenu.style.display = 'flex';
-            updateSteps(2);
         });
 
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -605,11 +558,35 @@
             } catch(e) { return text; }
         }
 
+        window.applyStyle = function(styleName) {
+            // 1. קריאה לבדיקת המונה לפני שמתחילים ליצור תמונה!
+            if(!canGenerate()) return; 
+
+            // 2. המונה יורד *מיד* ברגע שלחצנו כדי שייתן תחושה שעובד
+            const today = new Date().toDateString();
+            let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 0 };
+            usage.count++;
+            localStorage.setItem('personaai_usage', JSON.stringify(usage));
+            updateCreditDisplay();
+
+            styleMenu.style.display = 'none';
+            scanner.style.display = 'flex';
+            document.getElementById('processText').innerText = texts.process;
+            callAPI(styleName);
+        };
+
         customBtn.addEventListener('click', async () => {
             const val = customInput.value.trim();
             if(!val) { showToast(texts.alertEmpty); return; }
             if(!canGenerate()) return; 
             
+            // המונה יורד מיד גם פה
+            const today = new Date().toDateString();
+            let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 0 };
+            usage.count++;
+            localStorage.setItem('personaai_usage', JSON.stringify(usage));
+            updateCreditDisplay();
+
             styleMenu.style.display = 'none';
             scanner.style.display = 'flex';
             document.getElementById('processText').innerText = texts.translating; 
@@ -619,14 +596,6 @@
             
             callAPI(translatedPrompt);
         });
-
-        window.applyStyle = function(styleName) {
-            if(!canGenerate()) return; 
-            styleMenu.style.display = 'none';
-            scanner.style.display = 'flex';
-            document.getElementById('processText').innerText = texts.process;
-            callAPI(styleName);
-        };
 
         async function fetchAndWatermark(imageUrl) {
             try {
@@ -679,14 +648,14 @@
                 resultImg.onload = () => {
                     scanner.style.display = 'none';
                     resultControls.style.display = 'flex';
-                    updateSteps(3);
                 };
                 resultImg.src = watermarkedImage;
                 
-                incrementUsage();
                 saveToGalleryDB(watermarkedImage);
                 
             } catch (err) {
+                // במקרה של שגיאה מהשרת, מחזירים למשתמש את הקרדיט שהוא שילם!
+                refundUsage();
                 showToast("Error: " + err.message);
                 resetCamera();
             }
@@ -700,7 +669,6 @@
             styleMenu.style.display = 'none';
             cameraControls.style.display = 'flex';
             customInput.value = '';
-            updateSteps(1);
         }
 
         document.getElementById('rtBtn').addEventListener('click', resetCamera);
@@ -768,7 +736,9 @@
 
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js');
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then((reg) => { console.log('Service Worker registered successfully', reg); })
+                    .catch((err) => { console.log('Service Worker registration failed', err); });
             });
         }
     </script>
