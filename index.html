@@ -211,11 +211,28 @@
                         <button id="customBtn">צור יצירת מופת</button>
                     </div>
                 </div>
+
+                <div class="category">
+                    <div class="category-title" style="color: #ffb800;"><i class="fas fa-crown"></i> תבניות פרימיום (PRO)</div>
+                    <div class="style-scroll">
+                        <div class="style-card cat-pro" style="border-color: #ffb800; box-shadow: 0 0 10px rgba(255,184,0,0.4);" onclick="applyStyle('linkedin_4k')">
+                            <i class="fas fa-briefcase" style="color: #ffb800;"></i>
+                            <span style="color: #ffb800;">לינקדאין 4K (PRO)</span>
+                        </div>
+                        <div class="style-card cat-scifi" style="border-color: #00f3ff; box-shadow: 0 0 10px rgba(0,243,255,0.4);" onclick="applyStyle('cinematic_video')">
+                            <i class="fas fa-video" style="color: #00f3ff;"></i>
+                            <span style="color: #00f3ff;">וידאו קולנועי (PRO)</span>
+                        </div>
+                        <div class="style-card cat-anime" style="border-color: #ff3366; box-shadow: 0 0 10px rgba(255,51,102,0.4);" onclick="applyStyle('super_saiyan')">
+                            <i class="fas fa-bolt" style="color: #ff3366;"></i>
+                            <span style="color: #ff3366;">סופר סאייה (וידאו)</span>
+                        </div>
+                    </div>
+                </div>
                 
                 <div class="category">
                     <div class="category-title" id="quickTitle">תבניות מהירות</div>
                     <div class="style-scroll">
-                        <div class="style-card cat-pro" onclick="applyStyle('tech_ceo')"><i class="fas fa-briefcase"></i><span id="ceoText">מנכ"ל הייטק</span></div>
                         <div class="style-card cat-cinema" onclick="applyStyle('gladiator')"><i class="fas fa-shield-alt"></i><span id="gladText">גלדיאטור</span></div>
                         <div class="style-card cat-fantasy" onclick="applyStyle('jedi_master')"><i class="fab fa-jedi-order"></i><span id="jediText">אביר ג'דיי</span></div>
                         <div class="style-card cat-cinema" onclick="applyStyle('mafia_boss')"><i class="fas fa-user-tie"></i><span id="mafiaText">בוס מאפיה</span></div>
@@ -225,10 +242,6 @@
                 <div class="category">
                     <div class="category-title">אנימה וקומיקס</div>
                     <div class="style-scroll">
-                        <div class="style-card cat-anime" style="border-color: #ffb800; box-shadow: 0 0 10px rgba(255,184,0,0.4);" onclick="applyStyle('super_saiyan')">
-                            <i class="fas fa-bolt" style="color: #ffb800;"></i>
-                            <span style="color: #ffb800;">סופר סאייה (PRO)</span>
-                        </div>
                         <div class="style-card cat-anime" onclick="applyStyle('anime_hero')"><i class="fas fa-user-astronaut"></i><span>גיבור אנימה</span></div>
                         <div class="style-card cat-anime" onclick="applyStyle('pixar_character')"><i class="fas fa-smile"></i><span>פיקסאר 3D</span></div>
                         <div class="style-card cat-anime" onclick="applyStyle('comic_book')"><i class="fas fa-book-open"></i><span>קומיקס</span></div>
@@ -309,7 +322,6 @@
         document.getElementById('customInput').placeholder = texts.placeholder;
         document.getElementById('customBtn').innerText = texts.btnCreate;
         document.getElementById('quickTitle').innerText = texts.quickTitle;
-        document.getElementById('ceoText').innerText = texts.ceo;
         document.getElementById('gladText').innerText = texts.glad;
         document.getElementById('jediText').innerText = texts.jedi;
         document.getElementById('mafiaText').innerText = texts.mafia;
@@ -323,7 +335,6 @@
         const canvas = document.getElementById('canvas');
         const resultImg = document.getElementById('resultImg');
         
-        // יצירת אלמנט וידאו לתוצאות שזזות
         const resultVideo = document.createElement('video'); 
         resultVideo.id = 'resultVideo';
         resultVideo.autoplay = true; resultVideo.loop = true; resultVideo.muted = true; resultVideo.playsInline = true;
@@ -338,9 +349,6 @@
         const cameraControls = document.getElementById('cameraControls');
         const styleMenu = document.getElementById('styleMenu');
         const resultControls = document.getElementById('resultControls');
-        const customBtn = document.getElementById('customBtn');
-        const customInput = document.getElementById('customInput');
-        const micBtn = document.getElementById('micBtn');
 
         let currentFacingMode = 'user';
         let stream = null;
@@ -351,7 +359,7 @@
             const toast = document.getElementById('toastMsg');
             toast.innerText = msg;
             toast.style.bottom = '20px';
-            setTimeout(() => { toast.style.bottom = '-50px'; }, 4500); // השהייה ארוכה יותר כדי לקרוא את השגיאה
+            setTimeout(() => { toast.style.bottom = '-50px'; }, 6000);
         }
 
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
@@ -392,76 +400,6 @@
                 updateCreditDisplay();
             }
         }
-
-        function grantReward() {
-            const today = new Date().toDateString();
-            let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 3 };
-            if (usage.count > 0) usage.count--; 
-            localStorage.setItem('personaai_usage', JSON.stringify(usage));
-            updateCreditDisplay();
-            showToast(texts.adSuccess);
-            closeModal('limitModal');
-        }
-
-        function triggerMonetagAd() {
-            const btn = document.getElementById('watchAdBtn');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${texts.adWait}`;
-            btn.disabled = true;
-            window.open('https://omg10.com/4/11520543', '_blank', 'noopener,noreferrer');
-            setTimeout(() => {
-                grantReward();
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }, 4000);
-        }
-
-        const dbName = "PersonaAIDB"; const storeName = "Gallery"; let db;
-        const request = indexedDB.open(dbName, 1);
-        request.onupgradeneeded = (e) => {
-            db = e.target.result;
-            db.createObjectStore(storeName, { keyPath: "id", autoIncrement: true });
-        };
-        request.onsuccess = (e) => { db = e.target.result; };
-
-        function saveToGalleryDB(base64Data) {
-            if(!db) return;
-            const tx = db.transaction(storeName, "readwrite");
-            tx.objectStore(storeName).add({ image: base64Data, timestamp: Date.now() });
-        }
-
-        document.getElementById('openGalleryBtn').addEventListener('click', () => {
-            document.getElementById('galleryModal').style.display = 'flex';
-            const grid = document.getElementById('galleryGrid');
-            grid.innerHTML = '';
-            
-            if(!db) return;
-            const tx = db.transaction(storeName, "readonly");
-            const req = tx.objectStore(storeName).getAll();
-            
-            req.onsuccess = () => {
-                const items = req.result;
-                if (items.length === 0) {
-                    grid.innerHTML = `<div class="empty-gallery">${texts.galleryEmpty}</div>`;
-                    return;
-                }
-                items.reverse().forEach(item => {
-                    const img = document.createElement('img');
-                    img.src = item.image;
-                    img.className = 'gallery-img';
-                    img.onclick = () => {
-                        resultImg.src = item.image;
-                        resultImg.style.display = 'block';
-                        video.style.display = 'none';
-                        cameraControls.style.display = 'none';
-                        styleMenu.style.display = 'none';
-                        resultControls.style.display = 'flex';
-                        closeModal('galleryModal');
-                    };
-                    grid.appendChild(img);
-                });
-            };
-        });
 
         async function initCamera() {
             if (stream) stream.getTracks().forEach(track => track.stop());
@@ -518,7 +456,6 @@
         window.applyStyle = function(styleName) {
             if(!canGenerate()) return; 
 
-            // מוריד את הקרדיט מיד! (לפי הבקשה שלך)
             const today = new Date().toDateString();
             let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 0 };
             usage.count++;
@@ -566,14 +503,12 @@
 
         async function callAPI(stylePrompt) {
             try {
-                // שלב 1: הזמנת הוידאו/תמונה
                 const response = await fetch(API_URL, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ action: "start", image: capturedImageBase64, style: stylePrompt })
                 });
                 
-                // תפיסת שגיאות רשת חמורות (500)
                 if (!response.ok) {
                     const errData = await response.json().catch(()=>({}));
                     throw new Error(errData.detail || errData.error || "שגיאת חיבור לשרת (HTTP " + response.status + ")");
@@ -581,21 +516,18 @@
 
                 const startData = await response.json();
                 
-                // זיהוי שגיאות חכם מ-Replicate (לפעמים מגיע כ-error ולפעמים כ-detail)
                 if (startData.error) throw new Error(startData.error);
                 if (startData.detail) throw new Error(startData.detail);
-                if (!startData.id) throw new Error("לא התקבל מזהה משימה מהשרת. כנראה שהתמונה כבדה מדי.");
+                if (!startData.id) throw new Error("לא התקבל מזהה משימה מהשרת.");
 
                 let predictionId = startData.id;
                 let status = startData.status;
                 let attempts = 0;
 
-                // שלב 2: תור המתנה (פוללינג)
                 while (status === "starting" || status === "processing") {
                     attempts++;
-                    // 60 ניסיונות של 3 שניות = 3 דקות המתנה גג.
                     if (attempts > 60) {
-                        throw new Error("השרת עמוס מדי כרגע, האפליקציה עצרה את ההמתנה.");
+                        throw new Error("השרת עמוס מדי (Timeout). החזרנו לך את הקרדיט!");
                     }
 
                     await new Promise(r => setTimeout(r, 3000));
@@ -614,18 +546,17 @@
                     status = statusData.status;
                     
                     if (status === "failed") {
-                        throw new Error("מנוע ה-AI נכשל ביצירת התמונה (התמונה אולי לא תואמת).");
+                        throw new Error("מנוע ה-AI נכשל ביצירת התמונה/הוידאו.");
                     }
                     
                     if (status === "succeeded") {
                         const rawOutput = statusData.output;
-                        // שליפת הלינק הבטוחה
                         const finalUrl = Array.isArray(rawOutput) ? rawOutput[rawOutput.length - 1] : rawOutput;
                         
                         if (!finalUrl) throw new Error("התהליך הסתיים אך לא התקבל קובץ.");
 
-                        // זיהוי אם זה וידאו או תמונה
-                        if(stylePrompt === 'super_saiyan' || (typeof finalUrl === 'string' && finalUrl.includes('.mp4'))) {
+                        // זיהוי וידאו - או לפי הסגנון או לפי סיומת הקובץ מהשרת
+                        if(stylePrompt === 'super_saiyan' || stylePrompt === 'cinematic_video' || (typeof finalUrl === 'string' && finalUrl.includes('.mp4'))) {
                             resultVideo.src = finalUrl;
                             resultVideo.style.display = 'block';
                             resultImg.style.display = 'none';
@@ -639,21 +570,18 @@
                             };
                             resultImg.src = watermarkedImage;
                             resultVideo.style.display = 'none';
-                            saveToGalleryDB(watermarkedImage);
                         }
                         
-                        return; // הכל הסתיים בהצלחה!
+                        return;
                     }
                 }
                 
-                // אם הגענו לפה, משהו לא צפוי קרה
                 if (status !== "succeeded") {
                     throw new Error("התהליך הופסק בסטטוס: " + status);
                 }
 
             } catch (err) {
-                // רדאר השגיאות הופעל!
-                refundUsage(); // מחזיר קרדיט על כישלון
+                refundUsage(); 
                 showToast("שגיאה: " + err.message);
                 resetCamera();
             }
@@ -667,14 +595,12 @@
             resultControls.style.display = 'none';
             styleMenu.style.display = 'none';
             cameraControls.style.display = 'flex';
-            if(customInput) customInput.value = '';
         }
 
         document.getElementById('rtBtn').addEventListener('click', resetCamera);
 
         document.getElementById('waBtn').addEventListener('click', async () => {
             try {
-                // אם זה וידאו, אי אפשר לשתף ישירות כרגע בוואטסאפ דרך הרשת
                 if (resultVideo.style.display === 'block') {
                     showToast("שמור את הוידאו קודם ואז שתף");
                     return;
@@ -709,48 +635,8 @@
             }
         });
 
-        document.getElementById('profileBtn').addEventListener('click', () => {
-            try {
-                if (resultVideo.style.display === 'block') {
-                    showToast("אי אפשר לחתוך וידאו לפרופיל");
-                    return;
-                }
-                const size = Math.min(resultImg.naturalWidth, resultImg.naturalHeight);
-                const cropCanvas = document.createElement('canvas');
-                cropCanvas.width = size; cropCanvas.height = size;
-                const ctx = cropCanvas.getContext('2d');
-                
-                const startX = (resultImg.naturalWidth - size) / 2;
-                const startY = (resultImg.naturalHeight - size) / 2;
-                
-                ctx.drawImage(resultImg, startX, startY, size, size, 0, 0, size, size);
-                
-                cropCanvas.toBlob((blob) => {
-                    const url = window.URL.createObjectURL(blob);
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.download = 'MyProfile_' + Date.now() + '.jpg';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    window.URL.revokeObjectURL(url);
-                    showToast(currentLang === 'he' ? 'תמונת הפרופיל נשמרה!' : 'Profile picture saved!');
-                }, 'image/jpeg', 1.0);
-            } catch (err) {
-                showToast("Please long-press the image to save.");
-            }
-        });
-
         updateCreditDisplay();
         initCamera();
-
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js')
-                    .then((reg) => { console.log('Service Worker registered successfully', reg); })
-                    .catch((err) => { console.log('Service Worker registration failed', err); });
-            });
-        }
     </script>
 </body>
 </html>
