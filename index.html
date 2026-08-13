@@ -330,6 +330,14 @@
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const resultImg = document.getElementById('resultImg');
+        
+        // יצירת אלמנט וידאו לתוצאות שזזות!
+        const resultVideo = document.createElement('video'); 
+        resultVideo.id = 'resultVideo';
+        resultVideo.autoplay = true; resultVideo.loop = true; resultVideo.muted = true; resultVideo.playsInline = true;
+        resultVideo.style.cssText = 'display: none; width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 2; border-radius: 20px;';
+        document.getElementById('viewport').appendChild(resultVideo);
+
         const captureBtn = document.getElementById('captureBtn');
         const switchCameraBtn = document.getElementById('switchCameraBtn');
         const uploadFileBtn = document.getElementById('uploadFileBtn');
@@ -559,15 +567,7 @@
         }
 
         window.applyStyle = function(styleName) {
-            // 1. קריאה לבדיקת המונה לפני שמתחילים ליצור תמונה!
             if(!canGenerate()) return; 
-
-            // 2. המונה יורד *מיד* ברגע שלחצנו כדי שייתן תחושה שעובד
-            const today = new Date().toDateString();
-            let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 0 };
-            usage.count++;
-            localStorage.setItem('personaai_usage', JSON.stringify(usage));
-            updateCreditDisplay();
 
             styleMenu.style.display = 'none';
             scanner.style.display = 'flex';
@@ -580,13 +580,6 @@
             if(!val) { showToast(texts.alertEmpty); return; }
             if(!canGenerate()) return; 
             
-            // המונה יורד מיד גם פה
-            const today = new Date().toDateString();
-            let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 0 };
-            usage.count++;
-            localStorage.setItem('personaai_usage', JSON.stringify(usage));
-            updateCreditDisplay();
-
             styleMenu.style.display = 'none';
             scanner.style.display = 'flex';
             document.getElementById('processText').innerText = texts.translating; 
@@ -635,27 +628,63 @@
 
         async function callAPI(stylePrompt) {
             try {
+                // שלב 1: שולחים בקשה לשרת ויוצרים "הזמנה"
                 const response = await fetch(API_URL, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ image: capturedImageBase64, style: stylePrompt })
+                    body: JSON.stringify({ action: "start", image: capturedImageBase64, style: stylePrompt })
                 });
-                const data = await response.json();
-                if (data.error) throw new Error(data.error);
+                const startData = await response.json();
+                if (startData.error) throw new Error(startData.error);
                 
-                const watermarkedImage = await fetchAndWatermark(data.resultUrl);
-                
-                resultImg.onload = () => {
-                    scanner.style.display = 'none';
-                    resultControls.style.display = 'flex';
-                };
-                resultImg.src = watermarkedImage;
-                
-                saveToGalleryDB(watermarkedImage);
-                
+                let predictionId = startData.id;
+                let status = startData.status;
+
+                // שלב 2: תור המתנה - שואלים את השרת כל 3 שניות אם מוכן! (מונע קריסה של השרת)
+                while (status === "starting" || status === "processing") {
+                    await new Promise(r => setTimeout(r, 3000));
+                    const statusRes = await fetch(API_URL, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ action: "status", id: predictionId })
+                    });
+                    const statusData = await statusRes.json();
+                    status = statusData.status;
+                    
+                    if (status === "failed") throw new Error("AI generation failed");
+                    
+                    if (status === "succeeded") {
+                        const finalUrl = statusData.output[statusData.output.length - 1];
+                        
+                        // בדיקה אם התוצאה היא וידאו (.mp4) או תמונה
+                        if(finalUrl.endsWith('.mp4')) {
+                            resultVideo.src = finalUrl;
+                            resultVideo.style.display = 'block';
+                            resultImg.style.display = 'none';
+                            scanner.style.display = 'none';
+                            resultControls.style.display = 'flex';
+                        } else {
+                            const watermarkedImage = await fetchAndWatermark(finalUrl);
+                            resultImg.onload = () => {
+                                scanner.style.display = 'none';
+                                resultControls.style.display = 'flex';
+                            };
+                            resultImg.src = watermarkedImage;
+                            resultVideo.style.display = 'none';
+                            saveToGalleryDB(watermarkedImage);
+                        }
+                        
+                        // התיקון של המונה: יורד *רק* אחרי שהתוצאה מוכנה בהצלחה והוצגה למשתמש!
+                        const today = new Date().toDateString();
+                        let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 0 };
+                        usage.count++;
+                        localStorage.setItem('personaai_usage', JSON.stringify(usage));
+                        updateCreditDisplay();
+                        
+                        return;
+                    }
+                }
             } catch (err) {
-                // במקרה של שגיאה מהשרת, מחזירים למשתמש את הקרדיט שהוא שילם!
-                refundUsage();
                 showToast("Error: " + err.message);
                 resetCamera();
             }
@@ -664,6 +693,7 @@
         function resetCamera() {
             scanner.style.display = 'none';
             resultImg.style.display = 'none';
+            if(resultVideo) resultVideo.style.display = 'none';
             video.style.display = 'block';
             resultControls.style.display = 'none';
             styleMenu.style.display = 'none';
