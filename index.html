@@ -220,12 +220,12 @@
                             <span style="color: #ffb800;">לינקדאין 4K (PRO)</span>
                         </div>
                         <div class="style-card cat-scifi" style="border-color: #00f3ff; box-shadow: 0 0 10px rgba(0,243,255,0.4);" onclick="applyStyle('cinematic_video')">
-                            <i class="fas fa-video" style="color: #00f3ff;"></i>
-                            <span style="color: #00f3ff;">וידאו קולנועי (PRO)</span>
+                            <i class="fas fa-camera-retro" style="color: #00f3ff;"></i>
+                            <span style="color: #00f3ff;">פורטרט קולנועי</span>
                         </div>
                         <div class="style-card cat-anime" style="border-color: #ff3366; box-shadow: 0 0 10px rgba(255,51,102,0.4);" onclick="applyStyle('super_saiyan')">
                             <i class="fas fa-bolt" style="color: #ff3366;"></i>
-                            <span style="color: #ff3366;">סופר סאייה (וידאו)</span>
+                            <span style="color: #ff3366;">סופר סאייה 4K</span>
                         </div>
                     </div>
                 </div>
@@ -555,22 +555,13 @@
                         
                         if (!finalUrl) throw new Error("התהליך הסתיים אך לא התקבל קובץ.");
 
-                        // זיהוי וידאו - או לפי הסגנון או לפי סיומת הקובץ מהשרת
-                        if(stylePrompt === 'super_saiyan' || stylePrompt === 'cinematic_video' || (typeof finalUrl === 'string' && finalUrl.includes('.mp4'))) {
-                            resultVideo.src = finalUrl;
-                            resultVideo.style.display = 'block';
-                            resultImg.style.display = 'none';
+                        const watermarkedImage = await fetchAndWatermark(finalUrl);
+                        resultImg.onload = () => {
                             scanner.style.display = 'none';
                             resultControls.style.display = 'flex';
-                        } else {
-                            const watermarkedImage = await fetchAndWatermark(finalUrl);
-                            resultImg.onload = () => {
-                                scanner.style.display = 'none';
-                                resultControls.style.display = 'flex';
-                            };
-                            resultImg.src = watermarkedImage;
-                            resultVideo.style.display = 'none';
-                        }
+                        };
+                        resultImg.src = watermarkedImage;
+                        resultVideo.style.display = 'none';
                         
                         return;
                     }
