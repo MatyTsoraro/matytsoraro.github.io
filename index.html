@@ -639,9 +639,17 @@
                 
                 let predictionId = startData.id;
                 let status = startData.status;
+                let attempts = 0; // הוספנו מונה ניסיונות
 
                 // שלב 2: תור המתנה - שואלים את השרת כל 3 שניות אם מוכן! (מונע קריסה של השרת)
                 while (status === "starting" || status === "processing") {
+                    attempts++;
+                    // אם עברו 40 ניסיונות (בערך 2 דקות), עוצרים הכל!
+                    if (attempts > 40) {
+                        refundUsage(); // מחזירים קרדיט
+                        throw new Error("השרת עמוס כרגע, אנא נסה שוב מאוחר יותר");
+                    }
+
                     await new Promise(r => setTimeout(r, 3000));
                     const statusRes = await fetch(API_URL, {
                         method: "POST",
