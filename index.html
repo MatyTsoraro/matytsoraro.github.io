@@ -54,7 +54,6 @@
 </head>
 <body class="min-h-screen flex flex-col items-center pb-20">
 
-    <!-- Header -->
     <header class="w-full flex justify-between items-center p-4 glass-panel sticky top-0 z-50">
         <div class="text-2xl font-black tracking-widest bg-clip-text text-transparent bg-gradient-to-r from-[#00f3ff] to-[#FF3366]">
             VIRAL AVATAR
@@ -65,7 +64,6 @@
         </div>
     </header>
 
-    <!-- Camera Section -->
     <main class="w-full max-w-md mt-6 px-4 flex flex-col items-center">
         <div class="relative w-full aspect-[3/4] bg-gray-900 rounded-3xl overflow-hidden shadow-2xl border-2 border-white/10">
             <video id="cameraView" autoplay playsinline class="w-full h-full"></video>
@@ -94,7 +92,6 @@
             </button>
         </div>
 
-        <!-- Styles Section -->
         <div id="stylesSection" class="w-full mt-8 hidden flex-col gap-4">
             <h3 class="text-xl font-bold text-center text-white/90">בחר סגנון ויראלי</h3>
             
@@ -113,7 +110,7 @@
                 </button>
             </div>
 
-            <!-- PRO Styles -->
+            <!-- PRO Styles & TikTok Video -->
             <div class="mt-4 border-t border-white/10 pt-4 flex flex-col gap-3">
                 <button onclick="applyStyle('linkedin_4k')" class="pro-btn py-4 rounded-2xl text-lg flex items-center justify-center gap-2 active:scale-95 transition">
                     <i class="fas fa-briefcase"></i> תמונת לינקדאין (PRO) 4K
@@ -193,7 +190,6 @@
         let credits = 3;
         const maxCredits = 3;
         
-        // הקישור החדש והמעודכן לשרת האמיתי שלך ב-Cloudflare!
         const WORKER_URL = 'https://billowing-shape-1d81.maty-tsoraro.workers.dev';
 
         async function setupCamera() {
@@ -372,19 +368,19 @@
                         body: JSON.stringify(requestBody)
                     });
                 } catch (networkErr) {
-                    throw new Error("שגיאת תקשורת עם השרת (Cloudflare). ודא שלחצת Deploy ושאין חוסם פרסומות מופעל.");
+                    throw new Error("שגיאת תקשורת עם השרת (Cloudflare).");
                 }
                 
                 const startData = await res.json();
                 
                 if (startData.error) throw new Error("השרת החזיר שגיאה: " + startData.error);
                 if (startData.detail) throw new Error("שגיאת Replicate: " + JSON.stringify(startData.detail));
-                if (!startData.id) throw new Error("שגיאה: לא התקבל מזהה משימה מהשרת. כנראה שהסרטון video1.mp4 לא תקין.");
+                if (!startData.id) throw new Error("שגיאה: לא התקבל מזהה משימה מהשרת.");
 
                 let predictionId = startData.id;
                 let status = startData.status;
                 let attempts = 0;
-                const MAX_ATTEMPTS = 120; // הארכנו ל-6 דקות (120 ניסיונות של 3 שניות)
+                const MAX_ATTEMPTS = 120; // 6 דקות
 
                 while (status === "starting" || status === "processing") {
                     attempts++;
@@ -435,7 +431,8 @@
             let finalUrl = Array.isArray(outputUrl) ? outputUrl[0] : outputUrl;
 
             if (isVideo) {
-                resultContainer.innerHTML = `<video src="${finalUrl}" autoplay loop muted playsinline class="w-full h-auto rounded-2xl border border-[#00f3ff] shadow-[0_0_15px_rgba(0,243,255,0.4)]"></video>`;
+                // הוספת אפשרות סאונד ונגין וידאו מלא
+                resultContainer.innerHTML = `<video src="${finalUrl}" autoplay loop playsinline controls class="w-full h-auto rounded-2xl border border-[#00f3ff] shadow-[0_0_15px_rgba(0,243,255,0.4)]"></video>`;
             } else {
                 resultContainer.innerHTML = `<img src="${finalUrl}" class="w-full h-auto rounded-2xl border border-[#00f3ff] shadow-[0_0_15px_rgba(0,243,255,0.4)]" />`;
             }
