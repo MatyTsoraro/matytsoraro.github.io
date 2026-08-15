@@ -571,6 +571,9 @@
                 }
 
                 const startData = await response.json();
+                
+                // רדאר שגיאות עמוק: יודע לקרוא את סיבת הדחייה המדויקת מ-Replicate
+                if (startData.detail) throw new Error(JSON.stringify(startData.detail));
                 if (startData.error) throw new Error(startData.error);
                 if (!startData.id) throw new Error("לא התקבל מזהה משימה מהשרת.");
 
@@ -608,7 +611,6 @@
                         
                         if (!finalUrl) throw new Error("התהליך הסתיים אך הקובץ ריק.");
 
-                        // פיצול בין תוצאת וידאו לתוצאת תמונה
                         if (finalUrl.includes('.mp4') || finalUrl.includes('.mkv')) {
                             resultVideo.src = finalUrl;
                             resultVideo.style.display = 'block';
