@@ -38,7 +38,7 @@
             font-weight: bold;
         }
         #cameraView {
-            transform: scaleX(-1); /* אפקט מראה */
+            transform: scaleX(-1);
             object-fit: cover;
         }
         .loader-spinner {
@@ -54,7 +54,7 @@
 </head>
 <body class="min-h-screen flex flex-col items-center pb-20">
 
-    <!-- Header & Credit Counter -->
+    <!-- Header -->
     <header class="w-full flex justify-between items-center p-4 glass-panel sticky top-0 z-50">
         <div class="text-2xl font-black tracking-widest bg-clip-text text-transparent bg-gradient-to-r from-[#00f3ff] to-[#FF3366]">
             VIRAL AVATAR
@@ -67,13 +67,11 @@
 
     <!-- Camera Section -->
     <main class="w-full max-w-md mt-6 px-4 flex flex-col items-center">
-        
         <div class="relative w-full aspect-[3/4] bg-gray-900 rounded-3xl overflow-hidden shadow-2xl border-2 border-white/10">
             <video id="cameraView" autoplay playsinline class="w-full h-full"></video>
             <canvas id="snapshotCanvas" class="hidden"></canvas>
             <img id="previewImage" class="hidden w-full h-full object-cover" />
             
-            <!-- Camera Controls -->
             <div id="cameraControls" class="absolute bottom-6 left-0 w-full flex justify-center gap-6 px-4">
                 <button onclick="switchCamera()" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-white shadow-lg active:scale-95 transition">
                     <i class="fas fa-sync-alt"></i>
@@ -91,14 +89,13 @@
                 <input type="file" id="fileInput" accept="image/*" class="hidden" onchange="handleFileUpload(event)">
             </div>
             
-            <!-- Retake Button -->
             <button id="retakeBtn" onclick="resetCamera()" class="hidden absolute top-4 right-4 glass-panel px-4 py-2 rounded-full text-sm font-bold shadow-lg">
                 <i class="fas fa-times mr-2"></i> צלם מחדש
             </button>
         </div>
 
         <!-- Styles Section -->
-        <div id="stylesSection" class="w-full mt-8 hidden flex-col gap-4 w-full">
+        <div id="stylesSection" class="w-full mt-8 hidden flex-col gap-4">
             <h3 class="text-xl font-bold text-center text-white/90">בחר סגנון ויראלי</h3>
             
             <div class="grid grid-cols-2 gap-3">
@@ -116,6 +113,7 @@
                 </button>
             </div>
 
+            <!-- PRO Styles -->
             <div class="mt-4 border-t border-white/10 pt-4 flex flex-col gap-3">
                 <button onclick="applyStyle('linkedin_4k')" class="pro-btn py-4 rounded-2xl text-lg flex items-center justify-center gap-2 active:scale-95 transition">
                     <i class="fas fa-briefcase"></i> תמונת לינקדאין (PRO) 4K
@@ -143,14 +141,13 @@
         </div>
     </main>
 
-    <!-- Out of Credits Modal -->
+    <!-- Monetag Ad Modal -->
     <div id="adModal" class="fixed inset-0 bg-black/90 z-50 hidden flex-col items-center justify-center p-6 backdrop-blur-sm">
         <div class="glass-panel p-8 rounded-3xl text-center max-w-sm w-full border border-[#FF3366]/30">
             <i class="fas fa-battery-empty text-5xl text-[#FF3366] mb-4"></i>
             <h2 class="text-2xl font-black mb-2">נגמרו לך הקרדיטים!</h2>
             <p class="text-white/70 mb-6">רוצה ליצור עוד אווטארים ויראליים? צפה בפרסומת קצרה וקבל תמונה נוספת בחינם!</p>
             
-            <!-- Ad Link Button -->
             <a href="https://omg10.com/4/11571722" target="_blank" onclick="handleAdClick()" class="w-full block bg-gradient-to-r from-[#00f3ff] to-[#4facfe] text-black font-black py-4 rounded-xl mb-3 shadow-[0_0_15px_rgba(0,243,255,0.4)]">
                 צפה בפרסומת וקבל תמונה
             </a>
@@ -189,16 +186,16 @@
     </div>
 
     <script>
-        // --- State ---
         let video = document.getElementById('cameraView');
         let currentStream = null;
         let facingMode = 'user';
         let capturedImageB64 = null;
         let credits = 3;
         const maxCredits = 3;
-        const WORKER_URL = 'https://persona-ai.matytsoraro.workers.dev';
+        
+        // הקישור החדש והמעודכן לשרת האמיתי שלך ב-Cloudflare!
+        const WORKER_URL = 'https://billowing-shape-1d81.maty-tsoraro.workers.dev';
 
-        // --- Camera & Setup ---
         async function setupCamera() {
             if (currentStream) currentStream.getTracks().forEach(track => track.stop());
             try {
@@ -208,7 +205,6 @@
                 video.srcObject = currentStream;
             } catch (err) {
                 console.error("Camera error:", err);
-                alert("לא הצלחנו לגשת למצלמה. אנא ודא שאישרת הרשאות.");
             }
         }
 
@@ -275,7 +271,6 @@
             reader.readAsDataURL(file);
         }
 
-        // --- Mic & Speech ---
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (SpeechRecognition) {
             const recognition = new SpeechRecognition();
@@ -298,7 +293,6 @@
             document.getElementById('micBtn').style.display = 'none';
         }
 
-        // --- Translation & Logic ---
         async function translateToEnglish(text) {
             try {
                 const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=he&tl=en&dt=t&q=${encodeURI(text)}`);
@@ -311,7 +305,7 @@
 
         function updateCreditDisplay() {
             document.getElementById('creditCount').innerText = `${credits}/${maxCredits}`;
-            if (credits === 0) {
+            if (credits <= 0) {
                 document.getElementById('adModal').classList.remove('hidden');
                 document.getElementById('adModal').classList.add('flex');
             }
@@ -331,16 +325,14 @@
             document.getElementById(id).classList.remove('flex');
         }
 
-        // --- Ad Handling ---
         function handleAdClick() {
             setTimeout(() => {
                 credits = maxCredits;
                 updateCreditDisplay();
                 closeModal('adModal');
-            }, 2000);
+            }, 3000);
         }
 
-        // --- Generation Triggers ---
         window.applyStyle = function(styleName) {
             if (!canGenerate()) return;
             credits--;
@@ -350,7 +342,7 @@
 
         document.getElementById('customBtn').addEventListener('click', async () => {
             const prompt = document.getElementById('customPrompt').value;
-            if (!prompt) return alert("אנא הזן תיאור");
+            if (!prompt) return;
             if (!canGenerate()) return;
             
             credits--;
@@ -360,7 +352,6 @@
             callAPI({ image: capturedImageB64, style: engPrompt });
         });
 
-        // --- Main API Caller ---
         async function callAPI(requestBody) {
             const loading = document.getElementById('loadingModal');
             const errorMsg = document.getElementById('errorMsg');
@@ -373,7 +364,6 @@
             errorMsg.innerText = "";
 
             try {
-                // שלב 1: שליחת הבקשה לשרת עם תפיסת שגיאות רשת (Failed to fetch)
                 let res;
                 try {
                     res = await fetch(WORKER_URL, {
@@ -389,18 +379,17 @@
                 
                 if (startData.error) throw new Error("השרת החזיר שגיאה: " + startData.error);
                 if (startData.detail) throw new Error("שגיאת Replicate: " + JSON.stringify(startData.detail));
-                if (!startData.id) throw new Error("שגיאה: לא התקבל מזהה משימה מהשרת. כנראה בעיה בהגדרות המודל.");
+                if (!startData.id) throw new Error("שגיאה: לא התקבל מזהה משימה מהשרת. כנראה שהסרטון video1.mp4 לא תקין.");
 
                 let predictionId = startData.id;
                 let status = startData.status;
                 let attempts = 0;
-                const MAX_ATTEMPTS = 120; // 6 דקות לוידאו כבד
+                const MAX_ATTEMPTS = 120; // הארכנו ל-6 דקות (120 ניסיונות של 3 שניות)
 
-                // שלב 2: בדיקת סטטוס במעגל (Polling)
                 while (status === "starting" || status === "processing") {
                     attempts++;
                     if (attempts > MAX_ATTEMPTS) {
-                        throw new Error("זמן ההמתנה עבר (6 דקות). השרת עמוס מדי כרגע. החזרנו לך את הקרדיט.");
+                        throw new Error("השרת עמוס מדי כרגע. החזרנו לך את הקרדיט.");
                     }
                     
                     await new Promise(r => setTimeout(r, 3000));
@@ -413,11 +402,10 @@
                             body: JSON.stringify({ action: "status", id: predictionId })
                         });
                     } catch (netErr) {
-                        continue; // אם יש ניתוק רגעי בבדיקה, נמשיך לנסות
+                        continue; 
                     }
                     
                     const pollData = await pollRes.json();
-                    
                     if (pollData.error) throw new Error(pollData.error);
                     
                     status = pollData.status;
@@ -426,12 +414,12 @@
                         showResult(pollData.output, requestBody.style === 'tiktok_video');
                         return;
                     } else if (status === "failed") {
-                        throw new Error("יצירת הוידאו נכשלה. יכול להיות שקובץ video1.mp4 לא תקין או חסר ב-GitHub.");
+                        throw new Error("היצירה נכשלה בשרת. יומן: " + (pollData.logs || "No logs"));
                     }
                 }
             } catch (err) {
                 console.error(err);
-                credits++; // מחזירים קרדיט אם נכשל
+                credits++; 
                 updateCreditDisplay();
                 errorMsg.innerText = err.message;
                 errorMsg.classList.remove('hidden');
@@ -439,19 +427,17 @@
             }
         }
 
-        // --- Show Results ---
         function showResult(outputUrl, isVideo) {
             closeModal('loadingModal');
             const resultContainer = document.getElementById('resultContainer');
             resultContainer.innerHTML = '';
             
-            // Replicate לפעמים מחזיר מערך, ניקח את האיבר הראשון
             let finalUrl = Array.isArray(outputUrl) ? outputUrl[0] : outputUrl;
 
             if (isVideo) {
-                resultContainer.innerHTML = `<video src="${finalUrl}" autoplay loop muted playsinline class="w-full h-auto rounded-2xl"></video>`;
+                resultContainer.innerHTML = `<video src="${finalUrl}" autoplay loop muted playsinline class="w-full h-auto rounded-2xl border border-[#00f3ff] shadow-[0_0_15px_rgba(0,243,255,0.4)]"></video>`;
             } else {
-                resultContainer.innerHTML = `<img src="${finalUrl}" class="w-full h-auto rounded-2xl" />`;
+                resultContainer.innerHTML = `<img src="${finalUrl}" class="w-full h-auto rounded-2xl border border-[#00f3ff] shadow-[0_0_15px_rgba(0,243,255,0.4)]" />`;
             }
 
             const downloadBtn = document.getElementById('downloadBtn');
@@ -470,7 +456,6 @@
             resultModal.classList.add('flex');
         }
 
-        // Init
         window.addEventListener('load', setupCamera);
     </script>
 </body>
