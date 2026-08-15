@@ -7,7 +7,6 @@
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#FF3366">
-    <link rel="icon" type="image/png" href="PersonaAI_Icon_512x512.png">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -446,7 +445,6 @@
                         v.onplay = () => a.play();
                         v.onpause = () => a.pause();
                         v.onseeking = () => a.currentTime = v.currentTime;
-                        // נסיון ניגון סאונד אוטומטי
                         a.play().catch(e => console.log("Audio autoplay restricted by browser, user can unmute controls"));
                     }
                 }, 300);
