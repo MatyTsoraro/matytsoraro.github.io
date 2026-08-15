@@ -351,12 +351,11 @@
 
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-        function triggerMonetagAd() {
-            window.open('https://omg10.com/4/11571722', '_blank');
+        function grantAdCredit() {
             const btn = document.getElementById('watchAdBtn');
             const originalText = btn.innerHTML;
             btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> <span>מאשר צפייה...</span>`;
-            btn.disabled = true;
+            btn.style.pointerEvents = 'none';
 
             setTimeout(() => {
                 let usage = JSON.parse(localStorage.getItem('personaai_usage'));
@@ -369,9 +368,9 @@
                 setTimeout(() => {
                     closeModal('limitModal');
                     btn.innerHTML = originalText;
-                    btn.disabled = false;
+                    btn.style.pointerEvents = 'auto';
                 }, 1500);
-            }, 5000); 
+            }, 3000); 
         }
 
         function updateCreditDisplay() {
