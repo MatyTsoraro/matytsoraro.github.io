@@ -3,693 +3,466 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Viral Avatar Studio</title>
-    
-    <!-- Monetag Verification -->
-    <meta name="monetag" content="a1a510b358638c1de6131426091918eb">
+    <title>PersonaAI - Viral Avatar Studio</title>
     
     <link rel="manifest" href="manifest.json">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <meta name="theme-color" content="#FF3366">
+    <link rel="icon" type="image/png" href="PersonaAI_Icon_512x512.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
     <style>
-        :root { 
-            --primary: #00f3ff; 
-            --secondary: #bc13fe; 
-            --accent: #ffb800;
-            --bg: #0a0a12; 
-            --panel: rgba(22, 22, 37, 0.7); 
-            --text: #ffffff; 
-            --border: rgba(255, 255, 255, 0.1);
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;500;800&display=swap');
         body { 
-            background-color: var(--bg); color: var(--text); display: flex; flex-direction: column; 
-            height: 100vh; overflow: hidden; align-items: center; 
+            font-family: 'Heebo', sans-serif; 
+            background-color: #030207; 
+            color: white; 
+            overflow-x: hidden;
         }
-
-        header { 
-            width: 100%; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center;
-            background: var(--panel); border-bottom: 1px solid var(--border); backdrop-filter: blur(10px); z-index: 10;
+        .glass-panel {
+            background: rgba(22, 22, 37, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
-        h1 { 
-            font-size: 1.6rem; background: -webkit-linear-gradient(45deg, var(--primary), var(--secondary)); 
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 2px; margin: 0; font-weight: 900;
+        .pro-btn {
+            background: linear-gradient(45deg, #FF3366, #ffb800);
+            box-shadow: 0 4px 15px rgba(255, 51, 102, 0.4);
+            color: white;
+            font-weight: bold;
         }
-        
-        .container { 
-            width: 100%; max-width: 450px; flex: 1; display: flex; flex-direction: column; 
-            padding: 12px 15px; position: relative; gap: 12px; overflow-y: auto; scrollbar-width: none;
+        .tiktok-btn {
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.4);
+            color: white;
+            font-weight: bold;
         }
-        .container::-webkit-scrollbar { display: none; }
-        
-        .viewport { 
-            width: 100%; flex: 1 1 auto; 
-            min-height: 250px; 
-            max-height: 42vh; 
-            background: rgba(0, 0, 0, 0.4); border-radius: 20px; 
-            overflow: hidden; position: relative; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); 
-            border: 1px solid var(--border); display: flex; justify-content: center; align-items: center;
+        #cameraView {
+            transform: scaleX(-1); /* אפקט מראה */
+            object-fit: cover;
         }
-
-        video, img, canvas { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1; }
-        #resultImg, #resultVideo { display: none; z-index: 2; }
-        canvas { display: none; }
-        
-        .scanner-container { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; display: none; 
-            background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); flex-direction: column; justify-content: center; align-items: center;
-        }
-        
-        .spinner { 
-            border: 4px solid rgba(255, 255, 255, 0.1); border-top: 4px solid var(--primary); border-radius: 50%; 
-            width: 45px; height: 45px; animation: spin 1s linear infinite; margin-bottom: 15px;
+        .loader-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #00f3ff;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .overlay-text { font-weight: bold; color: var(--primary); text-align: center; line-height: 1.5; font-size: 1.1rem;}
-        
-        .bottom-area { width: 100%; flex: 0 0 auto; display: flex; flex-direction: column; justify-content: center; padding-bottom: 5px; }
-        .camera-controls { display: flex; justify-content: space-around; align-items: center; width: 100%; }
-
-        button.icon-btn { 
-            background: var(--panel); color: var(--text); border: 1px solid var(--border); border-radius: 50%; 
-            width: 55px; height: 55px; font-size: 1.2rem; cursor: pointer; transition: all 0.2s ease; 
-            display: flex; justify-content: center; align-items: center; backdrop-filter: blur(10px);
-        }
-        button.icon-btn:active { transform: scale(0.95); }
-        
-        #captureBtn { 
-            background: linear-gradient(45deg, var(--primary), var(--secondary)); border: none; width: 80px; height: 80px; 
-            font-size: 2.2rem; box-shadow: 0 0 20px rgba(188, 19, 254, 0.4); color: white; border-radius: 50%;
-            display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.2s;
-        }
-        #captureBtn:active { transform: scale(0.95); }
-        
-        #styleMenu { display: none; flex-direction: column; width: 100%; gap: 10px; }
-        
-        .custom-prompt { display: flex; flex-direction: column; gap: 8px; margin-bottom: 5px; }
-        .textarea-wrapper { position: relative; width: 100%; }
-        
-        .custom-prompt textarea { 
-            width: 100%; padding: 12px; padding-inline-end: 45px; border-radius: 12px; background: rgba(0,0,0,0.5); 
-            border: 1px solid var(--border); color: white; outline: none; font-size: 0.95rem; resize: vertical; 
-            min-height: 60px; font-family: inherit; line-height: 1.4;
-        }
-        .custom-prompt textarea:focus { border-color: var(--primary); }
-        
-        #customBtn { 
-            background: linear-gradient(45deg, var(--primary), var(--secondary)); border: none; padding: 10px; 
-            border-radius: 10px; color: white; font-weight: bold; cursor: pointer; font-size: 1rem; width: 100%;
-        }
-
-        .mic-btn { 
-            position: absolute; bottom: 12px; inset-inline-end: 12px; background: transparent; border: none; color: #888; 
-            font-size: 1.2rem; cursor: pointer; transition: 0.3s; width: auto; padding: 0;
-        }
-        .mic-btn.recording { color: red; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
-        
-        .category { margin-bottom: 2px; }
-        .category-title { font-size: 0.85rem; color: #aaa; margin-bottom: 8px; font-weight: bold;}
-        .style-scroll { display: flex; overflow-x: auto; gap: 10px; padding-bottom: 5px; scrollbar-width: none; }
-        .style-scroll::-webkit-scrollbar { display: none; }
-        
-        .style-card { 
-            flex: 0 0 95px; height: 100px; background: var(--panel); border-radius: 15px; border: 1px solid var(--border); 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; color: white;
-            backdrop-filter: blur(10px); transition: 0.2s;
-        }
-        .style-card i { font-size: 1.8rem; }
-        .style-card span { font-size: 0.75rem; text-align: center; font-weight: bold; padding: 0 4px;}
-        .style-card:active { transform: scale(0.95); border-color: var(--primary); }
-        
-        .cat-fantasy i { color: #bc13fe; }
-        .cat-cinema i { color: #ffb800; }
-        .cat-pro i { color: #00ff88; }
-        .cat-anime i { color: #ff3366; }
-        .cat-scifi i { color: #00f3ff; }
-
-        #resultControls { display: none; width: 100%; flex-direction: column; gap: 8px; }
-        .action-btn { 
-            width: 100%; padding: 10px; border-radius: 12px; border: none; font-size: 1.05rem; font-weight: bold; 
-            display: flex; justify-content: center; align-items: center; gap: 10px; cursor: pointer; color: white;
-        }
-        #waBtn { background: #25D366; }
-        #dlBtn { background: var(--primary); color: #000; }
-        #profileBtn { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
-        #rtBtn { background: transparent; border: 1px solid var(--border); }
-
-        .modal { 
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 100; justify-content: center; align-items: center; padding: 20px;
-        }
-        .modal-content { 
-            background: var(--bg); border: 1px solid var(--border); box-shadow: 0 0 30px rgba(0,243,255,0.2); 
-            border-radius: 20px; padding: 25px; width: 100%; max-width: 350px; text-align: center; color: white; position: relative;
-        }
-        .modal-content h2 { margin-bottom: 10px; color: var(--primary); font-size: 1.4rem;}
-        .modal-content p { margin-bottom: 20px; line-height: 1.5; color: #ccc; font-size: 0.9rem;}
-        .close-modal { 
-            position: absolute; top: 15px; right: 15px; background: none; border: none; color: #888; 
-            font-size: 1.5rem; cursor: pointer;
-        }
-
-        .gallery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; overflow-y: auto; max-height: 60vh; }
-        .gallery-img { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 10px; border: 1px solid #444; }
-        .empty-gallery { grid-column: span 2; padding: 40px 0; color: #666; font-style: italic; }
-
-        #toastMsg {
-            position: fixed; bottom: -50px; left: 50%; transform: translateX(-50%); background: var(--primary); 
-            color: #000; padding: 12px 24px; border-radius: 30px; font-weight: bold; z-index: 1000; transition: all 0.3s ease; text-align: center; max-width: 90%;
-        }
     </style>
 </head>
-<body>
-    <header>
-        <div id="creditBadge" style="background: rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 20px; font-weight: bold; color: #ffb800; display: flex; align-items: center; gap: 5px; font-size: 0.95rem; box-shadow: 0 0 10px rgba(255,184,0,0.2); transition: all 0.3s ease;">
-            <i class="fas fa-bolt"></i> <span id="creditCount">3</span>/3
+<body class="min-h-screen flex flex-col items-center pb-20">
+
+    <!-- Header & Credit Counter -->
+    <header class="w-full flex justify-between items-center p-4 glass-panel sticky top-0 z-50">
+        <div class="text-2xl font-black tracking-widest bg-clip-text text-transparent bg-gradient-to-r from-[#00f3ff] to-[#FF3366]">
+            VIRAL AVATAR
         </div>
-        <h1>VIRAL AVATAR</h1>
-        <button id="openGalleryBtn" class="icon-btn" style="width: 40px; height: 40px; font-size: 1rem;"><i class="fas fa-images"></i></button>
+        <div class="flex items-center gap-2 bg-white/10 px-4 py-1.5 rounded-full border border-white/20">
+            <span id="creditCount" class="font-bold text-[#ffb800]">3/3</span>
+            <i class="fas fa-bolt text-[#ffb800]"></i>
+        </div>
     </header>
-    
-    <div class="container">
-        <div class="viewport" id="viewport">
-            <video id="video" autoplay playsinline muted></video>
-            <canvas id="canvas"></canvas>
+
+    <!-- Camera Section -->
+    <main class="w-full max-w-md mt-6 px-4 flex flex-col items-center">
+        
+        <div class="relative w-full aspect-[3/4] bg-gray-900 rounded-3xl overflow-hidden shadow-2xl border-2 border-white/10">
+            <video id="cameraView" autoplay playsinline class="w-full h-full"></video>
+            <canvas id="snapshotCanvas" class="hidden"></canvas>
+            <img id="previewImage" class="hidden w-full h-full object-cover" />
             
-            <!-- Result Media -->
-            <img id="resultImg" alt="AI Result" crossorigin="anonymous">
-            <video id="resultVideo" autoplay loop muted playsinline crossorigin="anonymous"></video>
-            
-            <div class="scanner-container" id="scanner">
-                <div class="spinner"></div>
-                <div class="overlay-text">
-                    <span id="processText">מעבד יצירת מופת...</span><br>
-                    <span id="waitText" style="font-size: 0.8rem; color: #fff; font-weight: normal;">זה עשוי לקחת עד דקה וחצי</span>
-                </div>
+            <!-- Camera Controls -->
+            <div id="cameraControls" class="absolute bottom-6 left-0 w-full flex justify-center gap-6 px-4">
+                <button onclick="switchCamera()" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-white shadow-lg active:scale-95 transition">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                
+                <button onclick="takeSnapshot()" class="w-20 h-20 rounded-full bg-gradient-to-r from-[#00f3ff] to-[#FF3366] p-1 shadow-[0_0_20px_rgba(0,243,255,0.4)] active:scale-90 transition">
+                    <div class="w-full h-full bg-black rounded-full border-4 border-white flex items-center justify-center">
+                        <i class="fas fa-camera text-2xl text-white"></i>
+                    </div>
+                </button>
+                
+                <button onclick="document.getElementById('fileInput').click()" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-white shadow-lg active:scale-95 transition">
+                    <i class="fas fa-upload"></i>
+                </button>
+                <input type="file" id="fileInput" accept="image/*" class="hidden" onchange="handleFileUpload(event)">
             </div>
+            
+            <!-- Retake Button -->
+            <button id="retakeBtn" onclick="resetCamera()" class="hidden absolute top-4 right-4 glass-panel px-4 py-2 rounded-full text-sm font-bold shadow-lg">
+                <i class="fas fa-times mr-2"></i> צלם מחדש
+            </button>
         </div>
 
-        <div class="bottom-area">
+        <!-- Styles Section -->
+        <div id="stylesSection" class="w-full mt-8 hidden flex-col gap-4 w-full">
+            <h3 class="text-xl font-bold text-center text-white/90">בחר סגנון ויראלי</h3>
             
-            <div class="camera-controls" id="cameraControls">
-                <button class="icon-btn" id="uploadFileBtn"><i class="fas fa-upload"></i></button>
-                <input type="file" id="uploadInput" accept="image/*" style="display:none">
-                
-                <button id="captureBtn"><i class="fas fa-camera"></i></button>
-                <button class="icon-btn" id="switchCameraBtn"><i class="fas fa-sync-alt"></i></button>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="applyStyle('cyberpunk')" class="glass-panel py-3 rounded-2xl font-bold active:scale-95 transition">
+                    <i class="fas fa-robot text-[#00f3ff] block mb-1 text-2xl"></i> סייברפאנק
+                </button>
+                <button onclick="applyStyle('fantasy')" class="glass-panel py-3 rounded-2xl font-bold active:scale-95 transition">
+                    <i class="fas fa-dragon text-purple-400 block mb-1 text-2xl"></i> פנטזיה
+                </button>
+                <button onclick="applyStyle('gta')" class="glass-panel py-3 rounded-2xl font-bold active:scale-95 transition">
+                    <i class="fas fa-car text-yellow-400 block mb-1 text-2xl"></i> GTA Style
+                </button>
+                <button onclick="applyStyle('anime')" class="glass-panel py-3 rounded-2xl font-bold active:scale-95 transition">
+                    <i class="fas fa-star text-pink-400 block mb-1 text-2xl"></i> אנימה
+                </button>
             </div>
-            
-            <div id="styleMenu">
-                <div class="category">
-                    <div class="category-title" id="customTitle">יצירה חופשית (הקלד באנגלית בלבד)</div>
-                    <div class="custom-prompt">
-                        <div class="textarea-wrapper">
-                            <textarea id="customInput" placeholder="תאר את האווטאר שלך..."></textarea>
-                            <button id="micBtn" class="mic-btn"><i class="fas fa-microphone"></i></button>
-                        </div>
-                        <button id="customBtn">צור יצירת מופת</button>
-                    </div>
-                </div>
 
-                <div class="category">
-                    <div class="category-title" style="color: #ffb800;"><i class="fas fa-crown"></i> תבניות פרימיום (PRO)</div>
-                    <div class="style-scroll">
-                        <!-- כפתור וידאו טיקטוק החדש -->
-                        <div class="style-card cat-pro" style="border-color: #bc13fe; box-shadow: 0 0 10px rgba(188,19,254,0.4);" onclick="applyStyle('tiktok_video')">
-                            <i class="fab fa-tiktok" style="color: #bc13fe;"></i>
-                            <span style="color: #bc13fe;">וידאו טיקטוק</span>
-                        </div>
-                        <div class="style-card cat-pro" style="border-color: #ffb800; box-shadow: 0 0 10px rgba(255,184,0,0.4);" onclick="applyStyle('linkedin_4k')">
-                            <i class="fas fa-briefcase" style="color: #ffb800;"></i>
-                            <span style="color: #ffb800;">לינקדאין 4K</span>
-                        </div>
-                        <div class="style-card cat-scifi" style="border-color: #00f3ff; box-shadow: 0 0 10px rgba(0,243,255,0.4);" onclick="applyStyle('cinematic_video')">
-                            <i class="fas fa-camera-retro" style="color: #00f3ff;"></i>
-                            <span style="color: #00f3ff;">פורטרט 4K</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="category">
-                    <div class="category-title" id="quickTitle">תבניות מהירות</div>
-                    <div class="style-scroll">
-                        <div class="style-card cat-cinema" onclick="applyStyle('gladiator')"><i class="fas fa-shield-alt"></i><span id="gladText">גלדיאטור</span></div>
-                        <div class="style-card cat-fantasy" onclick="applyStyle('jedi_master')"><i class="fab fa-jedi-order"></i><span id="jediText">אביר ג'דיי</span></div>
-                        <div class="style-card cat-cinema" onclick="applyStyle('mafia_boss')"><i class="fas fa-user-tie"></i><span id="mafiaText">בוס מאפיה</span></div>
-                    </div>
-                </div>
-                
-                <div class="category">
-                    <div class="category-title">אנימה וקומיקס</div>
-                    <div class="style-scroll">
-                        <div class="style-card cat-anime" onclick="applyStyle('super_saiyan')"><i class="fas fa-bolt"></i><span>סופר סאייה</span></div>
-                        <div class="style-card cat-anime" onclick="applyStyle('pixar_character')"><i class="fas fa-smile"></i><span>פיקסאר 3D</span></div>
-                        <div class="style-card cat-anime" onclick="applyStyle('comic_book')"><i class="fas fa-book-open"></i><span>קומיקס</span></div>
-                    </div>
-                </div>
+            <div class="mt-4 border-t border-white/10 pt-4 flex flex-col gap-3">
+                <button onclick="applyStyle('linkedin_4k')" class="pro-btn py-4 rounded-2xl text-lg flex items-center justify-center gap-2 active:scale-95 transition">
+                    <i class="fas fa-briefcase"></i> תמונת לינקדאין 4K (PRO)
+                </button>
+                <button onclick="applyStyle('cinematic_video')" class="pro-btn py-4 rounded-2xl text-lg flex items-center justify-center gap-2 active:scale-95 transition">
+                    <i class="fas fa-film"></i> צילום קולנועי 4K (PRO)
+                </button>
+                <button onclick="applyStyle('tiktok_video')" class="tiktok-btn py-4 rounded-2xl text-lg flex items-center justify-center gap-2 active:scale-95 transition">
+                    <i class="fab fa-tiktok"></i> וידאו טיקטוק ויראלי (PRO)
+                </button>
+            </div>
 
-                <div class="category">
-                    <div class="category-title">פנטזיה ומדע בדיוני</div>
-                    <div class="style-scroll">
-                        <div class="style-card cat-scifi" onclick="applyStyle('cyber_ninja')"><i class="fas fa-user-ninja"></i><span>סייבר-נינג'ה</span></div>
-                        <div class="style-card cat-scifi" onclick="applyStyle('astronaut')"><i class="fas fa-rocket"></i><span>אסטרונאוט</span></div>
-                        <div class="style-card cat-fantasy" onclick="applyStyle('vampire')"><i class="fas fa-moon"></i><span>ערפד אפל</span></div>
-                    </div>
+            <!-- Free Text Creation -->
+            <div class="mt-4 glass-panel p-4 rounded-2xl flex flex-col gap-3">
+                <div class="flex gap-2">
+                    <input type="text" id="customPrompt" placeholder="תאר מה תרצה להיות..." class="w-full bg-black/50 text-white px-4 py-3 rounded-xl border border-white/10 focus:outline-none focus:border-[#00f3ff]">
+                    <button id="micBtn" class="bg-white/10 px-4 rounded-xl text-white active:bg-white/20">
+                        <i class="fas fa-microphone"></i>
+                    </button>
                 </div>
+                <button id="customBtn" class="w-full bg-white text-black font-bold py-3 rounded-xl active:scale-95 transition shadow-lg">
+                    צור יצירת מופת <i class="fas fa-magic ml-2"></i>
+                </button>
             </div>
-            
-            <div id="resultControls">
-                <button class="action-btn" id="waBtn"><i class="fab fa-whatsapp"></i> <span id="waText">שתף בווטסאפ</span></button>
-                <button class="action-btn" id="dlBtn"><i class="fas fa-download"></i> <span id="dlText">שמור תמונה/וידאו</span></button>
-                <button class="action-btn" id="rtBtn"><i class="fas fa-camera"></i> <span id="rtText">צלם מחדש</span></button>
-            </div>
-            
         </div>
-    </div>
+    </main>
 
-    <div id="limitModal" class="modal">
-        <div class="modal-content">
-            <button class="close-modal" onclick="closeModal('limitModal')"><i class="fas fa-times"></i></button>
-            <h2>הגעת למגבלה היומית!</h2>
-            <p>יצרת כבר 3 תמונות מדהימות היום. <br>השרתים שלנו צריכים קצת מנוחה.<br>חזור מחר להמשך יצירה בחינם!</p>
-            <button class="action-btn" id="watchAdBtn" style="background: var(--secondary); color: white; margin-top: 15px;" onclick="triggerMonetagAd()"><i class="fas fa-video"></i> <span id="adBtnText">צפה בפרסומת וקבל תמונה</span></button>
-            <button class="action-btn" style="background: transparent; border: 1px solid var(--border); color: white; margin-top: 10px;" onclick="closeModal('limitModal')">הבנתי, אחזור מחר</button>
+    <!-- Out of Credits Modal -->
+    <div id="adModal" class="fixed inset-0 bg-black/90 z-50 hidden flex-col items-center justify-center p-6 backdrop-blur-sm">
+        <div class="glass-panel p-8 rounded-3xl text-center max-w-sm w-full border border-[#FF3366]/30">
+            <i class="fas fa-battery-empty text-5xl text-[#FF3366] mb-4"></i>
+            <h2 class="text-2xl font-black mb-2">נגמרו לך הקרדיטים!</h2>
+            <p class="text-white/70 mb-6">רוצה ליצור עוד אווטארים ויראליים? צפה בפרסומת קצרה וקבל תמונה נוספת בחינם!</p>
+            
+            <!-- Ad Link Button -->
+            <a href="https://omg10.com/4/11571722" target="_blank" onclick="handleAdClick()" class="w-full block bg-gradient-to-r from-[#00f3ff] to-[#4facfe] text-black font-black py-4 rounded-xl mb-3 shadow-[0_0_15px_rgba(0,243,255,0.4)]">
+                צפה בפרסומת וקבל תמונה
+            </a>
+            
+            <button onclick="closeModal('adModal')" class="w-full bg-white/10 text-white font-bold py-3 rounded-xl">
+                ביטול
+            </button>
         </div>
     </div>
 
-    <div id="toastMsg">הודעה</div>
+    <!-- Loading Modal -->
+    <div id="loadingModal" class="fixed inset-0 bg-black/95 z-50 hidden flex-col items-center justify-center p-6">
+        <div class="loader-spinner mb-6"></div>
+        <h2 class="text-2xl font-black mb-2 text-center text-[#00f3ff] animate-pulse">מייצר קסם ויראלי...</h2>
+        <p class="text-white/60 text-center text-sm max-w-xs">הבינה המלאכותית מנתחת את הפנים שלך. נא לא לסגור את האפליקציה.</p>
+        <div id="errorMsg" class="mt-6 text-[#FF3366] font-bold text-center hidden bg-red-900/30 p-3 rounded-xl"></div>
+        <button id="closeErrorBtn" onclick="closeModal('loadingModal'); resetCamera();" class="hidden mt-4 bg-white text-black px-6 py-2 rounded-full font-bold">חזור למצלמה</button>
+    </div>
+
+    <!-- Result Modal -->
+    <div id="resultModal" class="fixed inset-0 bg-black z-50 hidden flex-col items-center justify-start pt-10 px-4 overflow-y-auto">
+        <h2 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#00f3ff] to-[#FF3366] mb-6">התוצאה שלך!</h2>
+        
+        <div id="resultContainer" class="w-full max-w-sm rounded-2xl overflow-hidden shadow-[0_0_30px_rgba(255,51,102,0.3)] mb-6">
+            <!-- Image or Video will be injected here -->
+        </div>
+
+        <div class="flex w-full max-w-sm gap-3 pb-10">
+            <button id="downloadBtn" class="flex-1 bg-gradient-to-r from-[#00f3ff] to-[#4facfe] text-black font-black py-4 rounded-xl shadow-lg active:scale-95 transition flex items-center justify-center gap-2">
+                <i class="fas fa-download"></i> שמור לטלפון
+            </button>
+            <button onclick="closeModal('resultModal'); resetCamera();" class="w-16 bg-white/10 text-white py-4 rounded-xl active:scale-95 transition flex items-center justify-center">
+                <i class="fas fa-home text-xl"></i>
+            </button>
+        </div>
+    </div>
 
     <script>
-        const dict = {
-            'he': {
-                dir: 'rtl', process: "מעבד יצירת מופת...", wait: "זה עשוי לקחת עד דקה וחצי",
-                customTitle: "יצירה חופשית (הקלד או דבר)", placeholder: "תאר את האווטאר שלך בפירוט...", btnCreate: "צור יצירת מופת",
-                quickTitle: "תבניות מהירות", ceo: "מנכ\"ל הייטק", glad: "גלדיאטור", jedi: "אביר ג'דיי", mafia: "בוס מאפיה", wa: "שתף בווטסאפ",
-                dl: "שמור לגלריה", prof: "חתוך לפרופיל", rt: "צלם מחדש", alertEmpty: "אנא הקלד או הקלט תיאור", translating: "מתרגם לאנגלית...",
-                limitTitle: "הגעת למגבלה היומית!", limitDesc: "יצרת כבר 3 תמונות היום. חזור מחר להמשך יצירה בחינם!", galleryEmpty: "הגלריה שלך ריקה. צור אווטאר כדי למלא אותה!",
-                adBtn: "צפה בפרסומת וקבל תמונה", adWait: "טוען...", adSuccess: "קיבלת קרדיט נוסף! צור תמונה"
-            },
-            'en': {
-                dir: 'ltr', process: "Processing Masterpiece...", wait: "This may take up to 90 seconds",
-                customTitle: "Free Creation (Type or Speak)", placeholder: "Describe your avatar in detail...", btnCreate: "Create Masterpiece",
-                quickTitle: "Quick Templates", ceo: "Tech CEO", glad: "Gladiator", jedi: "Jedi Master", mafia: "Mafia Boss", wa: "Share on WhatsApp",
-                dl: "Save Media", prof: "Crop for Profile", rt: "Retake Photo", alertEmpty: "Please type or record a description", translating: "Translating to English...",
-                limitTitle: "Daily Limit Reached!", limitDesc: "You have created 3 images today. Come back tomorrow for more free creations!", galleryEmpty: "Your gallery is empty. Create an avatar to fill it up!",
-                adBtn: "Watch Ad for +1 Avatar", adWait: "Loading...", adSuccess: "Extra credit granted! Create now"
+        // --- State ---
+        let video = document.getElementById('cameraView');
+        let currentStream = null;
+        let facingMode = 'user';
+        let capturedImageB64 = null;
+        let credits = 3;
+        const maxCredits = 3;
+        const WORKER_URL = 'https://persona-ai.matytsoraro.workers.dev';
+
+        // --- Camera & Setup ---
+        async function setupCamera() {
+            if (currentStream) currentStream.getTracks().forEach(track => track.stop());
+            try {
+                currentStream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: facingMode, width: { ideal: 1280 }, height: { ideal: 720 } } 
+                });
+                video.srcObject = currentStream;
+            } catch (err) {
+                console.error("Camera error:", err);
+                alert("לא הצלחנו לגשת למצלמה. אנא ודא שאישרת הרשאות.");
             }
-        };
-
-        const currentLang = navigator.language.startsWith('he') ? 'he' : 'en';
-        const texts = dict[currentLang];
-
-        document.documentElement.dir = texts.dir;
-        document.documentElement.lang = currentLang;
-        document.getElementById('processText').innerText = texts.process;
-        document.getElementById('waitText').innerText = texts.wait;
-        document.getElementById('customTitle').innerText = texts.customTitle;
-        document.getElementById('customInput').placeholder = texts.placeholder;
-        document.getElementById('customBtn').innerText = texts.btnCreate;
-        document.getElementById('quickTitle').innerText = texts.quickTitle;
-        document.getElementById('gladText').innerText = texts.glad;
-        document.getElementById('jediText').innerText = texts.jedi;
-        document.getElementById('mafiaText').innerText = texts.mafia;
-        document.getElementById('waText').innerText = texts.wa;
-        document.getElementById('dlText').innerText = texts.dl;
-        document.getElementById('rtText').innerText = texts.rt;
-        document.getElementById('adBtnText').innerText = texts.adBtn;
-        
-        const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
-        const resultImg = document.getElementById('resultImg');
-        const resultVideo = document.getElementById('resultVideo');
-        
-        const captureBtn = document.getElementById('captureBtn');
-        const switchCameraBtn = document.getElementById('switchCameraBtn');
-        const uploadFileBtn = document.getElementById('uploadFileBtn');
-        const uploadInput = document.getElementById('uploadInput');
-        const scanner = document.getElementById('scanner');
-        const cameraControls = document.getElementById('cameraControls');
-        const styleMenu = document.getElementById('styleMenu');
-        const resultControls = document.getElementById('resultControls');
-
-        let currentFacingMode = 'user';
-        let stream = null;
-        let capturedImageBase64 = null;
-        const API_URL = "https://billowing-shape-1d81.maty-tsoraro.workers.dev";
-
-        function showToast(msg, isError = false) {
-            const toast = document.getElementById('toastMsg');
-            toast.innerText = msg;
-            toast.style.background = isError ? '#ff3366' : 'var(--primary)';
-            toast.style.color = isError ? '#fff' : '#000';
-            toast.style.bottom = '20px';
-            setTimeout(() => { toast.style.bottom = '-50px'; }, 6000);
         }
 
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        function switchCamera() {
+            facingMode = facingMode === 'user' ? 'environment' : 'user';
+            video.style.transform = facingMode === 'user' ? 'scaleX(-1)' : 'scaleX(1)';
+            setupCamera();
+        }
 
-        function grantAdCredit() {
-            const btn = document.getElementById('watchAdBtn');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> <span>מאשר צפייה...</span>`;
-            btn.style.pointerEvents = 'none';
-
+        function takeSnapshot() {
+            const canvas = document.getElementById('snapshotCanvas');
+            const preview = document.getElementById('previewImage');
+            
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            
+            if (facingMode === 'user') {
+                ctx.translate(canvas.width, 0);
+                ctx.scale(-1, 1);
+            }
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            capturedImageB64 = canvas.toDataURL('image/jpeg', 0.8);
+            preview.src = capturedImageB64;
+            
+            video.classList.add('hidden');
+            preview.classList.remove('hidden');
+            document.getElementById('cameraControls').classList.add('hidden');
+            document.getElementById('retakeBtn').classList.remove('hidden');
+            document.getElementById('stylesSection').classList.remove('hidden');
+            document.getElementById('stylesSection').classList.add('flex');
+            
             setTimeout(() => {
-                let usage = JSON.parse(localStorage.getItem('personaai_usage'));
-                if(usage && usage.count > 0) {
-                    usage.count--;
-                    localStorage.setItem('personaai_usage', JSON.stringify(usage));
-                    updateCreditDisplay();
-                }
-                btn.innerHTML = `<i class="fas fa-check"></i> <span>קיבלת קרדיט!</span>`;
-                setTimeout(() => {
-                    closeModal('limitModal');
-                    btn.innerHTML = originalText;
-                    btn.style.pointerEvents = 'auto';
-                }, 1500);
-            }, 3000); 
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            }, 100);
+        }
+
+        function resetCamera() {
+            document.getElementById('previewImage').classList.add('hidden');
+            video.classList.remove('hidden');
+            document.getElementById('cameraControls').classList.remove('hidden');
+            document.getElementById('retakeBtn').classList.add('hidden');
+            document.getElementById('stylesSection').classList.add('hidden');
+            document.getElementById('stylesSection').classList.remove('flex');
+            capturedImageB64 = null;
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                capturedImageB64 = e.target.result;
+                const preview = document.getElementById('previewImage');
+                preview.src = capturedImageB64;
+                video.classList.add('hidden');
+                preview.classList.remove('hidden');
+                document.getElementById('cameraControls').classList.add('hidden');
+                document.getElementById('retakeBtn').classList.remove('hidden');
+                document.getElementById('stylesSection').classList.remove('hidden');
+                document.getElementById('stylesSection').classList.add('flex');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // --- Mic & Speech ---
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'he-IL';
+            recognition.interimResults = false;
+
+            document.getElementById('micBtn').addEventListener('click', () => {
+                recognition.start();
+                document.getElementById('micBtn').classList.add('bg-red-500');
+            });
+
+            recognition.onresult = (event) => {
+                document.getElementById('customPrompt').value = event.results[0][0].transcript;
+                document.getElementById('micBtn').classList.remove('bg-red-500');
+            };
+            recognition.onerror = () => {
+                document.getElementById('micBtn').classList.remove('bg-red-500');
+            };
+        } else {
+            document.getElementById('micBtn').style.display = 'none';
+        }
+
+        // --- Translation & Logic ---
+        async function translateToEnglish(text) {
+            try {
+                const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=he&tl=en&dt=t&q=${encodeURI(text)}`);
+                const data = await res.json();
+                return data[0][0][0];
+            } catch (e) {
+                return text;
+            }
         }
 
         function updateCreditDisplay() {
-            const today = new Date().toDateString();
-            let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 0 };
-            if (usage.date !== today) { usage = { date: today, count: 0 }; }
-            const creditsLeft = Math.max(0, 3 - usage.count);
-            document.getElementById('creditCount').innerText = creditsLeft;
-            
-            const badge = document.getElementById('creditBadge');
-            if(creditsLeft === 0) {
-                badge.style.color = '#ff3366';
-                badge.style.boxShadow = '0 0 10px rgba(255,51,102,0.3)';
-            } else {
-                badge.style.color = '#ffb800';
-                badge.style.boxShadow = '0 0 10px rgba(255,184,0,0.2)';
+            document.getElementById('creditCount').innerText = `${credits}/${maxCredits}`;
+            if (credits === 0) {
+                document.getElementById('adModal').classList.remove('hidden');
+                document.getElementById('adModal').classList.add('flex');
             }
         }
 
         function canGenerate() {
-            const today = new Date().toDateString();
-            let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 0 };
-            if (usage.date !== today) { usage = { date: today, count: 0 }; }
-            if (usage.count >= 3) {
-                document.getElementById('limitModal').style.display = 'flex';
+            if (credits <= 0) {
+                document.getElementById('adModal').classList.remove('hidden');
+                document.getElementById('adModal').classList.add('flex');
                 return false;
             }
             return true;
         }
 
-        function refundUsage() {
-            let usage = JSON.parse(localStorage.getItem('personaai_usage'));
-            if(usage && usage.count > 0) {
-                usage.count--;
-                localStorage.setItem('personaai_usage', JSON.stringify(usage));
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+            document.getElementById(id).classList.remove('flex');
+        }
+
+        // --- Ad Handling ---
+        function handleAdClick() {
+            // הלינק כבר נפתח בחלון חדש בגלל target="_blank"
+            // אנחנו רק מאפסים את המונה וסוגרים את החלון
+            setTimeout(() => {
+                credits = maxCredits;
                 updateCreditDisplay();
-            }
+                closeModal('adModal');
+            }, 2000);
         }
 
-        async function initCamera() {
-            if (stream) stream.getTracks().forEach(track => track.stop());
-            try {
-                stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingMode } });
-                video.srcObject = stream;
-                video.onloadedmetadata = () => video.play();
-            } catch (err) { showToast("שגיאת מצלמה", true); }
-        }
-
-        switchCameraBtn.addEventListener('click', () => {
-            currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
-            initCamera();
-        });
-
-        uploadFileBtn.addEventListener('click', () => uploadInput.click());
-
-        uploadInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if(!file) return;
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                const img = new Image();
-                img.onload = () => {
-                    canvas.width = img.width; canvas.height = img.height;
-                    const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0);
-                    capturedImageBase64 = canvas.toDataURL('image/jpeg', 0.8);
-                    
-                    resultImg.src = capturedImageBase64;
-                    resultImg.style.display = 'block';
-                    video.style.display = 'none';
-                    cameraControls.style.display = 'none';
-                    styleMenu.style.display = 'flex';
-                };
-                img.src = event.target.result;
-            };
-            reader.readAsDataURL(file);
-        });
-
-        captureBtn.addEventListener('click', () => {
-            canvas.width = video.videoWidth; canvas.height = video.videoHeight;
-            const ctx = canvas.getContext('2d');
-            if (currentFacingMode === 'user') { ctx.translate(canvas.width, 0); ctx.scale(-1, 1); }
-            ctx.drawImage(video, 0, 0);
-            capturedImageBase64 = canvas.toDataURL('image/jpeg', 0.8);
-            
-            resultImg.src = capturedImageBase64;
-            resultImg.style.display = 'block';
-            video.style.display = 'none';
-            cameraControls.style.display = 'none';
-            styleMenu.style.display = 'flex';
-        });
-
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (SpeechRecognition) {
-            const recognition = new SpeechRecognition();
-            recognition.lang = currentLang === 'he' ? 'he-IL' : 'en-US';
-            recognition.onstart = () => document.getElementById('micBtn').classList.add('recording');
-            recognition.onend = () => document.getElementById('micBtn').classList.remove('recording');
-            recognition.onresult = (e) => {
-                const transcript = e.results[0][0].transcript;
-                const customInput = document.getElementById('customInput');
-                customInput.value += (customInput.value ? " " : "") + transcript;
-            };
-            document.getElementById('micBtn').onclick = () => recognition.start();
-        } else {
-            document.getElementById('micBtn').style.display = 'none';
-        }
-
-        async function translateToEnglish(text) {
-            if(!/[\u0590-\u05FF]/.test(text)) return text;
-            try {
-                const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=he|en`);
-                const data = await res.json();
-                return data.responseData.translatedText;
-            } catch(e) { return text; }
-        }
-
-        document.getElementById('customBtn').addEventListener('click', async () => {
-            const customInput = document.getElementById('customInput');
-            const val = customInput.value.trim();
-            if(!val) { showToast(texts.alertEmpty, true); return; }
-            if(!canGenerate()) return; 
-
-            const today = new Date().toDateString();
-            let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 0 };
-            usage.count++;
-            localStorage.setItem('personaai_usage', JSON.stringify(usage));
-            updateCreditDisplay();
-
-            styleMenu.style.display = 'none';
-            scanner.style.display = 'flex';
-            document.getElementById('processText').innerText = texts.translating;
-            
-            const translatedPrompt = await translateToEnglish(val);
-            document.getElementById('processText').innerText = texts.process;
-            
-            callAPI(translatedPrompt);
-        });
-
+        // --- Generation Triggers ---
         window.applyStyle = function(styleName) {
-            if(!canGenerate()) return; 
-
-            const today = new Date().toDateString();
-            let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 0 };
-            usage.count++;
-            localStorage.setItem('personaai_usage', JSON.stringify(usage));
+            if (!canGenerate()) return;
+            credits--;
             updateCreditDisplay();
-
-            styleMenu.style.display = 'none';
-            scanner.style.display = 'flex';
-            document.getElementById('processText').innerText = texts.process;
-            
-            callAPI(styleName);
+            callAPI({ image: capturedImageB64, style: styleName });
         };
 
-        async function fetchAndWatermark(imageUrl) {
-            try {
-                const res = await fetch(imageUrl);
-                const blob = await res.blob();
-                const img = new Image();
-                img.src = URL.createObjectURL(blob);
-                
-                await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; });
-                
-                const c = document.createElement('canvas');
-                c.width = img.naturalWidth; c.height = img.naturalHeight;
-                const ctx = c.getContext('2d'); ctx.drawImage(img, 0, 0);
-                
-                const fontSize = Math.floor(c.width * 0.035); 
-                ctx.font = `bold ${fontSize}px "Segoe UI"`;
-                const text = 'Created with PersonaAI';
-                const padding = fontSize;
-                
-                ctx.fillStyle = 'rgba(0,0,0,0.6)';
-                ctx.beginPath();
-                ctx.roundRect(c.width - (ctx.measureText(text).width + padding*2), c.height - (fontSize*2.5), ctx.measureText(text).width + padding*2, fontSize*2.5, [15,0,0,0]);
-                ctx.fill();
-                
-                ctx.fillStyle = '#00f3ff'; ctx.textAlign = 'right';
-                ctx.fillText(text, c.width - padding, c.height - padding);
-                
-                return c.toDataURL('image/jpeg', 0.9);
-            } catch(e) {
-                return imageUrl; 
-            }
-        }
+        document.getElementById('customBtn').addEventListener('click', async () => {
+            const prompt = document.getElementById('customPrompt').value;
+            if (!prompt) return alert("אנא הזן תיאור");
+            if (!canGenerate()) return;
+            
+            credits--;
+            updateCreditDisplay();
+            
+            const engPrompt = await translateToEnglish(prompt);
+            callAPI({ image: capturedImageB64, style: engPrompt });
+        });
 
-        async function callAPI(stylePrompt) {
+        // --- Main API Caller ---
+        async function callAPI(requestBody) {
+            const loading = document.getElementById('loadingModal');
+            const errorMsg = document.getElementById('errorMsg');
+            const closeErrorBtn = document.getElementById('closeErrorBtn');
+            
+            loading.classList.remove('hidden');
+            loading.classList.add('flex');
+            errorMsg.classList.add('hidden');
+            closeErrorBtn.classList.add('hidden');
+            errorMsg.innerText = "";
+
             try {
-                const response = await fetch(API_URL, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ action: "start", image: capturedImageBase64, style: stylePrompt })
+                // שלב 1: שליחת הבקשה לשרת
+                const res = await fetch(WORKER_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestBody)
                 });
                 
-                if (!response.ok) {
-                    const errData = await response.json().catch(()=>({}));
-                    throw new Error(errData.detail || errData.error || "שגיאת חיבור לשרת");
-                }
-
-                const startData = await response.json();
+                const startData = await res.json();
                 
-                // רדאר שגיאות עמוק: יודע לקרוא את סיבת הדחייה המדויקת מ-Replicate
-                if (startData.detail) throw new Error(JSON.stringify(startData.detail));
                 if (startData.error) throw new Error(startData.error);
-                if (!startData.id) throw new Error("לא התקבל מזהה משימה מהשרת.");
+                if (!startData.id) throw new Error("שגיאה מהשרת: לא התקבל מזהה משימה. נסה שוב.");
 
                 let predictionId = startData.id;
                 let status = startData.status;
                 let attempts = 0;
-                const MAX_ATTEMPTS = 60; // Timeout = 3 mins
+                const MAX_ATTEMPTS = 120; // 6 דקות (120 פעמים כפול 3 שניות)
 
+                // שלב 2: בדיקת סטטוס במעגל (Polling)
                 while (status === "starting" || status === "processing") {
                     attempts++;
                     if (attempts > MAX_ATTEMPTS) {
                         throw new Error("השרת עמוס מדי כרגע. החזרנו לך את הקרדיט.");
                     }
-
+                    
                     await new Promise(r => setTimeout(r, 3000));
                     
-                    const statusRes = await fetch(API_URL, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
+                    const pollRes = await fetch(WORKER_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ action: "status", id: predictionId })
                     });
                     
-                    const statusData = await statusRes.json();
-                    if (statusData.error) throw new Error(statusData.error);
+                    const pollData = await pollRes.json();
                     
-                    status = statusData.status;
+                    if (pollData.error) throw new Error(pollData.error);
                     
-                    if (status === "failed") {
-                        throw new Error(statusData.error || "ה-AI נכשל בייצור האווטאר.");
-                    }
+                    status = pollData.status;
                     
                     if (status === "succeeded") {
-                        const rawOutput = statusData.output;
-                        const finalUrl = Array.isArray(rawOutput) ? rawOutput[rawOutput.length - 1] : rawOutput;
-                        
-                        if (!finalUrl) throw new Error("התהליך הסתיים אך הקובץ ריק.");
-
-                        if (finalUrl.includes('.mp4') || finalUrl.includes('.mkv')) {
-                            resultVideo.src = finalUrl;
-                            resultVideo.style.display = 'block';
-                            resultImg.style.display = 'none';
-                            scanner.style.display = 'none';
-                            resultControls.style.display = 'flex';
-                        } else {
-                            const watermarkedImage = await fetchAndWatermark(finalUrl);
-                            resultImg.onload = () => {
-                                scanner.style.display = 'none';
-                                resultControls.style.display = 'flex';
-                            };
-                            resultImg.src = watermarkedImage;
-                            resultImg.style.display = 'block';
-                            resultVideo.style.display = 'none';
-                        }
-                        
+                        showResult(pollData.output, requestBody.style === 'tiktok_video');
                         return;
+                    } else if (status === "failed") {
+                        throw new Error("שגיאת שרת: " + (pollData.error || "יצירת התמונה נכשלה."));
                     }
                 }
-
             } catch (err) {
-                refundUsage(); 
-                showToast("שגיאה: " + err.message, true);
-                resetCamera();
+                console.error(err);
+                credits++; // מחזירים קרדיט אם נכשל
+                updateCreditDisplay();
+                errorMsg.innerText = "שגיאה: " + err.message;
+                errorMsg.classList.remove('hidden');
+                closeErrorBtn.classList.remove('hidden');
             }
         }
 
-        function resetCamera() {
-            scanner.style.display = 'none';
-            resultImg.style.display = 'none';
-            resultVideo.style.display = 'none';
-            video.style.display = 'block';
-            resultControls.style.display = 'none';
-            styleMenu.style.display = 'none';
-            cameraControls.style.display = 'flex';
-            resultVideo.pause();
-            resultVideo.src = "";
+        // --- Show Results ---
+        function showResult(outputUrl, isVideo) {
+            closeModal('loadingModal');
+            const resultContainer = document.getElementById('resultContainer');
+            resultContainer.innerHTML = '';
+            
+            // Replicate לפעמים מחזיר מערך, ניקח את האיבר הראשון
+            let finalUrl = Array.isArray(outputUrl) ? outputUrl[0] : outputUrl;
+
+            if (isVideo) {
+                resultContainer.innerHTML = `<video src="${finalUrl}" autoplay loop muted playsinline class="w-full h-auto rounded-2xl"></video>`;
+            } else {
+                resultContainer.innerHTML = `<img src="${finalUrl}" class="w-full h-auto rounded-2xl" />`;
+            }
+
+            const downloadBtn = document.getElementById('downloadBtn');
+            downloadBtn.onclick = () => {
+                const a = document.createElement('a');
+                a.href = finalUrl;
+                a.download = isVideo ? "Viral_Avatar.mp4" : "Viral_Avatar.png";
+                a.target = "_blank";
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            };
+
+            const resultModal = document.getElementById('resultModal');
+            resultModal.classList.remove('hidden');
+            resultModal.classList.add('flex');
         }
 
-        document.getElementById('rtBtn').addEventListener('click', resetCamera);
-
-        document.getElementById('waBtn').addEventListener('click', async () => {
-            try {
-                const isVideo = resultVideo.style.display === 'block';
-                const src = isVideo ? resultVideo.src : resultImg.src;
-                
-                const response = await fetch(src);
-                const blob = await response.blob();
-                const file = new File([blob], isVideo ? 'Avatar.mp4' : 'Avatar.jpg', { type: isVideo ? 'video/mp4' : 'image/jpeg' });
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    await navigator.share({ files: [file], title: 'My Avatar', text: 'Created with PersonaAI!' });
-                }
-            } catch (err) { showToast("שגיאה בשיתוף לוואטסאפ", true); }
-        });
-
-        document.getElementById('dlBtn').addEventListener('click', async () => {
-            try {
-                const isVideo = resultVideo.style.display === 'block';
-                const src = isVideo ? resultVideo.src : resultImg.src;
-
-                const response = await fetch(src);
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = isVideo ? 'ViralAvatar_' + Date.now() + '.mp4' : 'ViralAvatar_' + Date.now() + '.jpg';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                window.URL.revokeObjectURL(url);
-                showToast(currentLang === 'he' ? 'נשמר בהצלחה!' : 'Saved successfully!');
-            } catch (err) {
-                showToast("אנא לחץ לחיצה ארוכה על המדיה כדי לשמור.", true);
-            }
-        });
-
-        updateCreditDisplay();
-        initCamera();
+        // Init
+        window.addEventListener('load', setupCamera);
     </script>
 </body>
 </html>
