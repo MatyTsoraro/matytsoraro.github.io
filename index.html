@@ -509,7 +509,7 @@
             if(!val) { showToast(texts.alertEmpty, true); return; }
             if(!canGenerate()) return; 
 
-            // הורדת המונה מיידית
+            // התיקון: הורדת המונה מיידית בלחיצה על יצירה חופשית
             const today = new Date().toDateString();
             let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 0 };
             usage.count++;
