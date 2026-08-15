@@ -478,6 +478,54 @@
             styleMenu.style.display = 'flex';
         });
 
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
+            const recognition = new SpeechRecognition();
+            recognition.lang = currentLang === 'he' ? 'he-IL' : 'en-US';
+            recognition.onstart = () => document.getElementById('micBtn').classList.add('recording');
+            recognition.onend = () => document.getElementById('micBtn').classList.remove('recording');
+            recognition.onresult = (e) => {
+                const transcript = e.results[0][0].transcript;
+                const customInput = document.getElementById('customInput');
+                customInput.value += (customInput.value ? " " : "") + transcript;
+            };
+            document.getElementById('micBtn').onclick = () => recognition.start();
+        } else {
+            document.getElementById('micBtn').style.display = 'none';
+        }
+
+        async function translateToEnglish(text) {
+            if(!/[\u0590-\u05FF]/.test(text)) return text;
+            try {
+                const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=he|en`);
+                const data = await res.json();
+                return data.responseData.translatedText;
+            } catch(e) { return text; }
+        }
+
+        document.getElementById('customBtn').addEventListener('click', async () => {
+            const customInput = document.getElementById('customInput');
+            const val = customInput.value.trim();
+            if(!val) { showToast(texts.alertEmpty, true); return; }
+            if(!canGenerate()) return; 
+
+            // הורדת המונה מיידית
+            const today = new Date().toDateString();
+            let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 0 };
+            usage.count++;
+            localStorage.setItem('personaai_usage', JSON.stringify(usage));
+            updateCreditDisplay();
+
+            styleMenu.style.display = 'none';
+            scanner.style.display = 'flex';
+            document.getElementById('processText').innerText = texts.translating;
+            
+            const translatedPrompt = await translateToEnglish(val);
+            document.getElementById('processText').innerText = texts.process;
+            
+            callAPI(translatedPrompt);
+        });
+
         window.applyStyle = function(styleName) {
             if(!canGenerate()) return; 
 
