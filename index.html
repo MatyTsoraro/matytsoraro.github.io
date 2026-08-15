@@ -118,10 +118,10 @@
 
             <div class="mt-4 border-t border-white/10 pt-4 flex flex-col gap-3">
                 <button onclick="applyStyle('linkedin_4k')" class="pro-btn py-4 rounded-2xl text-lg flex items-center justify-center gap-2 active:scale-95 transition">
-                    <i class="fas fa-briefcase"></i> תמונת לינקדאין 4K (PRO)
+                    <i class="fas fa-briefcase"></i> תמונת לינקדאין (PRO) 4K
                 </button>
                 <button onclick="applyStyle('cinematic_video')" class="pro-btn py-4 rounded-2xl text-lg flex items-center justify-center gap-2 active:scale-95 transition">
-                    <i class="fas fa-film"></i> צילום קולנועי 4K (PRO)
+                    <i class="fas fa-film"></i> צילום קולנועי (PRO) 4K
                 </button>
                 <button onclick="applyStyle('tiktok_video')" class="tiktok-btn py-4 rounded-2xl text-lg flex items-center justify-center gap-2 active:scale-95 transition">
                     <i class="fab fa-tiktok"></i> וידאו טיקטוק ויראלי (PRO)
@@ -165,7 +165,7 @@
     <div id="loadingModal" class="fixed inset-0 bg-black/95 z-50 hidden flex-col items-center justify-center p-6">
         <div class="loader-spinner mb-6"></div>
         <h2 class="text-2xl font-black mb-2 text-center text-[#00f3ff] animate-pulse">מייצר קסם ויראלי...</h2>
-        <p class="text-white/60 text-center text-sm max-w-xs">הבינה המלאכותית מנתחת את הפנים שלך. נא לא לסגור את האפליקציה.</p>
+        <p class="text-white/60 text-center text-sm max-w-xs">הבינה המלאכותית מנתחת את הפנים שלך. תהליך וידאו יכול לקחת עד 3-4 דקות. נא להמתין!</p>
         <div id="errorMsg" class="mt-6 text-[#FF3366] font-bold text-center hidden bg-red-900/30 p-3 rounded-xl"></div>
         <button id="closeErrorBtn" onclick="closeModal('loadingModal'); resetCamera();" class="hidden mt-4 bg-white text-black px-6 py-2 rounded-full font-bold">חזור למצלמה</button>
     </div>
@@ -333,8 +333,6 @@
 
         // --- Ad Handling ---
         function handleAdClick() {
-            // הלינק כבר נפתח בחלון חדש בגלל target="_blank"
-            // אנחנו רק מאפסים את המונה וסוגרים את החלון
             setTimeout(() => {
                 credits = maxCredits;
                 updateCreditDisplay();
@@ -375,37 +373,48 @@
             errorMsg.innerText = "";
 
             try {
-                // שלב 1: שליחת הבקשה לשרת
-                const res = await fetch(WORKER_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(requestBody)
-                });
+                // שלב 1: שליחת הבקשה לשרת עם תפיסת שגיאות רשת (Failed to fetch)
+                let res;
+                try {
+                    res = await fetch(WORKER_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(requestBody)
+                    });
+                } catch (networkErr) {
+                    throw new Error("שגיאת תקשורת עם השרת (Cloudflare). ודא שלחצת Deploy ושאין חוסם פרסומות מופעל.");
+                }
                 
                 const startData = await res.json();
                 
-                if (startData.error) throw new Error(startData.error);
-                if (!startData.id) throw new Error("שגיאה מהשרת: לא התקבל מזהה משימה. נסה שוב.");
+                if (startData.error) throw new Error("השרת החזיר שגיאה: " + startData.error);
+                if (startData.detail) throw new Error("שגיאת Replicate: " + JSON.stringify(startData.detail));
+                if (!startData.id) throw new Error("שגיאה: לא התקבל מזהה משימה מהשרת. כנראה בעיה בהגדרות המודל.");
 
                 let predictionId = startData.id;
                 let status = startData.status;
                 let attempts = 0;
-                const MAX_ATTEMPTS = 120; // 6 דקות (120 פעמים כפול 3 שניות)
+                const MAX_ATTEMPTS = 120; // 6 דקות לוידאו כבד
 
                 // שלב 2: בדיקת סטטוס במעגל (Polling)
                 while (status === "starting" || status === "processing") {
                     attempts++;
                     if (attempts > MAX_ATTEMPTS) {
-                        throw new Error("השרת עמוס מדי כרגע. החזרנו לך את הקרדיט.");
+                        throw new Error("זמן ההמתנה עבר (6 דקות). השרת עמוס מדי כרגע. החזרנו לך את הקרדיט.");
                     }
                     
                     await new Promise(r => setTimeout(r, 3000));
                     
-                    const pollRes = await fetch(WORKER_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ action: "status", id: predictionId })
-                    });
+                    let pollRes;
+                    try {
+                        pollRes = await fetch(WORKER_URL, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ action: "status", id: predictionId })
+                        });
+                    } catch (netErr) {
+                        continue; // אם יש ניתוק רגעי בבדיקה, נמשיך לנסות
+                    }
                     
                     const pollData = await pollRes.json();
                     
@@ -417,14 +426,14 @@
                         showResult(pollData.output, requestBody.style === 'tiktok_video');
                         return;
                     } else if (status === "failed") {
-                        throw new Error("שגיאת שרת: " + (pollData.error || "יצירת התמונה נכשלה."));
+                        throw new Error("יצירת הוידאו נכשלה. יכול להיות שקובץ video1.mp4 לא תקין או חסר ב-GitHub.");
                     }
                 }
             } catch (err) {
                 console.error(err);
                 credits++; // מחזירים קרדיט אם נכשל
                 updateCreditDisplay();
-                errorMsg.innerText = "שגיאה: " + err.message;
+                errorMsg.innerText = err.message;
                 errorMsg.classList.remove('hidden');
                 closeErrorBtn.classList.remove('hidden');
             }
