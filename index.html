@@ -47,14 +47,14 @@
         .viewport { 
             width: 100%; flex: 1 1 auto; 
             min-height: 250px; 
-            max-height: 42vh; /* הגבלת גובה כדי שהכפתורים לא ייחתכו */
+            max-height: 42vh; 
             background: rgba(0, 0, 0, 0.4); border-radius: 20px; 
             overflow: hidden; position: relative; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); 
             border: 1px solid var(--border); display: flex; justify-content: center; align-items: center;
         }
 
         video, img, canvas { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1; }
-        img { display: none; z-index: 2; }
+        #resultImg, #resultVideo { display: none; z-index: 2; }
         canvas { display: none; }
         
         .scanner-container { 
@@ -166,7 +166,6 @@
     </style>
 </head>
 <body>
-
     <header>
         <div id="creditBadge" style="background: rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 20px; font-weight: bold; color: #ffb800; display: flex; align-items: center; gap: 5px; font-size: 0.95rem; box-shadow: 0 0 10px rgba(255,184,0,0.2); transition: all 0.3s ease;">
             <i class="fas fa-bolt"></i> <span id="creditCount">3</span>/3
@@ -179,7 +178,10 @@
         <div class="viewport" id="viewport">
             <video id="video" autoplay playsinline muted></video>
             <canvas id="canvas"></canvas>
+            
+            <!-- Result Media -->
             <img id="resultImg" alt="AI Result" crossorigin="anonymous">
+            <video id="resultVideo" autoplay loop muted playsinline crossorigin="anonymous"></video>
             
             <div class="scanner-container" id="scanner">
                 <div class="spinner"></div>
@@ -213,19 +215,20 @@
                 </div>
 
                 <div class="category">
-                    <div class="category-title" style="color: #ffb800;"><i class="fas fa-crown"></i> תבניות פרימיום (4K PRO)</div>
+                    <div class="category-title" style="color: #ffb800;"><i class="fas fa-crown"></i> תבניות פרימיום (PRO)</div>
                     <div class="style-scroll">
+                        <!-- כפתור וידאו טיקטוק החדש -->
+                        <div class="style-card cat-pro" style="border-color: #bc13fe; box-shadow: 0 0 10px rgba(188,19,254,0.4);" onclick="applyStyle('tiktok_video')">
+                            <i class="fab fa-tiktok" style="color: #bc13fe;"></i>
+                            <span style="color: #bc13fe;">וידאו טיקטוק</span>
+                        </div>
                         <div class="style-card cat-pro" style="border-color: #ffb800; box-shadow: 0 0 10px rgba(255,184,0,0.4);" onclick="applyStyle('linkedin_4k')">
                             <i class="fas fa-briefcase" style="color: #ffb800;"></i>
-                            <span style="color: #ffb800;">לינקדאין PRO</span>
+                            <span style="color: #ffb800;">לינקדאין 4K</span>
                         </div>
                         <div class="style-card cat-scifi" style="border-color: #00f3ff; box-shadow: 0 0 10px rgba(0,243,255,0.4);" onclick="applyStyle('cinematic_video')">
                             <i class="fas fa-camera-retro" style="color: #00f3ff;"></i>
-                            <span style="color: #00f3ff;">פורטרט קולנועי</span>
-                        </div>
-                        <div class="style-card cat-anime" style="border-color: #ff3366; box-shadow: 0 0 10px rgba(255,51,102,0.4);" onclick="applyStyle('super_saiyan')">
-                            <i class="fas fa-bolt" style="color: #ff3366;"></i>
-                            <span style="color: #ff3366;">סופר סאייה 4K</span>
+                            <span style="color: #00f3ff;">פורטרט 4K</span>
                         </div>
                     </div>
                 </div>
@@ -242,7 +245,7 @@
                 <div class="category">
                     <div class="category-title">אנימה וקומיקס</div>
                     <div class="style-scroll">
-                        <div class="style-card cat-anime" onclick="applyStyle('anime_hero')"><i class="fas fa-user-astronaut"></i><span>גיבור אנימה</span></div>
+                        <div class="style-card cat-anime" onclick="applyStyle('super_saiyan')"><i class="fas fa-bolt"></i><span>סופר סאייה</span></div>
                         <div class="style-card cat-anime" onclick="applyStyle('pixar_character')"><i class="fas fa-smile"></i><span>פיקסאר 3D</span></div>
                         <div class="style-card cat-anime" onclick="applyStyle('comic_book')"><i class="fas fa-book-open"></i><span>קומיקס</span></div>
                     </div>
@@ -254,15 +257,13 @@
                         <div class="style-card cat-scifi" onclick="applyStyle('cyber_ninja')"><i class="fas fa-user-ninja"></i><span>סייבר-נינג'ה</span></div>
                         <div class="style-card cat-scifi" onclick="applyStyle('astronaut')"><i class="fas fa-rocket"></i><span>אסטרונאוט</span></div>
                         <div class="style-card cat-fantasy" onclick="applyStyle('vampire')"><i class="fas fa-moon"></i><span>ערפד אפל</span></div>
-                        <div class="style-card cat-fantasy" onclick="applyStyle('zombie')"><i class="fas fa-skull"></i><span>זומבי</span></div>
                     </div>
                 </div>
             </div>
             
             <div id="resultControls">
                 <button class="action-btn" id="waBtn"><i class="fab fa-whatsapp"></i> <span id="waText">שתף בווטסאפ</span></button>
-                <button class="action-btn" id="dlBtn"><i class="fas fa-download"></i> <span id="dlText">שמור תמונה</span></button>
-                <button class="action-btn" id="profileBtn"><i class="fas fa-user-circle"></i> <span id="profText">חתוך לפרופיל</span></button>
+                <button class="action-btn" id="dlBtn"><i class="fas fa-download"></i> <span id="dlText">שמור תמונה/וידאו</span></button>
                 <button class="action-btn" id="rtBtn"><i class="fas fa-camera"></i> <span id="rtText">צלם מחדש</span></button>
             </div>
             
@@ -279,16 +280,6 @@
         </div>
     </div>
 
-    <div id="galleryModal" class="modal">
-        <div class="modal-content" style="max-height: 85vh;">
-            <button class="close-modal" onclick="closeModal('galleryModal')"><i class="fas fa-times"></i></button>
-            <h2>הגלריה שלי</h2>
-            <p style="font-size: 0.8rem; margin-bottom: 15px;">האווטארים האחרונים שיצרת</p>
-            <div id="galleryGrid" class="gallery-grid">
-            </div>
-        </div>
-    </div>
-
     <div id="toastMsg">הודעה</div>
 
     <script>
@@ -297,7 +288,7 @@
                 dir: 'rtl', process: "מעבד יצירת מופת...", wait: "זה עשוי לקחת עד דקה וחצי",
                 customTitle: "יצירה חופשית (הקלד או דבר)", placeholder: "תאר את האווטאר שלך בפירוט...", btnCreate: "צור יצירת מופת",
                 quickTitle: "תבניות מהירות", ceo: "מנכ\"ל הייטק", glad: "גלדיאטור", jedi: "אביר ג'דיי", mafia: "בוס מאפיה", wa: "שתף בווטסאפ",
-                dl: "שמור תמונה", prof: "חתוך לפרופיל", rt: "צלם מחדש", alertEmpty: "אנא הקלד או הקלט תיאור", translating: "מתרגם לאנגלית...",
+                dl: "שמור לגלריה", prof: "חתוך לפרופיל", rt: "צלם מחדש", alertEmpty: "אנא הקלד או הקלט תיאור", translating: "מתרגם לאנגלית...",
                 limitTitle: "הגעת למגבלה היומית!", limitDesc: "יצרת כבר 3 תמונות היום. חזור מחר להמשך יצירה בחינם!", galleryEmpty: "הגלריה שלך ריקה. צור אווטאר כדי למלא אותה!",
                 adBtn: "צפה בפרסומת וקבל תמונה", adWait: "טוען...", adSuccess: "קיבלת קרדיט נוסף! צור תמונה"
             },
@@ -305,7 +296,7 @@
                 dir: 'ltr', process: "Processing Masterpiece...", wait: "This may take up to 90 seconds",
                 customTitle: "Free Creation (Type or Speak)", placeholder: "Describe your avatar in detail...", btnCreate: "Create Masterpiece",
                 quickTitle: "Quick Templates", ceo: "Tech CEO", glad: "Gladiator", jedi: "Jedi Master", mafia: "Mafia Boss", wa: "Share on WhatsApp",
-                dl: "Save to Gallery", prof: "Crop for Profile", rt: "Retake Photo", alertEmpty: "Please type or record a description", translating: "Translating to English...",
+                dl: "Save Media", prof: "Crop for Profile", rt: "Retake Photo", alertEmpty: "Please type or record a description", translating: "Translating to English...",
                 limitTitle: "Daily Limit Reached!", limitDesc: "You have created 3 images today. Come back tomorrow for more free creations!", galleryEmpty: "Your gallery is empty. Create an avatar to fill it up!",
                 adBtn: "Watch Ad for +1 Avatar", adWait: "Loading...", adSuccess: "Extra credit granted! Create now"
             }
@@ -327,13 +318,13 @@
         document.getElementById('mafiaText').innerText = texts.mafia;
         document.getElementById('waText').innerText = texts.wa;
         document.getElementById('dlText').innerText = texts.dl;
-        document.getElementById('profText').innerText = texts.prof;
         document.getElementById('rtText').innerText = texts.rt;
         document.getElementById('adBtnText').innerText = texts.adBtn;
         
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const resultImg = document.getElementById('resultImg');
+        const resultVideo = document.getElementById('resultVideo');
         
         const captureBtn = document.getElementById('captureBtn');
         const switchCameraBtn = document.getElementById('switchCameraBtn');
@@ -360,17 +351,13 @@
 
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-        // --- פונקציית הפרסומת המתוקנת (עם הלינק האמיתי) ---
         function triggerMonetagAd() {
-            // 1. הלינק הישיר שלך מ-Monetag!
             window.open('https://omg10.com/4/11571722', '_blank');
-            
             const btn = document.getElementById('watchAdBtn');
             const originalText = btn.innerHTML;
             btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> <span>מאשר צפייה...</span>`;
             btn.disabled = true;
 
-            // 2. אחרי 5 שניות, מחזירים קרדיט
             setTimeout(() => {
                 let usage = JSON.parse(localStorage.getItem('personaai_usage'));
                 if(usage && usage.count > 0) {
@@ -378,9 +365,7 @@
                     localStorage.setItem('personaai_usage', JSON.stringify(usage));
                     updateCreditDisplay();
                 }
-                
                 btn.innerHTML = `<i class="fas fa-check"></i> <span>קיבלת קרדיט!</span>`;
-                
                 setTimeout(() => {
                     closeModal('limitModal');
                     btn.innerHTML = originalText;
@@ -509,7 +494,6 @@
             if(!val) { showToast(texts.alertEmpty, true); return; }
             if(!canGenerate()) return; 
 
-            // התיקון: הורדת המונה מיידית בלחיצה על יצירה חופשית
             const today = new Date().toDateString();
             let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 0 };
             usage.count++;
@@ -529,7 +513,6 @@
         window.applyStyle = function(styleName) {
             if(!canGenerate()) return; 
 
-            // הורדת המונה *מיידית* בלחיצה
             const today = new Date().toDateString();
             let usage = JSON.parse(localStorage.getItem('personaai_usage')) || { date: today, count: 0 };
             usage.count++;
@@ -543,7 +526,6 @@
             callAPI(styleName);
         };
 
-        // פונקציית סימן מים שעובדת רק על תמונות (לא וידאו)
         async function fetchAndWatermark(imageUrl) {
             try {
                 const res = await fetch(imageUrl);
@@ -596,16 +578,15 @@
                 let predictionId = startData.id;
                 let status = startData.status;
                 let attempts = 0;
-                const MAX_ATTEMPTS = 60; // 3 דקות המתנה מקסימום
+                const MAX_ATTEMPTS = 60; // Timeout = 3 mins
 
-                // תור המתנה (Polling)
                 while (status === "starting" || status === "processing") {
                     attempts++;
                     if (attempts > MAX_ATTEMPTS) {
                         throw new Error("השרת עמוס מדי כרגע. החזרנו לך את הקרדיט.");
                     }
 
-                    await new Promise(r => setTimeout(r, 3000)); // מחכה 3 שניות
+                    await new Promise(r => setTimeout(r, 3000));
                     
                     const statusRes = await fetch(API_URL, {
                         method: "POST",
@@ -619,29 +600,38 @@
                     status = statusData.status;
                     
                     if (status === "failed") {
-                        throw new Error(statusData.error || "ה-AI לא הצליח לייצר את התמונה מסיבה לא ידועה.");
+                        throw new Error(statusData.error || "ה-AI נכשל בייצור האווטאר.");
                     }
                     
                     if (status === "succeeded") {
                         const rawOutput = statusData.output;
                         const finalUrl = Array.isArray(rawOutput) ? rawOutput[rawOutput.length - 1] : rawOutput;
                         
-                        if (!finalUrl) throw new Error("התהליך הסתיים אך התמונה ריקה.");
+                        if (!finalUrl) throw new Error("התהליך הסתיים אך הקובץ ריק.");
 
-                        // עיבוד תמונה 
-                        const watermarkedImage = await fetchAndWatermark(finalUrl);
-                        resultImg.onload = () => {
+                        // פיצול בין תוצאת וידאו לתוצאת תמונה
+                        if (finalUrl.includes('.mp4') || finalUrl.includes('.mkv')) {
+                            resultVideo.src = finalUrl;
+                            resultVideo.style.display = 'block';
+                            resultImg.style.display = 'none';
                             scanner.style.display = 'none';
                             resultControls.style.display = 'flex';
-                        };
-                        resultImg.src = watermarkedImage;
+                        } else {
+                            const watermarkedImage = await fetchAndWatermark(finalUrl);
+                            resultImg.onload = () => {
+                                scanner.style.display = 'none';
+                                resultControls.style.display = 'flex';
+                            };
+                            resultImg.src = watermarkedImage;
+                            resultImg.style.display = 'block';
+                            resultVideo.style.display = 'none';
+                        }
                         
-                        return; // סיום בהצלחה
+                        return;
                     }
                 }
 
             } catch (err) {
-                // רדאר שגיאות מופעל! החזרת קרדיט למשתמש והצגת השגיאה
                 refundUsage(); 
                 showToast("שגיאה: " + err.message, true);
                 resetCamera();
@@ -651,40 +641,49 @@
         function resetCamera() {
             scanner.style.display = 'none';
             resultImg.style.display = 'none';
+            resultVideo.style.display = 'none';
             video.style.display = 'block';
             resultControls.style.display = 'none';
             styleMenu.style.display = 'none';
             cameraControls.style.display = 'flex';
+            resultVideo.pause();
+            resultVideo.src = "";
         }
 
         document.getElementById('rtBtn').addEventListener('click', resetCamera);
 
         document.getElementById('waBtn').addEventListener('click', async () => {
             try {
-                const response = await fetch(resultImg.src);
+                const isVideo = resultVideo.style.display === 'block';
+                const src = isVideo ? resultVideo.src : resultImg.src;
+                
+                const response = await fetch(src);
                 const blob = await response.blob();
-                const file = new File([blob], 'Avatar.jpg', { type: 'image/jpeg' });
+                const file = new File([blob], isVideo ? 'Avatar.mp4' : 'Avatar.jpg', { type: isVideo ? 'video/mp4' : 'image/jpeg' });
                 if (navigator.canShare && navigator.canShare({ files: [file] })) {
                     await navigator.share({ files: [file], title: 'My Avatar', text: 'Created with PersonaAI!' });
                 }
-            } catch (err) { showToast("Sharing error", true); }
+            } catch (err) { showToast("שגיאה בשיתוף לוואטסאפ", true); }
         });
 
         document.getElementById('dlBtn').addEventListener('click', async () => {
             try {
-                const response = await fetch(resultImg.src);
+                const isVideo = resultVideo.style.display === 'block';
+                const src = isVideo ? resultVideo.src : resultImg.src;
+
+                const response = await fetch(src);
                 const blob = await response.blob();
                 const url = window.URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.href = url;
-                link.download = 'ViralAvatar_' + Date.now() + '.jpg';
+                link.download = isVideo ? 'ViralAvatar_' + Date.now() + '.mp4' : 'ViralAvatar_' + Date.now() + '.jpg';
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
                 window.URL.revokeObjectURL(url);
                 showToast(currentLang === 'he' ? 'נשמר בהצלחה!' : 'Saved successfully!');
             } catch (err) {
-                showToast("Please long-press the image to save.", true);
+                showToast("אנא לחץ לחיצה ארוכה על המדיה כדי לשמור.", true);
             }
         });
 
