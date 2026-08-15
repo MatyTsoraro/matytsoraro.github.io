@@ -95,6 +95,7 @@
         <div id="stylesSection" class="w-full mt-8 hidden flex-col gap-4">
             <h3 class="text-xl font-bold text-center text-white/90">בחר סגנון ויראלי</h3>
             
+            <!-- Standard Styles Grid -->
             <div class="grid grid-cols-2 gap-3">
                 <button onclick="applyStyle('cyberpunk')" class="glass-panel py-3 rounded-2xl font-bold active:scale-95 transition">
                     <i class="fas fa-robot text-[#00f3ff] block mb-1 text-2xl"></i> סייברפאנק
@@ -159,7 +160,7 @@
     <div id="loadingModal" class="fixed inset-0 bg-black/95 z-50 hidden flex-col items-center justify-center p-6">
         <div class="loader-spinner mb-6"></div>
         <h2 class="text-2xl font-black mb-2 text-center text-[#00f3ff] animate-pulse">מייצר קסם ויראלי...</h2>
-        <p class="text-white/60 text-center text-sm max-w-xs">הבינה המלאכותית מנתחת את הפנים שלך. תהליך וידאו יכול לקחת עד 3-4 דקות. נא להמתין!</p>
+        <p class="text-white/60 text-center text-sm max-w-xs">הבינה המלאכותית מנתחת את הפנים שלך. תהליך עיבוד יכול לקחת עד 3-4 דקות. נא להמתין!</p>
         <div id="errorMsg" class="mt-6 text-[#FF3366] font-bold text-center hidden bg-red-900/30 p-3 rounded-xl"></div>
         <button id="closeErrorBtn" onclick="closeModal('loadingModal'); resetCamera();" class="hidden mt-4 bg-white text-black px-6 py-2 rounded-full font-bold">חזור למצלמה</button>
     </div>
@@ -431,8 +432,24 @@
             let finalUrl = Array.isArray(outputUrl) ? outputUrl[0] : outputUrl;
 
             if (isVideo) {
-                // הוספת אפשרות סאונד ונגין וידאו מלא
-                resultContainer.innerHTML = `<video src="${finalUrl}" autoplay loop playsinline controls class="w-full h-auto rounded-2xl border border-[#00f3ff] shadow-[0_0_15px_rgba(0,243,255,0.4)]"></video>`;
+                // נגן וידאו עם סינכרון סאונד אוטומטי מהסרטון המקורי של תומאס שלבי!
+                resultContainer.innerHTML = `
+                    <div class="relative w-full">
+                        <video id="resultVideo" src="${finalUrl}" autoplay loop playsinline controls class="w-full h-auto rounded-2xl border border-[#00f3ff] shadow-[0_0_15px_rgba(0,243,255,0.4)]"></video>
+                        <audio id="resultAudio" src="video1.mp4" loop></audio>
+                    </div>
+                `;
+                setTimeout(() => {
+                    const v = document.getElementById('resultVideo');
+                    const a = document.getElementById('resultAudio');
+                    if(v && a) {
+                        v.onplay = () => a.play();
+                        v.onpause = () => a.pause();
+                        v.onseeking = () => a.currentTime = v.currentTime;
+                        // נסיון ניגון סאונד אוטומטי
+                        a.play().catch(e => console.log("Audio autoplay restricted by browser, user can unmute controls"));
+                    }
+                }, 300);
             } else {
                 resultContainer.innerHTML = `<img src="${finalUrl}" class="w-full h-auto rounded-2xl border border-[#00f3ff] shadow-[0_0_15px_rgba(0,243,255,0.4)]" />`;
             }
