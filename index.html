@@ -3,472 +3,302 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PersonaAI - Viral Avatar Studio</title>
-    
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#FF3366">
-    
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Viral Avatar Studio</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;500;800&display=swap');
-        body { 
-            font-family: 'Heebo', sans-serif; 
-            background-color: #030207; 
-            color: white; 
-            overflow-x: hidden;
-        }
-        .glass-panel {
-            background: rgba(22, 22, 37, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .pro-btn {
-            background: linear-gradient(45deg, #FF3366, #ffb800);
-            box-shadow: 0 4px 15px rgba(255, 51, 102, 0.4);
-            color: white;
-            font-weight: bold;
-        }
-        .tiktok-btn {
-            background: linear-gradient(45deg, #00f2fe, #4facfe);
-            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.4);
-            color: white;
-            font-weight: bold;
-        }
-        #cameraView {
-            transform: scaleX(-1);
-            object-fit: cover;
-        }
-        .loader-spinner {
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            border-top: 4px solid #00f3ff;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        :root { --primary: #00f3ff; --secondary: #bc13fe; --bg: #0a0a12; --panel: rgba(22, 22, 37, 0.8); --text: #ffffff; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        
+        /* Glass Panel Design from Lovable */
+        .glass-panel { background: var(--panel); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(14px); border-radius: 24px; }
+        
+        header { padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        h1 { font-size: 1.5rem; background: linear-gradient(45deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
+        
+        .container { flex: 1; display: flex; flex-direction: column; padding: 15px; gap: 15px; overflow-y: auto; max-width: 500px; margin: 0 auto; width: 100%; }
+        .container::-webkit-scrollbar { display: none; }
+        
+        .viewport { height: 40vh; min-height: 250px; border-radius: 24px; overflow: hidden; position: relative; border: 2px solid rgba(255,255,255,0.1); }
+        video, img, canvas { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
+        img, canvas { display: none; z-index: 2; }
+        
+        .loading-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.8); z-index: 10; display: none; flex-direction: column; justify-content: center; align-items: center; }
+        .spinner { border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 10px; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        
+        .controls { display: flex; justify-content: space-around; padding: 10px 0; }
+        .icon-btn { background: var(--panel); color: white; border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; width: 50px; height: 50px; font-size: 1.2rem; cursor: pointer; }
+        #captureBtn { background: linear-gradient(45deg, var(--primary), var(--secondary)); width: 70px; height: 70px; font-size: 2rem; border: none; }
+        
+        #styleMenu, #resultMenu { display: none; flex-direction: column; gap: 15px; padding-bottom: 20px;}
+        
+        /* 3 Column Grid Design */
+        .category-title { font-size: 0.85rem; color: #aaa; margin-bottom: 8px; padding-right: 5px; }
+        .style-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .style-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 15px 5px; display: flex; flex-direction: column; align-items: center; gap: 8px; color: white; cursor: pointer; }
+        .style-card i { font-size: 1.8rem; color: var(--primary); }
+        .style-card span { font-size: 0.75rem; font-weight: bold; text-align: center; }
+        
+        .faceoff-btn { background: linear-gradient(45deg, #ff0055, #00f3ff); border: none; border-radius: 20px; padding: 15px; color: white; font-weight: bold; font-size: 1.1rem; display: flex; justify-content: center; gap: 10px; cursor: pointer; width: 100%; margin-top: 10px;}
+        
+        .action-btn { width: 100%; padding: 15px; border-radius: 15px; border: none; font-weight: bold; font-size: 1rem; color: white; cursor: pointer; display: flex; justify-content: center; gap: 10px; margin-bottom: 10px;}
+        .btn-wa { background: #25D366; }
+        .btn-dl { background: var(--primary); color: black; }
+        
+        #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #ff3366; padding: 10px 20px; border-radius: 20px; display: none; z-index: 100; font-weight: bold; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center pb-20">
+<body>
 
-    <header class="w-full flex justify-between items-center p-4 glass-panel sticky top-0 z-50">
-        <div class="text-2xl font-black tracking-widest bg-clip-text text-transparent bg-gradient-to-r from-[#00f3ff] to-[#FF3366]">
-            VIRAL AVATAR
-        </div>
-        <div class="flex items-center gap-2 bg-white/10 px-4 py-1.5 rounded-full border border-white/20">
-            <span id="creditCount" class="font-bold text-[#ffb800]">3/3</span>
-            <i class="fas fa-bolt text-[#ffb800]"></i>
-        </div>
+    <header class="glass-panel">
+        <div style="color: #ffb800; font-weight: bold;"><i class="fas fa-bolt"></i> <span id="creditCount">3</span>/3</div>
+        <h1>VIRAL AVATAR</h1>
+        <div style="width: 40px;"></div>
     </header>
 
-    <main class="w-full max-w-md mt-6 px-4 flex flex-col items-center">
-        <div class="relative w-full aspect-[3/4] bg-gray-900 rounded-3xl overflow-hidden shadow-2xl border-2 border-white/10">
-            <video id="cameraView" autoplay playsinline class="w-full h-full"></video>
-            <canvas id="snapshotCanvas" class="hidden"></canvas>
-            <img id="previewImage" class="hidden w-full h-full object-cover" />
+    <div class="container">
+        <div class="viewport glass-panel">
+            <video id="videoElement" autoplay playsinline muted></video>
+            <canvas id="canvasElement"></canvas>
+            <img id="resultImage" alt="Result">
+            <!-- נגן מיוחד לוידאו שחוזר מ-FaceOff -->
+            <video id="resultVideo" style="display:none;" controls autoplay playsinline loop></video>
             
-            <div id="cameraControls" class="absolute bottom-6 left-0 w-full flex justify-center gap-6 px-4">
-                <button onclick="switchCamera()" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-white shadow-lg active:scale-95 transition">
-                    <i class="fas fa-sync-alt"></i>
-                </button>
-                
-                <button onclick="takeSnapshot()" class="w-20 h-20 rounded-full bg-gradient-to-r from-[#00f3ff] to-[#FF3366] p-1 shadow-[0_0_20px_rgba(0,243,255,0.4)] active:scale-90 transition">
-                    <div class="w-full h-full bg-black rounded-full border-4 border-white flex items-center justify-center">
-                        <i class="fas fa-camera text-2xl text-white"></i>
-                    </div>
-                </button>
-                
-                <button onclick="document.getElementById('fileInput').click()" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-white shadow-lg active:scale-95 transition">
-                    <i class="fas fa-upload"></i>
-                </button>
-                <input type="file" id="fileInput" accept="image/*" class="hidden" onchange="handleFileUpload(event)">
+            <div class="loading-overlay" id="loadingOverlay">
+                <div class="spinner"></div>
+                <div style="color: var(--primary); font-weight: bold;" id="loadingText">מעבד קסם...</div>
             </div>
-            
-            <button id="retakeBtn" onclick="resetCamera()" class="hidden absolute top-4 right-4 glass-panel px-4 py-2 rounded-full text-sm font-bold shadow-lg">
-                <i class="fas fa-times mr-2"></i> צלם מחדש
-            </button>
         </div>
 
-        <div id="stylesSection" class="w-full mt-8 hidden flex-col gap-4">
-            <h3 class="text-xl font-bold text-center text-white/90">בחר סגנון ויראלי</h3>
+        <div id="cameraMenu">
+            <div class="controls">
+                <button class="icon-btn" onclick="document.getElementById('uploadInput').click()"><i class="fas fa-upload"></i></button>
+                <input type="file" id="uploadInput" accept="image/*" style="display:none">
+                <button id="captureBtn" onclick="takePhoto()"><i class="fas fa-camera"></i></button>
+                <button class="icon-btn" onclick="switchCamera()"><i class="fas fa-sync"></i></button>
+            </div>
+        </div>
+
+        <div id="styleMenu">
+            <button class="faceoff-btn" onclick="generateFaceOff()">
+                <i class="fas fa-video"></i> FACE OFF - וידאו טיקטוק
+            </button>
             
-            <!-- Standard Styles Grid -->
-            <div class="grid grid-cols-2 gap-3">
-                <button onclick="applyStyle('cyberpunk')" class="glass-panel py-3 rounded-2xl font-bold active:scale-95 transition">
-                    <i class="fas fa-robot text-[#00f3ff] block mb-1 text-2xl"></i> סייברפאנק
-                </button>
-                <button onclick="applyStyle('fantasy')" class="glass-panel py-3 rounded-2xl font-bold active:scale-95 transition">
-                    <i class="fas fa-dragon text-purple-400 block mb-1 text-2xl"></i> פנטזיה
-                </button>
-                <button onclick="applyStyle('gta')" class="glass-panel py-3 rounded-2xl font-bold active:scale-95 transition">
-                    <i class="fas fa-car text-yellow-400 block mb-1 text-2xl"></i> GTA Style
-                </button>
-                <button onclick="applyStyle('anime')" class="glass-panel py-3 rounded-2xl font-bold active:scale-95 transition">
-                    <i class="fas fa-star text-pink-400 block mb-1 text-2xl"></i> אנימה
-                </button>
-            </div>
-
-            <!-- PRO Styles & TikTok Video -->
-            <div class="mt-4 border-t border-white/10 pt-4 flex flex-col gap-3">
-                <button onclick="applyStyle('linkedin_4k')" class="pro-btn py-4 rounded-2xl text-lg flex items-center justify-center gap-2 active:scale-95 transition">
-                    <i class="fas fa-briefcase"></i> תמונת לינקדאין (PRO) 4K
-                </button>
-                <button onclick="applyStyle('cinematic_video')" class="pro-btn py-4 rounded-2xl text-lg flex items-center justify-center gap-2 active:scale-95 transition">
-                    <i class="fas fa-film"></i> צילום קולנועי (PRO) 4K
-                </button>
-                <button onclick="applyStyle('tiktok_video')" class="tiktok-btn py-4 rounded-2xl text-lg flex items-center justify-center gap-2 active:scale-95 transition">
-                    <i class="fab fa-tiktok"></i> וידאו טיקטוק ויראלי (PRO)
-                </button>
-            </div>
-
-            <!-- Free Text Creation -->
-            <div class="mt-4 glass-panel p-4 rounded-2xl flex flex-col gap-3">
-                <div class="flex gap-2">
-                    <input type="text" id="customPrompt" placeholder="תאר מה תרצה להיות..." class="w-full bg-black/50 text-white px-4 py-3 rounded-xl border border-white/10 focus:outline-none focus:border-[#00f3ff]">
-                    <button id="micBtn" class="bg-white/10 px-4 rounded-xl text-white active:bg-white/20">
-                        <i class="fas fa-microphone"></i>
-                    </button>
+            <div>
+                <div class="category-title">תבניות פרימיום</div>
+                <div class="style-grid">
+                    <div class="style-card" onclick="generateImage('tech_ceo')"><i class="fas fa-briefcase"></i><span>מנכ"ל הייטק</span></div>
+                    <div class="style-card" onclick="generateImage('cyber_ninja')"><i class="fas fa-user-ninja"></i><span>סייבר-נינג'ה</span></div>
+                    <div class="style-card" onclick="generateImage('jedi_master')"><i class="fab fa-jedi-order"></i><span>אביר ג'דיי</span></div>
                 </div>
-                <button id="customBtn" class="w-full bg-white text-black font-bold py-3 rounded-xl active:scale-95 transition shadow-lg">
-                    צור יצירת מופת <i class="fas fa-magic ml-2"></i>
-                </button>
             </div>
         </div>
-    </main>
 
-    <!-- Monetag Ad Modal -->
-    <div id="adModal" class="fixed inset-0 bg-black/90 z-50 hidden flex-col items-center justify-center p-6 backdrop-blur-sm">
-        <div class="glass-panel p-8 rounded-3xl text-center max-w-sm w-full border border-[#FF3366]/30">
-            <i class="fas fa-battery-empty text-5xl text-[#FF3366] mb-4"></i>
-            <h2 class="text-2xl font-black mb-2">נגמרו לך הקרדיטים!</h2>
-            <p class="text-white/70 mb-6">רוצה ליצור עוד אווטארים ויראליים? צפה בפרסומת קצרה וקבל תמונה נוספת בחינם!</p>
-            
-            <a href="https://omg10.com/4/11571722" target="_blank" onclick="handleAdClick()" class="w-full block bg-gradient-to-r from-[#00f3ff] to-[#4facfe] text-black font-black py-4 rounded-xl mb-3 shadow-[0_0_15px_rgba(0,243,255,0.4)]">
-                צפה בפרסומת וקבל תמונה
-            </a>
-            
-            <button onclick="closeModal('adModal')" class="w-full bg-white/10 text-white font-bold py-3 rounded-xl">
-                ביטול
-            </button>
+        <div id="resultMenu">
+            <button class="action-btn btn-wa" onclick="shareResult()"><i class="fab fa-whatsapp"></i> שתף בוואטסאפ</button>
+            <button class="action-btn btn-dl" onclick="downloadResult()"><i class="fas fa-download"></i> שמור למכשיר</button>
+            <button class="action-btn glass-panel" onclick="resetApp()"><i class="fas fa-camera"></i> צלם מחדש</button>
         </div>
     </div>
 
-    <!-- Loading Modal -->
-    <div id="loadingModal" class="fixed inset-0 bg-black/95 z-50 hidden flex-col items-center justify-center p-6">
-        <div class="loader-spinner mb-6"></div>
-        <h2 class="text-2xl font-black mb-2 text-center text-[#00f3ff] animate-pulse">מייצר קסם ויראלי...</h2>
-        <p class="text-white/60 text-center text-sm max-w-xs">הבינה המלאכותית מנתחת את הפנים שלך. תהליך עיבוד יכול לקחת עד 3-4 דקות. נא להמתין!</p>
-        <div id="errorMsg" class="mt-6 text-[#FF3366] font-bold text-center hidden bg-red-900/30 p-3 rounded-xl"></div>
-        <button id="closeErrorBtn" onclick="closeModal('loadingModal'); resetCamera();" class="hidden mt-4 bg-white text-black px-6 py-2 rounded-full font-bold">חזור למצלמה</button>
-    </div>
+    <div id="toast"></div>
 
-    <!-- Result Modal -->
-    <div id="resultModal" class="fixed inset-0 bg-black z-50 hidden flex-col items-center justify-start pt-10 px-4 overflow-y-auto">
-        <h2 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#00f3ff] to-[#FF3366] mb-6">התוצאה שלך!</h2>
-        
-        <div id="resultContainer" class="w-full max-w-sm rounded-2xl overflow-hidden shadow-[0_0_30px_rgba(255,51,102,0.3)] mb-6">
-            <!-- Image or Video will be injected here -->
-        </div>
+<script>
+    const API_URL = "https://billowing-shape-1d81.maty-tsoraro.workers.dev";
+    let stream = null;
+    let facingMode = 'user';
+    let base64Image = null;
+    let currentResultUrl = null;
 
-        <div class="flex w-full max-w-sm gap-3 pb-10">
-            <button id="downloadBtn" class="flex-1 bg-gradient-to-r from-[#00f3ff] to-[#4facfe] text-black font-black py-4 rounded-xl shadow-lg active:scale-95 transition flex items-center justify-center gap-2">
-                <i class="fas fa-download"></i> שמור לטלפון
-            </button>
-            <button onclick="closeModal('resultModal'); resetCamera();" class="w-16 bg-white/10 text-white py-4 rounded-xl active:scale-95 transition flex items-center justify-center">
-                <i class="fas fa-home text-xl"></i>
-            </button>
-        </div>
-    </div>
+    const videoEl = document.getElementById('videoElement');
+    const canvasEl = document.getElementById('canvasElement');
+    const imgEl = document.getElementById('resultImage');
+    const resVideoEl = document.getElementById('resultVideo');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const loadingText = document.getElementById('loadingText');
 
-    <script>
-        let video = document.getElementById('cameraView');
-        let currentStream = null;
-        let facingMode = 'user';
-        let capturedImageB64 = null;
-        let credits = 3;
-        const maxCredits = 3;
-        
-        const WORKER_URL = 'https://billowing-shape-1d81.maty-tsoraro.workers.dev';
+    // אתחול מצלמה
+    async function startCamera() {
+        if (stream) stream.getTracks().forEach(t => t.stop());
+        try {
+            stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode } });
+            videoEl.srcObject = stream;
+        } catch (e) { showToast("שגיאה בגישה למצלמה"); }
+    }
+    
+    function switchCamera() { facingMode = facingMode === 'user' ? 'environment' : 'user'; startCamera(); }
 
-        async function setupCamera() {
-            if (currentStream) currentStream.getTracks().forEach(track => track.stop());
-            try {
-                currentStream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: facingMode, width: { ideal: 1280 }, height: { ideal: 720 } } 
-                });
-                video.srcObject = currentStream;
-            } catch (err) {
-                console.error("Camera error:", err);
-            }
-        }
+    function takePhoto() {
+        canvasEl.width = videoEl.videoWidth; canvasEl.height = videoEl.videoHeight;
+        const ctx = canvasEl.getContext('2d');
+        if (facingMode === 'user') { ctx.translate(canvasEl.width, 0); ctx.scale(-1, 1); }
+        ctx.drawImage(videoEl, 0, 0);
+        base64Image = canvasEl.toDataURL('image/jpeg', 0.8);
+        showStyleMenu();
+    }
 
-        function switchCamera() {
-            facingMode = facingMode === 'user' ? 'environment' : 'user';
-            video.style.transform = facingMode === 'user' ? 'scaleX(-1)' : 'scaleX(1)';
-            setupCamera();
-        }
-
-        function takeSnapshot() {
-            const canvas = document.getElementById('snapshotCanvas');
-            const preview = document.getElementById('previewImage');
-            
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            const ctx = canvas.getContext('2d');
-            
-            if (facingMode === 'user') {
-                ctx.translate(canvas.width, 0);
-                ctx.scale(-1, 1);
-            }
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            
-            capturedImageB64 = canvas.toDataURL('image/jpeg', 0.8);
-            preview.src = capturedImageB64;
-            
-            video.classList.add('hidden');
-            preview.classList.remove('hidden');
-            document.getElementById('cameraControls').classList.add('hidden');
-            document.getElementById('retakeBtn').classList.remove('hidden');
-            document.getElementById('stylesSection').classList.remove('hidden');
-            document.getElementById('stylesSection').classList.add('flex');
-            
-            setTimeout(() => {
-                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-            }, 100);
-        }
-
-        function resetCamera() {
-            document.getElementById('previewImage').classList.add('hidden');
-            video.classList.remove('hidden');
-            document.getElementById('cameraControls').classList.remove('hidden');
-            document.getElementById('retakeBtn').classList.add('hidden');
-            document.getElementById('stylesSection').classList.add('hidden');
-            document.getElementById('stylesSection').classList.remove('flex');
-            capturedImageB64 = null;
-        }
-
-        function handleFileUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                capturedImageB64 = e.target.result;
-                const preview = document.getElementById('previewImage');
-                preview.src = capturedImageB64;
-                video.classList.add('hidden');
-                preview.classList.remove('hidden');
-                document.getElementById('cameraControls').classList.add('hidden');
-                document.getElementById('retakeBtn').classList.remove('hidden');
-                document.getElementById('stylesSection').classList.remove('hidden');
-                document.getElementById('stylesSection').classList.add('flex');
+    document.getElementById('uploadInput').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => {
+                canvasEl.width = img.width; canvasEl.height = img.height;
+                canvasEl.getContext('2d').drawImage(img, 0, 0);
+                base64Image = canvasEl.toDataURL('image/jpeg', 0.8);
+                showStyleMenu();
             };
-            reader.readAsDataURL(file);
-        }
-
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (SpeechRecognition) {
-            const recognition = new SpeechRecognition();
-            recognition.lang = 'he-IL';
-            recognition.interimResults = false;
-
-            document.getElementById('micBtn').addEventListener('click', () => {
-                recognition.start();
-                document.getElementById('micBtn').classList.add('bg-red-500');
-            });
-
-            recognition.onresult = (event) => {
-                document.getElementById('customPrompt').value = event.results[0][0].transcript;
-                document.getElementById('micBtn').classList.remove('bg-red-500');
-            };
-            recognition.onerror = () => {
-                document.getElementById('micBtn').classList.remove('bg-red-500');
-            };
-        } else {
-            document.getElementById('micBtn').style.display = 'none';
-        }
-
-        async function translateToEnglish(text) {
-            try {
-                const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=he&tl=en&dt=t&q=${encodeURI(text)}`);
-                const data = await res.json();
-                return data[0][0][0];
-            } catch (e) {
-                return text;
-            }
-        }
-
-        function updateCreditDisplay() {
-            document.getElementById('creditCount').innerText = `${credits}/${maxCredits}`;
-            if (credits <= 0) {
-                document.getElementById('adModal').classList.remove('hidden');
-                document.getElementById('adModal').classList.add('flex');
-            }
-        }
-
-        function canGenerate() {
-            if (credits <= 0) {
-                document.getElementById('adModal').classList.remove('hidden');
-                document.getElementById('adModal').classList.add('flex');
-                return false;
-            }
-            return true;
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).classList.add('hidden');
-            document.getElementById(id).classList.remove('flex');
-        }
-
-        function handleAdClick() {
-            setTimeout(() => {
-                credits = maxCredits;
-                updateCreditDisplay();
-                closeModal('adModal');
-            }, 3000);
-        }
-
-        window.applyStyle = function(styleName) {
-            if (!canGenerate()) return;
-            credits--;
-            updateCreditDisplay();
-            callAPI({ image: capturedImageB64, style: styleName });
+            img.src = event.target.result;
         };
+        reader.readAsDataURL(file);
+    });
 
-        document.getElementById('customBtn').addEventListener('click', async () => {
-            const prompt = document.getElementById('customPrompt').value;
-            if (!prompt) return;
-            if (!canGenerate()) return;
-            
-            credits--;
-            updateCreditDisplay();
-            
-            const engPrompt = await translateToEnglish(prompt);
-            callAPI({ image: capturedImageB64, style: engPrompt });
-        });
+    function showStyleMenu() {
+        imgEl.src = base64Image;
+        imgEl.style.display = 'block';
+        videoEl.style.display = 'none';
+        document.getElementById('cameraMenu').style.display = 'none';
+        document.getElementById('styleMenu').style.display = 'flex';
+    }
 
-        async function callAPI(requestBody) {
-            const loading = document.getElementById('loadingModal');
-            const errorMsg = document.getElementById('errorMsg');
-            const closeErrorBtn = document.getElementById('closeErrorBtn');
-            
-            loading.classList.remove('hidden');
-            loading.classList.add('flex');
-            errorMsg.classList.add('hidden');
-            closeErrorBtn.classList.add('hidden');
-            errorMsg.innerText = "";
-
-            try {
-                let res;
-                try {
-                    res = await fetch(WORKER_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(requestBody)
-                    });
-                } catch (networkErr) {
-                    throw new Error("שגיאת תקשורת עם השרת (Cloudflare).");
-                }
-                
-                const startData = await res.json();
-                
-                if (startData.error) throw new Error("השרת החזיר שגיאה: " + startData.error);
-                if (startData.detail) throw new Error("שגיאת Replicate: " + JSON.stringify(startData.detail));
-                if (!startData.id) throw new Error("שגיאה: לא התקבל מזהה משימה מהשרת.");
-
-                let predictionId = startData.id;
-                let status = startData.status;
-                let attempts = 0;
-                const MAX_ATTEMPTS = 120; // 6 דקות
-
-                while (status === "starting" || status === "processing") {
-                    attempts++;
-                    if (attempts > MAX_ATTEMPTS) {
-                        throw new Error("השרת עמוס מדי כרגע. החזרנו לך את הקרדיט.");
-                    }
-                    
-                    await new Promise(r => setTimeout(r, 3000));
-                    
-                    let pollRes;
-                    try {
-                        pollRes = await fetch(WORKER_URL, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ action: "status", id: predictionId })
-                        });
-                    } catch (netErr) {
-                        continue; 
-                    }
-                    
-                    const pollData = await pollRes.json();
-                    if (pollData.error) throw new Error(pollData.error);
-                    
-                    status = pollData.status;
-                    
-                    if (status === "succeeded") {
-                        showResult(pollData.output, requestBody.style === 'tiktok_video');
-                        return;
-                    } else if (status === "failed") {
-                        throw new Error("היצירה נכשלה בשרת. יומן: " + (pollData.logs || "No logs"));
-                    }
-                }
-            } catch (err) {
-                console.error(err);
-                credits++; 
-                updateCreditDisplay();
-                errorMsg.innerText = err.message;
-                errorMsg.classList.remove('hidden');
-                closeErrorBtn.classList.remove('hidden');
-            }
+    // יצירת תמונה (Sync)
+    async function generateImage(style) {
+        if (!checkCredits()) return;
+        setLoading(true, "מייצר תמונה (כ-20 שניות)...");
+        try {
+            const res = await fetch(API_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ action: "image", image: base64Image, style: style })
+            });
+            const data = await res.json();
+            if(data.error) throw new Error(data.error);
+            showResult(data.resultUrl, 'image');
+            deductCredit();
+        } catch (e) {
+            showToast(e.message);
+            setLoading(false);
         }
+    }
 
-        function showResult(outputUrl, isVideo) {
-            closeModal('loadingModal');
-            const resultContainer = document.getElementById('resultContainer');
-            resultContainer.innerHTML = '';
-            
-            let finalUrl = Array.isArray(outputUrl) ? outputUrl[0] : outputUrl;
+    // יצירת וידאו (Async Polling לפי Lovable)
+    async function generateFaceOff() {
+        if (!checkCredits()) return;
+        setLoading(true, "מתחיל החלפת פנים בוידאו...");
+        try {
+            // 1. בקשת התחלה
+            const startRes = await fetch(API_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ action: "faceoff", image: base64Image })
+            });
+            const startData = await startRes.json();
+            if(startData.error) throw new Error(startData.error);
+            if(!startData.id) throw new Error("לא התקבל מזהה משימה");
 
-            if (isVideo) {
-                // נגן וידאו עם סינכרון סאונד אוטומטי מהסרטון המקורי של תומאס שלבי!
-                resultContainer.innerHTML = `
-                    <div class="relative w-full">
-                        <video id="resultVideo" src="${finalUrl}" autoplay loop playsinline controls class="w-full h-auto rounded-2xl border border-[#00f3ff] shadow-[0_0_15px_rgba(0,243,255,0.4)]"></video>
-                        <audio id="resultAudio" src="video1.mp4" loop></audio>
-                    </div>
-                `;
-                setTimeout(() => {
-                    const v = document.getElementById('resultVideo');
-                    const a = document.getElementById('resultAudio');
-                    if(v && a) {
-                        v.onplay = () => a.play();
-                        v.onpause = () => a.pause();
-                        v.onseeking = () => a.currentTime = v.currentTime;
-                        a.play().catch(e => console.log("Audio autoplay restricted by browser, user can unmute controls"));
-                    }
-                }, 300);
-            } else {
-                resultContainer.innerHTML = `<img src="${finalUrl}" class="w-full h-auto rounded-2xl border border-[#00f3ff] shadow-[0_0_15px_rgba(0,243,255,0.4)]" />`;
+            // 2. תור המתנה (Polling)
+            let isDone = false;
+            let attempts = 0;
+            while (!isDone && attempts < 40) { // מקסימום כ-2.5 דקות
+                await new Promise(r => setTimeout(r, 4000));
+                attempts++;
+                loadingText.innerText = "מעבד וידאו... אנא המתן (" + attempts + ")";
+                
+                const pollRes = await fetch(API_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ action: "status", id: startData.id })
+                });
+                const pollData = await pollRes.json();
+                
+                if (pollData.status === "succeeded" && pollData.output) {
+                    showResult(pollData.output, 'video');
+                    deductCredit();
+                    isDone = true;
+                } else if (pollData.status === "failed") {
+                    throw new Error(pollData.error || "הוידאו נכשל בשרת");
+                }
             }
+            if(!isDone) throw new Error("זמן ההמתנה לוידאו עבר. השרת עמוס.");
 
-            const downloadBtn = document.getElementById('downloadBtn');
-            downloadBtn.onclick = () => {
-                const a = document.createElement('a');
-                a.href = finalUrl;
-                a.download = isVideo ? "Viral_Avatar.mp4" : "Viral_Avatar.png";
-                a.target = "_blank";
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            };
-
-            const resultModal = document.getElementById('resultModal');
-            resultModal.classList.remove('hidden');
-            resultModal.classList.add('flex');
+        } catch (e) {
+            showToast(e.message);
+            setLoading(false);
         }
+    }
 
-        window.addEventListener('load', setupCamera);
-    </script>
+    function showResult(url, type) {
+        currentResultUrl = url;
+        setLoading(false);
+        document.getElementById('styleMenu').style.display = 'none';
+        
+        if (type === 'video') {
+            imgEl.style.display = 'none';
+            resVideoEl.src = url;
+            resVideoEl.style.display = 'block';
+        } else {
+            resVideoEl.style.display = 'none';
+            imgEl.src = url;
+            imgEl.style.display = 'block';
+        }
+        document.getElementById('resultMenu').style.display = 'flex';
+    }
+
+    function resetApp() {
+        document.getElementById('resultMenu').style.display = 'none';
+        document.getElementById('styleMenu').style.display = 'none';
+        imgEl.style.display = 'none';
+        resVideoEl.style.display = 'none';
+        resVideoEl.pause();
+        videoEl.style.display = 'block';
+        document.getElementById('cameraMenu').style.display = 'block';
+        base64Image = null;
+    }
+
+    function setLoading(isLoading, text) {
+        loadingText.innerText = text;
+        loadingOverlay.style.display = isLoading ? 'flex' : 'none';
+    }
+
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.innerText = msg; t.style.display = 'block';
+        setTimeout(() => t.style.display = 'none', 4000);
+    }
+
+    // Credits & Monetag Logic
+    let credits = 3;
+    function checkCredits() {
+        if (credits > 0) return true;
+        // סימולציה לפתיחת פרסומת Monetag כדי לקבל קרדיט
+        window.open('https://omg10.com/4/11571722', '_blank');
+        credits = 1; 
+        document.getElementById('creditCount').innerText = credits;
+        showToast("צפית בפרסומת! קיבלת קרדיט נוסף.");
+        return false;
+    }
+    function deductCredit() {
+        credits--;
+        document.getElementById('creditCount').innerText = credits;
+    }
+
+    function downloadResult() {
+        if(!currentResultUrl) return;
+        const a = document.createElement('a');
+        a.href = currentResultUrl;
+        a.download = "ViralAvatar";
+        a.click();
+    }
+    async function shareResult() {
+        if(!currentResultUrl) return;
+        try {
+            await navigator.share({ title: 'Viral Avatar', url: currentResultUrl });
+        } catch(e) { showToast("השיתוף לא נתמך במכשיר זה"); }
+    }
+
+    startCamera();
+</script>
 </body>
 </html>
