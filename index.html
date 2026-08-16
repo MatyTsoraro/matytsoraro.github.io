@@ -13,7 +13,7 @@
         .glass-panel { background: var(--panel); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(14px); border-radius: 24px; }
         
         header { padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        h1 { font-size: 1.5rem; background: linear-gradient(45deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
+        h1 { font-size: 1.5rem; background: linear-gradient(45deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; margin:0;}
         
         .container { flex: 1; display: flex; flex-direction: column; padding: 15px; gap: 12px; overflow-y: auto; max-width: 500px; margin: 0 auto; width: 100%; scrollbar-width: none; }
         .container::-webkit-scrollbar { display: none; }
@@ -44,6 +44,16 @@
         .btn-wa { background: #25D366; }
         .btn-dl { background: var(--primary); color: black; }
         
+        /* Custom Prompt Area */
+        .custom-area { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+        .input-wrapper { position: relative; width: 100%; }
+        #customInput { width: 100%; background: #000; border: 1px solid #444; border-radius: 12px; padding: 12px; padding-left: 45px; color: white; resize: none; font-family: inherit; font-size: 0.9rem; outline: none; }
+        #customInput:focus { border-color: var(--primary); }
+        .mic-btn { position: absolute; bottom: 12px; left: 12px; background: none; border: none; color: #888; font-size: 1.2rem; cursor: pointer; }
+        .mic-btn.recording { color: #ff3366; animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+        .custom-btn { background: var(--primary); color: black; font-weight: bold; border: none; border-radius: 12px; padding: 10px; font-size: 0.95rem; cursor: pointer; }
+
         #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #ff3366; color: white; padding: 10px 20px; border-radius: 20px; display: none; z-index: 100; font-weight: bold; }
     </style>
 </head>
@@ -78,21 +88,30 @@
         </div>
 
         <div id="styleMenu">
-            <button class="faceoff-btn" onclick="generateFaceOff()">
+            <button class="faceoff-btn" onclick="generateMedia('faceoff', true)">
                 <i class="fas fa-video"></i> FACE OFF - וידאו טיקטוק
             </button>
             
+            <div class="custom-area">
+                <div class="category-title" style="margin:0;">יצירה חופשית (אנגלית בלבד)</div>
+                <div class="input-wrapper">
+                    <textarea id="customInput" rows="2" placeholder="תאר את האווטאר שלך..."></textarea>
+                    <button id="micBtn" class="mic-btn" onclick="toggleMic()"><i class="fas fa-microphone"></i></button>
+                </div>
+                <button class="custom-btn" onclick="generateCustom()">צור יצירת מופת</button>
+            </div>
+
             <div>
                 <div class="category-title">תבניות מהירות ופרו</div>
                 <div class="style-grid">
-                    <div class="style-card" onclick="generateImage('tech_ceo')"><i class="fas fa-briefcase"></i><span>מנכ"ל הייטק</span></div>
-                    <div class="style-card" onclick="generateImage('cyber_ninja')"><i class="fas fa-user-ninja"></i><span>סייבר-נינג'ה</span></div>
-                    <div class="style-card" onclick="generateImage('jedi_master')"><i class="fab fa-jedi-order"></i><span>אביר ג'דיי</span></div>
-                    <div class="style-card" onclick="generateImage('gladiator')"><i class="fas fa-shield-alt"></i><span>גלדיאטור</span></div>
-                    <div class="style-card" onclick="generateImage('mafia_boss')"><i class="fas fa-user-tie"></i><span>בוס מאפיה</span></div>
-                    <div class="style-card" onclick="generateImage('anime_hero')"><i class="fas fa-bolt"></i><span>אנימה גיבור</span></div>
-                    <div class="style-card" onclick="generateImage('pixar_character')"><i class="fas fa-smile"></i><span>3D פיקסאר</span></div>
-                    <div class="style-card" onclick="generateImage('vampire')"><i class="fas fa-moon"></i><span>ערפד אפל</span></div>
+                    <div class="style-card" onclick="generateMedia('tech_ceo')"><i class="fas fa-briefcase"></i><span>מנכ"ל הייטק</span></div>
+                    <div class="style-card" onclick="generateMedia('cyber_ninja')"><i class="fas fa-user-ninja"></i><span>סייבר-נינג'ה</span></div>
+                    <div class="style-card" onclick="generateMedia('jedi_master')"><i class="fab fa-jedi-order"></i><span>אביר ג'דיי</span></div>
+                    <div class="style-card" onclick="generateMedia('gladiator')"><i class="fas fa-shield-alt"></i><span>גלדיאטור</span></div>
+                    <div class="style-card" onclick="generateMedia('mafia_boss')"><i class="fas fa-user-tie"></i><span>בוס מאפיה</span></div>
+                    <div class="style-card" onclick="generateMedia('anime_hero')"><i class="fas fa-bolt"></i><span>אנימה גיבור</span></div>
+                    <div class="style-card" onclick="generateMedia('pixar_character')"><i class="fas fa-smile"></i><span>3D פיקסאר</span></div>
+                    <div class="style-card" onclick="generateMedia('vampire')"><i class="fas fa-moon"></i><span>ערפד אפל</span></div>
                 </div>
             </div>
         </div>
@@ -119,6 +138,8 @@
     const resVideoEl = document.getElementById('resultVideo');
     const loadingOverlay = document.getElementById('loadingOverlay');
     const loadingText = document.getElementById('loadingText');
+    const customInput = document.getElementById('customInput');
+    const micBtn = document.getElementById('micBtn');
 
     async function startCamera() {
         if (stream) stream.getTracks().forEach(t => t.stop());
@@ -164,44 +185,76 @@
         document.getElementById('styleMenu').style.display = 'flex';
     }
 
-    async function generateImage(style) {
-        if (!checkCredits()) return;
-        setLoading(true, "מייצר תמונה (כ-20 שניות)...");
+    // הכתבה קולית
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition;
+    if (SpeechRecognition) {
+        recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.onstart = () => micBtn.classList.add('recording');
+        recognition.onend = () => micBtn.classList.remove('recording');
+        recognition.onresult = (e) => {
+            customInput.value += (customInput.value ? " " : "") + e.results[0][0].transcript;
+        };
+    } else {
+        micBtn.style.display = 'none';
+    }
+    function toggleMic() { if(recognition) recognition.start(); }
+
+    // תרגום היצירה החופשית
+    async function translateToEnglish(text) {
+        if(!/[\u0590-\u05FF]/.test(text)) return text;
         try {
-            const res = await fetch(API_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ action: "image", image: base64Image, style: style })
-            });
+            const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=he|en`);
             const data = await res.json();
-            if(data.error) throw new Error(data.error);
-            showResult(data.resultUrl, 'image');
-            deductCredit();
-        } catch (e) {
-            showToast(e.message);
-            setLoading(false);
-        }
+            return data.responseData.translatedText;
+        } catch(e) { return text; }
     }
 
-    async function generateFaceOff() {
+    async function generateCustom() {
+        const val = customInput.value.trim();
+        if(!val) return showToast("אנא הזן תיאור");
+        setLoading(true, "מתרגם תיאור...");
+        const translated = await translateToEnglish(val);
+        generateMedia(translated, false, true);
+    }
+
+    // פונקציה חכמה שעושה תור המתנה (Polling) גם לוידאו וגם לתמונות כדי לא להיתקע בחיים
+    async function generateMedia(styleOrPrompt, isFaceOff = false, isCustom = false) {
         if (!checkCredits()) return;
-        setLoading(true, "מתחיל החלפת פנים בוידאו (עשוי לקחת עד 2 דקות)...");
+        
+        const actionType = isFaceOff ? "faceoff" : "image";
+        const initialText = isFaceOff ? "מתחיל החלפת פנים בוידאו..." : "מתחיל ביצירת התמונה...";
+        setLoading(true, initialText);
+        
         try {
             const startRes = await fetch(API_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ action: "faceoff", image: base64Image })
+                body: JSON.stringify({ action: actionType, image: base64Image, style: styleOrPrompt, isCustom: isCustom })
             });
             const startData = await startRes.json();
+            
             if(startData.error) throw new Error(startData.error);
+            
+            // תמונות שחזרו מיד
+            if(startData.resultUrl) {
+                showResult(startData.resultUrl, 'image');
+                deductCredit();
+                return;
+            }
+            
             if(!startData.id) throw new Error("לא התקבל מזהה משימה מהשרת");
 
+            // לולאת ההמתנה עם הספירה כדי שתדע שזה עובד
             let isDone = false;
             let attempts = 0;
-            while (!isDone && attempts < 45) {
+            const maxAttempts = isFaceOff ? 45 : 20;
+
+            while (!isDone && attempts < maxAttempts) {
                 await new Promise(r => setTimeout(r, 4000));
                 attempts++;
-                loadingText.innerText = "מעבד וידאו טיקטוק... (" + attempts + ")";
+                loadingText.innerText = `מעבד נתונים... (${attempts})`;
                 
                 const pollRes = await fetch(API_URL, {
                     method: "POST",
@@ -211,15 +264,15 @@
                 const pollData = await pollRes.json();
                 
                 if (pollData.status === "succeeded" && pollData.output) {
-                    const videoUrl = Array.isArray(pollData.output) ? pollData.output[pollData.output.length - 1] : pollData.output;
-                    showResult(videoUrl, 'video');
+                    const mediaUrl = Array.isArray(pollData.output) ? pollData.output[pollData.output.length - 1] : pollData.output;
+                    showResult(mediaUrl, isFaceOff ? 'video' : 'image');
                     deductCredit();
                     isDone = true;
                 } else if (pollData.status === "failed" || pollData.status === "canceled") {
-                    throw new Error(pollData.error || "החלפת הפנים נכשלה בשרת");
+                    throw new Error(pollData.error || "הפעולה נכשלה בשרת");
                 }
             }
-            if(!isDone) throw new Error("זמן ההמתנה עבר. השרת עמוס מדי.");
+            if(!isDone) throw new Error("זמן ההמתנה עבר. השרת עמוס מדי, אנא נסה שוב.");
 
         } catch (e) {
             showToast(e.message);
@@ -253,6 +306,7 @@
         videoEl.style.display = 'block';
         document.getElementById('cameraMenu').style.display = 'block';
         base64Image = null;
+        customInput.value = '';
     }
 
     function setLoading(isLoading, text) {
