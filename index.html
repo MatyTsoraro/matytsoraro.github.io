@@ -6,55 +6,53 @@
     <title>Viral Avatar Studio</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root { --primary: #00f3ff; --secondary: #bc13fe; --bg: #0a0a12; --panel: rgba(22, 22, 37, 0.8); --text: #ffffff; }
+        :root { --primary: #00f3ff; --secondary: #bc13fe; --bg: #0a0a12; --panel: rgba(22, 22, 37, 0.85); --text: #ffffff; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: var(--bg); color: var(--text); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         
-        /* Glass Panel Design from Lovable */
         .glass-panel { background: var(--panel); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(14px); border-radius: 24px; }
         
         header { padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
         h1 { font-size: 1.5rem; background: linear-gradient(45deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
         
-        .container { flex: 1; display: flex; flex-direction: column; padding: 15px; gap: 15px; overflow-y: auto; max-width: 500px; margin: 0 auto; width: 100%; }
+        .container { flex: 1; display: flex; flex-direction: column; padding: 15px; gap: 12px; overflow-y: auto; max-width: 500px; margin: 0 auto; width: 100%; scrollbar-width: none; }
         .container::-webkit-scrollbar { display: none; }
         
-        .viewport { height: 40vh; min-height: 250px; border-radius: 24px; overflow: hidden; position: relative; border: 2px solid rgba(255,255,255,0.1); }
+        .viewport { height: 35vh; min-height: 220px; border-radius: 24px; overflow: hidden; position: relative; border: 2px solid rgba(255,255,255,0.1); flex-shrink: 0; }
         video, img, canvas { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
         img, canvas { display: none; z-index: 2; }
         
-        .loading-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.8); z-index: 10; display: none; flex-direction: column; justify-content: center; align-items: center; }
+        .loading-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.85); z-index: 10; display: none; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; }
         .spinner { border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 10px; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
         
-        .controls { display: flex; justify-content: space-around; padding: 10px 0; }
-        .icon-btn { background: var(--panel); color: white; border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; width: 50px; height: 50px; font-size: 1.2rem; cursor: pointer; }
-        #captureBtn { background: linear-gradient(45deg, var(--primary), var(--secondary)); width: 70px; height: 70px; font-size: 2rem; border: none; }
+        .controls { display: flex; justify-content: space-around; padding: 5px 0; }
+        .icon-btn { background: var(--panel); color: white; border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; width: 50px; height: 50px; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        #captureBtn { background: linear-gradient(45deg, var(--primary), var(--secondary)); width: 70px; height: 70px; font-size: 2rem; border: none; border-radius: 50%; }
         
-        #styleMenu, #resultMenu { display: none; flex-direction: column; gap: 15px; padding-bottom: 20px;}
+        #styleMenu, #resultMenu { display: none; flex-direction: column; gap: 12px; padding-bottom: 20px; }
         
-        /* 3 Column Grid Design */
-        .category-title { font-size: 0.85rem; color: #aaa; margin-bottom: 8px; padding-right: 5px; }
-        .style-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .style-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 15px 5px; display: flex; flex-direction: column; align-items: center; gap: 8px; color: white; cursor: pointer; }
-        .style-card i { font-size: 1.8rem; color: var(--primary); }
-        .style-card span { font-size: 0.75rem; font-weight: bold; text-align: center; }
+        .category-title { font-size: 0.85rem; color: var(--primary); margin-bottom: 6px; font-weight: bold; }
+        .style-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .style-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 12px 5px; display: flex; flex-direction: column; align-items: center; gap: 6px; color: white; cursor: pointer; }
+        .style-card i { font-size: 1.5rem; color: var(--primary); }
+        .style-card span { font-size: 0.7rem; font-weight: bold; text-align: center; }
         
-        .faceoff-btn { background: linear-gradient(45deg, #ff0055, #00f3ff); border: none; border-radius: 20px; padding: 15px; color: white; font-weight: bold; font-size: 1.1rem; display: flex; justify-content: center; gap: 10px; cursor: pointer; width: 100%; margin-top: 10px;}
+        .faceoff-btn { background: linear-gradient(45deg, #ff0055, #00f3ff); border: none; border-radius: 18px; padding: 14px; color: white; font-weight: bold; font-size: 1rem; display: flex; justify-content: center; gap: 10px; cursor: pointer; width: 100%; box-shadow: 0 0 15px rgba(255,0,85,0.3); }
         
-        .action-btn { width: 100%; padding: 15px; border-radius: 15px; border: none; font-weight: bold; font-size: 1rem; color: white; cursor: pointer; display: flex; justify-content: center; gap: 10px; margin-bottom: 10px;}
+        .action-btn { width: 100%; padding: 14px; border-radius: 14px; border: none; font-weight: bold; font-size: 1rem; color: white; cursor: pointer; display: flex; justify-content: center; gap: 10px; margin-bottom: 8px; }
         .btn-wa { background: #25D366; }
         .btn-dl { background: var(--primary); color: black; }
         
-        #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #ff3366; padding: 10px 20px; border-radius: 20px; display: none; z-index: 100; font-weight: bold; }
+        #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #ff3366; color: white; padding: 10px 20px; border-radius: 20px; display: none; z-index: 100; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <header class="glass-panel">
-        <div style="color: #ffb800; font-weight: bold;"><i class="fas fa-bolt"></i> <span id="creditCount">3</span>/3</div>
+    <header class="glass-panel" style="border-radius: 0;">
+        <div style="color: #ffb800; font-weight: bold; font-size: 0.9rem;"><i class="fas fa-bolt"></i> <span id="creditCount">3</span>/3</div>
         <h1>VIRAL AVATAR</h1>
-        <div style="width: 40px;"></div>
+        <div style="width: 30px;"></div>
     </header>
 
     <div class="container">
@@ -62,12 +60,11 @@
             <video id="videoElement" autoplay playsinline muted></video>
             <canvas id="canvasElement"></canvas>
             <img id="resultImage" alt="Result">
-            <!-- נגן מיוחד לוידאו שחוזר מ-FaceOff -->
             <video id="resultVideo" style="display:none;" controls autoplay playsinline loop></video>
             
             <div class="loading-overlay" id="loadingOverlay">
                 <div class="spinner"></div>
-                <div style="color: var(--primary); font-weight: bold;" id="loadingText">מעבד קסם...</div>
+                <div style="color: var(--primary); font-weight: bold; font-size: 0.95rem;" id="loadingText">מעבד קסם...</div>
             </div>
         </div>
 
@@ -86,11 +83,16 @@
             </button>
             
             <div>
-                <div class="category-title">תבניות פרימיום</div>
+                <div class="category-title">תבניות מהירות ופרו</div>
                 <div class="style-grid">
                     <div class="style-card" onclick="generateImage('tech_ceo')"><i class="fas fa-briefcase"></i><span>מנכ"ל הייטק</span></div>
                     <div class="style-card" onclick="generateImage('cyber_ninja')"><i class="fas fa-user-ninja"></i><span>סייבר-נינג'ה</span></div>
                     <div class="style-card" onclick="generateImage('jedi_master')"><i class="fab fa-jedi-order"></i><span>אביר ג'דיי</span></div>
+                    <div class="style-card" onclick="generateImage('gladiator')"><i class="fas fa-shield-alt"></i><span>גלדיאטור</span></div>
+                    <div class="style-card" onclick="generateImage('mafia_boss')"><i class="fas fa-user-tie"></i><span>בוס מאפיה</span></div>
+                    <div class="style-card" onclick="generateImage('anime_hero')"><i class="fas fa-bolt"></i><span>אנימה גיבור</span></div>
+                    <div class="style-card" onclick="generateImage('pixar_character')"><i class="fas fa-smile"></i><span>3D פיקסאר</span></div>
+                    <div class="style-card" onclick="generateImage('vampire')"><i class="fas fa-moon"></i><span>ערפד אפל</span></div>
                 </div>
             </div>
         </div>
@@ -118,7 +120,6 @@
     const loadingOverlay = document.getElementById('loadingOverlay');
     const loadingText = document.getElementById('loadingText');
 
-    // אתחול מצלמה
     async function startCamera() {
         if (stream) stream.getTracks().forEach(t => t.stop());
         try {
@@ -163,7 +164,6 @@
         document.getElementById('styleMenu').style.display = 'flex';
     }
 
-    // יצירת תמונה (Sync)
     async function generateImage(style) {
         if (!checkCredits()) return;
         setLoading(true, "מייצר תמונה (כ-20 שניות)...");
@@ -183,12 +183,10 @@
         }
     }
 
-    // יצירת וידאו (Async Polling לפי Lovable)
     async function generateFaceOff() {
         if (!checkCredits()) return;
-        setLoading(true, "מתחיל החלפת פנים בוידאו...");
+        setLoading(true, "מתחיל החלפת פנים בוידאו (עשוי לקחת עד 2 דקות)...");
         try {
-            // 1. בקשת התחלה
             const startRes = await fetch(API_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -196,15 +194,14 @@
             });
             const startData = await startRes.json();
             if(startData.error) throw new Error(startData.error);
-            if(!startData.id) throw new Error("לא התקבל מזהה משימה");
+            if(!startData.id) throw new Error("לא התקבל מזהה משימה מהשרת");
 
-            // 2. תור המתנה (Polling)
             let isDone = false;
             let attempts = 0;
-            while (!isDone && attempts < 40) { // מקסימום כ-2.5 דקות
+            while (!isDone && attempts < 45) {
                 await new Promise(r => setTimeout(r, 4000));
                 attempts++;
-                loadingText.innerText = "מעבד וידאו... אנא המתן (" + attempts + ")";
+                loadingText.innerText = "מעבד וידאו טיקטוק... (" + attempts + ")";
                 
                 const pollRes = await fetch(API_URL, {
                     method: "POST",
@@ -214,14 +211,15 @@
                 const pollData = await pollRes.json();
                 
                 if (pollData.status === "succeeded" && pollData.output) {
-                    showResult(pollData.output, 'video');
+                    const videoUrl = Array.isArray(pollData.output) ? pollData.output[pollData.output.length - 1] : pollData.output;
+                    showResult(videoUrl, 'video');
                     deductCredit();
                     isDone = true;
-                } else if (pollData.status === "failed") {
-                    throw new Error(pollData.error || "הוידאו נכשל בשרת");
+                } else if (pollData.status === "failed" || pollData.status === "canceled") {
+                    throw new Error(pollData.error || "החלפת הפנים נכשלה בשרת");
                 }
             }
-            if(!isDone) throw new Error("זמן ההמתנה לוידאו עבר. השרת עמוס.");
+            if(!isDone) throw new Error("זמן ההמתנה עבר. השרת עמוס מדי.");
 
         } catch (e) {
             showToast(e.message);
@@ -268,11 +266,9 @@
         setTimeout(() => t.style.display = 'none', 4000);
     }
 
-    // Credits & Monetag Logic
     let credits = 3;
     function checkCredits() {
         if (credits > 0) return true;
-        // סימולציה לפתיחת פרסומת Monetag כדי לקבל קרדיט
         window.open('https://omg10.com/4/11571722', '_blank');
         credits = 1; 
         document.getElementById('creditCount').innerText = credits;
