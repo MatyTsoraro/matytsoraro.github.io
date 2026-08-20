@@ -684,7 +684,6 @@
 
         .actions {
             display: grid;
-            grid-template-columns: 1fr;
             gap: 9px;
             margin-top: 16px;
         }
@@ -936,7 +935,7 @@
                 <input
                     id="uploadInput"
                     type="file"
-                    accept="image/jpeg,image/png,image/webp"
+                    accept="image/*"
                     hidden
                 >
 
@@ -1204,7 +1203,7 @@
 
         const MAX_CREDITS = 3;
         const MAX_IMAGE_DIMENSION = 1536;
-        const MAX_UPLOAD_SIZE = 10 * 1024 * 1024;
+        const MAX_UPLOAD_SIZE = 15 * 1024 * 1024;
         const POLL_INTERVAL = 4000;
         const MAX_POLL_ATTEMPTS = 25;
 
@@ -1331,7 +1330,7 @@
                 !navigator.mediaDevices.getUserMedia
             ) {
                 showCameraError(
-                    "הדפדפן או האפליקציה אינם מאפשרים גישה למצלמה. אפשר להעלות תמונה מהמכשיר."
+                    "האפליקציה אינה מאפשרת גישה למצלמה. אפשר להעלות תמונה מהמכשיר."
                 );
 
                 return;
@@ -1346,11 +1345,6 @@
                         audio: false
                     });
             } catch (firstError) {
-                console.warn(
-                    "Camera selection failed:",
-                    firstError
-                );
-
                 try {
                     cameraStream =
                         await navigator.mediaDevices.getUserMedia({
@@ -1358,11 +1352,6 @@
                             audio: false
                         });
                 } catch (secondError) {
-                    console.error(
-                        "Camera failed:",
-                        secondError
-                    );
-
                     let message =
                         "לא ניתן להפעיל את המצלמה. אפשר להעלות תמונה מהמכשיר.";
 
@@ -1371,7 +1360,7 @@
                         secondError.name === "PermissionDeniedError"
                     ) {
                         message =
-                            "הרשאת המצלמה חסומה. יש לאפשר הרשאת מצלמה בהגדרות האפליקציה.";
+                            "הרשאת המצלמה חסומה. יש לאפשר אותה בהגדרות האפליקציה.";
                     } else if (
                         secondError.name === "NotFoundError"
                     ) {
@@ -1401,11 +1390,6 @@
                         cameraPlaceholder.hidden = true;
                         hideCameraError();
                     } catch (error) {
-                        console.error(
-                            "Video playback failed:",
-                            error
-                        );
-
                         showCameraError(
                             "המצלמה הופעלה אך לא ניתן להציג את התמונה."
                         );
@@ -1570,64 +1554,106 @@
             });
         }
 
+        /*
+         * העלאת תמונה מותאמת ל-Android ול-WebView.
+         * משתמשת ב-FileReader, כמו בגרסה המקורית.
+         */
         function handleUpload(file) {
             if (!file) {
-                return;
-            }
-
-            const allowedTypes = [
-                "image/jpeg",
-                "image/png",
-                "image/webp"
-            ];
-
-            if (!allowedTypes.includes(file.type)) {
                 showToast(
-                    "יש לבחור קובץ JPG, PNG או WebP.",
+                    "לא נבחרה תמונה.",
                     true
                 );
 
                 return;
             }
 
-            if (file.size > MAX_UPLOAD_SIZE) {
+            if (
+                file.size &&
+                file.size > MAX_UPLOAD_SIZE
+            ) {
                 showToast(
-                    "התמונה גדולה מדי. הגודל המרבי הוא 10MB.",
+                    "התמונה גדולה מדי. ניתן להעלות תמונה עד 15MB.",
                     true
                 );
 
+                uploadInput.value = "";
                 return;
             }
 
-            const imageUrl = URL.createObjectURL(file);
-            const image = new Image();
+            /*
+             * בחלק ממכשירי Android סוג הקובץ ריק,
+             * ולכן דוחים רק כאשר קיים סוג והוא אינו תמונה.
+             */
+            if (
+                file.type &&
+                !file.type.startsWith("image/")
+            ) {
+                showToast(
+                    "הקובץ שנבחר אינו תמונה.",
+                    true
+                );
 
-            image.onload = function () {
-                try {
-                    const imageData =
-                        drawToCanvas(image, false);
+                uploadInput.value = "";
+                return;
+            }
 
-                    selectImage(imageData);
-                } catch (error) {
+            showToast("טוען את התמונה...");
+
+            const reader = new FileReader();
+
+            reader.onerror = function () {
+                uploadInput.value = "";
+
+                showToast(
+                    "לא ניתן לקרוא את התמונה מהמכשיר.",
+                    true
+                );
+            };
+
+            reader.onload = function (event) {
+                const uploadedImage = new Image();
+
+                uploadedImage.onload = function () {
+                    try {
+                        const imageData =
+                            drawToCanvas(
+                                uploadedImage,
+                                false
+                            );
+
+                        selectImage(imageData);
+
+                        showToast(
+                            "התמונה נטענה בהצלחה."
+                        );
+                    } catch (error) {
+                        showToast(
+                            error.message ||
+                            "לא ניתן לעבד את התמונה.",
+                            true
+                        );
+                    } finally {
+                        /*
+                         * מאפשר לבחור שוב את אותה תמונה.
+                         */
+                        uploadInput.value = "";
+                    }
+                };
+
+                uploadedImage.onerror = function () {
+                    uploadInput.value = "";
+
                     showToast(
-                        "לא ניתן לעבד את התמונה.",
+                        "פורמט התמונה אינו נתמך או שהקובץ פגום.",
                         true
                     );
-                } finally {
-                    URL.revokeObjectURL(imageUrl);
-                }
+                };
+
+                uploadedImage.src = event.target.result;
             };
 
-            image.onerror = function () {
-                URL.revokeObjectURL(imageUrl);
-
-                showToast(
-                    "קובץ התמונה אינו תקין.",
-                    true
-                );
-            };
-
-            image.src = imageUrl;
+            reader.readAsDataURL(file);
         }
 
         function setLoading(loading, message) {
@@ -2062,6 +2088,11 @@
             uploadInput.value = "";
 
             startCamera();
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
         }
 
         function createAnother() {
@@ -2078,6 +2109,11 @@
 
             styleMenu.hidden = false;
             resultMenu.hidden = true;
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
         }
 
         function showToast(message, isError) {
@@ -2137,19 +2173,27 @@
             micButton.hidden = true;
         }
 
+        /*
+         * פתיחת בוחר הקבצים.
+         * האיפוס לפני click מאפשר לבחור גם את אותה תמונה שוב.
+         */
         document
             .getElementById("uploadButton")
             .addEventListener("click", function () {
+                uploadInput.value = "";
                 uploadInput.click();
             });
 
         uploadInput.addEventListener(
             "change",
             function (event) {
-                handleUpload(
+                const selectedFile =
                     event.target.files &&
-                    event.target.files[0]
-                );
+                    event.target.files.length > 0
+                        ? event.target.files[0]
+                        : null;
+
+                handleUpload(selectedFile);
             }
         );
 
