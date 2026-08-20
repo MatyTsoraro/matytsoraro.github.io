@@ -2,353 +2,1265 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Viral Avatar Studio</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        :root { --primary: #00f3ff; --secondary: #bc13fe; --bg: #0a0a12; --panel: rgba(22, 22, 37, 0.85); --text: #ffffff; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg); color: var(--text); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        
-        .glass-panel { background: var(--panel); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(14px); border-radius: 24px; }
-        
-        header { padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        h1 { font-size: 1.5rem; background: linear-gradient(45deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; margin:0;}
-        
-        .container { flex: 1; display: flex; flex-direction: column; padding: 15px; gap: 12px; overflow-y: auto; max-width: 500px; margin: 0 auto; width: 100%; scrollbar-width: none; }
-        .container::-webkit-scrollbar { display: none; }
-        
-        .viewport { height: 35vh; min-height: 220px; border-radius: 24px; overflow: hidden; position: relative; border: 2px solid rgba(255,255,255,0.1); flex-shrink: 0; }
-        video, img, canvas { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
-        img, canvas { display: none; z-index: 2; }
-        
-        .loading-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.85); z-index: 10; display: none; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; }
-        .spinner { border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 10px; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-        
-        .controls { display: flex; justify-content: space-around; padding: 5px 0; }
-        .icon-btn { background: var(--panel); color: white; border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; width: 50px; height: 50px; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        #captureBtn { background: linear-gradient(45deg, var(--primary), var(--secondary)); width: 70px; height: 70px; font-size: 2rem; border: none; border-radius: 50%; }
-        
-        #styleMenu, #resultMenu { display: none; flex-direction: column; gap: 12px; padding-bottom: 20px; }
-        
-        .category-title { font-size: 0.85rem; color: var(--primary); margin-bottom: 6px; font-weight: bold; }
-        .style-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-        .style-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 12px 5px; display: flex; flex-direction: column; align-items: center; gap: 6px; color: white; cursor: pointer; }
-        .style-card i { font-size: 1.5rem; color: var(--primary); }
-        .style-card span { font-size: 0.7rem; font-weight: bold; text-align: center; }
-        
-        .faceoff-btn { background: linear-gradient(45deg, #ff0055, #00f3ff); border: none; border-radius: 18px; padding: 14px; color: white; font-weight: bold; font-size: 1rem; display: flex; justify-content: center; gap: 10px; cursor: pointer; width: 100%; box-shadow: 0 0 15px rgba(255,0,85,0.3); }
-        
-        .action-btn { width: 100%; padding: 14px; border-radius: 14px; border: none; font-weight: bold; font-size: 1rem; color: white; cursor: pointer; display: flex; justify-content: center; gap: 10px; margin-bottom: 8px; }
-        .btn-wa { background: #25D366; }
-        .btn-dl { background: var(--primary); color: black; }
-        
-        /* Custom Prompt Area */
-        .custom-area { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
-        .input-wrapper { position: relative; width: 100%; }
-        #customInput { width: 100%; background: #000; border: 1px solid #444; border-radius: 12px; padding: 12px; padding-left: 45px; color: white; resize: none; font-family: inherit; font-size: 0.9rem; outline: none; }
-        #customInput:focus { border-color: var(--primary); }
-        .mic-btn { position: absolute; bottom: 12px; left: 12px; background: none; border: none; color: #888; font-size: 1.2rem; cursor: pointer; }
-        .mic-btn.recording { color: #ff3366; animation: pulse 1s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
-        .custom-btn { background: var(--primary); color: black; font-weight: bold; border: none; border-radius: 12px; padding: 10px; font-size: 0.95rem; cursor: pointer; }
 
-        #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #ff3366; color: white; padding: 10px 20px; border-radius: 20px; display: none; z-index: 100; font-weight: bold; }
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+
+    <meta name="theme-color" content="#090a12">
+
+    <meta
+        name="description"
+        content="Viral Avatar Studio - יצירת אווטארים מרהיבים באמצעות בינה מלאכותית"
+    >
+
+    <title>Viral Avatar Studio</title>
+
+    ./manifest.json
+
+    <style>
+        :root {
+            --primary: #00eaf4;
+            --primary-dark: #00aeb8;
+            --secondary: #a848f5;
+            --secondary-dark: #7132c9;
+
+            --background: #070810;
+            --background-light: #111326;
+            --surface: rgba(23, 25, 45, 0.82);
+            --surface-strong: rgba(27, 29, 52, 0.96);
+
+            --text: #ffffff;
+            --text-muted: #b9bdd0;
+
+            --success: #25d366;
+            --warning: #ffbd2e;
+            --danger: #ff4e75;
+
+            --border: rgba(255, 255, 255, 0.12);
+            --border-strong: rgba(255, 255, 255, 0.2);
+
+            --shadow:
+                0 18px 55px rgba(0, 0, 0, 0.48),
+                0 0 28px rgba(0, 234, 244, 0.05);
+
+            --radius-large: 26px;
+            --radius-medium: 18px;
+            --radius-small: 13px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            min-height: 100%;
+            background: var(--background);
+        }
+
+        body {
+            min-height: 100vh;
+            min-height: 100dvh;
+            margin: 0;
+
+            color: var(--text);
+            background:
+                radial-gradient(
+                    circle at 10% -10%,
+                    rgba(0, 234, 244, 0.13),
+                    transparent 34%
+                ),
+                radial-gradient(
+                    circle at 95% 5%,
+                    rgba(168, 72, 245, 0.16),
+                    transparent 38%
+                ),
+                linear-gradient(
+                    180deg,
+                    var(--background-light),
+                    var(--background) 45%
+                );
+
+            font-family:
+                Arial,
+                "Segoe UI",
+                system-ui,
+                -apple-system,
+                sans-serif;
+
+            overflow-x: hidden;
+        }
+
+        button,
+        textarea,
+        input {
+            font: inherit;
+        }
+
+        button {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        button:focus-visible,
+        textarea:focus-visible {
+            outline: 3px solid rgba(0, 234, 244, 0.55);
+            outline-offset: 3px;
+        }
+
+        button:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+        .background-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .background-orb.one {
+            width: 250px;
+            height: 250px;
+            top: 15%;
+            right: -130px;
+            background: rgba(0, 234, 244, 0.12);
+        }
+
+        .background-orb.two {
+            width: 300px;
+            height: 300px;
+            bottom: 5%;
+            left: -170px;
+            background: rgba(168, 72, 245, 0.13);
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 30;
+
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 10px;
+
+            min-height: 70px;
+            padding:
+                max(12px, env(safe-area-inset-top))
+                max(15px, env(safe-area-inset-right))
+                12px
+                max(15px, env(safe-area-inset-left));
+
+            background: rgba(7, 8, 16, 0.78);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(17px);
+            -webkit-backdrop-filter: blur(17px);
+        }
+
+        .brand {
+            margin: 0;
+
+            font-size: clamp(1.15rem, 5vw, 1.48rem);
+            font-weight: 950;
+            letter-spacing: 0.02em;
+            text-align: center;
+
+            background:
+                linear-gradient(
+                    100deg,
+                    #ffffff 0%,
+                    var(--primary) 38%,
+                    #d887ff 80%
+                );
+
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .credit-pill {
+            justify-self: start;
+
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+
+            min-height: 40px;
+            padding: 8px 11px;
+
+            color: #ffe18c;
+            background: rgba(255, 189, 46, 0.11);
+            border: 1px solid rgba(255, 189, 46, 0.28);
+            border-radius: 999px;
+
+            font-size: 0.9rem;
+            font-weight: 850;
+        }
+
+        .credit-pill .bolt {
+            color: var(--warning);
+            filter: drop-shadow(0 0 7px rgba(255, 189, 46, 0.6));
+        }
+
+        .header-help {
+            justify-self: end;
+
+            width: 40px;
+            height: 40px;
+
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        .app-shell {
+            width: min(100%, 540px);
+            margin: 0 auto;
+
+            padding:
+                14px
+                max(14px, env(safe-area-inset-right))
+                calc(30px + env(safe-area-inset-bottom))
+                max(14px, env(safe-area-inset-left));
+
+            display: grid;
+            gap: 14px;
+        }
+
+        .glass-panel {
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255, 255, 255, 0.07),
+                    rgba(255, 255, 255, 0.025)
+                ),
+                var(--surface);
+
+            border: 1px solid var(--border);
+            border-radius: var(--radius-large);
+
+            box-shadow: var(--shadow);
+
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
+
+        .hero-copy {
+            padding: 17px 18px;
+        }
+
+        .hero-copy h2 {
+            margin: 0 0 5px;
+            font-size: 1.1rem;
+        }
+
+        .hero-copy p {
+            margin: 0;
+            color: var(--text-muted);
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+
+        .viewport {
+            position: relative;
+            overflow: hidden;
+
+            width: 100%;
+            aspect-ratio: 4 / 5;
+            max-height: 55dvh;
+            min-height: 300px;
+
+            background:
+                radial-gradient(
+                    circle at center,
+                    rgba(0, 234, 244, 0.08),
+                    transparent 50%
+                ),
+                #080911;
+        }
+
+        .viewport video,
+        .viewport img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .viewport::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    rgba(0, 0, 0, 0.08),
+                    transparent 28%,
+                    transparent 72%,
+                    rgba(0, 0, 0, 0.26)
+                );
+        }
+
+        .camera-guide {
+            position: absolute;
+            z-index: 3;
+            top: 50%;
+            right: 50%;
+            transform: translate(50%, -50%);
+
+            width: 58%;
+            aspect-ratio: 0.77;
+
+            border: 2px dashed rgba(255, 255, 255, 0.42);
+            border-radius: 48% 48% 43% 43%;
+
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .camera-guide-text {
+            position: absolute;
+            z-index: 4;
+            right: 50%;
+            bottom: 16px;
+            transform: translateX(50%);
+
+            width: max-content;
+            max-width: calc(100% - 30px);
+            padding: 8px 13px;
+
+            color: rgba(255, 255, 255, 0.92);
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 999px;
+
+            font-size: 0.8rem;
+            text-align: center;
+            backdrop-filter: blur(9px);
+        }
+
+        .loading-overlay {
+            position: absolute;
+            z-index: 20;
+            inset: 0;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 14px;
+
+            padding: 24px;
+
+            text-align: center;
+            background:
+                radial-gradient(
+                    circle at center,
+                    rgba(0, 234, 244, 0.12),
+                    transparent 50%
+                ),
+                rgba(3, 4, 9, 0.94);
+
+            backdrop-filter: blur(13px);
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+
+            border: 4px solid rgba(255, 255, 255, 0.14);
+            border-top-color: var(--primary);
+            border-right-color: var(--secondary);
+            border-radius: 50%;
+
+            animation: spin 0.9s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-title {
+            color: var(--primary);
+            font-size: 1rem;
+            font-weight: 850;
+        }
+
+        .loading-subtitle {
+            max-width: 300px;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            line-height: 1.45;
+        }
+
+        .panel {
+            padding: 16px;
+        }
+
+        .section-title {
+            margin: 0 0 5px;
+            font-size: 1.05rem;
+        }
+
+        .section-description {
+            margin: 0 0 14px;
+            color: var(--text-muted);
+            font-size: 0.86rem;
+            line-height: 1.5;
+        }
+
+        .camera-controls {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 18px;
+
+            padding: 3px 4px;
+        }
+
+        .round-button {
+            justify-self: center;
+
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+
+            width: 54px;
+            height: 54px;
+
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid var(--border-strong);
+            border-radius: 50%;
+
+            font-size: 1.35rem;
+            cursor: pointer;
+        }
+
+        .capture-button {
+            position: relative;
+
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+
+            width: 76px;
+            height: 76px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    var(--secondary)
+                );
+
+            border: 5px solid rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+
+            box-shadow:
+                0 0 0 5px rgba(255, 255, 255, 0.08),
+                0 0 28px rgba(0, 234, 244, 0.3);
+
+            cursor: pointer;
+        }
+
+        .capture-button::after {
+            content: "";
+            width: 24px;
+            height: 24px;
+
+            background: #ffffff;
+            border-radius: 50%;
+
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+        }
+
+        .maintenance-notice {
+            display: flex;
+            align-items: flex-start;
+            gap: 11px;
+
+            margin-bottom: 14px;
+            padding: 12px;
+
+            color: #ffe8ad;
+            background: rgba(255, 189, 46, 0.09);
+            border: 1px solid rgba(255, 189, 46, 0.25);
+            border-radius: var(--radius-small);
+
+            line-height: 1.45;
+            font-size: 0.86rem;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.93rem;
+            font-weight: 800;
+        }
+
+        .prompt-wrapper {
+            position: relative;
+        }
+
+        #customInput {
+            display: block;
+            width: 100%;
+            min-height: 96px;
+            resize: vertical;
+
+            padding: 13px 13px 46px;
+
+            color: var(--text);
+            background: rgba(2, 3, 8, 0.7);
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-medium);
+
+            line-height: 1.5;
+        }
+
+        #customInput::placeholder {
+            color: #7f849c;
+        }
+
+        .prompt-footer {
+            position: absolute;
+            right: 9px;
+            left: 9px;
+            bottom: 8px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mic-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+
+            min-height: 33px;
+            padding: 5px 10px;
+
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.065);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+
+            font-size: 0.78rem;
+            cursor: pointer;
+        }
+
+        .mic-button.recording {
+            color: #ffffff;
+            background: rgba(255, 78, 117, 0.28);
+            border-color: rgba(255, 78, 117, 0.6);
+
+            animation: microphonePulse 1s ease-in-out infinite;
+        }
+
+        @keyframes microphonePulse {
+            50% {
+                transform: scale(1.04);
+            }
+        }
+
+        .character-count {
+            color: #80859b;
+            font-size: 0.75rem;
+        }
+
+        .primary-button,
+        .secondary-button,
+        .share-button,
+        .download-button {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 9px;
+
+            min-height: 48px;
+            padding: 12px 16px;
+
+            border-radius: 15px;
+            font-weight: 850;
+            cursor: pointer;
+        }
+
+        .primary-button {
+            color: #051012;
+            background:
+                linear-gradient(
+                    100deg,
+                    var(--primary),
+                    #63f4df
+                );
+
+            border: 0;
+
+            box-shadow:
+                0 8px 25px rgba(0, 234, 244, 0.18);
+        }
+
+        .secondary-button {
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid var(--border);
+        }
+
+        .full-button {
+            width: 100%;
+        }
+
+        .custom-create-button {
+            width: 100%;
+            margin-top: 11px;
+        }
+
+        .templates-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin: 20px 0 10px;
+        }
+
+        .templates-header h3 {
+            margin: 0;
+            font-size: 0.98rem;
+        }
+
+        .templates-header span {
+            color: var(--text-muted);
+            font-size: 0.76rem;
+        }
+
+        .style-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .style-card {
+            position: relative;
+            overflow: hidden;
+
+            min-height: 91px;
+            padding: 13px 10px;
+
+            color: var(--text);
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255, 255, 255, 0.09),
+                    rgba(255, 255, 255, 0.025)
+                );
+
+            border: 1px solid var(--border);
+            border-radius: var(--radius-medium);
+
+            text-align: right;
+            cursor: pointer;
+
+            transition:
+                transform 0.18s ease,
+                border-color 0.18s ease,
+                background 0.18s ease;
+        }
+
+        .style-card::before {
+            content: "";
+            position: absolute;
+            top: -25px;
+            left: -30px;
+
+            width: 75px;
+            height: 75px;
+
+            background: var(--card-color, rgba(0, 234, 244, 0.2));
+            border-radius: 50%;
+            filter: blur(24px);
+        }
+
+        .style-card:active {
+            transform: scale(0.97);
+        }
+
+        .style-card:hover {
+            border-color: rgba(0, 234, 244, 0.48);
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(0, 234, 244, 0.1),
+                    rgba(168, 72, 245, 0.065)
+                );
+        }
+
+        .style-icon {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.55rem;
+        }
+
+        .style-name {
+            display: block;
+            font-size: 0.84rem;
+            font-weight: 850;
+        }
+
+        .style-subtitle {
+            display: block;
+            margin-top: 3px;
+            color: var(--text-muted);
+            font-size: 0.68rem;
+        }
+
+        .bottom-actions {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 9px;
+
+            margin-top: 16px;
+        }
+
+        .result-success {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            margin-bottom: 14px;
+            padding: 11px 12px;
+
+            color: #c9ffe0;
+            background: rgba(37, 211, 102, 0.09);
+            border: 1px solid rgba(37, 211, 102, 0.25);
+            border-radius: var(--radius-small);
+
+            font-size: 0.87rem;
+        }
+
+        .share-button {
+            color: #041309;
+            background: var(--success);
+            border: 0;
+        }
+
+        .download-button {
+            color: #041113;
+            background: var(--primary);
+            border: 0;
+        }
+
+        .result-disclaimer {
+            margin: 13px 2px 0;
+            color: var(--text-muted);
+            line-height: 1.45;
+            font-size: 0.76rem;
+            text-align: center;
+        }
+
+        .toast {
+            position: fixed;
+            z-index: 100;
+            right: 50%;
+            bottom: calc(18px + env(safe-area-inset-bottom));
+            transform: translateX(50%);
+
+            width: max-content;
+            max-width: min(92vw, 470px);
+            padding: 11px 16px;
+
+            color: #ffffff;
+            background: rgba(31, 34, 57, 0.97);
+            border: 1px solid var(--border-strong);
+            border-radius: 999px;
+
+            box-shadow: 0 12px 45px rgba(0, 0, 0, 0.55);
+
+            font-size: 0.88rem;
+            font-weight: 750;
+            text-align: center;
+        }
+
+        .toast.error {
+            background: rgba(118, 30, 55, 0.98);
+            border-color: rgba(255, 78, 117, 0.5);
+        }
+
+        dialog {
+            width: min(92vw, 460px);
+            padding: 21px;
+
+            color: var(--text);
+            background: var(--surface-strong);
+            border: 1px solid var(--border-strong);
+            border-radius: 22px;
+
+            box-shadow: var(--shadow);
+        }
+
+        dialog::backdrop {
+            background: rgba(0, 0, 0, 0.72);
+            backdrop-filter: blur(7px);
+        }
+
+        dialog h2 {
+            margin-top: 0;
+            font-size: 1.16rem;
+        }
+
+        dialog p,
+        dialog li {
+            color: var(--text-muted);
+            line-height: 1.55;
+            font-size: 0.88rem;
+        }
+
+        dialog ul {
+            padding-right: 20px;
+        }
+
+        @media (min-width: 430px) {
+            .style-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-height: 680px) {
+            .viewport {
+                max-height: 48dvh;
+                min-height: 260px;
+            }
+
+            .hero-copy {
+                display: none;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
     </style>
 </head>
-<body>
 
-    <header class="glass-panel" style="border-radius: 0;">
-        <div style="color: #ffb800; font-weight: bold; font-size: 0.9rem;"><i class="fas fa-bolt"></i> <span id="creditCount">3</span>/3</div>
-        <h1>VIRAL AVATAR</h1>
-        <div style="width: 30px;"></div>
+<body>
+    <div class="background-orb one"></div>
+    <div class="background-orb two"></div>
+
+    <header class="topbar">
+        <div class="credit-pill" aria-label="מספר הקרדיטים">
+            <span class="bolt" aria-hidden="true">⚡</span>
+            <span id="creditCount">3</span>
+            <span>/ 3</span>
+        </div>
+
+        <h1 class="brand">VIRAL AVATAR</h1>
+
+        <button
+            id="helpButton"
+            class="header-help"
+            type="button"
+            aria-label="מידע ופרטיות"
+        >
+            ?
+        </button>
     </header>
 
-    <div class="container">
-        <div class="viewport glass-panel">
-            <video id="videoElement" autoplay playsinline muted></video>
-            <canvas id="canvasElement"></canvas>
-            <img id="resultImage" alt="Result">
-            <video id="resultVideo" style="display:none;" controls autoplay playsinline loop></video>
-            
-            <div class="loading-overlay" id="loadingOverlay">
-                <div class="spinner"></div>
-                <div style="color: var(--primary); font-weight: bold; font-size: 0.95rem;" id="loadingText">מעבד קסם...</div>
-            </div>
-        </div>
+    <main class="app-shell">
+        <section class="hero-copy glass-panel">
+            <h2>הפוך את עצמך לדמות בלתי נשכחת</h2>
+            <p>
+                צלם תמונה ברורה, בחר סגנון ותן לבינה המלאכותית
+                ליצור עבורך אווטאר ייחודי.
+            </p>
+        </section>
 
-        <div id="cameraMenu">
-            <div class="controls">
-                <button class="icon-btn" onclick="document.getElementById('uploadInput').click()"><i class="fas fa-upload"></i></button>
-                <input type="file" id="uploadInput" accept="image/*" style="display:none">
-                <button id="captureBtn" onclick="takePhoto()"><i class="fas fa-camera"></i></button>
-                <button class="icon-btn" onclick="switchCamera()"><i class="fas fa-sync"></i></button>
-            </div>
-        </div>
+        <section class="viewport glass-panel" aria-label="תצוגה מקדימה">
+            <video
+                id="videoElement"
+                autoplay
+                playsinline
+                muted
+            ></video>
 
-        <div id="styleMenu">
-            <button class="faceoff-btn" onclick="generateMedia('faceoff', true)">
-                <i class="fas fa-video"></i> FACE OFF - וידאו טיקטוק
+            <canvas id="canvasElement" hidden></canvas>
+
+            <img
+                id="resultImage"
+                alt="התמונה שנבחרה או התוצאה שנוצרה"
+                hidden
+            >
+
+            <div id="cameraGuide" class="camera-guide"></div>
+
+            <div id="cameraGuideText" class="camera-guide-text">
+                מקם את הפנים במרכז והשתמש בתאורה טובה
+            </div>
+
+            <div
+                id="loadingOverlay"
+                class="loading-overlay"
+                hidden
+                aria-live="polite"
+                aria-busy="true"
+            >
+                <div class="spinner" aria-hidden="true"></div>
+
+                <div id="loadingText" class="loading-title">
+                    מתחיל ביצירת התמונה...
+                </div>
+
+                <div class="loading-subtitle">
+                    הפעולה עשויה להימשך מספר רגעים.
+                    אפשר לבטל מבלי לבזבז קרדיט כל עוד לא התקבלה תוצאה.
+                </div>
+
+                <button
+                    id="cancelButton"
+                    class="secondary-button"
+                    type="button"
+                >
+                    ביטול ההמתנה
+                </button>
+            </div>
+        </section>
+
+        <section id="cameraMenu" class="panel glass-panel">
+            <h2 class="section-title">בחר תמונה</h2>
+
+            <p class="section-description">
+                מומלץ להשתמש בתמונת פנים ברורה, ללא משקפי שמש
+                ועם אדם אחד בלבד.
+            </p>
+
+            <div class="camera-controls">
+                <button
+                    id="uploadButton"
+                    class="round-button"
+                    type="button"
+                    aria-label="העלאת תמונה מהמכשיר"
+                    title="העלאת תמונה"
+                >
+                    ⬆
+                </button>
+
+                <input
+                    id="uploadInput"
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    hidden
+                >
+
+                <button
+                    id="captureButton"
+                    class="capture-button"
+                    type="button"
+                    aria-label="צילום תמונה"
+                    title="צילום"
+                ></button>
+
+                <button
+                    id="switchCameraButton"
+                    class="round-button"
+                    type="button"
+                    aria-label="החלפת מצלמה"
+                    title="החלפת מצלמה"
+                >
+                    ↻
+                </button>
+            </div>
+        </section>
+
+        <section id="styleMenu" class="panel glass-panel" hidden>
+            <div class="maintenance-notice">
+                <span aria-hidden="true">🛠️</span>
+
+                <span>
+                    <strong>FACE OFF נמצא בשדרוג.</strong>
+                    יצירת האווטארים והתבניות ממשיכה לפעול כרגיל.
+                </span>
+            </div>
+
+            <label class="input-label" for="customInput">
+                יצירה חופשית
+            </label>
+
+            <div class="prompt-wrapper">
+                <textarea
+                    id="customInput"
+                    rows="3"
+                    maxlength="350"
+                    placeholder="לדוגמה: אסטרונאוט עתידני בתחנת חלל עם תאורה קולנועית"
+                ></textarea>
+
+                <div class="prompt-footer">
+                    <button
+                        id="micButton"
+                        class="mic-button"
+                        type="button"
+                    >
+                        <span aria-hidden="true">🎙️</span>
+                        <span id="micButtonText">הכתבה</span>
+                    </button>
+
+                    <span class="character-count">
+                        <span id="characterCount">0</span>/350
+                    </span>
+                </div>
+            </div>
+
+            <button
+                id="customCreateButton"
+                class="primary-button custom-create-button"
+                type="button"
+            >
+                ✨ צור מהתיאור שלי
             </button>
-            
-            <div class="custom-area">
-                <div class="category-title" style="margin:0;">יצירה חופשית (אנגלית בלבד)</div>
-                <div class="input-wrapper">
-                    <textarea id="customInput" rows="2" placeholder="תאר את האווטאר שלך..."></textarea>
-                    <button id="micBtn" class="mic-btn" onclick="toggleMic()"><i class="fas fa-microphone"></i></button>
-                </div>
-                <button class="custom-btn" onclick="generateCustom()">צור יצירת מופת</button>
+
+            <div class="templates-header">
+                <h3>תבניות מהירות</h3>
+                <span>לחץ על סגנון ליצירה</span>
             </div>
 
-            <div>
-                <div class="category-title">תבניות מהירות ופרו</div>
-                <div class="style-grid">
-                    <div class="style-card" onclick="generateMedia('tech_ceo')"><i class="fas fa-briefcase"></i><span>מנכ"ל הייטק</span></div>
-                    <div class="style-card" onclick="generateMedia('cyber_ninja')"><i class="fas fa-user-ninja"></i><span>סייבר-נינג'ה</span></div>
-                    <div class="style-card" onclick="generateMedia('jedi_master')"><i class="fab fa-jedi-order"></i><span>אביר ג'דיי</span></div>
-                    <div class="style-card" onclick="generateMedia('gladiator')"><i class="fas fa-shield-alt"></i><span>גלדיאטור</span></div>
-                    <div class="style-card" onclick="generateMedia('mafia_boss')"><i class="fas fa-user-tie"></i><span>בוס מאפיה</span></div>
-                    <div class="style-card" onclick="generateMedia('anime_hero')"><i class="fas fa-bolt"></i><span>אנימה גיבור</span></div>
-                    <div class="style-card" onclick="generateMedia('pixar_character')"><i class="fas fa-smile"></i><span>3D פיקסאר</span></div>
-                    <div class="style-card" onclick="generateMedia('vampire')"><i class="fas fa-moon"></i><span>ערפד אפל</span></div>
-                </div>
+            <div class="style-grid">
+                <button
+                    class="style-card"
+                    type="button"
+                    data-style="tech_ceo"
+                    style="--card-color: rgba(0, 234, 244, 0.28);"
+                >
+                    <span class="style-icon" aria-hidden="true">💼</span>
+                    <span class="style-name">מנכ״ל הייטק</span>
+                    <span class="style-subtitle">אלגנטי ומקצועי</span>
+                </button>
+
+                <button
+                    class="style-card"
+                    type="button"
+                    data-style="cyber_ninja"
+                    style="--card-color: rgba(48, 110, 255, 0.3);"
+                >
+                    <span class="style-icon" aria-hidden="true">🥷</span>
+                    <span class="style-name">סייבר נינג׳ה</span>
+                    <span class="style-subtitle">עתידני וניאון</span>
+                </button>
+
+                <button
+                    class="style-card"
+                    type="button"
+                    data-style="jedi_master"
+                    style="--card-color: rgba(68, 255, 172, 0.27);"
+                >
+                    <span class="style-icon" aria-hidden="true">⚔️</span>
+                    <span class="style-name">אביר גלקטי</span>
+                    <span class="style-subtitle">עוצמתי וקולנועי</span>
+                </button>
+
+                <button
+                    class="style-card"
+                    type="button"
+                    data-style="gladiator"
+                    style="--card-color: rgba(255, 151, 46, 0.3);"
+                >
+                    <span class="style-icon" aria-hidden="true">🛡️</span>
+                    <span class="style-name">גלדיאטור</span>
+                    <span class="style-subtitle">לוחם מהאגדות</span>
+                </button>
+
+                <button
+                    class="style-card"
+                    type="button"
+                    data-style="mafia_boss"
+                    style="--card-color: rgba(182, 182, 182, 0.24);"
+                >
+                    <span class="style-icon" aria-hidden="true">🎩</span>
+                    <span class="style-name">בוס קלאסי</span>
+                    <span class="style-subtitle">יוקרתי ומסתורי</span>
+                </button>
+
+                <button
+                    class="style-card"
+                    type="button"
+                    data-style="anime_hero"
+                    style="--card-color: rgba(255, 74, 181, 0.28);"
+                >
+                    <span class="style-icon" aria-hidden="true">⚡</span>
+                    <span class="style-name">גיבור אנימה</span>
+                    <span class="style-subtitle">צבעוני ודינמי</span>
+                </button>
+
+                <button
+                    class="style-card"
+                    type="button"
+                    data-style="pixar_character"
+                    style="--card-color: rgba(255, 211, 64, 0.3);"
+                >
+                    <span class="style-icon" aria-hidden="true">🎬</span>
+                    <span class="style-name">דמות תלת־ממד</span>
+                    <span class="style-subtitle">חברותי ומשעשע</span>
+                </button>
+
+                <button
+                    class="style-card"
+                    type="button"
+                    data-style="vampire"
+                    style="--card-color: rgba(185, 35, 74, 0.32);"
+                >
+                    <span class="style-icon" aria-hidden="true">🌙</span>
+                    <span class="style-name">ערפד אפל</span>
+                    <span class="style-subtitle">גותי ודרמטי</span>
+                </button>
             </div>
-        </div>
 
-        <div id="resultMenu">
-            <button class="action-btn btn-wa" onclick="shareResult()"><i class="fab fa-whatsapp"></i> שתף בוואטסאפ</button>
-            <button class="action-btn btn-dl" onclick="downloadResult()"><i class="fas fa-download"></i> שמור למכשיר</button>
-            <button class="action-btn glass-panel" onclick="resetApp()"><i class="fas fa-camera"></i> צלם מחדש</button>
-        </div>
-    </div>
+            <div class="bottom-actions">
+                <button
+                    id="retakeButton"
+                    class="secondary-button full-button"
+                    type="button"
+                >
+                    📷 בחר תמונה אחרת
+                </button>
+            </div>
+        </section>
 
-    <div id="toast"></div>
+        <section id="resultMenu" class="panel glass-panel" hidden>
+            <div class="result-success">
+                <span aria-hidden="true">✅</span>
+                <span>
+                    האווטאר שלך מוכן. אפשר להוריד, לשתף או ליצור אחד נוסף.
+                </span>
+            </div>
 
-<script>
-    const API_URL = "https://billowing-shape-1d81.maty-tsoraro.workers.dev";
-    let stream = null;
-    let facingMode = 'user';
-    let base64Image = null;
-    let currentResultUrl = null;
+            <div class="bottom-actions">
+                <button
+                    id="shareButton"
+                    class="share-button full-button"
+                    type="button"
+                >
+                    📤 שתף את התוצאה
+                </button>
 
-    const videoEl = document.getElementById('videoElement');
-    const canvasEl = document.getElementById('canvasElement');
-    const imgEl = document.getElementById('resultImage');
-    const resVideoEl = document.getElementById('resultVideo');
-    const loadingOverlay = document.getElementById('loadingOverlay');
-    const loadingText = document.getElementById('loadingText');
-    const customInput = document.getElementById('customInput');
-    const micBtn = document.getElementById('micBtn');
+                <button
+                    id="downloadButton"
+                    class="download-button full-button"
+                    type="button"
+                >
+                    ⬇️ שמור למכשיר
+                </button>
 
-    async function startCamera() {
-        if (stream) stream.getTracks().forEach(t => t.stop());
-        try {
-            stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode } });
-            videoEl.srcObject = stream;
-        } catch (e) { showToast("שגיאה בגישה למצלמה"); }
-    }
-    
-    function switchCamera() { facingMode = facingMode === 'user' ? 'environment' : 'user'; startCamera(); }
+                <button
+                    id="restartButton"
+                    class="secondary-button full-button"
+                    type="button"
+                >
+                    ✨ צור אווטאר נוסף
+                </button>
+            </div>
 
-    function takePhoto() {
-        canvasEl.width = videoEl.videoWidth; canvasEl.height = videoEl.videoHeight;
-        const ctx = canvasEl.getContext('2d');
-        if (facingMode === 'user') { ctx.translate(canvasEl.width, 0); ctx.scale(-1, 1); }
-        ctx.drawImage(videoEl, 0, 0);
-        base64Image = canvasEl.toDataURL('image/jpeg', 0.8);
-        showStyleMenu();
-    }
+            <p class="result-disclaimer">
+                תוצאות שנוצרות באמצעות בינה מלאכותית עשויות להיות שונות
+                מתמונת המקור. מומלץ לבדוק את התמונה לפני שיתוף.
+            </p>
+        </section>
+    </main>
 
-    document.getElementById('uploadInput').addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if(!file) return;
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const img = new Image();
-            img.onload = () => {
-                canvasEl.width = img.width; canvasEl.height = img.height;
-                canvasEl.getContext('2d').drawImage(img, 0, 0);
-                base64Image = canvasEl.toDataURL('image/jpeg', 0.8);
-                showStyleMenu();
-            };
-            img.src = event.target.result;
-        };
-        reader.readAsDataURL(file);
-    });
+    <div
+        id="toast"
+        class="toast"
+        role="status"
+        aria-live="polite"
+        hidden
+    ></div>
 
-    function showStyleMenu() {
-        imgEl.src = base64Image;
-        imgEl.style.display = 'block';
-        videoEl.style.display = 'none';
-        document.getElementById('cameraMenu').style.display = 'none';
-        document.getElementById('styleMenu').style.display = 'flex';
-    }
+    <dialog id="helpDialog">
+        <h2>מידע, פרטיות ושימוש בתמונות</h2>
 
-    // הכתבה קולית
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    let recognition;
-    if (SpeechRecognition) {
-        recognition = new SpeechRecognition();
-        recognition.lang = 'en-US';
-        recognition.onstart = () => micBtn.classList.add('recording');
-        recognition.onend = () => micBtn.classList.remove('recording');
-        recognition.onresult = (e) => {
-            customInput.value += (customInput.value ? " " : "") + e.results[0][0].transcript;
-        };
-    } else {
-        micBtn.style.display = 'none';
-    }
-    function toggleMic() { if(recognition) recognition.start(); }
+        <p>
+            כדי ליצור אווטאר, התמונה שבחרת נשלחת לשירות עיבוד
+            המבוסס על בינה מלאכותית.
+        </p>
 
-    // תרגום היצירה החופשית
-    async function translateToEnglish(text) {
-        if(!/[\u0590-\u05FF]/.test(text)) return text;
-        try {
-            const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=he|en`);
-            const data = await res.json();
-            return data.responseData.translatedText;
-        } catch(e) { return text; }
-    }
+        <ul>
+            <li>העלה רק תמונה שלך או תמונה שיש לך הרשאה להשתמש בה.</li>
+            <li>אל תשתמש באפליקציה לצורך התחזות או הטעיה.</li>
+            <li>תוצאות AI עשויות להיות שונות מהאדם שבתמונה.</li>
+            <li>בדוק את התוצאה לפני הורדה או שיתוף.</li>
+        </ul>
 
-    async function generateCustom() {
-        const val = customInput.value.trim();
-        if(!val) return showToast("אנא הזן תיאור");
-        setLoading(true, "מתרגם תיאור...");
-        const translated = await translateToEnglish(val);
-        generateMedia(translated, false, true);
-    }
+        <button
+            id="closeHelpButton"
+            class="primary-button full-button"
+            type="button"
+        >
+            הבנתי
+        </button>
+    </dialog>
 
-    // פונקציה חכמה שעושה תור המתנה (Polling) גם לוידאו וגם לתמונות כדי לא להיתקע בחיים
-    async function generateMedia(styleOrPrompt, isFaceOff = false, isCustom = false) {
-        if (!checkCredits()) return;
-        
-        const actionType = isFaceOff ? "faceoff" : "image";
-        const initialText = isFaceOff ? "מתחיל החלפת פנים בוידאו..." : "מתחיל ביצירת התמונה...";
-        setLoading(true, initialText);
-        
-        try {
-            const startRes = await fetch(API_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ action: actionType, image: base64Image, style: styleOrPrompt, isCustom: isCustom })
-            });
-            const startData = await startRes.json();
-            
-            if(startData.error) throw new Error(startData.error);
-            
-            // תמונות שחזרו מיד
-            if(startData.resultUrl) {
-                showResult(startData.resultUrl, 'image');
-                deductCredit();
-                return;
-            }
-            
-            if(!startData.id) throw new Error("לא התקבל מזהה משימה מהשרת");
+    <script>
+        "use strict";
 
-            // לולאת ההמתנה עם הספירה כדי שתדע שזה עובד
-            let isDone = false;
-            let attempts = 0;
-            const maxAttempts = isFaceOff ? 45 : 20;
+        /*
+         * כתובת ה-Worker הקיימת.
+         * המבנה של הבקשות נשאר תואם לקוד הנוכחי.
+         */
+        const API_URL =
+            "https://billowing-shape-1d81.maty-tsoraro.workers.dev";
 
-            while (!isDone && attempts < maxAttempts) {
-                await new Promise(r => setTimeout(r, 4000));
-                attempts++;
-                loadingText.innerText = `מעבד נתונים... (${attempts})`;
-                
-                const pollRes = await fetch(API_URL, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ action: "status", id: startData.id })
-                });
-                const pollData = await pollRes.json();
-                
-                if (pollData.status === "succeeded" && pollData.output) {
-                    const mediaUrl = Array.isArray(pollData.output) ? pollData.output[pollData.output.length - 1] : pollData.output;
-                    showResult(mediaUrl, isFaceOff ? 'video' : 'image');
-                    deductCredit();
-                    isDone = true;
-                } else if (pollData.status === "failed" || pollData.status === "canceled") {
-                    throw new Error(pollData.error || "הפעולה נכשלה בשרת");
-                }
-            }
-            if(!isDone) throw new Error("זמן ההמתנה עבר. השרת עמוס מדי, אנא נסה שוב.");
+        const AD_URL = "https://omg10.com/4/11571722";
 
-        } catch (e) {
-            showToast(e.message);
-            setLoading(false);
-        }
-    }
+        const MAX_CREDITS = 3;
+        const MAX_IMAGE_DIMENSION = 1536;
+        const MAX_UPLOAD_SIZE = 10 * 1024 * 1024;
+        const POLL_INTERVAL = 4000;
+        const MAX_POLL_ATTEMPTS = 25;
 
-    function showResult(url, type) {
-        currentResultUrl = url;
-        setLoading(false);
-        document.getElementById('styleMenu').style.display = 'none';
-        
-        if (type === 'video') {
-            imgEl.style.display = 'none';
-            resVideoEl.src = url;
-            resVideoEl.style.display = 'block';
-        } else {
-            resVideoEl.style.display = 'none';
-            imgEl.src = url;
-            imgEl.style.display = 'block';
-        }
-        document.getElementById('resultMenu').style.display = 'flex';
-    }
+        const videoElement = document.getElementById("videoElement");
+        const canvasElement = document.getElementById("canvasElement");
+        const resultImage = document.getElementById("resultImage");
 
-    function resetApp() {
-        document.getElementById('resultMenu').style.display = 'none';
-        document.getElementById('styleMenu').style.display = 'none';
-        imgEl.style.display = 'none';
-        resVideoEl.style.display = 'none';
-        resVideoEl.pause();
-        videoEl.style.display = 'block';
-        document.getElementById('cameraMenu').style.display = 'block';
-        base64Image = null;
-        customInput.value = '';
-    }
+        const cameraGuide = document.getElementById("cameraGuide");
+        const cameraGuideText =
+            document.getElementById("cameraGuideText");
 
-    function setLoading(isLoading, text) {
-        loadingText.innerText = text;
-        loadingOverlay.style.display = isLoading ? 'flex' : 'none';
-    }
+        const cameraMenu = document.getElementById("cameraMenu");
+        const styleMenu = document.getElementById("styleMenu");
+        const resultMenu = document.getElementById("resultMenu");
 
-    function showToast(msg) {
-        const t = document.getElementById('toast');
-        t.innerText = msg; t.style.display = 'block';
-        setTimeout(() => t.style.display = 'none', 4000);
-    }
+        const uploadInput = document.getElementById("uploadInput");
+        const customInput = document.getElementById("customInput");
 
-    let credits = 3;
-    function checkCredits() {
-        if (credits > 0) return true;
-        window.open('https://omg10.com/4/11571722', '_blank');
-        credits = 1; 
-        document.getElementById('creditCount').innerText = credits;
-        showToast("צפית בפרסומת! קיבלת קרדיט נוסף.");
-        return false;
-    }
-    function deductCredit() {
-        credits--;
-        document.getElementById('creditCount').innerText = credits;
-    }
+        const loadingOverlay =
+            document.getElementById("loadingOverlay");
 
-    function downloadResult() {
-        if(!currentResultUrl) return;
-        const a = document.createElement('a');
-        a.href = currentResultUrl;
-        a.download = "ViralAvatar";
-        a.click();
-    }
-    async function shareResult() {
-        if(!currentResultUrl) return;
-        try {
-            await navigator.share({ title: 'Viral Avatar', url: currentResultUrl });
-        } catch(e) { showToast("השיתוף לא נתמך במכשיר זה"); }
-    }
+        const loadingText = document.getElementById("loadingText");
+        const toastElement = document.getElementById("toast");
 
-    startCamera();
-</script>
-</body>
-</html>
+        const creditCount = document.getElementById("creditCount");
+        const characterCount =
+            document.getElementById("characterCount");
+
+        const micButton = document.getElementById("micButton");
+        const micButtonText =
+            document
