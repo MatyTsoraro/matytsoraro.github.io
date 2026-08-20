@@ -12,7 +12,7 @@
 
     <meta
         name="description"
-        content="Viral Avatar Studio - יצירת אווטארים מרהיבים באמצעות בינה מלאכותית"
+        content="Viral Avatar Studio - יצירת אווטארים באמצעות בינה מלאכותית"
     >
 
     <title>Viral Avatar Studio</title>
@@ -21,33 +21,20 @@
 
     <style>
         :root {
-            --primary: #00eaf4;
-            --primary-dark: #00aeb8;
-            --secondary: #a848f5;
-            --secondary-dark: #7132c9;
-
+            --primary: #00edf5;
+            --secondary: #a749f5;
             --background: #070810;
-            --background-light: #111326;
-            --surface: rgba(23, 25, 45, 0.82);
-            --surface-strong: rgba(27, 29, 52, 0.96);
-
+            --surface: rgba(24, 26, 47, 0.9);
             --text: #ffffff;
-            --text-muted: #b9bdd0;
-
+            --muted: #b9bfd2;
             --success: #25d366;
             --warning: #ffbd2e;
             --danger: #ff4e75;
-
-            --border: rgba(255, 255, 255, 0.12);
-            --border-strong: rgba(255, 255, 255, 0.2);
-
-            --shadow:
-                0 18px 55px rgba(0, 0, 0, 0.48),
-                0 0 28px rgba(0, 234, 244, 0.05);
-
+            --border: rgba(255, 255, 255, 0.14);
+            --border-strong: rgba(255, 255, 255, 0.23);
             --radius-large: 26px;
-            --radius-medium: 18px;
-            --radius-small: 13px;
+            --radius-medium: 17px;
+            --shadow: 0 18px 55px rgba(0, 0, 0, 0.48);
         }
 
         * {
@@ -63,23 +50,23 @@
             min-height: 100vh;
             min-height: 100dvh;
             margin: 0;
-
             color: var(--text);
+
             background:
                 radial-gradient(
                     circle at 10% -10%,
-                    rgba(0, 234, 244, 0.13),
-                    transparent 34%
+                    rgba(0, 237, 245, 0.15),
+                    transparent 35%
                 ),
                 radial-gradient(
-                    circle at 95% 5%,
-                    rgba(168, 72, 245, 0.16),
+                    circle at 100% 5%,
+                    rgba(167, 73, 245, 0.18),
                     transparent 38%
                 ),
                 linear-gradient(
                     180deg,
-                    var(--background-light),
-                    var(--background) 45%
+                    #12142a,
+                    var(--background) 48%
                 );
 
             font-family:
@@ -104,7 +91,7 @@
 
         button:focus-visible,
         textarea:focus-visible {
-            outline: 3px solid rgba(0, 234, 244, 0.55);
+            outline: 3px solid rgba(0, 237, 245, 0.6);
             outline-offset: 3px;
         }
 
@@ -115,30 +102,6 @@
 
         [hidden] {
             display: none !important;
-        }
-
-        .background-orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .background-orb.one {
-            width: 250px;
-            height: 250px;
-            top: 15%;
-            right: -130px;
-            background: rgba(0, 234, 244, 0.12);
-        }
-
-        .background-orb.two {
-            width: 300px;
-            height: 300px;
-            bottom: 5%;
-            left: -170px;
-            background: rgba(168, 72, 245, 0.13);
         }
 
         .topbar {
@@ -152,32 +115,32 @@
             gap: 10px;
 
             min-height: 70px;
+
             padding:
                 max(12px, env(safe-area-inset-top))
                 max(15px, env(safe-area-inset-right))
                 12px
                 max(15px, env(safe-area-inset-left));
 
-            background: rgba(7, 8, 16, 0.78);
+            background: rgba(7, 8, 16, 0.82);
             border-bottom: 1px solid var(--border);
-            backdrop-filter: blur(17px);
-            -webkit-backdrop-filter: blur(17px);
+
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
         }
 
         .brand {
             margin: 0;
-
-            font-size: clamp(1.15rem, 5vw, 1.48rem);
+            font-size: clamp(1.12rem, 5vw, 1.45rem);
             font-weight: 950;
-            letter-spacing: 0.02em;
             text-align: center;
 
             background:
                 linear-gradient(
                     100deg,
-                    #ffffff 0%,
-                    var(--primary) 38%,
-                    #d887ff 80%
+                    #ffffff,
+                    var(--primary) 42%,
+                    #d98aff 85%
                 );
 
             background-clip: text;
@@ -198,19 +161,14 @@
 
             color: #ffe18c;
             background: rgba(255, 189, 46, 0.11);
-            border: 1px solid rgba(255, 189, 46, 0.28);
+            border: 1px solid rgba(255, 189, 46, 0.29);
             border-radius: 999px;
 
             font-size: 0.9rem;
             font-weight: 850;
         }
 
-        .credit-pill .bolt {
-            color: var(--warning);
-            filter: drop-shadow(0 0 7px rgba(255, 189, 46, 0.6));
-        }
-
-        .header-help {
+        .help-button {
             justify-self: end;
 
             width: 40px;
@@ -243,34 +201,33 @@
             background:
                 linear-gradient(
                     145deg,
-                    rgba(255, 255, 255, 0.07),
+                    rgba(255, 255, 255, 0.075),
                     rgba(255, 255, 255, 0.025)
                 ),
                 var(--surface);
 
             border: 1px solid var(--border);
             border-radius: var(--radius-large);
-
             box-shadow: var(--shadow);
 
             backdrop-filter: blur(18px);
             -webkit-backdrop-filter: blur(18px);
         }
 
-        .hero-copy {
-            padding: 17px 18px;
+        .intro {
+            padding: 16px 18px;
         }
 
-        .hero-copy h2 {
-            margin: 0 0 5px;
-            font-size: 1.1rem;
+        .intro h2 {
+            margin: 0 0 6px;
+            font-size: 1.08rem;
         }
 
-        .hero-copy p {
+        .intro p {
             margin: 0;
-            color: var(--text-muted);
+            color: var(--muted);
+            font-size: 0.88rem;
             line-height: 1.5;
-            font-size: 0.9rem;
         }
 
         .viewport {
@@ -278,17 +235,17 @@
             overflow: hidden;
 
             width: 100%;
-            aspect-ratio: 4 / 5;
-            max-height: 55dvh;
             min-height: 300px;
+            max-height: 56dvh;
+            aspect-ratio: 4 / 5;
 
             background:
                 radial-gradient(
                     circle at center,
-                    rgba(0, 234, 244, 0.08),
-                    transparent 50%
+                    rgba(0, 237, 245, 0.09),
+                    transparent 52%
                 ),
-                #080911;
+                #05060b;
         }
 
         .viewport video,
@@ -299,58 +256,84 @@
             object-fit: cover;
         }
 
-        .viewport::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
+        #videoElement {
+            position: relative;
+            z-index: 2;
+            background: #05060b;
+        }
 
-            background:
-                linear-gradient(
-                    180deg,
-                    rgba(0, 0, 0, 0.08),
-                    transparent 28%,
-                    transparent 72%,
-                    rgba(0, 0, 0, 0.26)
-                );
+        #videoElement.front-camera {
+            transform: scaleX(-1);
+        }
+
+        #resultImage {
+            position: relative;
+            z-index: 3;
+        }
+
+        .camera-placeholder {
+            position: absolute;
+            z-index: 1;
+            inset: 0;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+
+            padding: 25px;
+            text-align: center;
+        }
+
+        .placeholder-icon {
+            font-size: 3rem;
+            opacity: 0.6;
+        }
+
+        .placeholder-text {
+            max-width: 280px;
+            color: var(--muted);
+            font-size: 0.86rem;
+            line-height: 1.5;
         }
 
         .camera-guide {
             position: absolute;
-            z-index: 3;
-            top: 50%;
+            z-index: 5;
+            top: 49%;
             right: 50%;
-            transform: translate(50%, -50%);
 
-            width: 58%;
+            width: 57%;
             aspect-ratio: 0.77;
 
-            border: 2px dashed rgba(255, 255, 255, 0.42);
+            transform: translate(50%, -50%);
+
+            border: 2px dashed rgba(255, 255, 255, 0.46);
             border-radius: 48% 48% 43% 43%;
 
             pointer-events: none;
-            opacity: 0.7;
         }
 
         .camera-guide-text {
             position: absolute;
-            z-index: 4;
+            z-index: 6;
             right: 50%;
             bottom: 16px;
+
             transform: translateX(50%);
 
             width: max-content;
             max-width: calc(100% - 30px);
             padding: 8px 13px;
 
-            color: rgba(255, 255, 255, 0.92);
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+            background: rgba(0, 0, 0, 0.55);
+            border: 1px solid var(--border);
             border-radius: 999px;
 
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             text-align: center;
-            backdrop-filter: blur(9px);
         }
 
         .loading-overlay {
@@ -365,17 +348,15 @@
             gap: 14px;
 
             padding: 24px;
-
             text-align: center;
+
             background:
                 radial-gradient(
                     circle at center,
-                    rgba(0, 234, 244, 0.12),
-                    transparent 50%
+                    rgba(0, 237, 245, 0.13),
+                    transparent 52%
                 ),
-                rgba(3, 4, 9, 0.94);
-
-            backdrop-filter: blur(13px);
+                rgba(3, 4, 9, 0.95);
         }
 
         .spinner {
@@ -403,8 +384,8 @@
         }
 
         .loading-subtitle {
-            max-width: 300px;
-            color: var(--text-muted);
+            max-width: 310px;
+            color: var(--muted);
             font-size: 0.82rem;
             line-height: 1.45;
         }
@@ -420,8 +401,21 @@
 
         .section-description {
             margin: 0 0 14px;
-            color: var(--text-muted);
+            color: var(--muted);
             font-size: 0.86rem;
+            line-height: 1.5;
+        }
+
+        .camera-error {
+            margin-bottom: 14px;
+            padding: 12px;
+
+            color: #ffd4de;
+            background: rgba(255, 78, 117, 0.1);
+            border: 1px solid rgba(255, 78, 117, 0.31);
+            border-radius: 13px;
+
+            font-size: 0.85rem;
             line-height: 1.5;
         }
 
@@ -430,8 +424,6 @@
             grid-template-columns: 1fr auto 1fr;
             align-items: center;
             gap: 18px;
-
-            padding: 3px 4px;
         }
 
         .round-button {
@@ -470,49 +462,48 @@
                     var(--secondary)
                 );
 
-            border: 5px solid rgba(255, 255, 255, 0.9);
+            border: 5px solid rgba(255, 255, 255, 0.92);
             border-radius: 50%;
 
             box-shadow:
                 0 0 0 5px rgba(255, 255, 255, 0.08),
-                0 0 28px rgba(0, 234, 244, 0.3);
+                0 0 28px rgba(0, 237, 245, 0.32);
 
             cursor: pointer;
         }
 
         .capture-button::after {
             content: "";
+
             width: 24px;
             height: 24px;
 
             background: #ffffff;
             border-radius: 50%;
-
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
         }
 
-        .maintenance-notice {
+        .notice {
             display: flex;
             align-items: flex-start;
-            gap: 11px;
+            gap: 10px;
 
             margin-bottom: 14px;
             padding: 12px;
 
             color: #ffe8ad;
             background: rgba(255, 189, 46, 0.09);
-            border: 1px solid rgba(255, 189, 46, 0.25);
-            border-radius: var(--radius-small);
+            border: 1px solid rgba(255, 189, 46, 0.26);
+            border-radius: 13px;
 
+            font-size: 0.85rem;
             line-height: 1.45;
-            font-size: 0.86rem;
         }
 
         .input-label {
             display: block;
             margin-bottom: 8px;
             font-size: 0.93rem;
-            font-weight: 800;
+            font-weight: 850;
         }
 
         .prompt-wrapper {
@@ -521,14 +512,15 @@
 
         #customInput {
             display: block;
+
             width: 100%;
-            min-height: 96px;
+            min-height: 100px;
+            padding: 13px 13px 44px;
+
             resize: vertical;
 
-            padding: 13px 13px 46px;
-
             color: var(--text);
-            background: rgba(2, 3, 8, 0.7);
+            background: rgba(2, 3, 8, 0.72);
             border: 1px solid var(--border-strong);
             border-radius: var(--radius-medium);
 
@@ -536,7 +528,7 @@
         }
 
         #customInput::placeholder {
-            color: #7f849c;
+            color: #858aa1;
         }
 
         .prompt-footer {
@@ -555,11 +547,11 @@
             align-items: center;
             gap: 6px;
 
-            min-height: 33px;
-            padding: 5px 10px;
+            min-height: 34px;
+            padding: 5px 11px;
 
-            color: var(--text-muted);
-            background: rgba(255, 255, 255, 0.065);
+            color: var(--muted);
+            background: rgba(255, 255, 255, 0.07);
             border: 1px solid var(--border);
             border-radius: 999px;
 
@@ -570,19 +562,11 @@
         .mic-button.recording {
             color: #ffffff;
             background: rgba(255, 78, 117, 0.28);
-            border-color: rgba(255, 78, 117, 0.6);
-
-            animation: microphonePulse 1s ease-in-out infinite;
-        }
-
-        @keyframes microphonePulse {
-            50% {
-                transform: scale(1.04);
-            }
+            border-color: rgba(255, 78, 117, 0.62);
         }
 
         .character-count {
-            color: #80859b;
+            color: #858aa1;
             font-size: 0.75rem;
         }
 
@@ -604,18 +588,16 @@
         }
 
         .primary-button {
-            color: #051012;
+            color: #041012;
+
             background:
                 linear-gradient(
                     100deg,
                     var(--primary),
-                    #63f4df
+                    #65f4df
                 );
 
             border: 0;
-
-            box-shadow:
-                0 8px 25px rgba(0, 234, 244, 0.18);
         }
 
         .secondary-button {
@@ -647,8 +629,8 @@
         }
 
         .templates-header span {
-            color: var(--text-muted);
-            font-size: 0.76rem;
+            color: var(--muted);
+            font-size: 0.75rem;
         }
 
         .style-grid {
@@ -658,13 +640,11 @@
         }
 
         .style-card {
-            position: relative;
-            overflow: hidden;
-
-            min-height: 91px;
+            min-height: 92px;
             padding: 13px 10px;
 
             color: var(--text);
+
             background:
                 linear-gradient(
                     145deg,
@@ -677,39 +657,10 @@
 
             text-align: right;
             cursor: pointer;
-
-            transition:
-                transform 0.18s ease,
-                border-color 0.18s ease,
-                background 0.18s ease;
-        }
-
-        .style-card::before {
-            content: "";
-            position: absolute;
-            top: -25px;
-            left: -30px;
-
-            width: 75px;
-            height: 75px;
-
-            background: var(--card-color, rgba(0, 234, 244, 0.2));
-            border-radius: 50%;
-            filter: blur(24px);
         }
 
         .style-card:active {
             transform: scale(0.97);
-        }
-
-        .style-card:hover {
-            border-color: rgba(0, 234, 244, 0.48);
-            background:
-                linear-gradient(
-                    145deg,
-                    rgba(0, 234, 244, 0.1),
-                    rgba(168, 72, 245, 0.065)
-                );
         }
 
         .style-icon {
@@ -727,15 +678,14 @@
         .style-subtitle {
             display: block;
             margin-top: 3px;
-            color: var(--text-muted);
+            color: var(--muted);
             font-size: 0.68rem;
         }
 
-        .bottom-actions {
+        .actions {
             display: grid;
             grid-template-columns: 1fr;
             gap: 9px;
-
             margin-top: 16px;
         }
 
@@ -749,10 +699,11 @@
 
             color: #c9ffe0;
             background: rgba(37, 211, 102, 0.09);
-            border: 1px solid rgba(37, 211, 102, 0.25);
-            border-radius: var(--radius-small);
+            border: 1px solid rgba(37, 211, 102, 0.26);
+            border-radius: 13px;
 
             font-size: 0.87rem;
+            line-height: 1.45;
         }
 
         .share-button {
@@ -767,11 +718,11 @@
             border: 0;
         }
 
-        .result-disclaimer {
+        .disclaimer {
             margin: 13px 2px 0;
-            color: var(--text-muted);
-            line-height: 1.45;
+            color: var(--muted);
             font-size: 0.76rem;
+            line-height: 1.45;
             text-align: center;
         }
 
@@ -780,6 +731,7 @@
             z-index: 100;
             right: 50%;
             bottom: calc(18px + env(safe-area-inset-bottom));
+
             transform: translateX(50%);
 
             width: max-content;
@@ -787,20 +739,21 @@
             padding: 11px 16px;
 
             color: #ffffff;
-            background: rgba(31, 34, 57, 0.97);
+            background: rgba(31, 34, 57, 0.98);
             border: 1px solid var(--border-strong);
             border-radius: 999px;
 
-            box-shadow: 0 12px 45px rgba(0, 0, 0, 0.55);
+            box-shadow: 0 12px 45px rgba(0, 0, 0, 0.56);
 
             font-size: 0.88rem;
             font-weight: 750;
+            line-height: 1.4;
             text-align: center;
         }
 
         .toast.error {
             background: rgba(118, 30, 55, 0.98);
-            border-color: rgba(255, 78, 117, 0.5);
+            border-color: rgba(255, 78, 117, 0.52);
         }
 
         dialog {
@@ -808,7 +761,7 @@
             padding: 21px;
 
             color: var(--text);
-            background: var(--surface-strong);
+            background: #1b1e36;
             border: 1px solid var(--border-strong);
             border-radius: 22px;
 
@@ -816,20 +769,18 @@
         }
 
         dialog::backdrop {
-            background: rgba(0, 0, 0, 0.72);
-            backdrop-filter: blur(7px);
+            background: rgba(0, 0, 0, 0.74);
         }
 
         dialog h2 {
             margin-top: 0;
-            font-size: 1.16rem;
         }
 
         dialog p,
         dialog li {
-            color: var(--text-muted);
-            line-height: 1.55;
+            color: var(--muted);
             font-size: 0.88rem;
+            line-height: 1.55;
         }
 
         dialog ul {
@@ -842,23 +793,11 @@
             }
         }
 
-        @media (max-height: 680px) {
-            .viewport {
-                max-height: 48dvh;
-                min-height: 260px;
-            }
-
-            .hero-copy {
-                display: none;
-            }
-        }
-
         @media (prefers-reduced-motion: reduce) {
             *,
             *::before,
             *::after {
                 animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
                 transition-duration: 0.01ms !important;
             }
         }
@@ -866,21 +805,18 @@
 </head>
 
 <body>
-    <div class="background-orb one"></div>
-    <div class="background-orb two"></div>
-
     <header class="topbar">
         <div class="credit-pill" aria-label="מספר הקרדיטים">
-            <span class="bolt" aria-hidden="true">⚡</span>
+            <span aria-hidden="true">⚡</span>
             <span id="creditCount">3</span>
-            <span>/ 3</span>
+            <span>/3</span>
         </div>
 
         <h1 class="brand">VIRAL AVATAR</h1>
 
         <button
             id="helpButton"
-            class="header-help"
+            class="help-button"
             type="button"
             aria-label="מידע ופרטיות"
         >
@@ -889,23 +825,39 @@
     </header>
 
     <main class="app-shell">
-        <section class="hero-copy glass-panel">
+        <section class="intro glass-panel">
             <h2>הפוך את עצמך לדמות בלתי נשכחת</h2>
+
             <p>
                 צלם תמונה ברורה, בחר סגנון ותן לבינה המלאכותית
                 ליצור עבורך אווטאר ייחודי.
             </p>
         </section>
 
-        <section class="viewport glass-panel" aria-label="תצוגה מקדימה">
+        <section class="viewport glass-panel">
+            <div
+                id="cameraPlaceholder"
+                class="camera-placeholder"
+            >
+                <div class="placeholder-icon">📷</div>
+
+                <div class="placeholder-text">
+                    מפעיל את המצלמה...
+                </div>
+            </div>
+
             <video
                 id="videoElement"
+                class="front-camera"
                 autoplay
                 playsinline
                 muted
             ></video>
 
-            <canvas id="canvasElement" hidden></canvas>
+            <canvas
+                id="canvasElement"
+                hidden
+            ></canvas>
 
             <img
                 id="resultImage"
@@ -913,9 +865,15 @@
                 hidden
             >
 
-            <div id="cameraGuide" class="camera-guide"></div>
+            <div
+                id="cameraGuide"
+                class="camera-guide"
+            ></div>
 
-            <div id="cameraGuideText" class="camera-guide-text">
+            <div
+                id="cameraGuideText"
+                class="camera-guide-text"
+            >
                 מקם את הפנים במרכז והשתמש בתאורה טובה
             </div>
 
@@ -924,17 +882,19 @@
                 class="loading-overlay"
                 hidden
                 aria-live="polite"
-                aria-busy="true"
             >
-                <div class="spinner" aria-hidden="true"></div>
+                <div class="spinner"></div>
 
-                <div id="loadingText" class="loading-title">
+                <div
+                    id="loadingText"
+                    class="loading-title"
+                >
                     מתחיל ביצירת התמונה...
                 </div>
 
                 <div class="loading-subtitle">
                     הפעולה עשויה להימשך מספר רגעים.
-                    אפשר לבטל מבלי לבזבז קרדיט כל עוד לא התקבלה תוצאה.
+                    אין לסגור את האפליקציה בזמן היצירה.
                 </div>
 
                 <button
@@ -947,21 +907,28 @@
             </div>
         </section>
 
-        <section id="cameraMenu" class="panel glass-panel">
+        <section
+            id="cameraMenu"
+            class="panel glass-panel"
+        >
             <h2 class="section-title">בחר תמונה</h2>
 
             <p class="section-description">
-                מומלץ להשתמש בתמונת פנים ברורה, ללא משקפי שמש
-                ועם אדם אחד בלבד.
+                מומלץ להשתמש בתמונת פנים ברורה, עם אדם אחד בלבד.
             </p>
+
+            <div
+                id="cameraError"
+                class="camera-error"
+                hidden
+            ></div>
 
             <div class="camera-controls">
                 <button
                     id="uploadButton"
                     class="round-button"
                     type="button"
-                    aria-label="העלאת תמונה מהמכשיר"
-                    title="העלאת תמונה"
+                    aria-label="העלאת תמונה"
                 >
                     ⬆
                 </button>
@@ -978,7 +945,6 @@
                     class="capture-button"
                     type="button"
                     aria-label="צילום תמונה"
-                    title="צילום"
                 ></button>
 
                 <button
@@ -986,24 +952,30 @@
                     class="round-button"
                     type="button"
                     aria-label="החלפת מצלמה"
-                    title="החלפת מצלמה"
                 >
                     ↻
                 </button>
             </div>
         </section>
 
-        <section id="styleMenu" class="panel glass-panel" hidden>
-            <div class="maintenance-notice">
-                <span aria-hidden="true">🛠️</span>
+        <section
+            id="styleMenu"
+            class="panel glass-panel"
+            hidden
+        >
+            <div class="notice">
+                <span>🛠️</span>
 
                 <span>
                     <strong>FACE OFF נמצא בשדרוג.</strong>
-                    יצירת האווטארים והתבניות ממשיכה לפעול כרגיל.
+                    יצירת התמונות ממשיכה לפעול כרגיל.
                 </span>
             </div>
 
-            <label class="input-label" for="customInput">
+            <label
+                class="input-label"
+                for="customInput"
+            >
                 יצירה חופשית
             </label>
 
@@ -1021,7 +993,7 @@
                         class="mic-button"
                         type="button"
                     >
-                        <span aria-hidden="true">🎙️</span>
+                        🎙️
                         <span id="micButtonText">הכתבה</span>
                     </button>
 
@@ -1041,7 +1013,7 @@
 
             <div class="templates-header">
                 <h3>תבניות מהירות</h3>
-                <span>לחץ על סגנון ליצירה</span>
+                <span>בחר סגנון</span>
             </div>
 
             <div class="style-grid">
@@ -1049,9 +1021,8 @@
                     class="style-card"
                     type="button"
                     data-style="tech_ceo"
-                    style="--card-color: rgba(0, 234, 244, 0.28);"
                 >
-                    <span class="style-icon" aria-hidden="true">💼</span>
+                    <span class="style-icon">💼</span>
                     <span class="style-name">מנכ״ל הייטק</span>
                     <span class="style-subtitle">אלגנטי ומקצועי</span>
                 </button>
@@ -1060,9 +1031,8 @@
                     class="style-card"
                     type="button"
                     data-style="cyber_ninja"
-                    style="--card-color: rgba(48, 110, 255, 0.3);"
                 >
-                    <span class="style-icon" aria-hidden="true">🥷</span>
+                    <span class="style-icon">🥷</span>
                     <span class="style-name">סייבר נינג׳ה</span>
                     <span class="style-subtitle">עתידני וניאון</span>
                 </button>
@@ -1071,9 +1041,8 @@
                     class="style-card"
                     type="button"
                     data-style="jedi_master"
-                    style="--card-color: rgba(68, 255, 172, 0.27);"
                 >
-                    <span class="style-icon" aria-hidden="true">⚔️</span>
+                    <span class="style-icon">⚔️</span>
                     <span class="style-name">אביר גלקטי</span>
                     <span class="style-subtitle">עוצמתי וקולנועי</span>
                 </button>
@@ -1082,9 +1051,8 @@
                     class="style-card"
                     type="button"
                     data-style="gladiator"
-                    style="--card-color: rgba(255, 151, 46, 0.3);"
                 >
-                    <span class="style-icon" aria-hidden="true">🛡️</span>
+                    <span class="style-icon">🛡️</span>
                     <span class="style-name">גלדיאטור</span>
                     <span class="style-subtitle">לוחם מהאגדות</span>
                 </button>
@@ -1093,9 +1061,8 @@
                     class="style-card"
                     type="button"
                     data-style="mafia_boss"
-                    style="--card-color: rgba(182, 182, 182, 0.24);"
                 >
-                    <span class="style-icon" aria-hidden="true">🎩</span>
+                    <span class="style-icon">🎩</span>
                     <span class="style-name">בוס קלאסי</span>
                     <span class="style-subtitle">יוקרתי ומסתורי</span>
                 </button>
@@ -1104,9 +1071,8 @@
                     class="style-card"
                     type="button"
                     data-style="anime_hero"
-                    style="--card-color: rgba(255, 74, 181, 0.28);"
                 >
-                    <span class="style-icon" aria-hidden="true">⚡</span>
+                    <span class="style-icon">⚡</span>
                     <span class="style-name">גיבור אנימה</span>
                     <span class="style-subtitle">צבעוני ודינמי</span>
                 </button>
@@ -1115,9 +1081,8 @@
                     class="style-card"
                     type="button"
                     data-style="pixar_character"
-                    style="--card-color: rgba(255, 211, 64, 0.3);"
                 >
-                    <span class="style-icon" aria-hidden="true">🎬</span>
+                    <span class="style-icon">🎬</span>
                     <span class="style-name">דמות תלת־ממד</span>
                     <span class="style-subtitle">חברותי ומשעשע</span>
                 </button>
@@ -1126,15 +1091,14 @@
                     class="style-card"
                     type="button"
                     data-style="vampire"
-                    style="--card-color: rgba(185, 35, 74, 0.32);"
                 >
-                    <span class="style-icon" aria-hidden="true">🌙</span>
+                    <span class="style-icon">🌙</span>
                     <span class="style-name">ערפד אפל</span>
                     <span class="style-subtitle">גותי ודרמטי</span>
                 </button>
             </div>
 
-            <div class="bottom-actions">
+            <div class="actions">
                 <button
                     id="retakeButton"
                     class="secondary-button full-button"
@@ -1145,15 +1109,20 @@
             </div>
         </section>
 
-        <section id="resultMenu" class="panel glass-panel" hidden>
+        <section
+            id="resultMenu"
+            class="panel glass-panel"
+            hidden
+        >
             <div class="result-success">
-                <span aria-hidden="true">✅</span>
+                <span>✅</span>
+
                 <span>
-                    האווטאר שלך מוכן. אפשר להוריד, לשתף או ליצור אחד נוסף.
+                    האווטאר שלך מוכן. אפשר להוריד, לשתף או ליצור נוסף.
                 </span>
             </div>
 
-            <div class="bottom-actions">
+            <div class="actions">
                 <button
                     id="shareButton"
                     class="share-button full-button"
@@ -1171,17 +1140,25 @@
                 </button>
 
                 <button
-                    id="restartButton"
+                    id="anotherButton"
                     class="secondary-button full-button"
                     type="button"
                 >
-                    ✨ צור אווטאר נוסף
+                    ✨ צור אווטאר נוסף מאותה תמונה
+                </button>
+
+                <button
+                    id="newPhotoButton"
+                    class="secondary-button full-button"
+                    type="button"
+                >
+                    📷 צלם תמונה חדשה
                 </button>
             </div>
 
-            <p class="result-disclaimer">
-                תוצאות שנוצרות באמצעות בינה מלאכותית עשויות להיות שונות
-                מתמונת המקור. מומלץ לבדוק את התמונה לפני שיתוף.
+            <p class="disclaimer">
+                תוצאות AI עשויות להיות שונות מתמונת המקור.
+                מומלץ לבדוק את התמונה לפני שיתוף.
             </p>
         </section>
     </main>
@@ -1195,18 +1172,16 @@
     ></div>
 
     <dialog id="helpDialog">
-        <h2>מידע, פרטיות ושימוש בתמונות</h2>
+        <h2>מידע ופרטיות</h2>
 
         <p>
-            כדי ליצור אווטאר, התמונה שבחרת נשלחת לשירות עיבוד
-            המבוסס על בינה מלאכותית.
+            התמונה שבחרת נשלחת לשירות עיבוד המבוסס על בינה מלאכותית.
         </p>
 
         <ul>
             <li>העלה רק תמונה שלך או תמונה שיש לך הרשאה להשתמש בה.</li>
-            <li>אל תשתמש באפליקציה לצורך התחזות או הטעיה.</li>
+            <li>אין להשתמש באפליקציה לצורך התחזות או הטעיה.</li>
             <li>תוצאות AI עשויות להיות שונות מהאדם שבתמונה.</li>
-            <li>בדוק את התוצאה לפני הורדה או שיתוף.</li>
         </ul>
 
         <button
@@ -1221,14 +1196,11 @@
     <script>
         "use strict";
 
-        /*
-         * כתובת ה-Worker הקיימת.
-         * המבנה של הבקשות נשאר תואם לקוד הנוכחי.
-         */
         const API_URL =
             "https://billowing-shape-1d81.maty-tsoraro.workers.dev";
 
-        const AD_URL = "https://omg10.com/4/11571722";
+        const AD_URL =
+            "https://omg10.com/4/11571722";
 
         const MAX_CREDITS = 3;
         const MAX_IMAGE_DIMENSION = 1536;
@@ -1236,31 +1208,1067 @@
         const POLL_INTERVAL = 4000;
         const MAX_POLL_ATTEMPTS = 25;
 
-        const videoElement = document.getElementById("videoElement");
-        const canvasElement = document.getElementById("canvasElement");
-        const resultImage = document.getElementById("resultImage");
+        const videoElement =
+            document.getElementById("videoElement");
 
-        const cameraGuide = document.getElementById("cameraGuide");
+        const canvasElement =
+            document.getElementById("canvasElement");
+
+        const resultImage =
+            document.getElementById("resultImage");
+
+        const cameraPlaceholder =
+            document.getElementById("cameraPlaceholder");
+
+        const cameraGuide =
+            document.getElementById("cameraGuide");
+
         const cameraGuideText =
             document.getElementById("cameraGuideText");
 
-        const cameraMenu = document.getElementById("cameraMenu");
-        const styleMenu = document.getElementById("styleMenu");
-        const resultMenu = document.getElementById("resultMenu");
+        const cameraError =
+            document.getElementById("cameraError");
 
-        const uploadInput = document.getElementById("uploadInput");
-        const customInput = document.getElementById("customInput");
+        const cameraMenu =
+            document.getElementById("cameraMenu");
+
+        const styleMenu =
+            document.getElementById("styleMenu");
+
+        const resultMenu =
+            document.getElementById("resultMenu");
+
+        const uploadInput =
+            document.getElementById("uploadInput");
+
+        const customInput =
+            document.getElementById("customInput");
 
         const loadingOverlay =
             document.getElementById("loadingOverlay");
 
-        const loadingText = document.getElementById("loadingText");
-        const toastElement = document.getElementById("toast");
+        const loadingText =
+            document.getElementById("loadingText");
 
-        const creditCount = document.getElementById("creditCount");
+        const toastElement =
+            document.getElementById("toast");
+
+        const creditCount =
+            document.getElementById("creditCount");
+
         const characterCount =
             document.getElementById("characterCount");
 
-        const micButton = document.getElementById("micButton");
+        const micButton =
+            document.getElementById("micButton");
+
         const micButtonText =
+            document.getElementById("micButtonText");
+
+        const helpDialog =
+            document.getElementById("helpDialog");
+
+        let cameraStream = null;
+        let facingMode = "user";
+        let cameraReady = false;
+
+        let base64Image = null;
+        let originalImage = null;
+        let currentResultUrl = null;
+
+        let isGenerating = false;
+        let generationCancelled = false;
+        let toastTimer = null;
+
+        let credits = MAX_CREDITS;
+
+        function updateCredits() {
+            creditCount.textContent = String(credits);
+        }
+
+        function showCameraError(message) {
+            cameraError.textContent = message;
+            cameraError.hidden = false;
+        }
+
+        function hideCameraError() {
+            cameraError.textContent = "";
+            cameraError.hidden = true;
+        }
+
+        function stopCamera() {
+            if (cameraStream) {
+                cameraStream
+                    .getTracks()
+                    .forEach(function (track) {
+                        track.stop();
+                    });
+            }
+
+            cameraStream = null;
+            cameraReady = false;
+            videoElement.srcObject = null;
+        }
+
+        async function startCamera() {
+            hideCameraError();
+            stopCamera();
+
+            cameraPlaceholder.hidden = false;
+            videoElement.hidden = false;
+            resultImage.hidden = true;
+
+            cameraGuide.hidden = false;
+            cameraGuideText.hidden = false;
+
+            videoElement.classList.toggle(
+                "front-camera",
+                facingMode === "user"
+            );
+
+            if (
+                !navigator.mediaDevices ||
+                !navigator.mediaDevices.getUserMedia
+            ) {
+                showCameraError(
+                    "הדפדפן או האפליקציה אינם מאפשרים גישה למצלמה. אפשר להעלות תמונה מהמכשיר."
+                );
+
+                return;
+            }
+
+            try {
+                cameraStream =
+                    await navigator.mediaDevices.getUserMedia({
+                        video: {
+                            facingMode: facingMode
+                        },
+                        audio: false
+                    });
+            } catch (firstError) {
+                console.warn(
+                    "Camera selection failed:",
+                    firstError
+                );
+
+                try {
+                    cameraStream =
+                        await navigator.mediaDevices.getUserMedia({
+                            video: true,
+                            audio: false
+                        });
+                } catch (secondError) {
+                    console.error(
+                        "Camera failed:",
+                        secondError
+                    );
+
+                    let message =
+                        "לא ניתן להפעיל את המצלמה. אפשר להעלות תמונה מהמכשיר.";
+
+                    if (
+                        secondError.name === "NotAllowedError" ||
+                        secondError.name === "PermissionDeniedError"
+                    ) {
+                        message =
+                            "הרשאת המצלמה חסומה. יש לאפשר הרשאת מצלמה בהגדרות האפליקציה.";
+                    } else if (
+                        secondError.name === "NotFoundError"
+                    ) {
+                        message =
+                            "לא נמצאה מצלמה זמינה במכשיר.";
+                    } else if (
+                        secondError.name === "NotReadableError"
+                    ) {
+                        message =
+                            "המצלמה נמצאת בשימוש באפליקציה אחרת.";
+                    }
+
+                    showCameraError(message);
+                    showToast(message, true);
+                    return;
+                }
+            }
+
+            videoElement.srcObject = cameraStream;
+
+            videoElement.onloadedmetadata =
+                async function () {
+                    try {
+                        await videoElement.play();
+
+                        cameraReady = true;
+                        cameraPlaceholder.hidden = true;
+                        hideCameraError();
+                    } catch (error) {
+                        console.error(
+                            "Video playback failed:",
+                            error
+                        );
+
+                        showCameraError(
+                            "המצלמה הופעלה אך לא ניתן להציג את התמונה."
+                        );
+                    }
+                };
+
+            try {
+                await videoElement.play();
+            } catch (error) {
+                console.warn(
+                    "Waiting for video metadata:",
+                    error
+                );
+            }
+
+            window.setTimeout(function () {
+                if (
+                    videoElement.videoWidth > 0 &&
+                    videoElement.videoHeight > 0
+                ) {
+                    cameraReady = true;
+                    cameraPlaceholder.hidden = true;
+                }
+            }, 1000);
+        }
+
+        async function switchCamera() {
+            if (isGenerating) {
+                return;
+            }
+
+            facingMode =
+                facingMode === "user"
+                    ? "environment"
+                    : "user";
+
+            await startCamera();
+        }
+
+        function getScaledDimensions(width, height) {
+            const largest = Math.max(width, height);
+
+            if (largest <= MAX_IMAGE_DIMENSION) {
+                return {
+                    width: width,
+                    height: height
+                };
+            }
+
+            const scale =
+                MAX_IMAGE_DIMENSION / largest;
+
+            return {
+                width: Math.round(width * scale),
+                height: Math.round(height * scale)
+            };
+        }
+
+        function drawToCanvas(source, mirror) {
+            const sourceWidth =
+                source.videoWidth ||
+                source.naturalWidth ||
+                source.width;
+
+            const sourceHeight =
+                source.videoHeight ||
+                source.naturalHeight ||
+                source.height;
+
+            if (!sourceWidth || !sourceHeight) {
+                throw new Error(
+                    "התמונה עדיין לא מוכנה. המתן רגע ונסה שוב."
+                );
+            }
+
+            const dimensions =
+                getScaledDimensions(
+                    sourceWidth,
+                    sourceHeight
+                );
+
+            canvasElement.width = dimensions.width;
+            canvasElement.height = dimensions.height;
+
+            const context =
+                canvasElement.getContext("2d", {
+                    alpha: false
+                });
+
+            context.save();
+
+            if (mirror) {
+                context.translate(dimensions.width, 0);
+                context.scale(-1, 1);
+            }
+
+            context.drawImage(
+                source,
+                0,
+                0,
+                dimensions.width,
+                dimensions.height
+            );
+
+            context.restore();
+
+            return canvasElement.toDataURL(
+                "image/jpeg",
+                0.86
+            );
+        }
+
+        function takePhoto() {
+            if (
+                !cameraStream ||
+                !cameraReady ||
+                videoElement.videoWidth === 0
+            ) {
+                showToast(
+                    "המצלמה עדיין לא מוכנה. המתן רגע ונסה שוב.",
+                    true
+                );
+
+                return;
+            }
+
+            try {
+                const imageData =
+                    drawToCanvas(
+                        videoElement,
+                        facingMode === "user"
+                    );
+
+                selectImage(imageData);
+            } catch (error) {
+                showToast(error.message, true);
+            }
+        }
+
+        function selectImage(imageData) {
+            base64Image = imageData;
+            originalImage = imageData;
+            currentResultUrl = null;
+
+            resultImage.src = imageData;
+            resultImage.hidden = false;
+
+            videoElement.hidden = true;
+            cameraPlaceholder.hidden = true;
+            cameraGuide.hidden = true;
+            cameraGuideText.hidden = true;
+
+            cameraMenu.hidden = true;
+            styleMenu.hidden = false;
+            resultMenu.hidden = true;
+
+            stopCamera();
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        }
+
+        function handleUpload(file) {
+            if (!file) {
+                return;
+            }
+
+            const allowedTypes = [
+                "image/jpeg",
+                "image/png",
+                "image/webp"
+            ];
+
+            if (!allowedTypes.includes(file.type)) {
+                showToast(
+                    "יש לבחור קובץ JPG, PNG או WebP.",
+                    true
+                );
+
+                return;
+            }
+
+            if (file.size > MAX_UPLOAD_SIZE) {
+                showToast(
+                    "התמונה גדולה מדי. הגודל המרבי הוא 10MB.",
+                    true
+                );
+
+                return;
+            }
+
+            const imageUrl = URL.createObjectURL(file);
+            const image = new Image();
+
+            image.onload = function () {
+                try {
+                    const imageData =
+                        drawToCanvas(image, false);
+
+                    selectImage(imageData);
+                } catch (error) {
+                    showToast(
+                        "לא ניתן לעבד את התמונה.",
+                        true
+                    );
+                } finally {
+                    URL.revokeObjectURL(imageUrl);
+                }
+            };
+
+            image.onerror = function () {
+                URL.revokeObjectURL(imageUrl);
+
+                showToast(
+                    "קובץ התמונה אינו תקין.",
+                    true
+                );
+            };
+
+            image.src = imageUrl;
+        }
+
+        function setLoading(loading, message) {
+            isGenerating = loading;
+            loadingOverlay.hidden = !loading;
+
+            if (message) {
+                loadingText.textContent = message;
+            }
+
             document
+                .querySelectorAll(
+                    "button:not(#cancelButton)"
+                )
+                .forEach(function (button) {
+                    button.disabled = loading;
+                });
+        }
+
+        function cancelGeneration() {
+            generationCancelled = true;
+            setLoading(false);
+
+            showToast(
+                "ההמתנה בוטלה. המשימה עשויה להמשיך בשרת."
+            );
+        }
+
+        function wait(milliseconds) {
+            return new Promise(function (resolve) {
+                window.setTimeout(resolve, milliseconds);
+            });
+        }
+
+        async function fetchJson(options) {
+            const response = await fetch(API_URL, options);
+
+            let data;
+
+            try {
+                data = await response.json();
+            } catch (error) {
+                throw new Error(
+                    "השרת החזיר תגובה לא תקינה."
+                );
+            }
+
+            if (!response.ok || data.error) {
+                throw new Error(
+                    data.error ||
+                    "שגיאת שרת (" +
+                    response.status +
+                    ")"
+                );
+            }
+
+            return data;
+        }
+
+        function extractOutputUrl(output) {
+            if (Array.isArray(output)) {
+                const urls =
+                    output.filter(function (item) {
+                        return typeof item === "string";
+                    });
+
+                return urls.length
+                    ? urls[urls.length - 1]
+                    : null;
+            }
+
+            return typeof output === "string"
+                ? output
+                : null;
+        }
+
+        function checkCredits() {
+            if (credits > 0) {
+                return true;
+            }
+
+            window.open(
+                AD_URL,
+                "_blank",
+                "noopener,noreferrer"
+            );
+
+            credits = 1;
+            updateCredits();
+
+            showToast(
+                "נפתח עמוד לקבלת קרדיט. חזור לאפליקציה כדי להמשיך."
+            );
+
+            return false;
+        }
+
+        function deductCredit() {
+            credits = Math.max(0, credits - 1);
+            updateCredits();
+        }
+
+        async function translateToEnglish(text) {
+            if (!/[\u0590-\u05FF]/.test(text)) {
+                return text;
+            }
+
+            try {
+                const url =
+                    "https://api.mymemory.translated.net/get" +
+                    "?q=" +
+                    encodeURIComponent(text) +
+                    "&langpair=he|en";
+
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    return text;
+                }
+
+                const data = await response.json();
+
+                return (
+                    data.responseData &&
+                    data.responseData.translatedText
+                ) || text;
+            } catch (error) {
+                return text;
+            }
+        }
+
+        async function generateCustom() {
+            const prompt = customInput.value.trim();
+
+            if (!prompt) {
+                showToast("יש להזין תיאור ליצירה.");
+                customInput.focus();
+                return;
+            }
+
+            if (!checkCredits()) {
+                return;
+            }
+
+            generationCancelled = false;
+
+            setLoading(
+                true,
+                "מכין את התיאור שלך..."
+            );
+
+            const translated =
+                await translateToEnglish(prompt);
+
+            if (generationCancelled) {
+                return;
+            }
+
+            await generateMedia(
+                translated,
+                true,
+                true
+            );
+        }
+
+        async function generateMedia(
+            styleOrPrompt,
+            isCustom,
+            loadingVisible
+        ) {
+            if (!base64Image) {
+                showToast(
+                    "יש לצלם או לבחור תמונה תחילה.",
+                    true
+                );
+
+                return;
+            }
+
+            if (!loadingVisible && !checkCredits()) {
+                return;
+            }
+
+            generationCancelled = false;
+
+            if (!loadingVisible) {
+                setLoading(
+                    true,
+                    "מתחיל ביצירת האווטאר..."
+                );
+            } else {
+                loadingText.textContent =
+                    "מתחיל ביצירת האווטאר...";
+            }
+
+            try {
+                const startData =
+                    await fetchJson({
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            action: "image",
+                            image: base64Image,
+                            style: styleOrPrompt,
+                            isCustom: Boolean(isCustom)
+                        })
+                    });
+
+                if (generationCancelled) {
+                    return;
+                }
+
+                const immediateUrl =
+                    startData.resultUrl ||
+                    extractOutputUrl(startData.output);
+
+                if (immediateUrl) {
+                    showResult(immediateUrl);
+                    deductCredit();
+                    return;
+                }
+
+                if (!startData.id) {
+                    throw new Error(
+                        "לא התקבל מזהה משימה מהשרת."
+                    );
+                }
+
+                for (
+                    let attempt = 1;
+                    attempt <= MAX_POLL_ATTEMPTS;
+                    attempt += 1
+                ) {
+                    if (generationCancelled) {
+                        return;
+                    }
+
+                    loadingText.textContent =
+                        "יוצר את האווטאר שלך... " +
+                        attempt +
+                        "/" +
+                        MAX_POLL_ATTEMPTS;
+
+                    await wait(POLL_INTERVAL);
+
+                    if (generationCancelled) {
+                        return;
+                    }
+
+                    const pollData =
+                        await fetchJson({
+                            method: "POST",
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+                            body: JSON.stringify({
+                                action: "status",
+                                id: startData.id
+                            })
+                        });
+
+                    if (
+                        pollData.status === "failed" ||
+                        pollData.status === "canceled"
+                    ) {
+                        throw new Error(
+                            pollData.error ||
+                            "היצירה נכשלה בשרת."
+                        );
+                    }
+
+                    if (pollData.status === "succeeded") {
+                        const outputUrl =
+                            extractOutputUrl(
+                                pollData.output
+                            );
+
+                        if (!outputUrl) {
+                            throw new Error(
+                                "היצירה הסתיימה אך לא התקבלה תמונה."
+                            );
+                        }
+
+                        showResult(outputUrl);
+                        deductCredit();
+                        return;
+                    }
+                }
+
+                throw new Error(
+                    "הפעולה אורכת זמן רב מהרגיל. נסה שוב."
+                );
+            } catch (error) {
+                if (!generationCancelled) {
+                    showToast(
+                        error.message ||
+                        "אירעה שגיאה ביצירת התמונה.",
+                        true
+                    );
+                }
+            } finally {
+                if (!generationCancelled) {
+                    setLoading(false);
+                }
+            }
+        }
+
+        function showResult(url) {
+            currentResultUrl = url;
+
+            resultImage.src = url;
+            resultImage.hidden = false;
+
+            styleMenu.hidden = true;
+            resultMenu.hidden = false;
+
+            setLoading(false);
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        }
+
+        async function downloadResult() {
+            if (!currentResultUrl) {
+                return;
+            }
+
+            try {
+                const response =
+                    await fetch(currentResultUrl);
+
+                if (!response.ok) {
+                    throw new Error();
+                }
+
+                const blob = await response.blob();
+                const objectUrl =
+                    URL.createObjectURL(blob);
+
+                const link =
+                    document.createElement("a");
+
+                link.href = objectUrl;
+                link.download =
+                    "viral-avatar-" +
+                    Date.now() +
+                    ".jpg";
+
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+
+                window.setTimeout(function () {
+                    URL.revokeObjectURL(objectUrl);
+                }, 2000);
+            } catch (error) {
+                window.open(
+                    currentResultUrl,
+                    "_blank",
+                    "noopener,noreferrer"
+                );
+
+                showToast(
+                    "התמונה נפתחה בחלון חדש. לחץ עליה לחיצה ארוכה כדי לשמור."
+                );
+            }
+        }
+
+        async function shareResult() {
+            if (!currentResultUrl) {
+                return;
+            }
+
+            try {
+                if (navigator.share) {
+                    await navigator.share({
+                        title: "Viral Avatar",
+                        text: "ראו את האווטאר שיצרתי!",
+                        url: currentResultUrl
+                    });
+
+                    return;
+                }
+
+                throw new Error();
+            } catch (error) {
+                if (error.name === "AbortError") {
+                    return;
+                }
+
+                window.open(
+                    "https://wa.me/?text=" +
+                    encodeURIComponent(
+                        "ראו את האווטאר שיצרתי: " +
+                        currentResultUrl
+                    ),
+                    "_blank",
+                    "noopener,noreferrer"
+                );
+            }
+        }
+
+        function resetApp() {
+            generationCancelled = true;
+
+            setLoading(false);
+            stopCamera();
+
+            base64Image = null;
+            originalImage = null;
+            currentResultUrl = null;
+
+            resultImage.src = "";
+            resultImage.hidden = true;
+
+            videoElement.hidden = false;
+            cameraPlaceholder.hidden = false;
+            cameraGuide.hidden = false;
+            cameraGuideText.hidden = false;
+
+            cameraMenu.hidden = false;
+            styleMenu.hidden = true;
+            resultMenu.hidden = true;
+
+            customInput.value = "";
+            characterCount.textContent = "0";
+            uploadInput.value = "";
+
+            startCamera();
+        }
+
+        function createAnother() {
+            if (!originalImage) {
+                resetApp();
+                return;
+            }
+
+            base64Image = originalImage;
+            currentResultUrl = null;
+
+            resultImage.src = originalImage;
+            resultImage.hidden = false;
+
+            styleMenu.hidden = false;
+            resultMenu.hidden = true;
+        }
+
+        function showToast(message, isError) {
+            window.clearTimeout(toastTimer);
+
+            toastElement.textContent = message;
+
+            toastElement.classList.toggle(
+                "error",
+                Boolean(isError)
+            );
+
+            toastElement.hidden = false;
+
+            toastTimer =
+                window.setTimeout(function () {
+                    toastElement.hidden = true;
+                }, 4300);
+        }
+
+        const SpeechRecognition =
+            window.SpeechRecognition ||
+            window.webkitSpeechRecognition;
+
+        let recognition = null;
+
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.lang = "he-IL";
+            recognition.interimResults = false;
+
+            recognition.onstart = function () {
+                micButton.classList.add("recording");
+                micButtonText.textContent = "מקשיב...";
+            };
+
+            recognition.onend = function () {
+                micButton.classList.remove("recording");
+                micButtonText.textContent = "הכתבה";
+            };
+
+            recognition.onresult = function (event) {
+                const transcript =
+                    event.results[0][0].transcript;
+
+                customInput.value =
+                    (
+                        customInput.value +
+                        (customInput.value ? " " : "") +
+                        transcript
+                    ).slice(0, 350);
+
+                characterCount.textContent =
+                    String(customInput.value.length);
+            };
+        } else {
+            micButton.hidden = true;
+        }
+
+        document
+            .getElementById("uploadButton")
+            .addEventListener("click", function () {
+                uploadInput.click();
+            });
+
+        uploadInput.addEventListener(
+            "change",
+            function (event) {
+                handleUpload(
+                    event.target.files &&
+                    event.target.files[0]
+                );
+            }
+        );
+
+        document
+            .getElementById("captureButton")
+            .addEventListener("click", takePhoto);
+
+        document
+            .getElementById("switchCameraButton")
+            .addEventListener("click", switchCamera);
+
+        document
+            .getElementById("cancelButton")
+            .addEventListener("click", cancelGeneration);
+
+        document
+            .getElementById("customCreateButton")
+            .addEventListener("click", generateCustom);
+
+        document
+            .getElementById("retakeButton")
+            .addEventListener("click", resetApp);
+
+        document
+            .getElementById("newPhotoButton")
+            .addEventListener("click", resetApp);
+
+        document
+            .getElementById("anotherButton")
+            .addEventListener("click", createAnother);
+
+        document
+            .getElementById("downloadButton")
+            .addEventListener("click", downloadResult);
+
+        document
+            .getElementById("shareButton")
+            .addEventListener("click", shareResult);
+
+        micButton.addEventListener("click", function () {
+            if (!recognition) {
+                return;
+            }
+
+            try {
+                recognition.start();
+            } catch (error) {
+                console.warn(error);
+            }
+        });
+
+        customInput.addEventListener("input", function () {
+            characterCount.textContent =
+                String(customInput.value.length);
+        });
+
+        document
+            .querySelectorAll(".style-card")
+            .forEach(function (button) {
+                button.addEventListener(
+                    "click",
+                    function () {
+                        generateMedia(
+                            button.dataset.style,
+                            false,
+                            false
+                        );
+                    }
+                );
+            });
+
+        document
+            .getElementById("helpButton")
+            .addEventListener("click", function () {
+                if (helpDialog.showModal) {
+                    helpDialog.showModal();
+                }
+            });
+
+        document
+            .getElementById("closeHelpButton")
+            .addEventListener("click", function () {
+                helpDialog.close();
+            });
+
+        window.addEventListener("pagehide", stopCamera);
+
+        function initializeApp() {
+            updateCredits();
+
+            window.setTimeout(function () {
+                startCamera();
+            }, 300);
+        }
+
+        if (document.readyState === "loading") {
+            document.addEventListener(
+                "DOMContentLoaded",
+                initializeApp,
+                {
+                    once: true
+                }
+            );
+        } else {
+            initializeApp();
+        }
+
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", function () {
+                navigator.serviceWorker
+                    .register("./service-worker.js")
+                    .catch(function (error) {
+                        console.error(
+                            "Service Worker error:",
+                            error
+                        );
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
