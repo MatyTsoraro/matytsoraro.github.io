@@ -355,7 +355,7 @@ async function animateAvatar(){
         await wait(1500);
     }
     try{
-        const startData=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"animate",imageUrl:currentResultUrl,motion:selectedMotion})});
+        const startData=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"animate",imageUrl:currentResultUrl,motion:selectedMotion,duration:window.selectedDuration||4})});
         if(generationCancelled) return;
         if(!startData.requestId) throw new Error("לא התקבל מזהה וידאו");
         currentVideoRequestId=startData.requestId;
