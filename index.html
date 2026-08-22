@@ -4,112 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#090a12">
-    <meta name="description" content="Viral Avatar Studio - יצירת אווטארים ווידאו באמצעות בינה מלאכותית">
-    <title>Viral Avatar Studio - Professional AI Avatars & Video</title>
-    <link rel="manifest" href="./manifest.json">
+    <title>Viral Avatar Studio - Professional</title>
     <style>
-        :root {
-            --primary: #00edf5; --secondary: #a749f5; --background: #070810;
-            --surface: rgba(24, 26, 47, 0.9); --text: #ffffff; --muted: #b9bfd2;
-            --success: #25d366; --warning: #ffbd2e; --danger: #ff4e75;
-            --border: rgba(255, 255, 255, 0.14); --border-strong: rgba(255, 255, 255, 0.23);
-            --radius-large: 26px; --radius-medium: 17px; --shadow: 0 18px 55px rgba(0, 0, 0, 0.48);
-        }
-        * { box-sizing: border-box; }
-        html { min-height: 100%; background: var(--background); }
-        body {
-            min-height: 100vh; min-height: 100dvh; margin: 0; color: var(--text);
-            background: radial-gradient(circle at 10% -10%, rgba(0, 237, 245, 0.15), transparent 35%),
-                        radial-gradient(circle at 100% 5%, rgba(167, 73, 245, 0.18), transparent 38%),
-                        linear-gradient(180deg, #12142a, var(--background) 48%);
-            font-family: Arial, "Segoe UI", system-ui, sans-serif; overflow-x: hidden;
-        }
-        button, textarea, input { font: inherit; }
-        button { -webkit-tap-highlight-color: transparent; }
-        button:disabled { opacity: 0.55; cursor: not-allowed; }
-        [hidden] { display: none !important; }
-        .topbar {
-            position: sticky; top: 0; z-index: 30; display: grid; grid-template-columns: 1fr auto 1fr;
-            align-items: center; gap: 10px; min-height: 70px;
-            padding: max(12px, env(safe-area-inset-top)) max(15px, env(safe-area-inset-right)) 12px max(15px, env(safe-area-inset-left));
-            background: rgba(7, 8, 16, 0.82); border-bottom: 1px solid var(--border);
-            backdrop-filter: blur(18px);
-        }
-        .brand { margin: 0; font-size: clamp(1.12rem, 5vw, 1.45rem); font-weight: 950; text-align: center;
-            background: linear-gradient(100deg, #ffffff, var(--primary) 42%, #d98aff 85%);
-            background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
-        .credit-pill { justify-self: start; display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 8px 11px;
-            color: #ffe18c; background: rgba(255, 189, 46, 0.11); border: 1px solid rgba(255, 189, 46, 0.29); border-radius: 999px; font-size: 0.9rem; font-weight: 850; }
-        .help-button { justify-self: end; width: 40px; height: 40px; color: var(--text); background: rgba(255, 255, 255, 0.07); border: 1px solid var(--border); border-radius: 50%; font-weight: 900; cursor: pointer; }
-        .app-shell { width: min(100%, 540px); margin: 0 auto; padding: 14px max(14px, env(safe-area-inset-right)) calc(30px + env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left)); display: grid; gap: 14px; }
-        .glass-panel { background: linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.025)), var(--surface); border: 1px solid var(--border); border-radius: var(--radius-large); box-shadow: var(--shadow); backdrop-filter: blur(18px); }
-        .intro { padding: 16px 18px; }
-        .intro h2 { margin: 0 0 6px; font-size: 1.08rem; }
-        .intro p { margin: 0; color: var(--muted); font-size: 0.88rem; line-height: 1.5; }
-        /* === FIX CROP - תיקון חיתוך מלמעלה === */
-        .viewport { position: relative; overflow: hidden; width: 100%; min-height: 360px; max-height: 72dvh; aspect-ratio: 3 / 4; background: radial-gradient(circle at center, rgba(0, 237, 245, 0.09), transparent 52%), #05060b; }
-        .viewport video, .viewport img { display: block; width: 100%; height: 100%; object-fit: contain !important; object-position: center top !important; background: #05060b; }
-        #videoElement { position: relative; z-index: 2; background: #05060b; object-fit: contain !important; object-position: center top !important; }
-        #videoElement.front-camera { transform: scaleX(-1); }
-        #resultImage { position: relative; z-index: 3; width: 100%; height: 100%; object-fit: contain !important; object-position: center top !important; background: #05060b; }
-        #resultVideo { position: relative; z-index: 3; width: 100%; height: 100%; object-fit: contain !important; object-position: center top !important; background: #000; }
-        .camera-placeholder { position: absolute; z-index: 1; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 12px; padding: 25px; text-align: center; }
-        .placeholder-icon { font-size: 3rem; opacity: 0.6; }
-        .placeholder-text { max-width: 280px; color: var(--muted); font-size: 0.86rem; line-height: 1.5; }
-        .camera-guide { position: absolute; z-index: 5; top: 49%; right: 50%; width: 57%; aspect-ratio: 0.77; transform: translate(50%, -50%); border: 2px dashed rgba(255, 255, 255, 0.46); border-radius: 48% 48% 43% 43%; pointer-events: none; }
-        .camera-guide-text { position: absolute; z-index: 6; right: 50%; bottom: 16px; transform: translateX(50%); width: max-content; max-width: calc(100% - 30px); padding: 8px 13px; color: #ffffff; background: rgba(0, 0, 0, 0.55); border: 1px solid var(--border); border-radius: 999px; font-size: 0.78rem; text-align: center; }
-        .loading-overlay { position: absolute; z-index: 20; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 14px; padding: 24px; text-align: center; background: radial-gradient(circle at center, rgba(0, 237, 245, 0.13), transparent 52%), rgba(3, 4, 9, 0.95); }
-        .spinner { width: 48px; height: 48px; border: 4px solid rgba(255, 255, 255, 0.14); border-top-color: var(--primary); border-right-color: var(--secondary); border-radius: 50%; animation: spin 0.9s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .loading-title { color: var(--primary); font-size: 1rem; font-weight: 850; }
-        .loading-subtitle { max-width: 310px; color: var(--muted); font-size: 0.82rem; line-height: 1.45; }
-        .panel { padding: 16px; }
-        .section-title { margin: 0 0 5px; font-size: 1.05rem; }
-        .section-description { margin: 0 0 14px; color: var(--muted); font-size: 0.86rem; line-height: 1.5; }
-        .camera-error { margin-bottom: 14px; padding: 12px; color: #ffd4de; background: rgba(255, 78, 117, 0.1); border: 1px solid rgba(255, 78, 117, 0.31); border-radius: 13px; font-size: 0.85rem; line-height: 1.5; }
-        .camera-controls { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 18px; }
-        .round-button { justify-self: center; display: inline-flex; justify-content: center; align-items: center; width: 54px; height: 54px; color: var(--text); background: rgba(255, 255, 255, 0.07); border: 1px solid var(--border-strong); border-radius: 50%; font-size: 1.35rem; cursor: pointer; }
-        .capture-button { position: relative; display: inline-flex; justify-content: center; align-items: center; width: 76px; height: 76px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border: 5px solid rgba(255, 255, 255, 0.92); border-radius: 50%; box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.08), 0 0 28px rgba(0, 237, 245, 0.32); cursor: pointer; }
-        .capture-button::after { content: ""; width: 24px; height: 24px; background: #ffffff; border-radius: 50%; }
-        .notice { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 14px; padding: 12px; color: #ffe8ad; background: rgba(255, 189, 46, 0.09); border: 1px solid rgba(255, 189, 46, 0.26); border-radius: 13px; font-size: 0.85rem; line-height: 1.45; }
-        .input-label { display: block; margin-bottom: 8px; font-size: 0.93rem; font-weight: 850; }
-        .prompt-wrapper { position: relative; }
-        #customInput { display: block; width: 100%; min-height: 100px; padding: 13px 13px 44px; resize: vertical; color: var(--text); background: rgba(2, 3, 8, 0.72); border: 1px solid var(--border-strong); border-radius: var(--radius-medium); line-height: 1.5; }
-        #customInput::placeholder { color: #858aa1; }
-        .prompt-footer { position: absolute; right: 9px; left: 9px; bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
-        .mic-button { display: inline-flex; align-items: center; gap: 6px; min-height: 34px; padding: 5px 11px; color: var(--muted); background: rgba(255, 255, 255, 0.07); border: 1px solid var(--border); border-radius: 999px; font-size: 0.78rem; cursor: pointer; }
-        .mic-button.recording { color: #ffffff; background: rgba(255, 78, 117, 0.28); border-color: rgba(255, 78, 117, 0.62); }
-        .character-count { color: #858aa1; font-size: 0.75rem; }
-        .primary-button, .secondary-button, .share-button, .download-button, .video-button { display: inline-flex; justify-content: center; align-items: center; gap: 9px; min-height: 48px; padding: 12px 16px; border-radius: 15px; font-weight: 850; cursor: pointer; }
-        .primary-button { color: #041012; background: linear-gradient(100deg, var(--primary), #65f4df); border: 0; }
-        .secondary-button { color: var(--text); background: rgba(255, 255, 255, 0.07); border: 1px solid var(--border); }
-        .full-button { width: 100%; }
-        .custom-create-button { width: 100%; margin-top: 11px; }
-        .templates-header { display: flex; justify-content: space-between; align-items: center; margin: 20px 0 10px; }
-        .templates-header h3 { margin: 0; font-size: 0.98rem; }
-        .templates-header span { color: var(--muted); font-size: 0.75rem; }
-        .style-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-        .style-card { min-height: 92px; padding: 13px 10px; color: var(--text); background: linear-gradient(145deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.025)); border: 1px solid var(--border); border-radius: var(--radius-medium); text-align: right; cursor: pointer; }
-        .style-icon { display: block; margin-bottom: 8px; font-size: 1.55rem; }
-        .style-name { display: block; font-size: 0.84rem; font-weight: 850; }
-        .style-subtitle { display: block; margin-top: 3px; color: var(--muted); font-size: 0.68rem; }
-        .actions { display: grid; gap: 9px; margin-top: 16px; }
-        .result-success { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding: 11px 12px; color: #c9ffe0; background: rgba(37, 211, 102, 0.09); border: 1px solid rgba(37, 211, 102, 0.26); border-radius: 13px; font-size: 0.87rem; line-height: 1.45; }
-        .share-button { color: #041309; background: var(--success); border: 0; }
-        .download-button { color: #041113; background: var(--primary); border: 0; }
-        .video-button { color: #ffffff; background: linear-gradient(135deg, #ff0055, #a749f5); border: 0; box-shadow: 0 0 18px rgba(255,0,85,0.35); }
-        .motion-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0; }
-        .motion-btn { padding: 8px; border-radius: 10px; background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: var(--muted); font-size: 0.75rem; cursor: pointer; }
-        .motion-btn.active { background: rgba(0,237,245,0.15); border-color: var(--primary); color: var(--text); }
-        .disclaimer { margin: 13px 2px 0; color: var(--muted); font-size: 0.76rem; line-height: 1.45; text-align: center; }
-        .toast { position: fixed; z-index: 100; right: 50%; bottom: calc(18px + env(safe-area-inset-bottom)); transform: translateX(50%); width: max-content; max-width: min(92vw, 470px); padding: 11px 16px; color: #ffffff; background: rgba(31, 34, 57, 0.98); border: 1px solid var(--border-strong); border-radius: 999px; box-shadow: 0 12px 45px rgba(0, 0, 0, 0.56); font-size: 0.88rem; font-weight: 750; line-height: 1.4; text-align: center; }
-        .toast.error { background: rgba(118, 30, 55, 0.98); border-color: rgba(255, 78, 117, 0.52); }
-        dialog { width: min(92vw, 460px); padding: 21px; color: var(--text); background: #1b1e36; border: 1px solid var(--border-strong); border-radius: 22px; box-shadow: var(--shadow); }
-        dialog::backdrop { background: rgba(0, 0, 0, 0.74); }
-        dialog h2 { margin-top: 0; }
-        dialog p, dialog li { color: var(--muted); font-size: 0.88rem; line-height: 1.55; }
-        dialog ul { padding-right: 20px; }
-        @media (min-width: 430px) { .style-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+        :root{--primary:#00edf5;--secondary:#a749f5;--background:#070810;--surface:rgba(24,26,47,0.9);--text:#fff;--muted:#b9bfd2;--success:#25d366;--warning:#ffbd2e;--border:rgba(255,255,255,0.14);--border-strong:rgba(255,255,255,0.23);--radius-large:26px;--radius-medium:17px;--shadow:0 18px 55px rgba(0,0,0,0.48)}
+        *{box-sizing:border-box}html{min-height:100%;background:var(--background)}body{min-height:100vh;min-height:100dvh;margin:0;color:var(--text);background:radial-gradient(circle at 10% -10%,rgba(0,237,245,0.15),transparent 35%),radial-gradient(circle at 100% 5%,rgba(167,73,245,0.18),transparent 38%),linear-gradient(180deg,#12142a,var(--background) 48%);font-family:Arial,sans-serif;overflow-x:hidden}
+        button,textarea,input{font:inherit}button{-webkit-tap-highlight-color:transparent}button:disabled{opacity:.55;cursor:not-allowed}[hidden]{display:none!important}
+        .topbar{position:sticky;top:0;z-index:30;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;min-height:70px;padding:max(12px,env(safe-area-inset-top)) max(15px,env(safe-area-inset-right)) 12px max(15px,env(safe-area-inset-left));background:rgba(7,8,16,0.82);border-bottom:1px solid var(--border);backdrop-filter:blur(18px)}
+        .brand{margin:0;font-size:clamp(1.12rem,5vw,1.45rem);font-weight:950;text-align:center;background:linear-gradient(100deg,#fff,var(--primary) 42%,#d98aff 85%);background-clip:text;-webkit-background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+        .credit-pill{justify-self:start;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:8px 11px;color:#ffe18c;background:rgba(255,189,46,0.11);border:1px solid rgba(255,189,46,0.29);border-radius:999px;font-size:.9rem;font-weight:850}
+        .help-button{justify-self:end;width:40px;height:40px;color:var(--text);background:rgba(255,255,255,0.07);border:1px solid var(--border);border-radius:50%;font-weight:900;cursor:pointer}
+        .app-shell{width:min(100%,540px);margin:0 auto;padding:14px max(14px,env(safe-area-inset-right)) calc(30px + env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));display:grid;gap:14px}
+        .glass-panel{background:linear-gradient(145deg,rgba(255,255,255,0.075),rgba(255,255,255,0.025)),var(--surface);border:1px solid var(--border);border-radius:var(--radius-large);box-shadow:var(--shadow);backdrop-filter:blur(18px)}
+        .intro{padding:16px 18px}.intro h2{margin:0 0 6px;font-size:1.08rem}.intro p{margin:0;color:var(--muted);font-size:.88rem;line-height:1.5}
+        .viewport{position:relative;overflow:hidden;width:100%;min-height:360px;max-height:72dvh;aspect-ratio:3/4;background:radial-gradient(circle at center,rgba(0,237,245,0.09),transparent 52%),#05060b}
+        .viewport video,.viewport img{display:block;width:100%;height:100%;object-fit:contain!important;object-position:center top!important;background:#05060b}
+        #videoElement{position:relative;z-index:2;background:#05060b}#videoElement.front-camera{transform:scaleX(-1)}#resultImage{position:relative;z-index:3;width:100%;height:100%;object-fit:contain!important;object-position:center top!important;background:#05060b}#resultVideo{position:relative;z-index:3;width:100%;height:100%;object-fit:contain!important;object-position:center top!important;background:#000}
+        .camera-placeholder{position:absolute;z-index:1;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:12px;padding:25px;text-align:center}.placeholder-icon{font-size:3rem;opacity:.6}.placeholder-text{max-width:280px;color:var(--muted);font-size:.86rem;line-height:1.5}
+        .camera-guide{position:absolute;z-index:5;top:49%;right:50%;width:57%;aspect-ratio:.77;transform:translate(50%,-50%);border:2px dashed rgba(255,255,255,0.46);border-radius:48% 48% 43% 43%;pointer-events:none}
+        .camera-guide-text{position:absolute;z-index:6;right:50%;bottom:16px;transform:translateX(50%);width:max-content;max-width:calc(100% - 30px);padding:8px 13px;color:#fff;background:rgba(0,0,0,0.55);border:1px solid var(--border);border-radius:999px;font-size:.78rem;text-align:center}
+        .loading-overlay{position:absolute;z-index:20;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:14px;padding:24px;text-align:center;background:radial-gradient(circle at center,rgba(0,237,245,0.13),transparent 52%),rgba(3,4,9,0.95)}.spinner{width:48px;height:48px;border:4px solid rgba(255,255,255,0.14);border-top-color:var(--primary);border-right-color:var(--secondary);border-radius:50%;animation:spin .9s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.loading-title{color:var(--primary);font-size:1rem;font-weight:850}.loading-subtitle{max-width:310px;color:var(--muted);font-size:.82rem;line-height:1.45}
+        .panel{padding:16px}.section-title{margin:0 0 5px;font-size:1.05rem}.section-description{margin:0 0 14px;color:var(--muted);font-size:.86rem;line-height:1.5}
+        .camera-error{margin-bottom:14px;padding:12px;color:#ffd4de;background:rgba(255,78,117,0.1);border:1px solid rgba(255,78,117,0.31);border-radius:13px;font-size:.85rem;line-height:1.5}
+        .camera-controls{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:18px}.round-button{justify-self:center;display:inline-flex;justify-content:center;align-items:center;width:54px;height:54px;color:var(--text);background:rgba(255,255,255,0.07);border:1px solid var(--border-strong);border-radius:50%;font-size:1.35rem;cursor:pointer}
+        .capture-button{position:relative;display:inline-flex;justify-content:center;align-items:center;width:76px;height:76px;background:linear-gradient(135deg,var(--primary),var(--secondary));border:5px solid rgba(255,255,255,0.92);border-radius:50%;box-shadow:0 0 0 5px rgba(255,255,255,0.08),0 0 28px rgba(0,237,245,0.32);cursor:pointer}.capture-button::after{content:"";width:24px;height:24px;background:#fff;border-radius:50%}
+        .notice{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;padding:12px;color:#ffe8ad;background:rgba(255,189,46,0.09);border:1px solid rgba(255,189,46,0.26);border-radius:13px;font-size:.85rem;line-height:1.45}
+        .input-label{display:block;margin-bottom:8px;font-size:.93rem;font-weight:850}.prompt-wrapper{position:relative}#customInput{display:block;width:100%;min-height:100px;padding:13px 13px 44px;resize:vertical;color:var(--text);background:rgba(2,3,8,0.72);border:1px solid var(--border-strong);border-radius:var(--radius-medium);line-height:1.5}#customInput::placeholder{color:#858aa1}.prompt-footer{position:absolute;right:9px;left:9px;bottom:8px;display:flex;justify-content:space-between;align-items:center}.mic-button{display:inline-flex;align-items:center;gap:6px;min-height:34px;padding:5px 11px;color:var(--muted);background:rgba(255,255,255,0.07);border:1px solid var(--border);border-radius:999px;font-size:.78rem;cursor:pointer}.mic-button.recording{color:#fff;background:rgba(255,78,117,0.28);border-color:rgba(255,78,117,0.62)}.character-count{color:#858aa1;font-size:.75rem}
+        .primary-button,.secondary-button,.share-button,.download-button,.video-button{display:inline-flex;justify-content:center;align-items:center;gap:9px;min-height:48px;padding:12px 16px;border-radius:15px;font-weight:850;cursor:pointer}
+        .primary-button{color:#041012;background:linear-gradient(100deg,var(--primary),#65f4df);border:0}.secondary-button{color:var(--text);background:rgba(255,255,255,0.07);border:1px solid var(--border)}.full-button{width:100%}.custom-create-button{width:100%;margin-top:11px}
+        .templates-header{display:flex;justify-content:space-between;align-items:center;margin:20px 0 10px}.templates-header h3{margin:0;font-size:.98rem}.templates-header span{color:var(--muted);font-size:.75rem}
+        .style-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.style-card{min-height:92px;padding:13px 10px;color:var(--text);background:linear-gradient(145deg,rgba(255,255,255,0.09),rgba(255,255,255,0.025));border:1px solid var(--border);border-radius:var(--radius-medium);text-align:right;cursor:pointer}.style-icon{display:block;margin-bottom:8px;font-size:1.55rem}.style-name{display:block;font-size:.84rem;font-weight:850}.style-subtitle{display:block;margin-top:3px;color:var(--muted);font-size:.68rem}
+        .actions{display:grid;gap:9px;margin-top:16px}.result-success{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:11px 12px;color:#c9ffe0;background:rgba(37,211,102,0.09);border:1px solid rgba(37,211,102,0.26);border-radius:13px;font-size:.87rem;line-height:1.45}
+        .share-button{color:#041309;background:var(--success);border:0}.download-button{color:#041113;background:var(--primary);border:0}.video-button{color:#fff;background:linear-gradient(135deg,#ff0055,#a749f5);border:0;box-shadow:0 0 18px rgba(255,0,85,0.35)}
+        .motion-selector{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.motion-btn{padding:8px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--muted);font-size:.75rem;cursor:pointer}.motion-btn.active{background:rgba(0,237,245,0.15);border-color:var(--primary);color:var(--text)}
+        .duration-selector{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:10px 0}.duration-btn{padding:10px 8px;border-radius:12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--muted);font-size:.82rem;font-weight:750;cursor:pointer;transition:.2s}.duration-btn.active{background:linear-gradient(135deg,#ff0055,#a749f5);border-color:#ff0055;color:#fff;box-shadow:0 0 12px rgba(255,0,85,0.3)}
+        .disclaimer{margin:13px 2px 0;color:var(--muted);font-size:.76rem;line-height:1.45;text-align:center}
+        .toast{position:fixed;z-index:100;right:50%;bottom:calc(18px + env(safe-area-inset-bottom));transform:translateX(50%);width:max-content;max-width:min(92vw,470px);padding:11px 16px;color:#fff;background:rgba(31,34,57,0.98);border:1px solid var(--border-strong);border-radius:999px;box-shadow:0 12px 45px rgba(0,0,0,0.56);font-size:.88rem;font-weight:750;line-height:1.4;text-align:center}.toast.error{background:rgba(118,30,55,0.98);border-color:rgba(255,78,117,0.52)}
+        dialog{width:min(92vw,460px);padding:21px;color:var(--text);background:#1b1e36;border:1px solid var(--border-strong);border-radius:22px;box-shadow:var(--shadow)}dialog::backdrop{background:rgba(0,0,0,0.74)}dialog h2{margin-top:0}dialog p,dialog li{color:var(--muted);font-size:.88rem;line-height:1.55}dialog ul{padding-right:20px}
+        @media (min-width:430px){.style-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
     </style>
 </head>
 <body>
@@ -150,10 +81,10 @@
             </div>
         </section>
         <section id="styleMenu" class="panel glass-panel" hidden>
-            <div class="notice"><span>🧪</span><span><strong>חדש! הנפשת וידאו.</strong> הלייב בגוגל פליי עדיין על תמונות בלבד.</span></div>
+            <div class="notice"><span>🧪</span><span><strong>חדש! הנפשת וידאו 8 ו-12 שניות.</strong> בחר זמן!</span></div>
             <label class="input-label" for="customInput">יצירה חופשית</label>
             <div class="prompt-wrapper">
-                <textarea id="customInput" rows="3" maxlength="350" placeholder="לדוגמה: אסטרונאוט עתידני בתחנת חלל"></textarea>
+                <textarea id="customInput" rows="3" maxlength="350" placeholder="לדוגמה: One Punch Man Saitama bald yellow suit"></textarea>
                 <div class="prompt-footer">
                     <button id="micButton" class="mic-button" type="button">🎙 <span id="micButtonText">הכתבה</span></button>
                     <span class="character-count"><span id="characterCount">0</span>/350</span>
@@ -175,25 +106,31 @@
         </section>
         <section id="resultMenu" class="panel glass-panel" hidden>
             <div class="result-success"><span>✅</span><span>האווטאר מוכן! 🔥 עכשיו תהפוך אותו לווידאו ויראלי</span></div>
-            <label class="input-label">סגנון הנפשה (חדש!)</label>
+            <label class="input-label">סגנון הנפשה</label>
             <div class="motion-selector">
                 <button class="motion-btn active" data-motion="alive">✨ חי - טבעי</button>
                 <button class="motion-btn" data-motion="cinematic">🎥 קולנועי</button>
                 <button class="motion-btn" data-motion="hero">🦸 גיבור</button>
                 <button class="motion-btn" data-motion="smile">😊 חיוך</button>
             </div>
+            <label class="input-label" style="margin-top:14px">⏱️ בחר זמן וידאו - המשתמש בוחר!</label>
+            <div class="duration-selector">
+                <button class="duration-btn" data-duration="4">4 שניות<br><small style="opacity:.7">מהיר</small></button>
+                <button class="duration-btn active" data-duration="8">8 שניות<br><small style="opacity:.7">מומלץ 🔥</small></button>
+                <button class="duration-btn" data-duration="12">12 שניות<br><small style="opacity:.7">ארוך</small></button>
+            </div>
             <div class="actions">
-                <button id="animateButton" class="video-button full-button" type="button">🎬 הנפש לווידאו - 4 שניות ✨</button>
+                <button id="animateButton" class="video-button full-button" type="button">🎬 הנפש לווידאו - 8 שניות ✨</button>
                 <button id="shareButton" class="share-button full-button" type="button">📤 שתף תוצאה</button>
                 <button id="downloadButton" class="download-button full-button" type="button">⬇ שמור למכשיר</button>
                 <button id="anotherButton" class="secondary-button full-button" type="button">✨ צור אווטאר נוסף</button>
                 <button id="newPhotoButton" class="secondary-button full-button" type="button">📷 תמונה חדשה</button>
             </div>
-            <p class="disclaimer">💡 טיפ: וידאו עובד הכי טוב עם תמונת פנים ברורה ותאורה טובה</p>
+            <p class="disclaimer">💡 טיפ: 4 שניות=מהיר וזול, 8 שניות=מושלם לטיקטוק, 12 שניות=סיפור מלא</p>
         </section>
     </main>
     <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-    <dialog id="helpDialog"><h2>Viral Avatar Studio</h2><p>צור אווטארים מקצועיים והנפש אותם לווידאו</p><ul><li>תמונות: Face-Swap 100% פנים - יציב</li><li>וידאו: FAL Seedance - חדש בבדיקה</li><li>עלות וידאו גבוהה - שימוש מושכל</li></ul><button id="closeHelpButton" class="primary-button full-button" type="button">הבנתי</button></dialog>
+    <dialog id="helpDialog"><h2>Viral Avatar Studio - בחירת זמן</h2><p>עכשיו אפשר לבחור זמן וידאו!</p><ul><li>4 שניות: מהיר, זול, טוב לבדיקה (1 קרדיט)</li><li>8 שניות: מומלץ! מושלם לטיקטוק ורילס (2 קרדיטים)</li><li>12 שניות: סיפור מלא, הכי מרשים (3 קרדיטים)</li><li>תמונות: Face-Swap 100% פנים</li><li>וידאו: FAL Seedance 2.5 - תומך עד 12 שניות</li></ul><button id="closeHelpButton" class="primary-button full-button" type="button">הבנתי</button></dialog>
     <script>
 "use strict";
 const API_URL = "https://billowing-shape-1d81.maty-tsoraro.workers.dev";
@@ -226,7 +163,7 @@ const helpDialog = document.getElementById("helpDialog");
 let cameraStream = null; let facingMode = "user"; let cameraReady = false;
 let base64Image = null; let originalImage = null; let currentResultUrl = null; let currentVideoUrl = null;
 let isGenerating = false; let generationCancelled = false; let toastTimer = null;
-let credits = MAX_CREDITS; let selectedMotion = "alive";
+let credits = MAX_CREDITS; let selectedMotion = "alive"; let selectedDuration = 8;
 let currentVideoRequestId = null; let isVideoGenerating = false;
 
 function updateCredits(){ creditCount.textContent = String(credits); }
@@ -240,12 +177,8 @@ async function startCamera(){
     cameraGuide.hidden=false; cameraGuideText.hidden=false;
     videoElement.classList.toggle("front-camera", facingMode==="user");
     if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){ showCameraError("אין גישה למצלמה. אפשר להעלות תמונה."); return; }
-    try{
-        cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: facingMode }, audio: false });
-    }catch(e){
-        try{ cameraStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false }); }
-        catch(err){ showCameraError("לא ניתן להפעיל מצלמה. העלה תמונה."); return; }
-    }
+    try{ cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: facingMode }, audio: false }); }
+    catch(e){ try{ cameraStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false }); } catch(err){ showCameraError("לא ניתן להפעיל מצלמה. העלה תמונה."); return; } }
     videoElement.srcObject=cameraStream;
     videoElement.onloadedmetadata=async function(){ try{ await videoElement.play(); cameraReady=true; cameraPlaceholder.hidden=true; }catch(e){} };
     try{ await videoElement.play(); }catch(e){}
@@ -262,30 +195,15 @@ function drawToCanvas(source,mirror){
     ctx.drawImage(source,0,0,dim.width,dim.height); ctx.restore();
     return canvasElement.toDataURL("image/jpeg",0.86);
 }
-function takePhoto(){
-    if(!cameraStream||!cameraReady||videoElement.videoWidth===0){ showToast("המצלמה לא מוכנה.",true); return; }
-    try{ const img = drawToCanvas(videoElement, facingMode==="user"); selectImage(img); }catch(e){ showToast(e.message,true); }
-}
-function selectImage(imgData){
-    base64Image=imgData; originalImage=imgData; currentResultUrl=null; currentVideoUrl=null;
-    resultImage.src=imgData; resultImage.hidden=false; resultVideo.hidden=true;
-    videoElement.hidden=true; cameraPlaceholder.hidden=true; cameraGuide.hidden=true; cameraGuideText.hidden=true;
-    cameraMenu.hidden=true; styleMenu.hidden=false; resultMenu.hidden=true; stopCamera();
-    window.scrollTo({top:0,behavior:"smooth"});
-}
+function takePhoto(){ if(!cameraStream||!cameraReady||videoElement.videoWidth===0){ showToast("המצלמה לא מוכנה.",true); return; } try{ const img = drawToCanvas(videoElement, facingMode==="user"); selectImage(img); }catch(e){ showToast(e.message,true); } }
+function selectImage(imgData){ base64Image=imgData; originalImage=imgData; currentResultUrl=null; currentVideoUrl=null; resultImage.src=imgData; resultImage.hidden=false; resultVideo.hidden=true; videoElement.hidden=true; cameraPlaceholder.hidden=true; cameraGuide.hidden=true; cameraGuideText.hidden=true; cameraMenu.hidden=true; styleMenu.hidden=false; resultMenu.hidden=true; stopCamera(); window.scrollTo({top:0,behavior:"smooth"}); }
 function handleUpload(file){
     if(!file){ showToast("לא נבחרה תמונה.",true); return; }
     if(file.size&&file.size>MAX_UPLOAD_SIZE){ showToast("תמונה גדולה מדי - עד 15MB",true); uploadInput.value=""; return; }
     if(file.type&&!file.type.startsWith("image/")){ showToast("לא תמונה",true); uploadInput.value=""; return; }
-    showToast("טוען תמונה...");
-    const reader=new FileReader();
+    showToast("טוען תמונה..."); const reader=new FileReader();
     reader.onerror=function(){ uploadInput.value=""; showToast("לא ניתן לקרוא תמונה",true); };
-    reader.onload=function(ev){
-        const img=new Image();
-        img.onload=function(){ try{ const d=drawToCanvas(img,false); selectImage(d); showToast("תמונה נטענה - עכשיו בחר סגנון"); }catch(e){ showToast(e.message,true); } finally{ uploadInput.value=""; } };
-        img.onerror=function(){ uploadInput.value=""; showToast("פורמט לא נתמך",true); };
-        img.src=ev.target.result;
-    };
+    reader.onload=function(ev){ const img=new Image(); img.onload=function(){ try{ const d=drawToCanvas(img,false); selectImage(d); showToast("תמונה נטענה - עכשיו בחר סגנון"); }catch(e){ showToast(e.message,true); } finally{ uploadInput.value=""; } }; img.onerror=function(){ uploadInput.value=""; showToast("פורמט לא נתמך",true); }; img.src=ev.target.result; };
     reader.readAsDataURL(file);
 }
 function setLoading(loading,msg){ isGenerating=loading; loadingOverlay.hidden=!loading; if(msg) loadingText.textContent=msg; document.querySelectorAll("button:not(#cancelButton)").forEach(b=>b.disabled=loading); }
@@ -294,14 +212,11 @@ function wait(ms){ return new Promise(r=>setTimeout(r,ms)); }
 async function fetchJson(opts){ const res=await fetch(API_URL,opts); let data; try{ data=await res.json(); }catch(e){ throw new Error("תגובת שרת לא תקינה"); } if(!res.ok||data.error) throw new Error(data.error||"שגיאת שרת ("+res.status+")"); return data; }
 function extractOutputUrl(out){ if(Array.isArray(out)){ const urls=out.filter(i=>typeof i==="string"); return urls.length?urls[urls.length-1]:null; } return typeof out==="string"?out:null; }
 function checkCredits(){ if(credits>0) return true; window.open(AD_URL,"_blank","noopener,noreferrer"); credits=1; updateCredits(); showToast("נפתח עמוד קרדיט."); return false; }
-function deductCredit(){ credits=Math.max(0,credits-1); updateCredits(); }
+function deductCredit(amount){ amount = amount||1; credits=Math.max(0,credits-amount); updateCredits(); }
 async function translateToEnglish(t){ if(!/[\u0590-\u05FF]/.test(t)) return t; try{ const url="https://api.mymemory.translated.net/get?q="+encodeURIComponent(t)+"&langpair=he|en"; const r=await fetch(url); if(!r.ok) return t; const d=await r.json(); return (d.responseData&&d.responseData.translatedText)||t; }catch(e){ return t; } }
 async function generateCustom(){
     const p=customInput.value.trim(); if(!p){ showToast("יש להזין תיאור"); customInput.focus(); return; } if(!checkCredits()) return;
-    generationCancelled=false; setLoading(true,"מכין תיאור..."); const trans=await translateToEnglish(p); if(generationCancelled) return; 
-    // FIX: הוספת headroom לתיאור
-    const fixedPrompt = `full head visible, not cropped, medium shot, head and shoulders, empty space above head, centered face, ${trans}`;
-    await generateMedia(fixedPrompt,true,true);
+    generationCancelled=false; setLoading(true,"מכין תיאור..."); const trans=await translateToEnglish(p); if(generationCancelled) return; const fixedPrompt = `full head visible, not cropped, medium shot, head and shoulders, empty space above head, centered face, ${trans}`; await generateMedia(fixedPrompt,true,true);
 }
 async function generateMedia(styleOrPrompt,isCustom,loadingVisible){
     if(!base64Image){ showToast("צלם או בחר תמונה",true); return; }
@@ -309,15 +224,11 @@ async function generateMedia(styleOrPrompt,isCustom,loadingVisible){
     generationCancelled=false;
     if(!loadingVisible){ setLoading(true,"מתחיל ביצירת האווטאר..."); } else { loadingText.textContent="מתחיל ביצירת האווטאר..."; }
     try{
-        // FIX: תמיד להוסיף headroom למנוע חיתוך
-        let finalPrompt = styleOrPrompt;
-        if(!finalPrompt.includes("full head visible")){
-            finalPrompt = `full head visible, not cropped, medium shot, head and shoulders, empty space above head, centered, ${styleOrPrompt}`;
-        }
+        let finalPrompt = styleOrPrompt; if(!finalPrompt.includes("full head visible")){ finalPrompt = `full head visible, not cropped, medium shot, head and shoulders, empty space above head, centered, ${styleOrPrompt}`; }
         const startData=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"image",image:base64Image,style:finalPrompt,isCustom:Boolean(isCustom),prompt:finalPrompt})});
         if(generationCancelled) return;
         const immediateUrl=startData.resultUrl||extractOutputUrl(startData.output);
-        if(immediateUrl){ showResult(immediateUrl); deductCredit(); return; }
+        if(immediateUrl){ showResult(immediateUrl); deductCredit(1); return; }
         if(!startData.id) throw new Error("לא התקבל מזהה משימה");
         for(let attempt=1; attempt<=MAX_POLL_ATTEMPTS; attempt++){
             if(generationCancelled) return;
@@ -325,72 +236,56 @@ async function generateMedia(styleOrPrompt,isCustom,loadingVisible){
             await wait(POLL_INTERVAL); if(generationCancelled) return;
             const pollData=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"status",id:startData.id})});
             if(pollData.status==="failed"||pollData.status==="canceled") throw new Error(pollData.error||"יצירה נכשלה");
-            if(pollData.status==="succeeded"){ const url=extractOutputUrl(pollData.output); if(!url) throw new Error("לא התקבלה תמונה"); showResult(url); deductCredit(); return; }
+            if(pollData.status==="succeeded"){ const url=extractOutputUrl(pollData.output); if(!url) throw new Error("לא התקבלה תמונה"); showResult(url); deductCredit(1); return; }
         }
         throw new Error("לוקח יותר זמן מהרגיל");
     }catch(e){ if(!generationCancelled) showToast(e.message||"שגיאה",true); } finally{ if(!generationCancelled) setLoading(false); }
 }
-function showResult(url){
-    currentResultUrl=url; currentVideoUrl=null; resultImage.src=url; resultImage.hidden=false; resultVideo.hidden=true; styleMenu.hidden=true; resultMenu.hidden=false; setLoading(false);
-    window.scrollTo({top:0,behavior:"smooth"});
-}
+function showResult(url){ currentResultUrl=url; currentVideoUrl=null; resultImage.src=url; resultImage.hidden=false; resultVideo.hidden=true; styleMenu.hidden=true; resultMenu.hidden=false; setLoading(false); window.scrollTo({top:0,behavior:"smooth"}); }
 function showVideoResult(url){
-    currentVideoUrl=url; 
-    resultVideo.src=url; 
-    resultVideo.hidden=false; 
-    resultImage.hidden=true;
-    resultVideo.load();
-    resultVideo.onloadeddata = function(){
-        resultVideo.play().catch(()=>{});
-    };
+    currentVideoUrl=url; resultVideo.src=url; resultVideo.hidden=false; resultImage.hidden=true; resultVideo.load();
+    resultVideo.onloadeddata = function(){ resultVideo.play().catch(()=>{}); };
     setLoading(false); isVideoGenerating=false;
-    showToast("הוידאו מוכן! 🎬 נשמר אוטומטית - לחץ שמור למכשיר"); 
-    window.scrollTo({top:0,behavior:"smooth"});
+    showToast("הוידאו "+selectedDuration+" שניות מוכן! 🎬"); window.scrollTo({top:0,behavior:"smooth"});
 }
 async function animateAvatar(){
     if(!currentResultUrl){ showToast("אין תמונה להנפשה",true); return; }
     if(!validUrlForFal(currentResultUrl)){ showToast("כתובת התמונה לא תקינה להנפשה - נסה ליצור שוב",true); return; }
     isVideoGenerating=true; generationCancelled=false;
-    setLoading(true,"מתחיל הנפשת וידאו... זה יקר! "+selectedMotion);
-    if(credits < 2){
-        showToast("לוידאו צריך 2 קרדיטים - צפה ב-2 פרסומות", true);
-        window.open(AD_URL,"_blank","noopener,noreferrer");
-        await wait(1000);
-        window.open(AD_URL,"_blank","noopener,noreferrer");
-        credits = 2;
-        updateCredits();
-        showToast("2 קרדיטים נוספו! מנסה שוב...");
-        await wait(1500);
+    const cost = selectedDuration <=4 ? 1 : selectedDuration <=8 ? 2 : 3;
+    setLoading(true,"מתחיל הנפשת וידאו "+selectedDuration+" שניות... ("+cost+" קרדיטים) "+selectedMotion);
+    if(credits < cost){
+        showToast("לוידאו "+selectedDuration+" שניות צריך "+cost+" קרדיטים - צפה בפרסומות", true);
+        for(let i=0;i<cost;i++){ window.open(AD_URL,"_blank","noopener,noreferrer"); await wait(800); }
+        credits = cost; updateCredits(); showToast(cost+" קרדיטים נוספו! מנסה שוב..."); await wait(1500);
     }
     try{
-        const startData=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"animate",imageUrl:currentResultUrl,motion:selectedMotion})});
+        const startData=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"animate",imageUrl:currentResultUrl,motion:selectedMotion,duration:selectedDuration})});
         if(generationCancelled) return;
         if(!startData.requestId) throw new Error("לא התקבל מזהה וידאו");
         currentVideoRequestId=startData.requestId;
         for(let attempt=1; attempt<=MAX_VIDEO_POLL; attempt++){
             if(generationCancelled) return;
-            loadingText.textContent="מנפיש וידאו... "+attempt+"/"+MAX_VIDEO_POLL+" - מעבד...";
+            loadingText.textContent="מנפיש וידאו "+selectedDuration+"s... "+attempt+"/"+MAX_VIDEO_POLL+" - מעבד...";
             await wait(VIDEO_POLL_INTERVAL); if(generationCancelled) return;
             const poll=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"video_status",requestId:currentVideoRequestId})});
-            if(poll.status==="processing"){
-                loadingText.textContent="מנפיש וידאו... "+attempt+"/"+MAX_VIDEO_POLL+" - "+(poll.falStatus||"בתור")+(poll.queuePosition ? " (מקום בתור: "+poll.queuePosition+")" : "");
-            }
+            if(poll.status==="processing"){ loadingText.textContent="מנפיש "+selectedDuration+"s... "+attempt+"/"+MAX_VIDEO_POLL+" - "+(poll.falStatus||"בתור")+(poll.queuePosition ? " (תור: "+poll.queuePosition+")" : ""); }
             if(poll.status==="failed") throw new Error(poll.error||"וידאו נכשל");
-            if(poll.status==="succeeded"){ const vurl=poll.videoUrl||poll.output; if(!vurl) throw new Error("אין קישור וידאו"); showVideoResult(vurl); deductCredit(); deductCredit(); return; }
+            if(poll.status==="succeeded"){ const vurl=poll.videoUrl||poll.output; if(!vurl) throw new Error("אין קישור וידאו"); showVideoResult(vurl); deductCredit(cost); return; }
         }
-        throw new Error("הוידאו עדיין בתור ב-FAL (עומס גבוה). נסה שוב בעוד דקה - המזהה נשמר: "+currentVideoRequestId);
+        throw new Error("הוידאו עדיין בתור ב-FAL (עומס). מזהה: "+currentVideoRequestId);
     }catch(e){ if(!generationCancelled) showToast(e.message,true); setLoading(false); isVideoGenerating=false; }
 }
 function validUrlForFal(v){ try{ const u=new URL(v); return u.protocol==="https:"||u.protocol==="http:"; }catch(e){ return false; } }
 async function downloadResult(){
     const url = currentVideoUrl || currentResultUrl; if(!url) return;
-    try{ const r=await fetch(url); if(!r.ok) throw new Error(); const blob=await r.blob(); const o=URL.createObjectURL(blob); const a=document.createElement("a"); a.href=o; a.download="viral-avatar-"+Date.now()+(currentVideoUrl?".mp4":".jpg"); document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(o),2000); }
+    try{ const r=await fetch(url); if(!r.ok) throw new Error(); const blob=await r.blob(); const o=URL.createObjectURL(blob); const a=document.createElement("a"); a.href=o; a.download="viral-avatar-"+selectedDuration+"s-"+Date.now()+(currentVideoUrl?".mp4":".jpg"); document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(o),2000); }
     catch(e){ window.open(url,"_blank","noopener,noreferrer"); showToast("נפתח בחלון חדש - לחיצה ארוכה לשמירה"); }
 }
 async function shareResult(){
     const url = currentVideoUrl || currentResultUrl; if(!url) return;
-    try{ if(navigator.share){ await navigator.share({title:"Viral Avatar",text:"ראו מה יצרתי!",url:url}); return; } throw new Error(); }
-    catch(e){ if(e.name==="AbortError") return; window.open("https://wa.me/?text="+encodeURIComponent("ראו מה יצרתי: "+url),"_blank","noopener,noreferrer"); }
+    try{ if(navigator.share){ await navigator.share({title:"Viral Avatar",text:"ראו מה יצרתי! "+selectedDuration+" שניות",url:url}); return; } throw new Error(); }
+    catch(e){ if(e.name==="AbortError") return; window.open("https://wa.me/?text="+encodeURIComponent("ראו מה יצרתי "+selectedDuration+"s: "+url),"_blank","noopener,noreferrer"); }
 }
 function resetApp(){
     generationCancelled=true; setLoading(false); stopCamera(); isVideoGenerating=false;
@@ -436,6 +331,13 @@ document.querySelectorAll(".motion-btn").forEach(b=>{
     b.addEventListener("click",()=>{
         document.querySelectorAll(".motion-btn").forEach(x=>x.classList.remove("active"));
         b.classList.add("active"); selectedMotion=b.dataset.motion;
+    });
+});
+document.querySelectorAll(".duration-btn").forEach(b=>{
+    b.addEventListener("click",()=>{
+        document.querySelectorAll(".duration-btn").forEach(x=>x.classList.remove("active"));
+        b.classList.add("active"); selectedDuration=parseInt(b.dataset.duration);
+        document.getElementById("animateButton").textContent = "🎬 הנפש לווידאו - "+selectedDuration+" שניות ✨";
     });
 });
 document.getElementById("helpButton").addEventListener("click",()=>{ if(helpDialog.showModal) helpDialog.showModal(); });
