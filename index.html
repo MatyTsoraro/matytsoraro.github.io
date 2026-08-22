@@ -290,12 +290,7 @@ function handleUpload(file){
 function setLoading(loading,msg){ isGenerating=loading; loadingOverlay.hidden=!loading; if(msg) loadingText.textContent=msg; document.querySelectorAll("button:not(#cancelButton)").forEach(b=>b.disabled=loading); }
 function cancelGeneration(){ generationCancelled=true; if(isVideoGenerating&&currentVideoRequestId){ fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"video_cancel",requestId:currentVideoRequestId})}).catch(()=>{}); } setLoading(false); isVideoGenerating=false; showToast("ההמתנה בוטלה."); }
 function wait(ms){ return new Promise(r=>setTimeout(r,ms)); }
-async function fetchJson(opts){ const res=await fetch(API_URL,opts); let data; try{ data=await res.json(); }catch(e){             if (!statusRes.ok) {
-                const errText = await statusRes.text();
-                console.error("SERVER ERROR:", errText);
-                alert("שגיאת שרת מפורטת:\n" + errText.slice(0,500));
-                throw new Error(errText.slice(0,200));
-            } } if(!res.ok||data.error) throw new Error(data.error||"שגיאת שרת ("+res.status+")"); return data; }
+async function fetchJson(opts){ const res=await fetch(API_URL,opts); let data; try{ data=await res.json(); }catch(e){ throw new Error("תגובת שרת לא תקינה"); } if(!res.ok||data.error) throw new Error(data.error||"שגיאת שרת ("+res.status+")"); return data; }
 function extractOutputUrl(out){ if(Array.isArray(out)){ const urls=out.filter(i=>typeof i==="string"); return urls.length?urls[urls.length-1]:null; } return typeof out==="string"?out:null; }
 function checkCredits(){ if(credits>0) return true; window.open(AD_URL,"_blank","noopener,noreferrer"); credits=1; updateCredits(); showToast("נפתח עמוד קרדיט."); return false; }
 function deductCredit(){ credits=Math.max(0,credits-1); updateCredits(); }
@@ -360,7 +355,7 @@ async function animateAvatar(){
         await wait(1500);
     }
     try{
-        const startData=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"animate",imageUrl:currentResultUrl,motion:selectedMotion,duration:window.selectedDuration||4})});
+        const startData=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"animate",imageUrl:currentResultUrl,motion:selectedMotion})});
         if(generationCancelled) return;
         if(!startData.requestId) throw new Error("לא התקבל מזהה וידאו");
         currentVideoRequestId=startData.requestId;
