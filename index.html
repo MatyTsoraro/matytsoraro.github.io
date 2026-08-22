@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#090a12">
     <meta name="description" content="Viral Avatar Studio - יצירת אווטארים ווידאו באמצעות בינה מלאכותית">
-    <title>Viral Avatar Studio - TEST VIDEO ENGINE</title>
+    <title>Viral Avatar Studio - Professional AI Avatars & Video</title>
     <link rel="manifest" href="./manifest.json">
     <style>
         :root {
@@ -51,7 +51,7 @@
         #videoElement { position: relative; z-index: 2; background: #05060b; }
         #videoElement.front-camera { transform: scaleX(-1); }
         #resultImage { position: relative; z-index: 3; }
-        #resultVideo { position: relative; z-index: 3; width: 100%; height: 100%; object-fit: cover; display: none; }
+        #resultVideo { position: relative; z-index: 3; width: 100%; height: 100%; object-fit: cover; }
         .camera-placeholder { position: absolute; z-index: 1; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 12px; padding: 25px; text-align: center; }
         .placeholder-icon { font-size: 3rem; opacity: 0.6; }
         .placeholder-text { max-width: 280px; color: var(--muted); font-size: 0.86rem; line-height: 1.5; }
@@ -343,6 +343,17 @@ async function animateAvatar(){
     if(!validUrlForFal(currentResultUrl)){ showToast("כתובת התמונה לא תקינה להנפשה - נסה ליצור שוב",true); return; }
     isVideoGenerating=true; generationCancelled=false;
     setLoading(true,"מתחיל הנפשת וידאו... זה יקר! "+selectedMotion);
+    // Monetization: Video costs 2 extra credits = total 3 ads to watch if no credits
+    if(credits < 2){
+        showToast("לוידאו צריך 2 קרדיטים - צפה ב-2 פרסומות", true);
+        window.open(AD_URL,"_blank","noopener,noreferrer");
+        await wait(1000);
+        window.open(AD_URL,"_blank","noopener,noreferrer");
+        credits = 2;
+        updateCredits();
+        showToast("2 קרדיטים נוספו! מנסה שוב...");
+        await wait(1500);
+    }
     try{
         const startData=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"animate",imageUrl:currentResultUrl,motion:selectedMotion})});
         if(generationCancelled) return;
