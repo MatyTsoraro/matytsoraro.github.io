@@ -4,42 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#090a12">
-    <title>Viral Avatar Studio - Final Fixed</title>
+    <title>Viral Avatar Studio - Final With Audio</title>
     <style>
-        :root{--primary:#00edf5;--secondary:#a749f5;--background:#070810;--surface:rgba(24,26,47,0.9);--text:#fff;--muted:#b9bfd2;--success:#25d366;--warning:#ffbd2e;--border:rgba(255,255,255,0.14);--border-strong:rgba(255,255,255,0.23);--radius-large:26px;--radius-medium:17px;--shadow:0 18px 55px rgba(0,0,0,0.48)}
-        *{box-sizing:border-box}html{min-height:100%;background:var(--background)}body{min-height:100vh;min-height:100dvh;margin:0;color:var(--text);background:radial-gradient(circle at 10% -10%,rgba(0,237,245,0.15),transparent 35%),radial-gradient(circle at 100% 5%,rgba(167,73,245,0.18),transparent 38%),linear-gradient(180deg,#12142a,var(--background) 48%);font-family:Arial,sans-serif;overflow-x:hidden}
-        button,textarea,input{font:inherit}button{-webkit-tap-highlight-color:transparent}button:disabled{opacity:.55;cursor:not-allowed}[hidden]{display:none!important}
-        .topbar{position:sticky;top:0;z-index:30;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;min-height:70px;padding:max(12px,env(safe-area-inset-top)) max(15px,env(safe-area-inset-right)) 12px max(15px,env(safe-area-inset-left));background:rgba(7,8,16,0.82);border-bottom:1px solid var(--border);backdrop-filter:blur(18px)}
-        .brand{margin:0;font-size:clamp(1.12rem,5vw,1.45rem);font-weight:950;text-align:center;background:linear-gradient(100deg,#fff,var(--primary) 42%,#d98aff 85%);background-clip:text;-webkit-background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+        :root{--primary:#00edf5;--secondary:#a749f5;--background:#070810;--surface:rgba(24,26,47,0.9);--text:#fff;--muted:#b9bfd2;--success:#25d366;--border:rgba(255,255,255,0.14);--border-strong:rgba(255,255,255,0.23);--radius-large:26px;--radius-medium:17px;--shadow:0 18px 55px rgba(0,0,0,0.48)}
+        *{box-sizing:border-box}html{min-height:100%;background:var(--background)}body{min-height:100vh;margin:0;color:var(--text);background:radial-gradient(circle at 10% -10%,rgba(0,237,245,0.15),transparent 35%),radial-gradient(circle at 100% 5%,rgba(167,73,245,0.18),transparent 38%),linear-gradient(180deg,#12142a,var(--background) 48%);font-family:Arial,sans-serif}
+        button,textarea,input{font:inherit}button:disabled{opacity:.55;cursor:not-allowed}[hidden]{display:none!important}
+        .topbar{position:sticky;top:0;z-index:30;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;min-height:70px;padding:12px 15px;background:rgba(7,8,16,0.82);border-bottom:1px solid var(--border);backdrop-filter:blur(18px)}
+        .brand{margin:0;font-size:1.3rem;font-weight:950;text-align:center;background:linear-gradient(100deg,#fff,var(--primary) 42%,#d98aff 85%);background-clip:text;-webkit-background-clip:text;color:transparent}
         .credit-pill{justify-self:start;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:8px 11px;color:#ffe18c;background:rgba(255,189,46,0.11);border:1px solid rgba(255,189,46,0.29);border-radius:999px;font-size:.9rem;font-weight:850}
         .help-button{justify-self:end;width:40px;height:40px;color:var(--text);background:rgba(255,255,255,0.07);border:1px solid var(--border);border-radius:50%;font-weight:900;cursor:pointer}
-        .app-shell{width:min(100%,540px);margin:0 auto;padding:14px max(14px,env(safe-area-inset-right)) calc(30px + env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));display:grid;gap:14px}
+        .app-shell{width:min(100%,540px);margin:0 auto;padding:14px;display:grid;gap:14px}
         .glass-panel{background:linear-gradient(145deg,rgba(255,255,255,0.075),rgba(255,255,255,0.025)),var(--surface);border:1px solid var(--border);border-radius:var(--radius-large);box-shadow:var(--shadow);backdrop-filter:blur(18px)}
-        .intro{padding:16px 18px}.intro h2{margin:0 0 6px;font-size:1.08rem}.intro p{margin:0;color:var(--muted);font-size:.88rem;line-height:1.5}
-        .viewport{position:relative;overflow:hidden;width:100%;min-height:360px;max-height:72dvh;aspect-ratio:3/4;background:radial-gradient(circle at center,rgba(0,237,245,0.09),transparent 52%),#05060b}
-        .viewport video,.viewport img{display:block;width:100%;height:100%;object-fit:contain!important;object-position:center top!important;background:#05060b}
-        #videoElement{position:relative;z-index:2;background:#05060b}#videoElement.front-camera{transform:scaleX(-1)}#resultImage{position:relative;z-index:3;width:100%;height:100%;object-fit:contain!important;object-position:center top!important;background:#05060b}#resultVideo{position:relative;z-index:3;width:100%;height:100%;object-fit:contain!important;object-position:center top!important;background:#000}
-        .camera-placeholder{position:absolute;z-index:1;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:12px;padding:25px;text-align:center}.placeholder-icon{font-size:3rem;opacity:.6}.placeholder-text{max-width:280px;color:var(--muted);font-size:.86rem;line-height:1.5}
+        .viewport{position:relative;overflow:hidden;width:100%;min-height:360px;max-height:72dvh;aspect-ratio:3/4;background:#05060b}
+        .viewport video,.viewport img{display:block;width:100%;height:100%;object-fit:contain!important;background:#05060b}
+        #videoElement.front-camera{transform:scaleX(-1)}
+        .camera-placeholder{position:absolute;z-index:1;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:12px;padding:25px;text-align:center}.placeholder-icon{font-size:3rem;opacity:.6}
         .camera-guide{position:absolute;z-index:5;top:49%;right:50%;width:57%;aspect-ratio:.77;transform:translate(50%,-50%);border:2px dashed rgba(255,255,255,0.46);border-radius:48% 48% 43% 43%;pointer-events:none}
-        .camera-guide-text{position:absolute;z-index:6;right:50%;bottom:16px;transform:translateX(50%);width:max-content;max-width:calc(100% - 30px);padding:8px 13px;color:#fff;background:rgba(0,0,0,0.55);border:1px solid var(--border);border-radius:999px;font-size:.78rem;text-align:center}
-        .loading-overlay{position:absolute;z-index:20;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:14px;padding:24px;text-align:center;background:radial-gradient(circle at center,rgba(0,237,245,0.13),transparent 52%),rgba(3,4,9,0.95)}.spinner{width:48px;height:48px;border:4px solid rgba(255,255,255,0.14);border-top-color:var(--primary);border-right-color:var(--secondary);border-radius:50%;animation:spin .9s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.loading-title{color:var(--primary);font-size:1rem;font-weight:850}.loading-subtitle{max-width:310px;color:var(--muted);font-size:.82rem;line-height:1.45}
-        .panel{padding:16px}.section-title{margin:0 0 5px;font-size:1.05rem}.section-description{margin:0 0 14px;color:var(--muted);font-size:.86rem;line-height:1.5}
-        .camera-error{margin-bottom:14px;padding:12px;color:#ffd4de;background:rgba(255,78,117,0.1);border:1px solid rgba(255,78,117,0.31);border-radius:13px;font-size:.85rem;line-height:1.5}
+        .camera-guide-text{position:absolute;z-index:6;right:50%;bottom:16px;transform:translateX(50%);padding:8px 13px;color:#fff;background:rgba(0,0,0,0.55);border:1px solid var(--border);border-radius:999px;font-size:.78rem}
+        .loading-overlay{position:absolute;z-index:20;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:14px;padding:24px;text-align:center;background:rgba(3,4,9,0.95)}.spinner{width:48px;height:48px;border:4px solid rgba(255,255,255,0.14);border-top-color:var(--primary);border-right-color:var(--secondary);border-radius:50%;animation:spin .9s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.loading-title{color:var(--primary);font-size:1rem;font-weight:850}.loading-subtitle{color:var(--muted);font-size:.82rem}
+        .panel{padding:16px}.section-title{margin:0 0 5px;font-size:1.05rem}.section-description{margin:0 0 14px;color:var(--muted);font-size:.86rem}
+        .camera-error{margin-bottom:14px;padding:12px;color:#ffd4de;background:rgba(255,78,117,0.1);border:1px solid rgba(255,78,117,0.31);border-radius:13px;font-size:.85rem}
         .camera-controls{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:18px}.round-button{justify-self:center;display:inline-flex;justify-content:center;align-items:center;width:54px;height:54px;color:var(--text);background:rgba(255,255,255,0.07);border:1px solid var(--border-strong);border-radius:50%;font-size:1.35rem;cursor:pointer}
         .capture-button{position:relative;display:inline-flex;justify-content:center;align-items:center;width:76px;height:76px;background:linear-gradient(135deg,var(--primary),var(--secondary));border:5px solid rgba(255,255,255,0.92);border-radius:50%;box-shadow:0 0 0 5px rgba(255,255,255,0.08),0 0 28px rgba(0,237,245,0.32);cursor:pointer}.capture-button::after{content:"";width:24px;height:24px;background:#fff;border-radius:50%}
         .primary-button,.secondary-button,.share-button,.download-button,.video-button{display:inline-flex;justify-content:center;align-items:center;gap:9px;min-height:48px;padding:12px 16px;border-radius:15px;font-weight:850;cursor:pointer}
         .primary-button{color:#041012;background:linear-gradient(100deg,var(--primary),#65f4df);border:0}.secondary-button{color:var(--text);background:rgba(255,255,255,0.07);border:1px solid var(--border)}.full-button{width:100%}.custom-create-button{width:100%;margin-top:11px}
-        .templates-header{display:flex;justify-content:space-between;align-items:center;margin:20px 0 10px}.templates-header h3{margin:0;font-size:.98rem}.templates-header span{color:var(--muted);font-size:.75rem}
-        .style-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.style-card{min-height:92px;padding:13px 10px;color:var(--text);background:linear-gradient(145deg,rgba(255,255,255,0.09),rgba(255,255,255,0.025));border:1px solid var(--border);border-radius:var(--radius-medium);text-align:right;cursor:pointer}.style-icon{display:block;margin-bottom:8px;font-size:1.55rem}.style-name{display:block;font-size:.84rem;font-weight:850}.style-subtitle{display:block;margin-top:3px;color:var(--muted);font-size:.68rem}
-        .actions{display:grid;gap:9px;margin-top:16px}.result-success{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:11px 12px;color:#c9ffe0;background:rgba(37,211,102,0.09);border:1px solid rgba(37,211,102,0.26);border-radius:13px;font-size:.87rem;line-height:1.45}
-        .share-button{color:#041309;background:var(--success);border:0}.download-button{color:#041113;background:var(--primary);border:0}.video-button{color:#fff;background:linear-gradient(135deg,#ff0055,#a749f5);border:0;box-shadow:0 0 18px rgba(255,0,85,0.35)}
+        .style-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.style-card{min-height:92px;padding:13px 10px;color:var(--text);background:linear-gradient(145deg,rgba(255,255,255,0.09),rgba(255,255,255,0.025));border:1px solid var(--border);border-radius:var(--radius-medium);text-align:right;cursor:pointer}.style-icon{display:block;margin-bottom:8px;font-size:1.55rem}.style-name{display:block;font-size:.84rem;font-weight:850}
+        .actions{display:grid;gap:9px;margin-top:16px}.result-success{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:11px 12px;color:#c9ffe0;background:rgba(37,211,102,0.09);border:1px solid rgba(37,211,102,0.26);border-radius:13px;font-size:.87rem}
+        .share-button{color:#041309;background:var(--success);border:0}.download-button{color:#041113;background:var(--primary);border:0}.video-button{color:#fff;background:linear-gradient(135deg,#ff0055,#a749f5);border:0}
         .direct-animate-button{color:#fff;background:linear-gradient(135deg,#00edf5,#a749f5);border:0;box-shadow:0 0 18px rgba(0,237,245,0.3);margin-bottom:12px}
         .motion-selector{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.motion-btn{padding:8px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--muted);font-size:.75rem;cursor:pointer}.motion-btn.active{background:rgba(0,237,245,0.15);border-color:var(--primary);color:var(--text)}
-        .duration-selector{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:10px 0}.duration-btn{padding:10px 8px;border-radius:12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--muted);font-size:.82rem;font-weight:750;cursor:pointer}.duration-btn.active{background:linear-gradient(135deg,#ff0055,#a749f5);border-color:#ff0055;color:#fff;box-shadow:0 0 12px rgba(255,0,85,0.3)}
+        .duration-selector{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:10px 0}.duration-btn{padding:10px 8px;border-radius:12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--muted);font-size:.82rem;font-weight:750;cursor:pointer}.duration-btn.active{background:linear-gradient(135deg,#ff0055,#a749f5);border-color:#ff0055;color:#fff}
         .audio-selector{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.audio-btn{padding:8px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--muted);font-size:.75rem;cursor:pointer}.audio-btn.active{background:rgba(37,211,102,0.15);border-color:var(--success);color:var(--text)}
-        .toast{position:fixed;z-index:100;right:50%;bottom:calc(18px + env(safe-area-inset-bottom));transform:translateX(50%);width:max-content;max-width:min(92vw,470px);padding:11px 16px;color:#fff;background:rgba(31,34,57,0.98);border:1px solid var(--border-strong);border-radius:999px;box-shadow:0 12px 45px rgba(0,0,0,0.56);font-size:.88rem;font-weight:750;line-height:1.4;text-align:center}.toast.error{background:rgba(118,30,55,0.98);border-color:rgba(255,78,117,0.52)}
-        dialog{width:min(92vw,460px);padding:21px;color:var(--text);background:#1b1e36;border:1px solid var(--border-strong);border-radius:22px;box-shadow:var(--shadow)}dialog::backdrop{background:rgba(0,0,0,0.74)}dialog h2{margin-top:0}dialog p,dialog li{color:var(--muted);font-size:.88rem;line-height:1.55}dialog ul{padding-right:20px}
-        @media (min-width:430px){.style-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+        .toast{position:fixed;z-index:100;right:50%;bottom:18px;transform:translateX(50%);width:max-content;max-width:92vw;padding:11px 16px;color:#fff;background:rgba(31,34,57,0.98);border:1px solid var(--border-strong);border-radius:999px;box-shadow:0 12px 45px rgba(0,0,0,0.56);font-size:.88rem;font-weight:750;text-align:center}.toast.error{background:rgba(118,30,55,0.98)}
+        dialog{width:min(92vw,460px);padding:21px;color:var(--text);background:#1b1e36;border:1px solid var(--border-strong);border-radius:22px}dialog::backdrop{background:rgba(0,0,0,0.74)}
     </style>
 </head>
 <body>
@@ -49,12 +46,8 @@
         <button id="helpButton" class="help-button" type="button">?</button>
     </header>
     <main class="app-shell">
-        <section class="intro glass-panel">
-            <h2>סטודיו האווטארים המקצועי</h2>
-            <p>העלה תמונה והנפש אותה ישירות, או צור אווטאר וידאו עם מוזיקה.</p>
-        </section>
         <section class="viewport glass-panel">
-            <div id="cameraPlaceholder" class="camera-placeholder"><div class="placeholder-icon">📷</div><div class="placeholder-text">מפעיל את המצלמה...</div></div>
+            <div id="cameraPlaceholder" class="camera-placeholder"><div class="placeholder-icon">📷</div><div>מפעיל מצלמה...</div></div>
             <video id="videoElement" class="front-camera" autoplay playsinline muted></video>
             <canvas id="canvasElement" hidden></canvas>
             <img id="resultImage" alt="תוצאה" hidden>
@@ -63,41 +56,39 @@
             <div id="cameraGuideText" class="camera-guide-text">מקם את הפנים במרכז</div>
             <div id="loadingOverlay" class="loading-overlay" hidden>
                 <div class="spinner"></div>
-                <div id="loadingText" class="loading-title">מכין את הקסם...</div>
+                <div id="loadingText" class="loading-title">מכין וידאו...</div>
                 <div class="loading-subtitle">כ-30 שניות</div>
                 <button id="cancelButton" class="secondary-button" type="button">ביטול</button>
             </div>
         </section>
         <section id="cameraMenu" class="panel glass-panel">
             <h2 class="section-title">בחר תמונה</h2>
-            <p class="section-description">תמונת פנים ברורה, אדם אחד.</p>
             <div id="cameraError" class="camera-error" hidden></div>
             <div class="camera-controls">
                 <button id="uploadButton" class="round-button" type="button">⬆</button>
                 <input id="uploadInput" type="file" accept="image/*" hidden>
-                <button id="captureButton" class="capture-button" type="button" aria-label="צילום"></button>
+                <button id="captureButton" class="capture-button" type="button"></button>
                 <button id="switchCameraButton" class="round-button" type="button">↻</button>
             </div>
         </section>
         <section id="styleMenu" class="panel glass-panel" hidden>
             <button id="directAnimateButton" class="direct-animate-button full-button" type="button" style="font-size:1.05rem; min-height:56px;">🎬 הנפש ישירות!</button>
-            <div style="text-align:center; margin:8px 0; color:var(--muted); font-size:.8rem;">─ או שנה לאווטאר ─</div>
+            <div style="text-align:center; margin:8px 0; color:#b9bfd2; font-size:.8rem;">─ או שנה לאווטאר ─</div>
             <label class="input-label" for="customInput">יצירה חופשית</label>
-            <div class="prompt-wrapper">
-                <textarea id="customInput" rows="3" maxlength="350" placeholder="One Punch Man Saitama"></textarea>
-                <div class="prompt-footer">
-                    <button id="micButton" class="mic-button" type="button">🎙 <span id="micButtonText">הכתבה</span></button>
-                    <span class="character-count"><span id="characterCount">0</span>/350</span>
+            <div style="position:relative">
+                <textarea id="customInput" rows="3" maxlength="350" placeholder="One Punch Man Saitama" style="width:100%;min-height:100px;padding:13px;background:rgba(2,3,8,0.72);border:1px solid var(--border-strong);border-radius:17px;color:#fff"></textarea>
+                <div style="position:absolute;right:9px;left:9px;bottom:8px;display:flex;justify-content:space-between;align-items:center">
+                    <button id="micButton" style="display:inline-flex;align-items:center;gap:6px;min-height:34px;padding:5px 11px;color:#b9bfd2;background:rgba(255,255,255,0.07);border:1px solid var(--border);border-radius:999px;font-size:.78rem;cursor:pointer">🎙 <span id="micButtonText">הכתבה</span></button>
+                    <span style="color:#858aa1;font-size:.75rem"><span id="characterCount">0</span>/350</span>
                 </div>
             </div>
             <button id="customCreateButton" class="primary-button custom-create-button" type="button">✨ צור אווטאר</button>
-            <div class="templates-header"><h3>תבניות</h3></div>
-            <div class="style-grid">
-                <button class="style-card" type="button" data-style="tech_ceo"><span class="style-icon">💼</span><span class="style-name">מנכ״ל הייטק</span></button>
-                <button class="style-card" type="button" data-style="cyber_ninja"><span class="style-icon">🥷</span><span class="style-name">סייבר נינג׳ה</span></button>
+            <div class="style-grid" style="margin-top:20px">
+                <button class="style-card" type="button" data-style="tech_ceo"><span class="style-icon">💼</span><span class="style-name">מנכ״ל</span></button>
+                <button class="style-card" type="button" data-style="cyber_ninja"><span class="style-icon">🥷</span><span class="style-name">נינג׳ה</span></button>
                 <button class="style-card" type="button" data-style="jedi_master"><span class="style-icon">⚔</span><span class="style-name">אביר גלקטי</span></button>
                 <button class="style-card" type="button" data-style="gladiator"><span class="style-icon">🛡</span><span class="style-name">גלדיאטור</span></button>
-                <button class="style-card" type="button" data-style="mafia_boss"><span class="style-icon">🎩</span><span class="style-name">בוס קלאסי</span></button>
+                <button class="style-card" type="button" data-style="mafia_boss"><span class="style-icon">🎩</span><span class="style-name">בוס</span></button>
                 <button class="style-card" type="button" data-style="anime_hero"><span class="style-icon">⚡</span><span class="style-name">גיבור אנימה</span></button>
                 <button class="style-card" type="button" data-style="pixar_character"><span class="style-icon">🎬</span><span class="style-name">תלת־ממד</span></button>
                 <button class="style-card" type="button" data-style="vampire"><span class="style-icon">🌙</span><span class="style-name">ערפד</span></button>
@@ -105,22 +96,29 @@
             <div class="actions"><button id="retakeButton" class="secondary-button full-button" type="button">📷 תמונה אחרת</button></div>
         </section>
         <section id="resultMenu" class="panel glass-panel" hidden>
-            <div class="result-success"><span>✅</span><span>מוכן! עכשיו תהפוך לווידאו</span></div>
-            <label class="input-label">סגנון הנפשה</label>
+            <div class="result-success"><span>✅</span><span>מוכן! עכשיו תהפוך לווידאו עם קול</span></div>
+            <label style="display:block;margin-bottom:8px;font-size:.93rem;font-weight:850">סגנון הנפשה</label>
             <div class="motion-selector">
                 <button class="motion-btn active" data-motion="alive">✨ חי</button>
                 <button class="motion-btn" data-motion="cinematic">🎥 קולנועי</button>
                 <button class="motion-btn" data-motion="hero">🦸 גיבור</button>
                 <button class="motion-btn" data-motion="smile">😊 חיוך</button>
             </div>
-            <label class="input-label" style="margin-top:14px">⏱️ זמן וידאו</label>
+            <label style="display:block;margin:14px 0 8px;font-size:.93rem;font-weight:850">⏱️ זמן וידאו</label>
             <div class="duration-selector">
                 <button class="duration-btn active" data-duration="5">5 שניות</button>
                 <button class="duration-btn" data-duration="8">8 שניות</button>
                 <button class="duration-btn" data-duration="10">10 שניות</button>
             </div>
+            <label style="display:block;margin:14px 0 8px;font-size:.93rem;font-weight:850">🔊 מוזיקה (חדש! עובד!)</label>
+            <div class="audio-selector">
+                <button class="audio-btn active" data-audio="none">🔇 בלי</button>
+                <button class="audio-btn" data-audio="epic">🎵 אפית</button>
+                <button class="audio-btn" data-audio="tiktok">🎶 טיקטוק</button>
+                <button class="audio-btn" data-audio="cinematic">🎬 קולנועי</button>
+            </div>
             <div class="actions">
-                <button id="animateButton" class="video-button full-button" type="button">🎬 הנפש לווידאו ✨</button>
+                <button id="animateButton" class="video-button full-button" type="button">🎬 הנפש לווידאו + קול ✨</button>
                 <button id="shareButton" class="share-button full-button" type="button">📤 שתף</button>
                 <button id="downloadButton" class="download-button full-button" type="button">⬇ שמור</button>
                 <button id="anotherButton" class="secondary-button full-button" type="button">✨ עוד אווטאר</button>
@@ -129,7 +127,7 @@
         </section>
     </main>
     <div id="toast" class="toast" hidden></div>
-    <dialog id="helpDialog"><h2>איך זה עובד?</h2><ul><li>📷 העלה או צלם</li><li>🎬 הנפש ישירות או צור אווטאר</li></ul><button id="closeHelpButton" class="primary-button full-button" type="button">הבנתי</button></dialog>
+    <dialog id="helpDialog"><h2>איך זה עובד?</h2><ul><li>📷 העלה או צלם</li><li>🎬 הנפש ישירות או צור אווטאר</li><li>🔊 בחר מוזיקה - עובד עכשיו!</li></ul><button id="closeHelpButton" class="primary-button full-button" type="button">הבנתי</button></dialog>
     <script>
 "use strict";
 const API_URL = "https://billowing-shape-1d81.maty-tsoraro.workers.dev";
@@ -163,8 +161,16 @@ const helpDialog = document.getElementById("helpDialog");
 let cameraStream = null; let facingMode = "user"; let cameraReady = false;
 let base64Image = null; let originalImage = null; let currentResultUrl = null; let currentVideoUrl = null;
 let isGenerating = false; let generationCancelled = false; let toastTimer = null;
-let credits = MAX_CREDITS; let selectedMotion = "alive"; let selectedDuration = 5;
+let credits = MAX_CREDITS; let selectedMotion = "alive"; let selectedDuration = 5; let selectedAudio = "none";
 let currentVideoRequestId = null; let isVideoGenerating = false;
+
+// FIXED AUDIO - SoundHelix with CORS (no 403)
+const AUDIO_URLS = {
+  epic: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3",
+  tiktok: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+  cinematic: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+};
+let audioContext = null; let currentAudio = null;
 
 function updateCredits(){ creditCount.textContent = String(credits); }
 function showCameraError(m){ cameraError.textContent=m; cameraError.hidden=false; }
@@ -175,9 +181,9 @@ async function startCamera(){
     cameraPlaceholder.hidden=false; videoElement.hidden=false; resultImage.hidden=true; resultVideo.hidden=true; resultVideo.pause();
     cameraGuide.hidden=false; cameraGuideText.hidden=false;
     videoElement.classList.toggle("front-camera", facingMode==="user");
-    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){ showCameraError("אין גישה למצלמה. אפשר להעלות תמונה."); return; }
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){ showCameraError("אין גישה למצלמה."); return; }
     try{ cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: facingMode }, audio: false }); }
-    catch(e){ try{ cameraStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false }); } catch(err){ showCameraError("לא ניתן להפעיל מצלמה. העלה תמונה."); return; } }
+    catch(e){ try{ cameraStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false }); } catch(err){ showCameraError("לא ניתן להפעיל מצלמה."); return; } }
     videoElement.srcObject=cameraStream;
     videoElement.onloadedmetadata=async function(){ try{ await videoElement.play(); cameraReady=true; cameraPlaceholder.hidden=true; }catch(e){} };
     try{ await videoElement.play(); }catch(e){}
@@ -201,28 +207,25 @@ function selectImage(imgData){
     videoElement.hidden=true; cameraPlaceholder.hidden=true; cameraGuide.hidden=true; cameraGuideText.hidden=true;
     cameraMenu.hidden=true; styleMenu.hidden=false; resultMenu.hidden=true; stopCamera();
     window.scrollTo({top:0,behavior:"smooth"});
-    showToast("תמונה נטענה!");
 }
 function handleUpload(file){
     if(!file){ showToast("לא נבחרה תמונה.",true); return; }
-    if(file.size&&file.size>MAX_UPLOAD_SIZE){ showToast("תמונה גדולה מדי - עד 15MB",true); uploadInput.value=""; return; }
-    if(file.type&&!file.type.startsWith("image/")){ showToast("לא תמונה",true); uploadInput.value=""; return; }
+    if(file.size&&file.size>MAX_UPLOAD_SIZE){ showToast("תמונה גדולה מדי",true); uploadInput.value=""; return; }
     showToast("טוען תמונה..."); const reader=new FileReader();
-    reader.onerror=function(){ uploadInput.value=""; showToast("לא ניתן לקרוא תמונה",true); };
     reader.onload=function(ev){ const img=new Image(); img.onload=function(){ try{ const d=drawToCanvas(img,false); selectImage(d); }catch(e){ showToast(e.message,true); } finally{ uploadInput.value=""; } }; img.onerror=function(){ uploadInput.value=""; showToast("פורמט לא נתמך",true); }; img.src=ev.target.result; };
     reader.readAsDataURL(file);
 }
 function setLoading(loading,msg){ isGenerating=loading; loadingOverlay.hidden=!loading; if(msg) loadingText.textContent=msg; document.querySelectorAll("button:not(#cancelButton)").forEach(b=>b.disabled=loading); }
-function cancelGeneration(){ generationCancelled=true; setLoading(false); isVideoGenerating=false; showToast("בוטל."); }
+function cancelGeneration(){ generationCancelled=true; setLoading(false); isVideoGenerating=false; if(currentAudio){ currentAudio.pause(); currentAudio=null; } showToast("בוטל."); }
 function wait(ms){ return new Promise(r=>setTimeout(r,ms)); }
 async function fetchJson(opts){ const res=await fetch(API_URL,opts); let data; try{ data=await res.json(); }catch(e){ throw new Error("תגובת שרת לא תקינה"); } if(!res.ok||data.error) throw new Error(data.error||"שגיאת שרת"); return data; }
 function extractOutputUrl(out){ if(Array.isArray(out)){ const urls=out.filter(i=>typeof i==="string"); return urls.length?urls[urls.length-1]:null; } return typeof out==="string"?out:null; }
-function checkCredits(){ if(credits>0) return true; window.open(AD_URL,"_blank","noopener,noreferrer"); credits=1; updateCredits(); showToast("נפתח עמוד קרדיט."); return false; }
-function deductCredit(amount){ amount = amount||1; credits=Math.max(0,credits-amount); updateCredits(); }
-async function translateToEnglish(t){ if(!/[\u0590-\u05FF]/.test(t)) return t; try{ const url="https://api.mymemory.translated.net/get?q="+encodeURIComponent(t)+"&langpair=he|en"; const r=await fetch(url); if(!r.ok) return t; const d=await r.json(); return (d.responseData&&d.responseData.translatedText)||t; }catch(e){ return t; } }
+function checkCredits(){ if(credits>0) return true; window.open(AD_URL,"_blank","noopener,noreferrer"); credits=1; updateCredits(); return false; }
+function deductCredit(amount){ credits=Math.max(0,credits-(amount||1)); updateCredits(); }
+async function translateToEnglish(t){ if(!/[\u0590-\u05FF]/.test(t)) return t; try{ const url="https://api.mymemory.translated.net/get?q="+encodeURIComponent(t)+"&langpair=he|en"; const r=await fetch(url); if(!r.ok) return t; const d=await r.json(); return d.responseData?.translatedText||t; }catch(e){ return t; } }
 async function generateCustom(){
-    const p=customInput.value.trim(); if(!p){ showToast("יש להזין תיאור"); customInput.focus(); return; } if(!checkCredits()) return;
-    generationCancelled=false; setLoading(true,"מכין תיאור..."); const trans=await translateToEnglish(p); if(generationCancelled) return; const fixedPrompt = `full head visible, not cropped, medium shot, head and shoulders, empty space above head, centered face, ${trans}`; await generateMedia(fixedPrompt,true,true);
+    const p=customInput.value.trim(); if(!p){ showToast("יש להזין תיאור"); return; } if(!checkCredits()) return;
+    generationCancelled=false; setLoading(true,"מכין תיאור..."); const trans=await translateToEnglish(p); if(generationCancelled) return; const fixedPrompt = `full head visible, not cropped, medium shot, ${trans}`; await generateMedia(fixedPrompt,true,true);
 }
 async function generateMedia(styleOrPrompt,isCustom,loadingVisible){
     if(!base64Image){ showToast("צלם או בחר תמונה",true); return; }
@@ -230,42 +233,46 @@ async function generateMedia(styleOrPrompt,isCustom,loadingVisible){
     generationCancelled=false;
     if(!loadingVisible){ setLoading(true,"יוצר אווטאר..."); } else { loadingText.textContent="יוצר אווטאר..."; }
     try{
-        let finalPrompt = styleOrPrompt; if(!finalPrompt.includes("full head visible")){ finalPrompt = `full head visible, not cropped, medium shot, head and shoulders, empty space above head, centered, ${stylePrompt}`; }
+        let finalPrompt = styleOrPrompt; if(!finalPrompt.includes("full head visible")){ finalPrompt = `full head visible, not cropped, medium shot, ${styleOrPrompt}`; }
         const startData=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"image",image:base64Image,style:finalPrompt,isCustom:Boolean(isCustom),prompt:finalPrompt})});
         if(generationCancelled) return;
         const immediateUrl=startData.resultUrl||extractOutputUrl(startData.output);
-        if(immediateUrl){ showResult(immediateUrl,false); deductCredit(1); return; }
+        if(immediateUrl){ showResult(immediateUrl); deductCredit(1); return; }
         if(!startData.id) throw new Error("לא התקבל מזהה");
         for(let attempt=1; attempt<=MAX_POLL_ATTEMPTS; attempt++){
             if(generationCancelled) return;
-            loadingText.textContent="יוצר אווטאר...";
             await wait(POLL_INTERVAL); if(generationCancelled) return;
             const pollData=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"status",id:startData.id})});
-            if(pollData.status==="failed"||pollData.status==="canceled") throw new Error(pollData.error||"נכשל");
-            if(pollData.status==="succeeded"){ const url=extractOutputUrl(pollData.output); if(!url) throw new Error("אין תמונה"); showResult(url,false); deductCredit(1); return; }
+            if(pollData.status==="failed") throw new Error(pollData.error||"נכשל");
+            if(pollData.status==="succeeded"){ const url=extractOutputUrl(pollData.output); if(!url) throw new Error("אין תמונה"); showResult(url); deductCredit(1); return; }
         }
         throw new Error("לוקח זמן");
-    }catch(e){ if(!generationCancelled) showToast(e.message||"שגיאה",true); } finally{ if(!generationCancelled) setLoading(false); }
+    }catch(e){ if(!generationCancelled) showToast(e.message,true); } finally{ if(!generationCancelled) setLoading(false); }
 }
 function showResult(url){
     currentResultUrl=url; currentVideoUrl=null;
     resultImage.src=url; resultImage.hidden=false; resultVideo.hidden=true; 
     styleMenu.hidden=true; resultMenu.hidden=false; setLoading(false);
-    window.scrollTo({top:0,behavior:"smooth"});
 }
 function showVideoResult(url){
     currentVideoUrl=url; resultVideo.src=url; resultVideo.hidden=false; resultImage.hidden=true; resultVideo.load();
-    resultVideo.onloadeddata = function(){ resultVideo.play().catch(()=>{}); };
+    resultVideo.onloadeddata = function(){ 
+        resultVideo.play().catch(()=>{});
+        if(selectedAudio!=="none" && AUDIO_URLS[selectedAudio]){
+            if(currentAudio){ currentAudio.pause(); }
+            currentAudio = new Audio(AUDIO_URLS[selectedAudio]);
+            currentAudio.volume = 0.5;
+            currentAudio.loop = true;
+            currentAudio.play().catch(()=>{ showToast("לחץ על הוידאו להפעלת קול"); });
+            resultVideo.onplay = () => { if(currentAudio) currentAudio.play().catch(()=>{}); };
+            resultVideo.onpause = () => { if(currentAudio) currentAudio.pause(); };
+            resultVideo.onclick = () => { if(currentAudio) currentAudio.play().catch(()=>{}); };
+        }
+    };
     setLoading(false); isVideoGenerating=false;
-    showToast("הוידאו מוכן! 🎬"); 
-    window.scrollTo({top:0,behavior:"smooth"});
+    showToast("וידאו מוכן עם קול "+selectedAudio+"! 🎬🔊"); 
 }
-async function directAnimate(){
-    if(!base64Image && !originalImage){ showToast("אין תמונה",true); return; }
-    const imageToAnimate = originalImage || base64Image;
-    currentResultUrl = imageToAnimate;
-    showResult(imageToAnimate);
-}
+async function directAnimate(){ if(!base64Image && !originalImage){ showToast("אין תמונה",true); return; } currentResultUrl = originalImage || base64Image; showResult(currentResultUrl); }
 async function animateAvatar(){
     if(!currentResultUrl){ showToast("אין תמונה",true); return; }
     isVideoGenerating=true; generationCancelled=false;
@@ -280,42 +287,36 @@ async function animateAvatar(){
         currentVideoRequestId=startData.requestId || startData.request_id;
         for(let attempt=1; attempt<=MAX_VIDEO_POLL; attempt++){
             if(generationCancelled) return;
-            loadingText.textContent="מכין וידאו "+selectedDuration+" שניות...";
+            loadingText.textContent="מכין וידאו "+selectedDuration+" שניות... ("+attempt+"/"+MAX_VIDEO_POLL+")";
             await wait(VIDEO_POLL_INTERVAL); if(generationCancelled) return;
             const poll=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"video_status",requestId:currentVideoRequestId})});
             if(poll.status==="processing" || poll.status==="queued") continue;
             if(poll.status==="failed") throw new Error(poll.error||"נכשל");
             if(poll.status==="succeeded"){ const vurl=poll.videoUrl||poll.output; if(!vurl) throw new Error("אין וידאו"); showVideoResult(vurl); deductCredit(cost); return; }
         }
-        throw new Error("לוקח זמן, נסה שוב");
+        throw new Error("לוקח יותר זמן, נסה שוב בעוד דקה");
     }catch(e){ if(!generationCancelled) showToast(e.message,true); setLoading(false); isVideoGenerating=false; }
 }
-function validUrlForFal(v){ try{ if(v.startsWith("data:")) return true; const u=new URL(v); return u.protocol==="https:"||u.protocol==="http:"; }catch(e){ return false; } }
 async function downloadResult(){
     const url = currentVideoUrl || currentResultUrl; if(!url) return;
-    try{ const r=await fetch(url); const blob=await r.blob(); const o=URL.createObjectURL(blob); const a=document.createElement("a"); a.href=o; a.download="avatar-"+Date.now()+(currentVideoUrl?".mp4":".jpg"); document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(o),2000); }
+    try{ const r=await fetch(url); const blob=await r.blob(); const o=URL.createObjectURL(blob); const a=document.createElement("a"); a.href=o; a.download="avatar-"+Date.now()+(currentVideoUrl?".mp4":".jpg"); document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(o),2000); if(currentAudio) showToast("הורדה בלי קול בדפדפן - הקול מתווסף רק בניגון"); }
     catch(e){ window.open(url,"_blank","noopener,noreferrer"); }
 }
 async function shareResult(){
     const url = currentVideoUrl || currentResultUrl; if(!url) return;
-    try{ if(navigator.share){ await navigator.share({title:"Viral Avatar",text:"ראו!",url:url}); return; } throw new Error(); }
+    try{ if(navigator.share){ await navigator.share({title:"Viral Avatar",text:"ראו! "+selectedDuration+"s עם קול "+selectedAudio,url:url}); return; } throw new Error(); }
     catch(e){ window.open("https://wa.me/?text="+encodeURIComponent("ראו: "+url),"_blank","noopener,noreferrer"); }
 }
 function resetApp(){
-    generationCancelled=true; setLoading(false); stopCamera(); isVideoGenerating=false;
+    generationCancelled=true; setLoading(false); stopCamera(); isVideoGenerating=false; if(currentAudio){ currentAudio.pause(); currentAudio=null; }
     base64Image=null; originalImage=null; currentResultUrl=null; currentVideoUrl=null; currentVideoRequestId=null;
     resultImage.src=""; resultImage.hidden=true; resultVideo.src=""; resultVideo.hidden=true;
     videoElement.hidden=false; cameraPlaceholder.hidden=false; cameraGuide.hidden=false; cameraGuideText.hidden=false;
     cameraMenu.hidden=false; styleMenu.hidden=true; resultMenu.hidden=true;
     customInput.value=""; characterCount.textContent="0"; uploadInput.value="";
-    startCamera(); window.scrollTo({top:0,behavior:"smooth"});
+    startCamera();
 }
-function createAnother(){
-    if(!originalImage){ resetApp(); return; }
-    base64Image=originalImage; currentResultUrl=originalImage; currentVideoUrl=null;
-    resultImage.src=originalImage; resultImage.hidden=false; resultVideo.hidden=true;
-    styleMenu.hidden=false; resultMenu.hidden=true; window.scrollTo({top:0,behavior:"smooth"});
-}
+function createAnother(){ if(!originalImage){ resetApp(); return; } base64Image=originalImage; currentResultUrl=originalImage; currentVideoUrl=null; resultImage.src=originalImage; resultImage.hidden=false; resultVideo.hidden=true; styleMenu.hidden=false; resultMenu.hidden=true; }
 function showToast(msg,isErr){ clearTimeout(toastTimer); toastElement.textContent=msg; toastElement.classList.toggle("error",Boolean(isErr)); toastElement.hidden=false; toastTimer=setTimeout(()=>{ toastElement.hidden=true; },4000); }
 const SpeechRecognition = window.SpeechRecognition||window.webkitSpeechRecognition; let recognition=null;
 if(SpeechRecognition){
@@ -350,6 +351,22 @@ document.querySelectorAll(".duration-btn").forEach(b=>{
     b.addEventListener("click",()=>{
         document.querySelectorAll(".duration-btn").forEach(x=>x.classList.remove("active"));
         b.classList.add("active"); selectedDuration=parseInt(b.dataset.duration);
+    });
+});
+document.querySelectorAll(".audio-btn").forEach(b=>{
+    b.addEventListener("click",()=>{
+        document.querySelectorAll(".audio-btn").forEach(x=>x.classList.remove("active"));
+        b.classList.add("active"); selectedAudio=b.dataset.audio;
+        if(selectedAudio!=="none" && AUDIO_URLS[selectedAudio]){
+            if(currentAudio) currentAudio.pause();
+            currentAudio = new Audio(AUDIO_URLS[selectedAudio]);
+            currentAudio.volume = 0.4;
+            currentAudio.play().catch(()=>{});
+            setTimeout(()=>{ if(currentAudio) currentAudio.pause(); }, 2000);
+            showToast("דוגמת קול: "+b.textContent);
+        } else {
+            if(currentAudio){ currentAudio.pause(); currentAudio=null; }
+        }
     });
 });
 document.getElementById("helpButton").addEventListener("click",()=>{ if(helpDialog.showModal) helpDialog.showModal(); });
