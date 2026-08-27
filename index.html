@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0a0a14">
-<title>VIRAL STUDIO - תוקן</title>
+<title>VIRAL STUDIO</title>
 <style>
 :root{--p:#00e5ff;--s:#7c4dff;--bg:#0a0a14;--surface:#151528;--surface2:#1e1e38;--text:#fff;--muted:#9aa0b8;--border:rgba(255,255,255,0.08);--r:20px;--r2:12px}
 *{box-sizing:border-box}html{background:var(--bg)}body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
@@ -43,7 +43,6 @@
 .choose-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px}
 .choose-card{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:14px;cursor:pointer;text-align:right;transition:.15s}
 .choose-card:hover{border-color:rgba(255,255,255,0.14)}
-.choose-card.active{border-color:var(--p);background:rgba(0,229,255,0.08)}
 .choose-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;border:1px solid var(--border)}
 .choose-icon.meme{background:rgba(255,189,46,0.14)}
 .choose-icon.basic{background:rgba(0,229,255,0.12)}
@@ -70,7 +69,7 @@
 <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--p),var(--s));display:flex;align-items:center;justify-content:center;font-weight:800;color:#000">V</div>
 <h1 class="brand">VIRAL <span>STUDIO</span></h1>
 </div>
-<div style="font-size:.75rem;color:var(--muted)">אולפן וידאו AI - תוקן</div>
+<div style="font-size:.75rem;color:var(--muted)">אולפן וידאו AI</div>
 </header>
 
 <main class="app">
@@ -88,7 +87,7 @@
 <div id="loading" class="loading" hidden>
 <div class="spinner"></div>
 <div id="loadingText" style="font-weight:700;font-size:.95rem">יוצר...</div>
-<div id="loadingSub" style="font-size:.82rem;color:var(--muted)">כ-20 שניות</div>
+<div id="loadingSub" style="font-size:.82rem;color:var(--muted)">כמה שניות</div>
 <div id="loadingTimer" style="font-size:.75rem;color:var(--muted);margin-top:4px"></div>
 <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
 <button id="cancelBtn" class="btn btn-ghost" style="width:auto;padding:8px 16px;margin-top:12px;font-size:.8rem" type="button">ביטול</button>
@@ -108,7 +107,7 @@
 
 <section id="chooseMenu" class="glass panel" hidden>
 <div class="section-title">שלב 2: מה תרצה ליצור?</div>
-<div class="section-sub">בחר סגנון - כל אחד יוצר וידאו קצר</div>
+<div class="section-sub">בחר סגנון וידאו</div>
 <div class="choose-grid">
 <button class="choose-card" data-choose="meme" type="button">
 <div class="choose-icon meme">😂</div>
@@ -117,22 +116,22 @@
 </button>
 <button class="choose-card" data-choose="basic" type="button">
 <div class="choose-icon basic">🎬</div>
-<div class="choose-text"><div class="choose-title">תמונה נעה</div><div class="choose-sub">הפנים זזות בעדינות - הכי טבעי</div></div>
+<div class="choose-text"><div class="choose-title">תמונה נעה</div><div class="choose-sub">הפנים זזות בעדינות</div></div>
 <div style="color:var(--muted)">‹</div>
 </button>
 <button class="choose-card" data-choose="talking" type="button">
 <div class="choose-icon talk">🎤</div>
-<div class="choose-text"><div class="choose-title">דמות מדברת - תוקן! עם ליפ-סינק אמיתי</div><div class="choose-sub">מקליט קול והדמות מדברת באמת</div></div>
+<div class="choose-text"><div class="choose-title">דמות מדברת</div><div class="choose-sub">מקליט קול והדמות מדברת</div></div>
 <div style="color:var(--muted)">‹</div>
 </button>
 <button class="choose-card" data-choose="trending" type="button">
 <div class="choose-icon trend">💃</div>
-<div class="choose-text"><div class="choose-title">טרנד ויראלי</div><div class="choose-sub">חיבוק, ריקוד, נשיקה, גיבור על</div></div>
+<div class="choose-text"><div class="choose-title">טרנד ויראלי</div><div class="choose-sub">חיבוק, ריקוד, נשיקה</div></div>
 <div style="color:var(--muted)">‹</div>
 </button>
 <button class="choose-card" data-choose="cinema" type="button">
 <div class="choose-icon cine">🎥</div>
-<div class="choose-text"><div class="choose-title">טריילר קולנועי - מהיר</div><div class="choose-sub">Minimax Fast - 15-25 שניות</div></div>
+<div class="choose-text"><div class="choose-title">טריילר קולנועי</div><div class="choose-sub">סצנה דרמטית עם מוזיקה וסאונד</div></div>
 <div style="color:var(--muted)">‹</div>
 </button>
 </div>
@@ -162,17 +161,17 @@
 <button class="card" data-meme-motion="meme_dance"><div class="card-title">רוקד</div><div class="card-sub">שמח</div></button>
 </div>
 <button id="memeVideoBtn" class="btn btn-meme" style="margin-top:14px" type="button">צור מם וידאו</button>
-<button id="memeImageBtn" class="btn btn-ghost" style="margin-top:8px" type="button">צור רק תמונה (חינם)</button>
+<button id="memeImageBtn" class="btn btn-ghost" style="margin-top:8px" type="button">צור רק תמונה</button>
 </div>
 
 <div id="detail-basic" class="detail-content" hidden>
 <div class="grid2">
-<button class="card active" data-basic-motion="alive"><div class="card-title">חי</div><div class="card-sub">טבעי - הכי מהיר</div></button>
+<button class="card active" data-basic-motion="alive"><div class="card-title">חי</div><div class="card-sub">טבעי</div></button>
 <button class="card" data-basic-motion="smile"><div class="card-title">חיוך</div><div class="card-sub">עדין</div></button>
 <button class="card" data-basic-motion="cinematic"><div class="card-title">קולנועי</div><div class="card-sub">איטי</div></button>
 <button class="card" data-basic-motion="hero"><div class="card-title">גיבור</div><div class="card-sub">בטוח</div></button>
 </div>
-<button id="animateBtn" class="btn btn-primary" style="margin-top:14px" type="button">צור וידאו - מהיר</button>
+<button id="animateBtn" class="btn btn-primary" style="margin-top:14px" type="button">צור וידאו</button>
 </div>
 
 <div id="detail-talking" class="detail-content" hidden>
@@ -182,23 +181,22 @@
 <button id="uploadAudioBtn" class="btn btn-ghost" type="button">⬆️ העלה קובץ קול</button>
 <div id="audioStatus" style="font-size:.78rem;color:var(--muted);text-align:center;padding:10px;background:var(--surface2);border-radius:10px;border:1px solid var(--border)">אין אודיו - הקלט או העלה</div>
 </div>
-<button id="talkingBtn" class="btn btn-talk" style="margin-top:14px" type="button">צור דמות מדברת - עם ליפ-סינק אמיתי!</button>
+<button id="talkingBtn" class="btn btn-talk" style="margin-top:14px" type="button">צור דמות מדברת</button>
 </div>
 
 <div id="detail-trending" class="detail-content" hidden>
 <div class="grid2">
-<button class="card active" data-trend="hug"><div class="card-title">חיבוק AI</div><div class="card-sub">חם</div></button>
-<button class="card" data-trend="dance"><div class="card-title">ריקוד AI</div><div class="card-sub">ויראלי</div></button>
-<button class="card" data-trend="kiss"><div class="card-title">נשיקה AI</div><div class="card-sub">רומנטי</div></button>
+<button class="card active" data-trend="hug"><div class="card-title">חיבוק</div><div class="card-sub">חם</div></button>
+<button class="card" data-trend="dance"><div class="card-title">ריקוד</div><div class="card-sub">ויראלי</div></button>
+<button class="card" data-trend="kiss"><div class="card-title">נשיקה</div><div class="card-sub">רומנטי</div></button>
 <button class="card" data-trend="superhero"><div class="card-title">גיבור על</div><div class="card-sub">שינוי</div></button>
 </div>
 <button id="trendingBtn" class="btn btn-trend" style="margin-top:14px" type="button">צור טרנד</button>
 </div>
 
 <div id="detail-cinema" class="detail-content" hidden>
-<textarea id="cinemaPrompt" class="input" rows="2" placeholder="למשל: טריילר אקשן, בורח מפיצוץ, תאורה דרמטית..."></textarea>
-<div style="font-size:.75rem;color:var(--muted);margin-top:8px">⚡ Minimax Fast - 15-25 שניות, מהיר פי 3 מ-Luma</div>
-<button id="cinemaBtn" class="btn btn-cine" style="margin-top:14px" type="button">צור טריילר מהיר</button>
+<textarea id="cinemaPrompt" class="input" rows="2" placeholder="למשל: טריילר אקשן, בורח מפיצוץ, תאורה דרמטית עם מוזיקה..."></textarea>
+<button id="cinemaBtn" class="btn btn-cine" style="margin-top:14px" type="button">צור טריילר עם קול</button>
 </div>
 </section>
 
@@ -221,7 +219,7 @@
 <script>
 "use strict";
 const API_URL = "https://billowing-shape-1d81.maty-tsoraro.workers.dev";
-const APP_SECRET = "vs_87dTVS5q8rKeTtFahgFgl8GQeKyL78tB_2026"; // חייב להתאים בדיוק ל-APP_SECRET ב-Cloudflare
+const APP_SECRET = "vs_87dTVS5q8rKeTtFahgFgl8GQeKyL78tB_2026";
 const MAX_DIM = 1536;
 const videoEl = document.getElementById("videoElement");
 const canvasEl = document.getElementById("canvasElement");
@@ -241,7 +239,7 @@ let stream=null,facing="user",camReady=false,originalImg=null,currentResult=null
 let selectedBasicMotion="alive",selectedMemeMotion="meme_punch",selectedTrend="hug",selectedCat=null,audioData=null;
 let mediaRecorder=null,audioChunks=[],timerInterval=null,startTime=null;
 
-function showToast(msg,err){clearTimeout(toastTimer);toastEl.textContent=msg;toastEl.classList.toggle("error",!!err);toastEl.hidden=false;toastTimer=setTimeout(()=>toastEl.hidden=true,5000);}
+function showToast(msg,err){clearTimeout(toastTimer);toastEl.textContent=msg;toastEl.classList.toggle("error",!!err);toastEl.hidden=false;toastTimer=setTimeout(()=>toastEl.hidden=true,4000);}
 function setLoading(on,txt,sub){
   loading.hidden=!on;
   if(txt)loadingText.textContent=txt;
@@ -254,8 +252,8 @@ function setLoading(on,txt,sub){
     timerInterval=setInterval(()=>{
       if(!startTime)return;
       const elapsed=Math.floor((Date.now()-startTime)/1000);
-      loadingTimer.textContent=`${elapsed} שניות עברו...`;
-      if(elapsed>45) loadingSub.textContent="כמעט מוכן, עוד כמה שניות...";
+      loadingTimer.textContent=`${elapsed} שניות`;
+      if(elapsed>45) loadingSub.textContent="כמעט מוכן...";
     },1000);
   }else{
     clearInterval(timerInterval);
@@ -310,9 +308,8 @@ async function fetchJson(opts){
   if(!res.ok||data.error)throw new Error(data.error||"שגיאה");
   return data;
 }
-// עוזר משותף לכל ה-polling - מתקן באג קריטי + מאחד קוד
 async function pollForResult(reqId, statusUrl, responseUrl, onTick){
-  for(let i=0;i<50;i++){
+  for(let i=0;i<60;i++){
     if(cancelled) return null;
     await wait(3000);
     if(cancelled) return null;
@@ -331,7 +328,7 @@ function showResult(url){
   document.getElementById("detailMenu").hidden=true;
   document.getElementById("cameraMenu").hidden=true;
   document.getElementById("resultMenu").hidden=false;
-  document.getElementById("resultText").textContent="מוכן! התוצאה למעלה";
+  document.getElementById("resultText").textContent="מוכן!";
   setLoading(false);
   window.scrollTo({top:0,behavior:"smooth"});
 }
@@ -341,7 +338,7 @@ function showVideo(url){
   resultImg.hidden=true;resultImg.style.display="none";
   resultVideo.load();
   resultVideo.onloadeddata=()=>{
-    resultVideo.play().catch(()=>{ showToast("לחץ/י על הוידאו כדי לנגן עם קול"); });
+    resultVideo.play().catch(()=>{ showToast("לחץ על הוידאו כדי לנגן עם קול"); });
   };
   document.getElementById("chooseMenu").hidden=true;
   document.getElementById("detailMenu").hidden=true;
@@ -349,7 +346,7 @@ function showVideo(url){
   document.getElementById("resultMenu").hidden=false;
   document.getElementById("resultText").textContent="הסרטון מוכן";
   setLoading(false);
-  showToast("מוכן! 🎉");
+  showToast("מוכן!");
   window.scrollTo({top:0,behavior:"smooth"});
 }
 function wrapText(ctx,text,maxWidth){
@@ -399,7 +396,7 @@ async function createMemeImage(){
         }
         ctx.fillStyle="rgba(0,0,0,0.85)";ctx.fillRect(0,1040,1080,40);
         ctx.fillStyle="#00e5ff";ctx.font="bold 16px Arial";
-        ctx.fillText("VIRAL STUDIO • matytsoraro.github.io",540,1063);
+        ctx.fillText("VIRAL STUDIO",540,1063);
         resolve({dataUrl:memeCanvas.toDataURL("image/jpeg",0.92),topText,bottomText});
       }catch(e){reject(e);}
     };
@@ -444,7 +441,7 @@ async function createMemeVideo(){
 }
 async function basicAnimate(){
   if(!currentResult){showToast("בחר תמונה",true);return;}
-  cancelled=false;setLoading(true,"יוצר וידאו...","Minimax Fast - הכי מהיר");
+  cancelled=false;setLoading(true,"יוצר וידאו...","תמונה נעה");
   try{
     const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"animate",imageUrl:currentResult,motion:selectedBasicMotion})});
     if(cancelled)return;
@@ -458,7 +455,7 @@ async function basicAnimate(){
 async function talkingAvatar(){
   if(!currentResult){showToast("בחר תמונה",true);return;}
   if(!audioData){showToast("הקלט או העלה קול",true);return;}
-  cancelled=false;setLoading(true,"יוצר דמות מדברת...","Kling Avatar עם ליפ-סינק אמיתי - לוקח 30-60 שניות");
+  cancelled=false;setLoading(true,"יוצר דמות מדברת...","מסנכרן קול ותנועה");
   try{
     const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"talking",imageUrl:currentResult,audioUrl:audioData})});
     if(cancelled)return;
@@ -484,15 +481,16 @@ async function trendingVideo(){
 }
 async function cinematicVideo(){
   if(!currentResult){showToast("בחר תמונה",true);return;}
-  const prompt=document.getElementById("cinemaPrompt").value||"טריילר קולנועי אפי";
-  cancelled=false;setLoading(true,"יוצר טריילר קולנועי...","Minimax Fast - 15-25 שניות");
+  const prompt=document.getElementById("cinemaPrompt").value||"טריילר קולנועי אפי עם מוזיקה";
+  cancelled=false;setLoading(true,"יוצר טריילר קולנועי...","עם קול ומוזיקה");
   try{
     const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"cinematic",imageUrl:currentResult,prompt:prompt})});
     if(cancelled)return;
     if(data.status==="succeeded"&&data.videoUrl){showVideo(data.videoUrl);return;}
     const reqId=data.requestId||data.request_id;
+    if(!reqId)throw new Error("לא התקבל מזהה");
     const videoUrl=await pollForResult(reqId, data.statusUrl||data.status_url, data.responseUrl||data.response_url, (i)=>{
-      if(i>10) document.getElementById("loadingSub").textContent="מעבד... עוד כמה שניות";
+      if(i>10) document.getElementById("loadingSub").textContent="מעבד עם קול... עוד כמה שניות";
     });
     if(cancelled||!videoUrl)return;
     showVideo(videoUrl);
@@ -503,7 +501,7 @@ function openDetail(cat){
   document.getElementById("chooseMenu").hidden=true;
   document.getElementById("detailMenu").hidden=false;
   document.querySelectorAll(".detail-content").forEach(el=>el.hidden=true);
-  const titles={meme:["מם זז עם טקסט","כותב טקסט והופך לוידאו"],basic:["תמונה נעה","הפנים זזות בעדינות - Minimax Fast"],talking:["דמות מדברת - תוקן!","Kling Avatar עם ליפ-סינק אמיתי"],trending:["טרנד ויראלי","חיבוק, ריקוד, נשיקה"],cinema:["טריילר קולנועי - מהיר","Minimax Fast - 15-25 שניות"]};
+  const titles={meme:["מם זז עם טקסט","כותב טקסט והופך לוידאו"],basic:["תמונה נעה","הפנים זזות בעדינות"],talking:["דמות מדברת","מקליט קול והדמות מדברת"],trending:["טרנד ויראלי","חיבוק, ריקוד, נשיקה"],cinema:["טריילר קולנועי","סצנה דרמטית עם מוזיקה וסאונד"]};
   const t=titles[cat]||["יצירה",""];
   document.getElementById("detailTitle").textContent=t[0];
   document.getElementById("detailSub").textContent=t[1];
