@@ -9,7 +9,7 @@
 :root{--p:#00e5ff;--s:#7c4dff;--bg:#0a0a14;--surface:#151528;--surface2:#1e1e38;--text:#fff;--muted:#9aa0b8;--border:rgba(255,255,255,0.08);--r:20px;--r2:12px}
 *{box-sizing:border-box}html{background:var(--bg)}body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
 .topbar{position:sticky;top:0;z-index:30;display:flex;justify-content:space-between;align-items:center;min-height:62px;padding:0 16px;background:rgba(10,10,20,0.95);border-bottom:1px solid var(--border);backdrop-filter:blur(20px)}
-.brand{margin:0;font-size:1.15rem;font-weight:800;letter-spacing:-0.02em}.brand span{background:linear-gradient(90deg,var(--p),var(--s));-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand{margin:0;font-size:1.15rem;font-weight:800}.brand span{background:linear-gradient(90deg,var(--p),var(--s));-webkit-background-clip:text;background-clip:text;color:transparent}
 .app{width:min(100%,560px);margin:0 auto;padding:12px;display:grid;gap:14px}
 .glass{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
 .viewport{position:relative;width:100%;aspect-ratio:3/4;background:#08080f;min-height:460px}
@@ -17,12 +17,14 @@
 #videoElement.front{transform:scaleX(-1)}
 .placeholder{position:absolute;z-index:2;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:14px;padding:24px;text-align:center;background:#08080f}
 .guide{position:absolute;top:50%;right:50%;width:56%;aspect-ratio:.78;transform:translate(50%,-50%);border:1.5px dashed rgba(255,255,255,0.22);border-radius:48% 48% 44% 44%;pointer-events:none;z-index:3}
-.loading{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:14px;padding:24px;text-align:center;background:rgba(8,8,15,0.94)}
+.loading{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:14px;padding:20px;text-align:center;background:rgba(8,8,15,0.96)}
 .spinner{width:42px;height:42px;border:3px solid rgba(255,255,255,0.1);border-top-color:var(--p);border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.progress-bar{width:80%;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden;margin-top:8px}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--p),var(--s));width:0%;transition:width 0.5s;animation:progress 30s linear forwards}
+@keyframes progress{0%{width:5%}50%{width:60%}90%{width:85%}100%{width:95%}}
 .panel{padding:16px}
 .section-title{margin:0 0 6px;font-size:1.05rem;font-weight:800}
 .section-sub{margin:0;font-size:.82rem;color:var(--muted);line-height:1.4}
-.divider{height:1px;background:var(--border);margin:14px 0}
 .h3{margin:14px 0 8px;font-size:.8rem;font-weight:700;color:var(--muted)}
 .btn{width:100%;min-height:48px;padding:12px 16px;border-radius:var(--r2);font-weight:700;font-size:.92rem;cursor:pointer;display:inline-flex;justify-content:center;align-items:center;gap:8px;border:0;transition:.15s}
 .btn:active{transform:scale(.98)}
@@ -40,7 +42,7 @@
 .capture{position:relative;display:inline-flex;justify-content:center;align-items:center;width:76px;height:76px;background:#fff;border:4px solid rgba(255,255,255,0.15);border-radius:50%;cursor:pointer;box-shadow:0 0 0 8px rgba(255,255,255,0.04)}.capture::after{content:"";width:22px;height:22px;background:#000;border-radius:50%}
 .choose-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px}
 .choose-card{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:14px;cursor:pointer;text-align:right;transition:.15s}
-.choose-card:hover{border-color:rgba(255,255,255,0.14);transform:translateY(-1px)}
+.choose-card:hover{border-color:rgba(255,255,255,0.14)}
 .choose-card.active{border-color:var(--p);background:rgba(0,229,255,0.08)}
 .choose-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;border:1px solid var(--border)}
 .choose-icon.meme{background:rgba(255,189,46,0.14)}
@@ -52,32 +54,30 @@
 .choose-title{font-size:.95rem;font-weight:800;margin-bottom:2px}
 .choose-sub{font-size:.78rem;color:var(--muted);line-height:1.3}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.card{padding:12px;border-radius:var(--r2);background:var(--surface2);border:1px solid var(--border);cursor:pointer;text-align:right;transition:.15s}
+.card{padding:12px;border-radius:var(--r2);background:var(--surface2);border:1px solid var(--border);cursor:pointer;text-align:right}
 .card.active{border-color:var(--p);background:rgba(0,229,255,0.08)}
 .card-title{font-size:.85rem;font-weight:700}
 .card-sub{font-size:.7rem;color:var(--muted);margin-top:2px}
 .preset{padding:10px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;cursor:pointer;font-size:.82rem;line-height:1.4}
-.preset:hover{border-color:rgba(255,255,255,0.12)}
 .toast{position:fixed;z-index:100;right:50%;bottom:18px;transform:translateX(50%);width:max-content;max-width:92vw;padding:10px 18px;background:#1a1a2e;border:1px solid var(--border);border-radius:999px;font-size:.85rem;font-weight:600;text-align:center}
-.toast.error{background:#2a1520;border-color:rgba(255,0,85,0.25)}
+.toast.error{background:#2a1520}
 [hidden]{display:none!important}
 </style>
 </head>
 <body>
 <header class="topbar">
 <div style="display:flex;align-items:center;gap:10px">
-<div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--p),var(--s));display:flex;align-items:center;justify-content:center;font-weight:800;color:#000;font-size:.95rem">V</div>
+<div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--p),var(--s));display:flex;align-items:center;justify-content:center;font-weight:800;color:#000">V</div>
 <h1 class="brand">VIRAL <span>STUDIO</span></h1>
 </div>
 <div style="font-size:.75rem;color:var(--muted)">אולפן וידאו AI</div>
 </header>
 
 <main class="app">
-<!-- תצוגה -->
 <section class="glass viewport">
 <div id="placeholder" class="placeholder">
 <div style="width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,rgba(0,229,255,0.12),rgba(124,77,255,0.12));display:flex;align-items:center;justify-content:center;font-size:1.8rem">◐</div>
-<div><div style="font-weight:700;font-size:1rem">העלה תמונה להתחלה</div><div style="font-size:.82rem;color:var(--muted);margin-top:4px">צלם סלפי או בחר מהגלריה</div></div>
+<div><div style="font-weight:700">העלה תמונה להתחלה</div><div style="font-size:.82rem;color:var(--muted);margin-top:4px">צלם סלפי או בחר מהגלריה</div></div>
 <button id="enableCamBtn" class="btn btn-primary" style="width:auto;padding:10px 20px;font-size:.85rem" type="button">פתח מצלמה</button>
 </div>
 <video id="videoElement" class="front" autoplay playsinline muted hidden></video>
@@ -88,109 +88,93 @@
 <div id="loading" class="loading" hidden>
 <div class="spinner"></div>
 <div id="loadingText" style="font-weight:700;font-size:.95rem">יוצר...</div>
-<div id="loadingSub" style="font-size:.82rem;color:var(--muted)">זה לוקח כ-30 שניות</div>
-<button id="cancelBtn" class="btn btn-ghost" style="width:auto;padding:8px 16px;margin-top:8px;font-size:.8rem" type="button">ביטול</button>
+<div id="loadingSub" style="font-size:.82rem;color:var(--muted)">כ-20 שניות</div>
+<div id="loadingTimer" style="font-size:.75rem;color:var(--muted);margin-top:4px"></div>
+<div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+<button id="cancelBtn" class="btn btn-ghost" style="width:auto;padding:8px 16px;margin-top:12px;font-size:.8rem" type="button">ביטול</button>
 </div>
 </section>
 
-<!-- שלב 1 -->
 <section id="cameraMenu" class="glass panel">
 <div class="section-title">שלב 1: צלם או העלה תמונה</div>
-<div class="section-sub">כל הכלים עובדים מאותה תמונה אחת. תמונה ברורה עם פנים = תוצאה טובה יותר.</div>
+<div class="section-sub">תמונה ברורה עם פנים = תוצאה טובה יותר</div>
 <div class="controls">
-<button id="uploadBtn" class="round" type="button" title="העלה">⬆️</button>
+<button id="uploadBtn" class="round" type="button">⬆️</button>
 <input id="uploadInput" type="file" accept="image/*" hidden>
-<button id="captureBtn" class="capture" type="button" title="צלם"></button>
-<button id="switchBtn" class="round" type="button" title="החלף מצלמה">↻</button>
+<button id="captureBtn" class="capture" type="button"></button>
+<button id="switchBtn" class="round" type="button">↻</button>
 </div>
 </section>
 
-<!-- שלב 2 - בחירה ברורה -->
 <section id="chooseMenu" class="glass panel" hidden>
 <div class="section-title">שלב 2: מה תרצה ליצור?</div>
-<div class="section-sub">בחר סגנון אחד. כל אחד יוצר וידאו קצר של 5 שניות.</div>
-
+<div class="section-sub">בחר סגנון - כל אחד יוצר וידאו קצר</div>
 <div class="choose-grid">
 <button class="choose-card" data-choose="meme" type="button">
 <div class="choose-icon meme">😂</div>
-<div class="choose-text"><div class="choose-title">מם זז עם טקסט</div><div class="choose-sub">כותב משפט מצחיק והופך לוידאו עם תנועה</div></div>
+<div class="choose-text"><div class="choose-title">מם זז עם טקסט</div><div class="choose-sub">כותב משפט מצחיק והופך לוידאו</div></div>
 <div style="color:var(--muted)">‹</div>
 </button>
-
 <button class="choose-card" data-choose="basic" type="button">
 <div class="choose-icon basic">🎬</div>
 <div class="choose-text"><div class="choose-title">תמונה נעה</div><div class="choose-sub">הפנים זזות בעדינות - הכי טבעי</div></div>
 <div style="color:var(--muted)">‹</div>
 </button>
-
 <button class="choose-card" data-choose="talking" type="button">
 <div class="choose-icon talk">🎤</div>
-<div class="choose-text"><div class="choose-title">דמות מדברת</div><div class="choose-sub">מקליט קול והדמות מדברת כמו בטיקטוק</div></div>
+<div class="choose-text"><div class="choose-title">דמות מדברת</div><div class="choose-sub">מקליט קול והדמות מדברת</div></div>
 <div style="color:var(--muted)">‹</div>
 </button>
-
 <button class="choose-card" data-choose="trending" type="button">
 <div class="choose-icon trend">💃</div>
 <div class="choose-text"><div class="choose-title">טרנד ויראלי</div><div class="choose-sub">חיבוק, ריקוד, נשיקה, גיבור על</div></div>
 <div style="color:var(--muted)">‹</div>
 </button>
-
 <button class="choose-card" data-choose="cinema" type="button">
 <div class="choose-icon cine">🎥</div>
-<div class="choose-text"><div class="choose-title">טריילר קולנועי</div><div class="choose-sub">סצנה דרמטית עם תאורה ואפקטים</div></div>
+<div class="choose-text"><div class="choose-title">טריילר קולנועי</div><div class="choose-sub">סצנה דרמטית עם תאורה</div></div>
 <div style="color:var(--muted)">‹</div>
 </button>
 </div>
 </section>
 
-<!-- פאנלים לכל קטגוריה -->
 <section id="detailMenu" class="glass panel" hidden>
 <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
 <button id="backToChoose" class="round" style="width:36px;height:36px;font-size:.9rem" type="button">›</button>
-<div>
-<div id="detailTitle" style="font-weight:800;font-size:1rem">כותרת</div>
-<div id="detailSub" style="font-size:.78rem;color:var(--muted)">הסבר</div>
-</div>
+<div><div id="detailTitle" style="font-weight:800;font-size:1rem">כותרת</div><div id="detailSub" style="font-size:.78rem;color:var(--muted)">הסבר</div></div>
 </div>
 
-<!-- מם -->
 <div id="detail-meme" class="detail-content" hidden>
 <div class="h3">מה המם אומר?</div>
 <input id="topText" class="input" placeholder="למעלה - הסיטואציה" maxlength="70" style="margin-bottom:8px">
 <input id="bottomText" class="input" placeholder="למטה - הפאנץ'" maxlength="70">
-<div id="memeTextError" style="font-size:.75rem;color:#ff4d7a;margin:6px 0;display:none">נא למלא טקסט עליון ותחתון</div>
-
+<div id="memeTextError" style="font-size:.75rem;color:#ff4d7a;margin:6px 0;display:none">נא למלא טקסט</div>
 <div class="h3">רעיונות מהירים</div>
 <div style="display:grid;gap:6px;margin-bottom:12px">
 <div class="preset" data-top="כשאומרים לי תהיה רציני" data-bottom="ואני עם פילטר של כלב 🐶">כשאומרים תהיה רציני → ואני עם פילטר כלב</div>
 <div class="preset" data-top="אמא אומרת תמצא עבודה" data-bottom="אני מכין ממים זזים ב-AI">אמא: תמצא עבודה → אני: ממים ב-AI</div>
-<div class="preset" data-top="כשכולם אומרים AI זה העתיד" data-bottom="ואני מחכה לוידאו">AI זה העתיד → מחכה לוידאו</div>
 </div>
-
-<div class="h3">תנועה - מבטאת את הפאנץ'</div>
+<div class="h3">תנועה</div>
 <div class="grid2">
 <button class="card active" data-meme-motion="meme_punch"><div class="card-title">זום לפאנץ'</div><div class="card-sub">מתמקד בטקסט</div></button>
 <button class="card" data-meme-motion="meme_laugh"><div class="card-title">רועד מצחוק</div><div class="card-sub">מצחיק</div></button>
 <button class="card" data-meme-motion="meme_shock"><div class="card-title">שוק</div><div class="card-sub">הפתעה</div></button>
 <button class="card" data-meme-motion="meme_dance"><div class="card-title">רוקד</div><div class="card-sub">שמח</div></button>
 </div>
-
 <button id="memeVideoBtn" class="btn btn-meme" style="margin-top:14px" type="button">צור מם וידאו</button>
 <button id="memeImageBtn" class="btn btn-ghost" style="margin-top:8px" type="button">צור רק תמונה (חינם)</button>
 </div>
 
-<!-- בסיס -->
 <div id="detail-basic" class="detail-content" hidden>
 <div class="grid2">
-<button class="card active" data-basic-motion="alive"><div class="card-title">חי</div><div class="card-sub">תנועה טבעית</div></button>
-<button class="card" data-basic-motion="smile"><div class="card-title">חיוך</div><div class="card-sub">חיוך עדין</div></button>
-<button class="card" data-basic-motion="cinematic"><div class="card-title">קולנועי</div><div class="card-sub">מצלמה איטית</div></button>
-<button class="card" data-basic-motion="hero"><div class="card-title">גיבור</div><div class="card-sub">בטוח בעצמו</div></button>
+<button class="card active" data-basic-motion="alive"><div class="card-title">חי</div><div class="card-sub">טבעי</div></button>
+<button class="card" data-basic-motion="smile"><div class="card-title">חיוך</div><div class="card-sub">עדין</div></button>
+<button class="card" data-basic-motion="cinematic"><div class="card-title">קולנועי</div><div class="card-sub">איטי</div></button>
+<button class="card" data-basic-motion="hero"><div class="card-title">גיבור</div><div class="card-sub">בטוח</div></button>
 </div>
 <button id="animateBtn" class="btn btn-primary" style="margin-top:14px" type="button">צור וידאו</button>
 </div>
 
-<!-- מדברת -->
 <div id="detail-talking" class="detail-content" hidden>
 <div style="display:grid;gap:8px">
 <button id="recordBtn" class="btn btn-ghost" type="button">🎙️ הקלט קול (10 שניות)</button>
@@ -201,10 +185,9 @@
 <button id="talkingBtn" class="btn btn-talk" style="margin-top:14px" type="button">צור דמות מדברת</button>
 </div>
 
-<!-- טרנדים -->
 <div id="detail-trending" class="detail-content" hidden>
 <div class="grid2">
-<button class="card active" data-trend="hug"><div class="card-title">חיבוק AI</div><div class="card-sub">חם ומרגש</div></button>
+<button class="card active" data-trend="hug"><div class="card-title">חיבוק AI</div><div class="card-sub">חם</div></button>
 <button class="card" data-trend="dance"><div class="card-title">ריקוד AI</div><div class="card-sub">ויראלי</div></button>
 <button class="card" data-trend="kiss"><div class="card-title">נשיקה AI</div><div class="card-sub">רומנטי</div></button>
 <button class="card" data-trend="superhero"><div class="card-title">גיבור על</div><div class="card-sub">שינוי</div></button>
@@ -212,21 +195,20 @@
 <button id="trendingBtn" class="btn btn-trend" style="margin-top:14px" type="button">צור טרנד</button>
 </div>
 
-<!-- קולנועי -->
 <div id="detail-cinema" class="detail-content" hidden>
 <textarea id="cinemaPrompt" class="input" rows="2" placeholder="למשל: טריילר אקשן, בורח מפיצוץ, תאורה דרמטית..."></textarea>
+<div style="font-size:.75rem;color:var(--muted);margin-top:8px">💡 יצירה קולנועית - המודל המהיר ביותר, כ-20-30 שניות</div>
 <button id="cinemaBtn" class="btn btn-cine" style="margin-top:14px" type="button">צור טריילר</button>
 </div>
 </section>
 
-<!-- תוצאה -->
 <section id="resultMenu" class="glass panel" hidden>
 <div style="padding:12px;background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.15);border-radius:10px;font-size:.88rem;margin-bottom:12px">✅ <span id="resultText">מוכן!</span></div>
 <div style="display:grid;gap:8px">
 <button id="downloadBtn" class="btn btn-primary" type="button">שמור למכשיר</button>
 <button id="shareBtn" class="btn" style="background:#25d366;color:#000" type="button">שתף לוואטסאפ</button>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-<button id="anotherBtn" class="btn btn-ghost" type="button">ליצור עוד אחד</button>
+<button id="anotherBtn" class="btn btn-ghost" type="button">עוד אחד</button>
 <button id="newPhotoBtn" class="btn btn-ghost" type="button">תמונה חדשה</button>
 </div>
 </div>
@@ -249,15 +231,38 @@ const guide = document.getElementById("guide");
 const loading = document.getElementById("loading");
 const loadingText = document.getElementById("loadingText");
 const loadingSub = document.getElementById("loadingSub");
+const loadingTimer = document.getElementById("loadingTimer");
+const progressFill = document.getElementById("progressFill");
 const toastEl = document.getElementById("toast");
 const memeCanvas = document.getElementById("memeCanvas");
 
 let stream=null,facing="user",camReady=false,originalImg=null,currentResult=null,currentVideo=null,cancelled=false,toastTimer=null;
 let selectedBasicMotion="alive",selectedMemeMotion="meme_punch",selectedTrend="hug",selectedCat=null,audioData=null;
-let mediaRecorder=null,audioChunks=[];
+let mediaRecorder=null,audioChunks=[],timerInterval=null,startTime=null;
 
 function showToast(msg,err){clearTimeout(toastTimer);toastEl.textContent=msg;toastEl.classList.toggle("error",!!err);toastEl.hidden=false;toastTimer=setTimeout(()=>toastEl.hidden=true,4000);}
-function setLoading(on,txt,sub){loading.hidden=!on;if(txt)loadingText.textContent=txt;if(sub)loadingSub.textContent=sub;document.querySelectorAll("button:not(#cancelBtn)").forEach(b=>b.disabled=on);}
+function setLoading(on,txt,sub){
+  loading.hidden=!on;
+  if(txt)loadingText.textContent=txt;
+  if(sub)loadingSub.textContent=sub;
+  if(on){
+    startTime=Date.now();
+    progressFill.style.width="5%";
+    progressFill.style.animation="progress 35s linear forwards";
+    clearInterval(timerInterval);
+    timerInterval=setInterval(()=>{
+      if(!startTime)return;
+      const elapsed=Math.floor((Date.now()-startTime)/1000);
+      loadingTimer.textContent=`${elapsed} שניות עברו...`;
+      if(elapsed>45) loadingSub.textContent="כמעט מוכן, עוד כמה שניות...";
+    },1000);
+  }else{
+    clearInterval(timerInterval);
+    loadingTimer.textContent="";
+    progressFill.style.animation="none";
+  }
+  document.querySelectorAll("button:not(#cancelBtn)").forEach(b=>b.disabled=on);
+}
 function stopCam(){if(stream){stream.getTracks().forEach(t=>t.stop());}stream=null;camReady=false;if(videoEl.srcObject)videoEl.srcObject=null;videoEl.hidden=true;if(!currentResult){placeholder.hidden=false;guide.hidden=true;}}
 async function startCam(){
   placeholder.hidden=false;videoEl.hidden=true;guide.hidden=true;
@@ -413,19 +418,19 @@ async function createMemeVideo(){
     if(cancelled)return;
     if(data.status==="succeeded"&&data.videoUrl){showVideo(data.videoUrl);return;}
     let reqId=data.requestId||data.request_id;if(!reqId)throw new Error("לא התקבל מזהה");
-    for(let i=0;i<40;i++){if(cancelled)return;await wait(5000);if(cancelled)return;const p=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"status",requestId:reqId})});if(p.status==="succeeded"&&p.videoUrl){showVideo(p.videoUrl);return;}if(p.status==="failed")throw new Error(p.error||"נכשל");}
+    for(let i=0;i<30;i++){if(cancelled)return;await wait(3000);if(cancelled)return;const p=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"status",requestId:reqId})});if(p.status==="succeeded"&&p.videoUrl){showVideo(p.videoUrl);return;}if(p.status==="failed")throw new Error(p.error||"נכשל");}
     throw new Error("לוקח יותר זמן מהרגיל, נסה שוב");
   }catch(e){if(!cancelled&&e.message)showToast(e.message,true);setLoading(false);}
 }
 async function basicAnimate(){
   if(!currentResult){showToast("בחר תמונה",true);return;}
-  cancelled=false;setLoading(true,"יוצר וידאו...","תמונה נעה");
+  cancelled=false;setLoading(true,"יוצר וידאו...","תמונה נעה - הכי מהיר");
   try{
     const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"animate",imageUrl:currentResult,motion:selectedBasicMotion})});
     if(cancelled)return;
     if(data.status==="succeeded"&&data.videoUrl){showVideo(data.videoUrl);return;}
     let reqId=data.requestId||data.request_id;
-    for(let i=0;i<40;i++){if(cancelled)return;await wait(5000);const p=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"status",requestId:reqId})});if(p.status==="succeeded"&&p.videoUrl){showVideo(p.videoUrl);return;}if(p.status==="failed")throw new Error(p.error);}
+    for(let i=0;i<30;i++){if(cancelled)return;await wait(3000);const p=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"status",requestId:reqId})});if(p.status==="succeeded"&&p.videoUrl){showVideo(p.videoUrl);return;}if(p.status==="failed")throw new Error(p.error);}
     throw new Error("לוקח יותר זמן");
   }catch(e){if(!cancelled)showToast(e.message,true);setLoading(false);}
 }
@@ -438,7 +443,7 @@ async function talkingAvatar(){
     if(cancelled)return;
     if(data.status==="succeeded"&&data.videoUrl){showVideo(data.videoUrl);return;}
     let reqId=data.requestId||data.request_id;
-    for(let i=0;i<50;i++){if(cancelled)return;await wait(6000);if(cancelled)return;const p=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"status",requestId:reqId})});if(p.status==="succeeded"&&p.videoUrl){showVideo(p.videoUrl);return;}if(p.status==="failed")throw new Error(p.error);}
+    for(let i=0;i<30;i++){if(cancelled)return;await wait(3000);if(cancelled)return;const p=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"status",requestId:reqId})});if(p.status==="succeeded"&&p.videoUrl){showVideo(p.videoUrl);return;}if(p.status==="failed")throw new Error(p.error);}
     throw new Error("לוקח יותר זמן");
   }catch(e){if(!cancelled)showToast(e.message,true);setLoading(false);}
 }
@@ -450,21 +455,29 @@ async function trendingVideo(){
     if(cancelled)return;
     if(data.status==="succeeded"&&data.videoUrl){showVideo(data.videoUrl);return;}
     let reqId=data.requestId||data.request_id;
-    for(let i=0;i<40;i++){if(cancelled)return;await wait(5000);const p=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"status",requestId:reqId})});if(p.status==="succeeded"&&p.videoUrl){showVideo(p.videoUrl);return;}if(p.status==="failed")throw new Error(p.error);}
+    for(let i=0;i<30;i++){if(cancelled)return;await wait(3000);const p=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"status",requestId:reqId})});if(p.status==="succeeded"&&p.videoUrl){showVideo(p.videoUrl);return;}if(p.status==="failed")throw new Error(p.error);}
     throw new Error("לוקח יותר זמן");
   }catch(e){if(!cancelled)showToast(e.message,true);setLoading(false);}
 }
 async function cinematicVideo(){
   if(!currentResult){showToast("בחר תמונה",true);return;}
   const prompt=document.getElementById("cinemaPrompt").value||"טריילר קולנועי אפי";
-  cancelled=false;setLoading(true,"יוצר טריילר קולנועי...","אפקטים ותאורה");
+  cancelled=false;setLoading(true,"יוצר טריילר קולנועי...","מודל מהיר - כ-20 שניות");
   try{
     const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"cinematic",imageUrl:currentResult,prompt:prompt})});
     if(cancelled)return;
     if(data.status==="succeeded"&&data.videoUrl){showVideo(data.videoUrl);return;}
     let reqId=data.requestId||data.request_id;
-    for(let i=0;i<40;i++){if(cancelled)return;await wait(6000);const p=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"status",requestId:reqId})});if(p.status==="succeeded"&&p.videoUrl){showVideo(p.videoUrl);return;}if(p.status==="failed")throw new Error(p.error);}
-    throw new Error("לוקח יותר זמן");
+    for(let i=0;i<30;i++){
+      if(cancelled)return;
+      await wait(3000);
+      if(cancelled)return;
+      const p=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"status",requestId:reqId})});
+      if(p.status==="succeeded"&&p.videoUrl){showVideo(p.videoUrl);return;}
+      if(p.status==="failed")throw new Error(p.error);
+      if(i>10) document.getElementById("loadingSub").textContent="מעבד... עוד כמה שניות, המודל המהיר עובד";
+    }
+    throw new Error("לוקח יותר זמן, נסה שוב");
   }catch(e){if(!cancelled)showToast(e.message,true);setLoading(false);}
 }
 function openDetail(cat){
@@ -472,7 +485,7 @@ function openDetail(cat){
   document.getElementById("chooseMenu").hidden=true;
   document.getElementById("detailMenu").hidden=false;
   document.querySelectorAll(".detail-content").forEach(el=>el.hidden=true);
-  const titles={meme:["מם זז עם טקסט","כותב טקסט והופך לוידאו"],basic:["תמונה נעה","הפנים זזות בעדינות"],talking:["דמות מדברת","מקליט קול והדמות מדברת"],trending:["טרנד ויראלי","חיבוק, ריקוד, נשיקה"],cinema:["טריילר קולנועי","סצנה דרמטית עם אפקטים"]};
+  const titles={meme:["מם זז עם טקסט","כותב טקסט והופך לוידאו"],basic:["תמונה נעה","הפנים זזות בעדינות - הכי מהיר"],talking:["דמות מדברת","מקליט קול והדמות מדברת"],trending:["טרנד ויראלי","חיבוק, ריקוד, נשיקה"],cinema:["טריילר קולנועי","סצנה דרמטית - מודל מהיר"]};
   const t=titles[cat]||["יצירה",""];
   document.getElementById("detailTitle").textContent=t[0];
   document.getElementById("detailSub").textContent=t[1];
@@ -510,7 +523,6 @@ function anotherVideo(){
   document.getElementById("resultMenu").hidden=true;
 }
 
-// Events
 document.getElementById("enableCamBtn").addEventListener("click",startCam);
 document.getElementById("uploadBtn").addEventListener("click",()=>{document.getElementById("uploadInput").value="";document.getElementById("uploadInput").click();});
 document.getElementById("uploadInput").addEventListener("change",e=>{const f=e.target.files&&e.target.files[0];if(f)handleUpload(f);});
