@@ -2,93 +2,97 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VIRAL STUDIO - TOP - All 4 Categories + TikTok Talking</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#090a12">
+<title>VIRAL STUDIO TOP - FIXED</title>
 <style>
-:root{--p:#00edf5;--s:#a749f5;--bg:#070810;--surface:rgba(24,26,47,0.9);--text:#fff;--muted:#b9bfd2;--success:#25d366;--border:rgba(255,255,255,0.14);--r:22px}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 10% -10%,rgba(0,237,245,0.15),transparent 35%),radial-gradient(circle at 100% 5%,rgba(167,73,245,0.18),transparent 38%),linear-gradient(180deg,#12142a,var(--bg) 48%);color:var(--text);font-family:Arial,sans-serif}
-.topbar{position:sticky;top:0;z-index:10;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;min-height:64px;padding:10px 14px;background:rgba(7,8,16,0.9);border-bottom:1px solid var(--border);backdrop-filter:blur(18px)}
-.brand{margin:0;text-align:center;font-size:1.2rem;font-weight:950;background:linear-gradient(100deg,#fff,var(--p) 42%,#d98aff 85%);background-clip:text;-webkit-background-clip:text;color:transparent}
-.credit{justify-self:start;display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:6px 10px;color:#ffe18c;background:rgba(255,189,46,0.11);border:1px solid rgba(255,189,46,0.29);border-radius:999px;font-size:.85rem;font-weight:850}
+:root{--p:#00edf5;--s:#a749f5;--bg:#070810;--surface:rgba(24,26,47,0.92);--text:#fff;--muted:#b9bfd2;--border:rgba(255,255,255,0.14);--r:22px}
+*{box-sizing:border-box}html{background:var(--bg)}body{margin:0;min-height:100vh;background:radial-gradient(circle at 10% -10%,rgba(0,237,245,0.15),transparent 35%),radial-gradient(circle at 100% 5%,rgba(167,73,245,0.18),transparent 38%),linear-gradient(180deg,#12142a,var(--bg) 48%);color:var(--text);font-family:Arial,sans-serif;overflow-x:hidden}
+.topbar{position:sticky;top:0;z-index:30;display:flex;justify-content:space-between;align-items:center;min-height:64px;padding:10px 14px;background:rgba(7,8,16,0.92);border-bottom:1px solid var(--border);backdrop-filter:blur(18px)}
+.brand{margin:0;font-size:1.15rem;font-weight:950;background:linear-gradient(100deg,#fff,var(--p) 42%,#d98aff 85%);background-clip:text;-webkit-background-clip:text;color:transparent}
+.credit{padding:6px 12px;color:#fff;background:rgba(255,255,255,0.08);border:1px solid var(--border);border-radius:999px;font-size:.85rem;font-weight:800}
 .app{width:min(100%,560px);margin:0 auto;padding:14px;display:grid;gap:14px}
 .glass{background:linear-gradient(145deg,rgba(255,255,255,0.07),rgba(255,255,255,0.025)),var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:0 18px 55px rgba(0,0,0,0.48);backdrop-filter:blur(18px);overflow:hidden}
-.viewport{position:relative;width:100%;aspect-ratio:3/4;background:#05060b;min-height:360px}
-.viewport video,.viewport img{display:block;width:100%;height:100%;object-fit:contain;background:#05060b}
+.viewport{position:relative;width:100%;aspect-ratio:3/4;background:#05060b;min-height:380px;display:flex;justify-content:center;align-items:center}
+.viewport video,.viewport img{display:block;width:100%;height:100%;object-fit:contain;background:#05060b;position:absolute;inset:0}
 #videoElement.front{transform:scaleX(-1)}
-.placeholder{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:12px;padding:20px;text-align:center;color:var(--muted)}
-.guide{position:absolute;top:49%;right:50%;width:57%;aspect-ratio:.77;transform:translate(50%,-50%);border:2px dashed rgba(255,255,255,0.46);border-radius:48% 48% 43% 43%;pointer-events:none;z-index:2}
-.loading{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:14px;padding:24px;text-align:center;background:rgba(3,4,9,0.95)}
+.placeholder{position:absolute;z-index:2;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:12px;padding:20px;text-align:center;color:var(--muted);background:#05060b}
+.guide{position:absolute;top:49%;right:50%;width:57%;aspect-ratio:.77;transform:translate(50%,-50%);border:2px dashed rgba(255,255,255,0.46);border-radius:48% 48% 43% 43%;pointer-events:none;z-index:3}
+.loading{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:14px;padding:24px;text-align:center;background:rgba(3,4,9,0.96)}
 .spinner{width:48px;height:48px;border:4px solid rgba(255,255,255,0.14);border-top-color:var(--p);border-right-color:var(--s);border-radius:50%;animation:spin .9s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
 .panel{padding:16px}
 .btn{width:100%;min-height:48px;padding:12px 16px;border-radius:15px;font-weight:850;cursor:pointer;display:inline-flex;justify-content:center;align-items:center;gap:8px;border:0}
 .btn-primary{color:#041012;background:linear-gradient(100deg,var(--p),#65f4df)}
-.btn-secondary{color:var(--text);background:rgba(255,255,255,0.07);border:1px solid var(--border)}
-.btn-video{color:#fff;background:linear-gradient(135deg,#ff0055,#a749f5);box-shadow:0 0 18px rgba(255,0,85,0.35)}
-.btn-talk{color:#fff;background:linear-gradient(135deg,#25d366,#00edf5);box-shadow:0 0 18px rgba(37,211,102,0.35)}
+.btn-secondary{color:var(--text);background:rgba(255,255,255,0.08);border:1px solid var(--border)}
+.btn-video{color:#fff;background:linear-gradient(135deg,#ff0055,#a749f5)}
+.btn-talk{color:#fff;background:linear-gradient(135deg,#25d366,#00edf5)}
 .btn-trend{color:#fff;background:linear-gradient(135deg,#ffbd2e,#ff0055)}
 .btn-cinema{color:#fff;background:linear-gradient(135deg,#a749f5,#00edf5)}
 .controls{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:18px}
-.round{justify-self:center;display:inline-flex;justify-content:center;align-items:center;width:54px;height:54px;color:var(--text);background:rgba(255,255,255,0.07);border:1px solid var(--border);border-radius:50%;font-size:1.35rem;cursor:pointer}
-.capture{position:relative;display:inline-flex;justify-content:center;align-items:center;width:76px;height:76px;background:linear-gradient(135deg,var(--p),var(--s));border:5px solid rgba(255,255,255,0.92);border-radius:50%;box-shadow:0 0 0 5px rgba(255,255,255,0.08),0 0 28px rgba(0,237,245,0.32);cursor:pointer}.capture::after{content:"";width:24px;height:24px;background:#fff;border-radius:50%}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:10px 0}
-.chip{padding:10px 8px;border-radius:12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--muted);font-size:.82rem;font-weight:750;cursor:pointer;text-align:center}
-.chip.active{background:linear-gradient(135deg,#ff0055,#a749f5);border-color:#ff0055;color:#fff}
+.round{justify-self:center;display:inline-flex;justify-content:center;align-items:center;width:56px;height:56px;color:var(--text);background:rgba(255,255,255,0.08);border:1px solid var(--border);border-radius:50%;font-size:1.4rem;cursor:pointer}
+.capture{position:relative;display:inline-flex;justify-content:center;align-items:center;width:80px;height:80px;background:linear-gradient(135deg,var(--p),var(--s));border:5px solid rgba(255,255,255,0.92);border-radius:50%;box-shadow:0 0 0 5px rgba(255,255,255,0.08),0 0 28px rgba(0,237,245,0.32);cursor:pointer}.capture::after{content:"";width:26px;height:26px;background:#fff;border-radius:50%}
 .cat-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
 .cat-tab{padding:12px 8px;border-radius:14px;background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--muted);font-size:.78rem;font-weight:800;cursor:pointer;text-align:center}
 .cat-tab.active{background:rgba(0,237,245,0.15);border-color:var(--p);color:var(--text)}
+.chip{padding:10px 8px;border-radius:12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--muted);font-size:.82rem;font-weight:750;cursor:pointer;text-align:center}
+.chip.active{background:linear-gradient(135deg,#ff0055,#a749f5);border-color:#ff0055;color:#fff}
 .toast{position:fixed;z-index:100;right:50%;bottom:18px;transform:translateX(50%);width:max-content;max-width:92vw;padding:11px 16px;color:#fff;background:rgba(31,34,57,0.98);border:1px solid rgba(255,255,255,0.23);border-radius:999px;box-shadow:0 12px 45px rgba(0,0,0,0.56);font-size:.88rem;font-weight:750;text-align:center}
 .toast.error{background:rgba(118,30,55,0.98)}
 .meme-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.meme-card{padding:10px;border-radius:12px;background:rgba(255,255,255,0.06);border:1px solid var(--border);cursor:pointer;text-align:center;font-size:.75rem}
-.meme-card img{width:100%;aspect-ratio:1;border-radius:8px;object-fit:cover;margin-bottom:6px}
-.cost-badge{display:inline-flex;padding:2px 6px;border-radius:999px;font-size:.65rem;font-weight:800;background:rgba(0,237,245,0.15);color:var(--p);border:1px solid rgba(0,237,245,0.3)}
+.meme-card{padding:10px;border-radius:12px;background:rgba(255,255,255,0.06);border:2px solid var(--border);cursor:pointer;text-align:center;font-size:.75rem;transition:.2s}
+.meme-card.active{border-color:var(--p);background:rgba(0,237,245,0.12)}
+.error-box{padding:12px;color:#ffd4de;background:rgba(255,78,117,0.12);border:1px solid rgba(255,78,117,0.32);border-radius:12px;font-size:.85rem;margin-bottom:12px}
+[hidden]{display:none!important}
 </style>
 </head>
 <body>
 <header class="topbar">
-<div class="credit">⚡ <span id="creditCount">3</span>/3 | 💰 $<span id="balance">12.53</span></div>
+<div class="credit">⚡ <span id="creditCount">3</span>/3</div>
 <h1 class="brand">VIRAL STUDIO TOP</h1>
-<div style="justify-self:end;font-size:.7rem;color:var(--muted)">TOP 4 + TikTok</div>
+<div style="font-size:.7rem;color:var(--muted)">TOP 4 + TikTok</div>
 </header>
+
 <main class="app">
-<section class="glass viewport">
-<div id="placeholder" class="placeholder"><div style="font-size:3rem">📷</div><div>מפעיל מצלמה...</div></div>
-<video id="videoElement" class="front" autoplay playsinline muted></video>
+<section class="glass viewport" id="viewport">
+<div id="placeholder" class="placeholder">
+<div style="font-size:3rem">📷</div>
+<div id="placeholderText">לחץ "אפשר" בדפדפן כדי להפעיל מצלמה<br><span style="font-size:.75rem;color:var(--muted)">או העלה תמונה למטה</span></div>
+</div>
+<video id="videoElement" class="front" autoplay playsinline muted hidden></video>
 <canvas id="canvasElement" hidden></canvas>
-<img id="resultImage" hidden>
-<video id="resultVideo" controls autoplay loop playsinline></video>
-<div id="guide" class="guide"></div>
+<img id="resultImage" alt="תוצאה" hidden>
+<video id="resultVideo" controls autoplay loop playsinline hidden></video>
+<div id="guide" class="guide" hidden></div>
+
 <div id="loading" class="loading" hidden>
 <div class="spinner"></div>
 <div id="loadingText" style="color:var(--p);font-weight:850">מכין...</div>
-<div style="color:var(--muted);font-size:.82rem">כ-30-40 שניות</div>
-<div id="costInfo" style="color:#ffe18c;font-size:.75rem"></div>
+<div style="color:var(--muted);font-size:.82rem">כ-30 שניות, אל תסגור</div>
 <button id="cancelBtn" class="btn btn-secondary" style="width:auto;padding:8px 16px;margin-top:8px">ביטול</button>
 </div>
 </section>
 
 <section id="cameraMenu" class="glass panel">
-<h3 style="margin:0 0 8px">1. בחר תמונה</h3>
-<div id="camError" style="display:none;padding:10px;color:#ffd4de;background:rgba(255,78,117,0.1);border:1px solid rgba(255,78,117,0.31);border-radius:12px;font-size:.85rem;margin-bottom:10px"></div>
+<h3 style="margin:0 0 10px">1. בחר תמונה - צלם או העלה</h3>
+<div id="camError" class="error-box" hidden></div>
 <div class="controls">
-<button id="uploadBtn" class="round">⬆</button>
+<button id="uploadBtn" class="round" type="button" title="העלה תמונה">⬆️</button>
 <input id="uploadInput" type="file" accept="image/*" hidden>
-<button id="captureBtn" class="capture"></button>
-<button id="switchBtn" class="round">↻</button>
+<button id="captureBtn" class="capture" type="button" title="צלם"></button>
+<button id="switchBtn" class="round" type="button" title="החלף מצלמה">↻</button>
 </div>
+<p style="font-size:.75rem;color:var(--muted);text-align:center;margin:10px 0 0">💡 אם המצלמה לא עובדת, לחץ ⬆️ להעלאת תמונה - זה עובד 100%</p>
 </section>
 
 <section id="categoryMenu" class="glass panel" hidden>
-<h3 style="margin:0 0 10px">2. בחר קטגוריה - TOP 4 + טיקטוק</h3>
+<h3 style="margin:0 0 10px">2. בחר קטגוריה - TOP 4</h3>
 <div class="cat-tabs">
-<button class="cat-tab active" data-cat="basic">🎬 בסיס 5s<br><span class="cost-badge">$0.04</span></button>
-<button class="cat-tab" data-cat="talking">🎤 מדברת<br><span class="cost-badge">$0.28</span></button>
-<button class="cat-tab" data-cat="trending">💃 טרנדים<br><span class="cost-badge">$0.35</span></button>
-<button class="cat-tab" data-cat="cinema">🎥 קולנועי<br><span class="cost-badge">$0.75</span></button>
+<button class="cat-tab active" data-cat="basic">🎬 בסיס 5s</button>
+<button class="cat-tab" data-cat="talking">🎤 מדברת TikTok</button>
+<button class="cat-tab" data-cat="trending">💃 טרנדים</button>
+<button class="cat-tab" data-cat="cinema">🎥 קולנועי</button>
 </div>
 
-<!-- BASIC -->
 <div id="cat-basic" class="cat-content">
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
 <button class="chip active" data-motion="alive">✨ חי</button>
@@ -96,25 +100,23 @@
 <button class="chip" data-motion="cinematic">🎥 קולנועי</button>
 <button class="chip" data-motion="hero">🦸 גיבור</button>
 </div>
-<button id="animateBtn" class="btn btn-video" style="margin-top:12px">🎬 הנפש 5s - $0.04</button>
+<button id="animateBtn" class="btn btn-video" style="margin-top:12px">🎬 הנפש 5 שניות</button>
 </div>
 
-<!-- TALKING - TikTok style -->
 <div id="cat-talking" class="cat-content" hidden>
-<p style="color:var(--muted);font-size:.82rem">דמויות טיקטוק שאומרות "אנחנו לא אמיתיים" - הקלט קול או העלה אודיו</p>
-<div style="display:grid;gap:8px;margin:10px 0">
-<button id="recordBtn" class="btn btn-secondary">🎙️ הקלט קול (10s)</button>
+<p style="color:var(--muted);font-size:.82rem;margin:0 0 10px">דמויות טיקטוק שאומרות "אנחנו לא אמיתיים" - הקלט קול</p>
+<div style="display:grid;gap:8px">
+<button id="recordBtn" class="btn btn-secondary" type="button">🎙️ הקלט קול (10 שניות)</button>
 <input id="audioInput" type="file" accept="audio/*" hidden>
-<button id="uploadAudioBtn" class="btn btn-secondary">⬆️ העלה אודיו MP3/WAV</button>
-<div id="audioStatus" style="font-size:.75rem;color:var(--muted);text-align:center">אין אודיו</div>
+<button id="uploadAudioBtn" class="btn btn-secondary" type="button">⬆️ העלה אודיו MP3/WAV</button>
+<div id="audioStatus" style="font-size:.75rem;color:var(--muted);text-align:center;padding:6px;background:rgba(255,255,255,0.05);border-radius:8px">אין אודיו - הקלט או העלה</div>
 </div>
-<div style="background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.3);border-radius:12px;padding:10px;font-size:.75rem;margin:10px 0">
-💡 טיפ טיקטוק: הקלט "אנחנו לא אנשים אמיתיים, רק נראים ככה. זה AI!" - זה מה שמתפוצץ עכשיו
+<div style="background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.3);border-radius:12px;padding:10px;font-size:.75rem;margin-top:10px">
+💡 טיפ: הקלט "אנחנו לא אנשים אמיתיים, רק נראים ככה. זה AI!" - זה ויראלי בטיקטוק
 </div>
-<button id="talkingBtn" class="btn btn-talk" style="margin-top:8px">🎤 צור דמות מדברת - $0.28</button>
+<button id="talkingBtn" class="btn btn-talk" style="margin-top:12px" type="button">🎤 צור דמות מדברת</button>
 </div>
 
-<!-- TRENDING -->
 <div id="cat-trending" class="cat-content" hidden>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
 <button class="chip active" data-trend="hug">🤗 AI Hug</button>
@@ -122,246 +124,522 @@
 <button class="chip" data-trend="kiss">😘 AI Kiss</button>
 <button class="chip" data-trend="superhero">🦸 Superhero</button>
 </div>
-<button id="trendingBtn" class="btn btn-trend" style="margin-top:12px">💃 צור טרנד - $0.35</button>
+<button id="trendingBtn" class="btn btn-trend" style="margin-top:12px" type="button">💃 צור טרנד ויראלי</button>
 </div>
 
-<!-- CINEMATIC -->
 <div id="cat-cinema" class="cat-content" hidden>
-<textarea id="cinemaPrompt" rows="2" placeholder="Epic movie trailer, running from explosion, cinematic..." style="width:100%;padding:10px;background:rgba(0,0,0,0.4);border:1px solid var(--border);border-radius:12px;color:#fff;font-size:.85rem"></textarea>
-<button id="cinemaBtn" class="btn btn-cinema" style="margin-top:12px">🎥 צור טריילר קולנועי - $0.75</button>
-<div style="font-size:.7rem;color:var(--muted);text-align:center;margin-top:6px">Veo3 / Ray2 - הכי איכותי, הכי יקר</div>
+<textarea id="cinemaPrompt" rows="2" placeholder="Epic movie trailer, running from explosion, cinematic..." style="width:100%;padding:10px;background:rgba(0,0,0,0.4);border:1px solid var(--border);border-radius:12px;color:#fff;font-size:.85rem;resize:vertical"></textarea>
+<button id="cinemaBtn" class="btn btn-cinema" style="margin-top:12px" type="button">🎥 צור טריילר קולנועי</button>
 </div>
 
-<!-- MEMES - FREE -->
 <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:12px">
-<h4 style="margin:0 0 8px;font-size:.9rem">😂 ממים עם watermark - חינם!</h4>
+<h4 style="margin:0 0 8px;font-size:.9rem">😂 ממים עם לוגו VIRAL - חינם, בלי FAL!</h4>
 <div class="meme-grid">
-<div class="meme-card" data-meme="drake"><div style="font-size:2rem">👎👍</div>Drake<br><span class="cost-badge">FREE</span></div>
-<div class="meme-card" data-meme="distracted"><div style="font-size:2rem">👀</div>בויפרנד<br><span class="cost-badge">FREE</span></div>
-<div class="meme-card" data-meme="buttons"><div style="font-size:2rem">🔘</div>2 כפתורים<br><span class="cost-badge">FREE</span></div>
-<div class="meme-card" data-meme="change"><div style="font-size:2rem">🧠</div>Change My Mind<br><span class="cost-badge">FREE</span></div>
+<div class="meme-card active" data-meme="drake"><div style="font-size:2rem">👎👍</div><div>Drake</div><div style="font-size:.65rem;color:var(--p)">FREE</div></div>
+<div class="meme-card" data-meme="distracted"><div style="font-size:2rem">👀</div><div>בויפרנד</div><div style="font-size:.65rem;color:var(--p)">FREE</div></div>
+<div class="meme-card" data-meme="buttons"><div style="font-size:2rem">🔘</div><div>2 כפתורים</div><div style="font-size:.65rem;color:var(--p)">FREE</div></div>
+<div class="meme-card" data-meme="change"><div style="font-size:2rem">🧠</div><div>Change Mind</div><div style="font-size:.65rem;color:var(--p)">FREE</div></div>
 </div>
-<button id="memeBtn" class="btn btn-secondary" style="margin-top:8px">😂 צור מם עם לוגו VIRAL - חינם</button>
+<button id="memeBtn" class="btn btn-secondary" style="margin-top:8px" type="button">😂 צור מם עם לוגו VIRAL - עובד 100%</button>
 </div>
 
-<div style="margin-top:12px"><button id="retakeBtn" class="btn btn-secondary">📷 תמונה אחרת</button></div>
+<div style="margin-top:16px"><button id="retakeBtn" class="btn btn-secondary" type="button">📷 תמונה אחרת</button></div>
 </section>
 
 <section id="resultMenu" class="glass panel" hidden>
 <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:10px;color:#c9ffe0;background:rgba(37,211,102,0.09);border:1px solid rgba(37,211,102,0.26);border-radius:12px;font-size:.85rem">✅ <span id="resultText">מוכן!</span></div>
 <div style="display:grid;gap:8px">
-<button id="downloadBtn" class="btn btn-primary">⬇️ שמור</button>
-<button id="shareBtn" class="btn" style="background:var(--success);color:#041309">📤 שתף לוואטסאפ</button>
-<button id="anotherBtn" class="btn btn-secondary">✨ עוד וידאו</button>
-<button id="newPhotoBtn" class="btn btn-secondary">📷 תמונה חדשה</button>
+<button id="downloadBtn" class="btn btn-primary" type="button">⬇️ שמור</button>
+<button id="shareBtn" class="btn" style="background:var(--success);color:#041309" type="button">📤 שתף לוואטסאפ</button>
+<button id="anotherBtn" class="btn btn-secondary" type="button">✨ עוד וידאו</button>
+<button id="newPhotoBtn" class="btn btn-secondary" type="button">📷 תמונה חדשה</button>
 </div>
-<div style="margin-top:10px;padding:8px;background:rgba(0,237,245,0.1);border-radius:10px;font-size:.7rem;color:var(--muted);text-align:center">💰 עלות: <span id="lastCost">$0.04</span> | יתרה: $<span id="balance2">12.53</span></div>
 </section>
 </main>
+
 <div id="toast" class="toast" hidden></div>
 <canvas id="memeCanvas" width="1080" height="1080" hidden></canvas>
+
 <script>
 "use strict";
 const API_URL = "https://billowing-shape-1d81.maty-tsoraro.workers.dev";
-const MAX_CREDITS = 3; const MAX_DIM = 1536;
+const MAX_DIM = 1536;
 const videoEl = document.getElementById("videoElement");
 const canvasEl = document.getElementById("canvasElement");
 const resultImg = document.getElementById("resultImage");
 const resultVideo = document.getElementById("resultVideo");
 const placeholder = document.getElementById("placeholder");
+const placeholderText = document.getElementById("placeholderText");
 const guide = document.getElementById("guide");
 const loading = document.getElementById("loading");
 const loadingText = document.getElementById("loadingText");
-const costInfo = document.getElementById("costInfo");
 const toastEl = document.getElementById("toast");
-const balanceEl = document.getElementById("balance");
-const balance2El = document.getElementById("balance2");
 const memeCanvas = document.getElementById("memeCanvas");
+const camError = document.getElementById("camError");
 
-let stream=null, facing="user", camReady=false, base64Img=null, originalImg=null, currentResult=null, currentVideo=null, isGen=false, cancelled=false, toastTimer=null;
-let selectedMotion="alive", selectedTrend="hug", selectedMeme="drake", audioData=null, audioUrl=null;
+let stream=null, facing="user", camReady=false, base64Img=null, originalImg=null, currentResult=null, currentVideo=null, cancelled=false, toastTimer=null;
+let selectedMotion="alive", selectedTrend="hug", selectedMeme="drake", audioData=null;
 let selectedCat="basic", currentReqId=null;
+let mediaRecorder=null, audioChunks=[];
 
-function showToast(msg,err){clearTimeout(toastTimer);toastEl.textContent=msg;toastEl.classList.toggle("error",!!err);toastEl.hidden=false;toastTimer=setTimeout(()=>toastEl.hidden=true,4000);}
-function setLoading(on,txt,cost){isGen=on;loading.hidden=!on;if(txt)loadingText.textContent=txt;if(cost)costInfo.textContent="עלות: "+cost;document.querySelectorAll("button:not(#cancelBtn)").forEach(b=>b.disabled=on);}
-function stopCam(){if(stream){stream.getTracks().forEach(t=>t.stop());}stream=null;camReady=false;videoEl.srcObject=null;}
+function showToast(msg,err){clearTimeout(toastTimer);toastEl.textContent=msg;toastEl.classList.toggle("error",!!err);toastEl.hidden=false;toastTimer=setTimeout(()=>toastEl.hidden=true,4500);}
+function showError(msg){camError.textContent=msg;camError.hidden=false;setTimeout(()=>camError.hidden=true,5000);}
+function setLoading(on,txt){loading.hidden=!on;if(txt)loadingText.textContent=txt;document.querySelectorAll("button:not(#cancelBtn)").forEach(b=>b.disabled=on);}
+
+function stopCam(){if(stream){stream.getTracks().forEach(t=>t.stop());}stream=null;camReady=false;videoEl.srcObject=null;videoEl.hidden=true;placeholder.hidden=false;guide.hidden=true;}
+
 async function startCam(){
- placeholder.hidden=false;videoEl.hidden=false;resultImg.hidden=true;resultVideo.hidden=true;guide.hidden=false;
- videoEl.classList.toggle("front",facing==="user");
- try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:facing}});}catch(e){try{stream=await navigator.mediaDevices.getUserMedia({video:true});}catch(err){document.getElementById("camError").textContent="אין מצלמה, העלה תמונה";document.getElementById("camError").style.display="block";return;}}
- videoEl.srcObject=stream;videoEl.onloadedmetadata=async()=>{try{await videoEl.play();camReady=true;placeholder.hidden=true;}catch(e){}};try{await videoEl.play();}catch(e){}setTimeout(()=>{if(videoEl.videoWidth>0){camReady=true;placeholder.hidden=true;}},1000);
+  stopCam();
+  placeholder.hidden=false;
+  placeholderText.innerHTML='מפעיל מצלמה...<br><span style="font-size:.75rem;color:var(--muted)">אם לא עובד, העלה תמונה ב-⬆️</span>';
+  guide.hidden=true;
+  videoEl.hidden=true;
+  camError.hidden=true;
+  
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+    placeholderText.innerHTML='אין גישה למצלמה בדפדפן זה<br><span style="font-size:.85rem">לחץ ⬆️ להעלאת תמונה - עובד 100%</span>';
+    showError("הדפדפן לא תומך במצלמה, העלה תמונה");
+    return;
+  }
+  try{
+    stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:facing,width:{ideal:1280},height:{ideal:720}},audio:false});
+  }catch(e){
+    console.log("facingMode failed, trying default", e);
+    try{
+      stream = await navigator.mediaDevices.getUserMedia({video:true,audio:false});
+    }catch(err){
+      console.log("camera failed", err);
+      placeholderText.innerHTML='מצלמה חסומה או לא זמינה<br><span style="font-size:.85rem">לחץ ⬆️ להעלאת תמונה<br>'+err.message+'</span>';
+      showError("מצלמה חסומה: "+err.message+" - העלה תמונה");
+      return;
+    }
+  }
+  try{
+    videoEl.srcObject=stream;
+    videoEl.hidden=false;
+    placeholder.hidden=true;
+    guide.hidden=false;
+    await videoEl.play();
+    camReady=true;
+    // Check if video actually playing
+    setTimeout(()=>{
+      if(videoEl.videoWidth===0){
+        placeholder.hidden=false;
+        placeholderText.textContent="מצלמה לא מגיבה, העלה תמונה";
+        guide.hidden=true;
+      }
+    },1500);
+  }catch(e){
+    console.log("play failed", e);
+    placeholder.hidden=false;
+    placeholderText.textContent="שגיאת מצלמה, העלה תמונה";
+    showError("שגיאת מצלמה: "+e.message);
+  }
 }
+
 function getDim(w,h){const l=Math.max(w,h);if(l<=MAX_DIM)return{w,h};const s=MAX_DIM/l;return{w:Math.round(w*s),h:Math.round(h*s)};}
 function drawToCanvas(src,mirror){
- const sw=src.videoWidth||src.naturalWidth||src.width;const sh=src.videoHeight||src.naturalHeight||src.height;
- if(!sw||!sh)throw new Error("תמונה לא מוכנה");
- const d=getDim(sw,sh);canvasEl.width=d.w;canvasEl.height=d.h;const ctx=canvasEl.getContext("2d",{alpha:false});ctx.save();if(mirror){ctx.translate(d.w,0);ctx.scale(-1,1);}ctx.drawImage(src,0,0,d.w,d.h);ctx.restore();return canvasEl.toDataURL("image/jpeg",0.86);
+  const sw=src.videoWidth||src.naturalWidth||src.width;const sh=src.videoHeight||src.naturalHeight||src.height;
+  if(!sw||!sh)throw new Error("תמונה לא מוכנה");
+  const d=getDim(sw,sh);canvasEl.width=d.w;canvasEl.height=d.h;const ctx=canvasEl.getContext("2d",{alpha:false});ctx.save();if(mirror){ctx.translate(d.w,0);ctx.scale(-1,1);}ctx.drawImage(src,0,0,d.w,d.h);ctx.restore();return canvasEl.toDataURL("image/jpeg",0.86);
 }
-function takePhoto(){if(!stream||!camReady||videoEl.videoWidth===0){showToast("מצלמה לא מוכנה",true);return;}try{selectImage(drawToCanvas(videoEl,facing==="user"));}catch(e){showToast(e.message,true);}}
+function takePhoto(){
+  if(!stream||!camReady){showToast("מצלמה לא מוכנה, העלה תמונה",true);return;}
+  if(videoEl.videoWidth===0){showToast("מצלמה לא מגיבה, העלה תמונה",true);return;}
+  try{
+    const data=drawToCanvas(videoEl,facing==="user");
+    selectImage(data);
+    showToast("תמונה צולמה!");
+  }catch(e){showToast(e.message,true);}
+}
 function selectImage(data){
- base64Img=data;originalImg=data;currentResult=data;currentVideo=null;
- resultImg.src=data;resultImg.hidden=false;resultVideo.hidden=true;videoEl.hidden=true;placeholder.hidden=true;guide.hidden=true;
- document.getElementById("cameraMenu").hidden=true;document.getElementById("categoryMenu").hidden=false;document.getElementById("resultMenu").hidden=true;stopCam();
+  base64Img=data;originalImg=data;currentResult=data;currentVideo=null;
+  resultImg.src=data;resultImg.hidden=false;resultVideo.hidden=true;resultVideo.pause();
+  videoEl.hidden=true;placeholder.hidden=true;guide.hidden=true;
+  document.getElementById("cameraMenu").hidden=true;
+  document.getElementById("categoryMenu").hidden=false;
+  document.getElementById("resultMenu").hidden=true;
+  stopCam();
+  window.scrollTo({top:0,behavior:"smooth"});
 }
 function handleUpload(file){
- if(!file){showToast("לא נבחרה תמונה",true);return;}
- const reader=new FileReader();reader.onload=ev=>{const img=new Image();img.onload=()=>{try{selectImage(drawToCanvas(img,false));}catch(e){showToast(e.message,true);}};img.src=ev.target.result;};reader.readAsDataURL(file);
+  if(!file){showToast("לא נבחרה תמונה",true);return;}
+  if(!file.type.startsWith("image/")){showToast("קובץ לא תמונה",true);return;}
+  if(file.size>15*1024*1024){showToast("תמונה גדולה מדי - עד 15MB",true);return;}
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const img=new Image();
+    img.onload=()=>{
+      try{
+        const data=drawToCanvas(img,false);
+        selectImage(data);
+        showToast("תמונה נטענה!");
+      }catch(e){showToast(e.message,true);}
+    };
+    img.onerror=()=>showToast("פורמט לא נתמך",true);
+    img.src=ev.target.result;
+  };
+  reader.onerror=()=>showToast("לא ניתן לקרוא קובץ",true);
+  reader.readAsDataURL(file);
 }
 function wait(ms){return new Promise(r=>setTimeout(r,ms));}
-async function fetchJson(opts){const res=await fetch(API_URL,opts);let data;try{data=await res.json();}catch(e){throw new Error("שרת לא תקין");}if(!res.ok||data.error)throw new Error(data.error||"שגיאת שרת");return data;}
-function checkBalance(cost){const b=parseFloat(balanceEl.textContent);if(b<0.5){showToast("יתרה נמוכה! $"+b+" - טען ב-fal.ai",true);return false;}return true;}
-
-async function generateAvatar(){
- // Simple avatar generation - using existing image action
- if(!base64Img)return;
- setLoading(true,"יוצר אווטאר...","$0.025");
- try{
-   const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"image",image:base64Img,prompt:"tech ceo, professional"})});
-   if(data.resultUrl||data.output){showResult(data.resultUrl||data.output[0],"$0.025");balanceEl.textContent=(parseFloat(balanceEl.textContent)-0.025).toFixed(2);balance2El.textContent=balanceEl.textContent;}
- }catch(e){showToast(e.message,true);setLoading(false);}
+async function fetchJson(opts){
+  const res=await fetch(API_URL,opts);
+  let data;
+  try{data=await res.json();}catch(e){const txt=await res.text();throw new Error("שרת: "+txt.slice(0,200));}
+  if(!res.ok||data.error)throw new Error(data.error||"שגיאת שרת "+res.status);
+  return data;
 }
 
 async function basicAnimate(){
- if(!currentResult)return;
- if(!checkBalance(0.04))return;
- setLoading(true,"מכין וידאו 5s...","$0.04");
- try{
-   const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"animate",imageUrl:currentResult,motion:selectedMotion,duration:5})});
-   if(data.status==="succeeded"&&data.videoUrl){showVideo(data.videoUrl,"$0.04");balanceEl.textContent=(parseFloat(balanceEl.textContent)-0.04).toFixed(2);balance2El.textContent=balanceEl.textContent;return;}
-   // queue fallback
-   let reqId=data.requestId||data.request_id;for(let i=0;i<40;i++){await wait(5000);const poll=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"status",requestId:reqId})});if(poll.status==="succeeded"){showVideo(poll.videoUrl,"$0.04");balanceEl.textContent=(parseFloat(balanceEl.textContent)-0.04).toFixed(2);balance2El.textContent=balanceEl.textContent;return;}if(poll.status==="failed")throw new Error(poll.error);}
-   throw new Error("לוקח זמן");
- }catch(e){showToast(e.message,true);setLoading(false);}
+  if(!currentResult){showToast("אין תמונה",true);return;}
+  cancelled=false;setLoading(true,"מכין וידאו 5 שניות...");
+  try{
+    const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"animate",imageUrl:currentResult,motion:selectedMotion,duration:5})});
+    if(cancelled)return;
+    if(data.status==="succeeded"&&data.videoUrl){showVideo(data.videoUrl);return;}
+    let reqId=data.requestId||data.request_id;
+    if(!reqId)throw new Error("לא התקבל מזהה");
+    for(let i=0;i<40;i++){
+      if(cancelled)return;
+      await wait(5000);
+      if(cancelled)return;
+      const poll=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"status",requestId:reqId})});
+      if(poll.status==="succeeded"&&poll.videoUrl){showVideo(poll.videoUrl);return;}
+      if(poll.status==="failed")throw new Error(poll.error||"נכשל");
+    }
+    throw new Error("לוקח יותר זמן מהרגיל, נסה שוב");
+  }catch(e){if(!cancelled)showToast(e.message,true);}finally{if(!cancelled)setLoading(false);}
 }
 
 async function talkingAvatar(){
- if(!currentResult){showToast("אין תמונה",true);return;}
- if(!audioUrl&&!audioData){showToast("הקלט או העלה אודיו",true);return;}
- if(!checkBalance(0.28))return;
- setLoading(true,"מכין דמות מדברת...","$0.28 - טיקטוק TOP!");
- try{
-   let aUrl=audioUrl||audioData;
-   const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"talking",imageUrl:currentResult,audioUrl:aUrl})});
-   if(data.status==="succeeded"&&data.videoUrl){showVideo(data.videoUrl,"$0.28");balanceEl.textContent=(parseFloat(balanceEl.textContent)-0.28).toFixed(2);balance2El.textContent=balanceEl.textContent;return;}
-   let reqId=data.requestId||data.request_id;if(!reqId)throw new Error("לא התקבל מזהה");
-   for(let i=0;i<50;i++){await wait(6000);loadingText.textContent="מכין דמות מדברת... "+(i+1)+"/50";const poll=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"status",requestId:reqId})});if(poll.status==="succeeded"){showVideo(poll.videoUrl,"$0.28");balanceEl.textContent=(parseFloat(balanceEl.textContent)-0.28).toFixed(2);balance2El.textContent=balanceEl.textContent;return;}if(poll.status==="failed")throw new Error(poll.error);}
-   throw new Error("לוקח זמן");
- }catch(e){showToast(e.message,true);setLoading(false);}
+  if(!currentResult){showToast("אין תמונה",true);return;}
+  if(!audioData){showToast("הקלט או העלה אודיו קודם",true);return;}
+  cancelled=false;setLoading(true,"מכין דמות מדברת - טיקטוק TOP...");
+  try{
+    const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"talking",imageUrl:currentResult,audioUrl:audioData})});
+    if(cancelled)return;
+    if(data.status==="succeeded"&&data.videoUrl){showVideo(data.videoUrl);return;}
+    let reqId=data.requestId||data.request_id;
+    if(!reqId)throw new Error("לא התקבל מזהה");
+    for(let i=0;i<50;i++){
+      if(cancelled)return;
+      loadingText.textContent="מכין דמות מדברת... "+(i+1)+"/50";
+      await wait(6000);
+      if(cancelled)return;
+      const poll=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"status",requestId:reqId})});
+      if(poll.status==="succeeded"&&poll.videoUrl){showVideo(poll.videoUrl);return;}
+      if(poll.status==="failed")throw new Error(poll.error||"נכשל");
+    }
+    throw new Error("לוקח זמן, נסה שוב");
+  }catch(e){if(!cancelled)showToast(e.message,true);}finally{if(!cancelled)setLoading(false);}
 }
 
 async function trendingVideo(){
- if(!currentResult)return;
- if(!checkBalance(0.35))return;
- setLoading(true,"מכין טרנד "+selectedTrend+"...","$0.35");
- try{
-   const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"trending",imageUrl:currentResult,trend:selectedTrend})});
-   if(data.status==="succeeded"&&data.videoUrl){showVideo(data.videoUrl,"$0.35");balanceEl.textContent=(parseFloat(balanceEl.textContent)-0.35).toFixed(2);balance2El.textContent=balanceEl.textContent;return;}
-   let reqId=data.requestId||data.request_id;for(let i=0;i<40;i++){await wait(5000);const poll=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"status",requestId:reqId})});if(poll.status==="succeeded"){showVideo(poll.videoUrl,"$0.35");balanceEl.textContent=(parseFloat(balanceEl.textContent)-0.35).toFixed(2);balance2El.textContent=balanceEl.textContent;return;}if(poll.status==="failed")throw new Error(poll.error);}
-   throw new Error("לוקח זמן");
- }catch(e){showToast(e.message,true);setLoading(false);}
+  if(!currentResult){showToast("אין תמונה",true);return;}
+  cancelled=false;setLoading(true,"מכין טרנד "+selectedTrend+"...");
+  try{
+    const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"trending",imageUrl:currentResult,trend:selectedTrend})});
+    if(cancelled)return;
+    if(data.status==="succeeded"&&data.videoUrl){showVideo(data.videoUrl);return;}
+    let reqId=data.requestId||data.request_id;
+    for(let i=0;i<40;i++){
+      if(cancelled)return;
+      await wait(5000);
+      const poll=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"status",requestId:reqId})});
+      if(poll.status==="succeeded"&&poll.videoUrl){showVideo(poll.videoUrl);return;}
+      if(poll.status==="failed")throw new Error(poll.error);
+    }
+    throw new Error("לוקח זמן");
+  }catch(e){if(!cancelled)showToast(e.message,true);}finally{if(!cancelled)setLoading(false);}
 }
 
 async function cinematicVideo(){
- if(!currentResult)return;
- if(!checkBalance(0.75))return;
- const prompt=document.getElementById("cinemaPrompt").value||"epic movie trailer, cinematic";
- setLoading(true,"מכין טריילר קולנועי...","$0.75 - Veo3/Ray2 TOP!");
- try{
-   const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"cinematic",imageUrl:currentResult,prompt:prompt})});
-   if(data.status==="succeeded"&&data.videoUrl){showVideo(data.videoUrl,"$0.75");balanceEl.textContent=(parseFloat(balanceEl.textContent)-0.75).toFixed(2);balance2El.textContent=balanceEl.textContent;return;}
-   let reqId=data.requestId||data.request_id;for(let i=0;i<40;i++){await wait(6000);const poll=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"status",requestId:reqId})});if(poll.status==="succeeded"){showVideo(poll.videoUrl,"$0.75");balanceEl.textContent=(parseFloat(balanceEl.textContent)-0.75).toFixed(2);balance2El.textContent=balanceEl.textContent;return;}if(poll.status==="failed")throw new Error(poll.error);}
-   throw new Error("לוקח זמן");
- }catch(e){showToast(e.message,true);setLoading(false);}
+  if(!currentResult){showToast("אין תמונה",true);return;}
+  const prompt=document.getElementById("cinemaPrompt").value||"epic movie trailer, cinematic";
+  cancelled=false;setLoading(true,"מכין טריילר קולנועי...");
+  try{
+    const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"cinematic",imageUrl:currentResult,prompt:prompt})});
+    if(cancelled)return;
+    if(data.status==="succeeded"&&data.videoUrl){showVideo(data.videoUrl);return;}
+    let reqId=data.requestId||data.request_id;
+    for(let i=0;i<40;i++){
+      if(cancelled)return;
+      await wait(6000);
+      const poll=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"status",requestId:reqId})});
+      if(poll.status==="succeeded"&&poll.videoUrl){showVideo(poll.videoUrl);return;}
+      if(poll.status==="failed")throw new Error(poll.error);
+    }
+    throw new Error("לוקח זמן");
+  }catch(e){if(!cancelled)showToast(e.message,true);}finally{if(!cancelled)setLoading(false);}
 }
 
-function showResult(url,cost){currentResult=url;currentVideo=null;resultImg.src=url;resultImg.hidden=false;resultVideo.hidden=true;document.getElementById("categoryMenu").hidden=true;document.getElementById("resultMenu").hidden=false;document.getElementById("resultText").textContent="אווטאר מוכן! עכשיו תהפוך לווידאו TOP";document.getElementById("lastCost").textContent=cost||"$0.025";setLoading(false);}
-function showVideo(url,cost){currentVideo=url;resultVideo.src=url;resultVideo.hidden=false;resultImg.hidden=true;resultVideo.load();resultVideo.onloadeddata=()=>resultVideo.play().catch(()=>{});document.getElementById("categoryMenu").hidden=true;document.getElementById("resultMenu").hidden=false;document.getElementById("resultText").textContent="וידאו TOP מוכן! 🎬";document.getElementById("lastCost").textContent=cost||"$0.04";setLoading(false);showToast("מוכן! "+cost);}
+function showResult(url){currentResult=url;currentVideo=null;resultImg.src=url;resultImg.hidden=false;resultVideo.hidden=true;resultVideo.pause();document.getElementById("categoryMenu").hidden=true;document.getElementById("resultMenu").hidden=false;document.getElementById("resultText").textContent="מוכן!";setLoading(false);window.scrollTo({top:0,behavior:"smooth"});}
+function showVideo(url){currentVideo=url;resultVideo.src=url;resultVideo.hidden=false;resultImg.hidden=true;resultVideo.load();resultVideo.onloadeddata=()=>resultVideo.play().catch(()=>{});document.getElementById("categoryMenu").hidden=true;document.getElementById("resultMenu").hidden=false;document.getElementById("resultText").textContent="וידאו TOP מוכן! 🎬";setLoading(false);showToast("מוכן! 🎉");window.scrollTo({top:0,behavior:"smooth"});}
 
 function createMeme(){
- if(!currentResult){showToast("אין תמונה למם",true);return;}
- const ctx=memeCanvas.getContext("2d");
- const img=new Image();img.crossOrigin="anonymous";
- img.onload=()=>{
-   ctx.fillStyle="#000";ctx.fillRect(0,0,1080,1080);
-   // Simple meme template - drake style
-   ctx.fillStyle="#fff";ctx.fillRect(0,0,1080,1080);
-   ctx.drawImage(img,100,100,880,880);
-   // Watermark - TOP trademark
-   ctx.fillStyle="rgba(0,0,0,0.7)";ctx.fillRect(0,1000,1080,80);
-   ctx.fillStyle="#00edf5";ctx.font="bold 32px Arial";ctx.textAlign="center";
-   ctx.fillText("VIRAL STUDIO • matytsoraro.github.io",540,1050);
-   // QR-like branding
-   ctx.fillStyle="#a749f5";ctx.font="bold 20px Arial";ctx.fillText("TOP • AI",900,1020);
-   const dataUrl=memeCanvas.toDataURL("image/jpeg",0.9);
-   showResult(dataUrl,"FREE - עם watermark!");
-   showToast("מם עם לוגו VIRAL נוצר! חינם!");
- };
- img.src=currentResult;
+  if(!currentResult){showToast("בחר תמונה קודם",true);return;}
+  const ctx=memeCanvas.getContext("2d");
+  const img=new Image();
+  img.onload=()=>{
+    // Clear
+    ctx.fillStyle="#ffffff";
+    ctx.fillRect(0,0,1080,1080);
+    
+    // Draw user image centered
+    const size=880;
+    const x=(1080-size)/2;
+    const y=(1080-size)/2 - 40;
+    
+    // White background for meme
+    ctx.fillStyle="#ffffff";
+    ctx.fillRect(0,0,1080,1080);
+    
+    // Draw image
+    try{
+      ctx.drawImage(img,x,y,size,size);
+    }catch(e){
+      console.error("draw failed", e);
+      showToast("שגיאת מם: "+e.message,true);
+      return;
+    }
+    
+    // Meme text based on type
+    ctx.textAlign="center";
+    ctx.fillStyle="#000000";
+    ctx.font="bold 56px Arial";
+    
+    if(selectedMeme==="drake"){
+      ctx.fillText("לא אוהב רגיל",540,70);
+      ctx.fillStyle="#00edf5";
+      ctx.fillText("אוהב VIRAL",540,1000);
+    } else if(selectedMeme==="distracted"){
+      ctx.fillText("כשאתה רואה AI רגיל",540,70);
+      ctx.fillStyle="#a749f5";
+      ctx.fillText("כשאתה רואה VIRAL TOP",540,1000);
+    } else if(selectedMeme==="buttons"){
+      ctx.fillText("לחיצה רגילה",540,70);
+      ctx.fillStyle="#ff0055";
+      ctx.fillText("לחיצה ויראלית!",540,1000);
+    } else {
+      ctx.fillText("אומרים AI משעמם",540,70);
+      ctx.fillStyle="#25d366";
+      ctx.fillText("עד שרואים VIRAL",540,1000);
+    }
+    
+    // Watermark - סימן היכר - ALWAYS
+    ctx.fillStyle="rgba(0,0,0,0.75)";
+    ctx.fillRect(0,1040,1080,40);
+    ctx.fillStyle="#00edf5";
+    ctx.font="bold 22px Arial";
+    ctx.textAlign="center";
+    ctx.fillText("VIRAL STUDIO TOP • matytsoraro.github.io • AI",540,1065);
+    
+    // Side branding
+    ctx.save();
+    ctx.translate(20,540);
+    ctx.rotate(-Math.PI/2);
+    ctx.fillStyle="rgba(167,73,245,0.8)";
+    ctx.font="bold 18px Arial";
+    ctx.fillText("TOP • VIRAL",0,0);
+    ctx.restore();
+    
+    const dataUrl=memeCanvas.toDataURL("image/jpeg",0.92);
+    showResult(dataUrl);
+    showToast("מם עם לוגו VIRAL נוצר! חינם, עובד 100%!");
+  };
+  img.onerror=()=>showToast("לא ניתן לטעון תמונה למם",true);
+  img.src=currentResult;
 }
 
-// Audio recording
-let mediaRecorder=null,audioChunks=[];
+// Audio recording - FIXED
 async function startRecording(){
- try{
-   const stream=await navigator.mediaDevices.getUserMedia({audio:true});
-   mediaRecorder=new MediaRecorder(stream);audioChunks=[];
-   mediaRecorder.ondataavailable=e=>audioChunks.push(e.data);
-   mediaRecorder.onstop=async()=>{
-     const blob=new Blob(audioChunks,{type:"audio/wav"});
-     const reader=new FileReader();reader.onload=()=>{audioData=reader.result;audioUrl=null;document.getElementById("audioStatus").textContent="אודיו הוקלט! "+(blob.size/1000).toFixed(1)+"KB";showToast("אודיו הוקלט!");};reader.readAsDataURL(blob);
-     stream.getTracks().forEach(t=>t.stop());
-   };
-   mediaRecorder.start();document.getElementById("recordBtn").textContent="⏹️ עצור הקלטה (מקליט...)";showToast("מקליט... אמור 'אנחנו לא אמיתיים, רק נראים ככה'");
-   setTimeout(()=>{if(mediaRecorder&&mediaRecorder.state==="recording"){mediaRecorder.stop();document.getElementById("recordBtn").textContent="🎙️ הקלט קול (10s)";}},10000);
- }catch(e){showToast("אין גישה למיקרופון",true);}
+  if(mediaRecorder && mediaRecorder.state==="recording"){
+    stopRecording();
+    return;
+  }
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    mediaRecorder=new MediaRecorder(stream);
+    audioChunks=[];
+    mediaRecorder.ondataavailable=e=>{if(e.data.size>0)audioChunks.push(e.data);};
+    mediaRecorder.onstop=async()=>{
+      const blob=new Blob(audioChunks,{type:"audio/webm"});
+      const reader=new FileReader();
+      reader.onload=()=>{
+        audioData=reader.result;
+        document.getElementById("audioStatus").textContent="✅ אודיו הוקלט! "+(blob.size/1000).toFixed(1)+"KB - מוכן!";
+        document.getElementById("audioStatus").style.color="#25d366";
+        showToast("אודיו הוקלט! עכשיו לחץ צור דמות מדברת");
+      };
+      reader.readAsDataURL(blob);
+      stream.getTracks().forEach(t=>t.stop());
+      document.getElementById("recordBtn").textContent="🎙️ הקלט קול (10 שניות)";
+    };
+    mediaRecorder.start();
+    document.getElementById("recordBtn").textContent="⏹️ עצור הקלטה (מקליט...)";
+    document.getElementById("audioStatus").textContent="🔴 מקליט... אמור 'אנחנו לא אמיתיים, רק נראים ככה'";
+    document.getElementById("audioStatus").style.color="#ff0055";
+    showToast("מקליט... אמור: 'אנחנו לא אמיתיים, רק נראים ככה!'");
+    setTimeout(()=>{if(mediaRecorder&&mediaRecorder.state==="recording"){stopRecording();}},10000);
+  }catch(e){
+    console.error("mic error", e);
+    showToast("אין גישה למיקרופון: "+e.message+" - העלה אודיו",true);
+    document.getElementById("audioStatus").textContent="❌ מיקרופון חסום - העלה אודיו MP3";
+  }
 }
-function stopRecording(){if(mediaRecorder&&mediaRecorder.state==="recording"){mediaRecorder.stop();document.getElementById("recordBtn").textContent="🎙️ הקלט קול (10s)";}}
+function stopRecording(){
+  if(mediaRecorder&&mediaRecorder.state==="recording"){
+    mediaRecorder.stop();
+    document.getElementById("recordBtn").textContent="🎙️ הקלט קול (10 שניות)";
+  }
+}
 
 function resetApp(){
- cancelled=true;setLoading(false);stopCam();base64Img=null;originalImg=null;currentResult=null;currentVideo=null;audioData=null;audioUrl=null;
- resultImg.src="";resultImg.hidden=true;resultVideo.src="";resultVideo.hidden=true;
- videoEl.hidden=false;placeholder.hidden=false;guide.hidden=false;
- document.getElementById("cameraMenu").hidden=false;document.getElementById("categoryMenu").hidden=true;document.getElementById("resultMenu").hidden=true;
- document.getElementById("uploadInput").value="";document.getElementById("audioStatus").textContent="אין אודיו";
- startCam();
+  cancelled=true;
+  setLoading(false);
+  stopCam();
+  base64Img=null;originalImg=null;currentResult=null;currentVideo=null;audioData=null;
+  resultImg.src="";resultImg.hidden=true;resultVideo.src="";resultVideo.hidden=true;resultVideo.pause();
+  document.getElementById("cameraMenu").hidden=false;
+  document.getElementById("categoryMenu").hidden=true;
+  document.getElementById("resultMenu").hidden=true;
+  document.getElementById("uploadInput").value="";
+  const audioInput=document.getElementById("audioInput");
+  if(audioInput)audioInput.value="";
+  document.getElementById("audioStatus").textContent="אין אודיו - הקלט או העלה";
+  document.getElementById("audioStatus").style.color="var(--muted)";
+  camError.hidden=true;
+  startCam();
+  window.scrollTo({top:0,behavior:"smooth"});
 }
-function anotherVideo(){if(!originalImg){resetApp();return;}base64Img=originalImg;currentResult=originalImg;currentVideo=null;resultImg.src=originalImg;resultImg.hidden=false;resultVideo.hidden=true;document.getElementById("categoryMenu").hidden=false;document.getElementById("resultMenu").hidden=true;}
+function anotherVideo(){
+  if(!originalImg){resetApp();return;}
+  base64Img=originalImg;currentResult=originalImg;currentVideo=null;
+  resultImg.src=originalImg;resultImg.hidden=false;resultVideo.hidden=true;resultVideo.pause();
+  document.getElementById("categoryMenu").hidden=false;
+  document.getElementById("resultMenu").hidden=true;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
 
-// Events
-document.getElementById("uploadBtn").addEventListener("click",()=>{document.getElementById("uploadInput").value="";document.getElementById("uploadInput").click();});
-document.getElementById("uploadInput").addEventListener("change",e=>{const f=e.target.files[0];if(f)handleUpload(f);});
+// Events - FIXED with null checks
+document.getElementById("uploadBtn").addEventListener("click",()=>{
+  const inp=document.getElementById("uploadInput");
+  inp.value="";
+  inp.click();
+});
+document.getElementById("uploadInput").addEventListener("change",e=>{
+  const f=e.target.files&&e.target.files[0];
+  if(f)handleUpload(f);
+});
 document.getElementById("captureBtn").addEventListener("click",takePhoto);
-document.getElementById("switchBtn").addEventListener("click",()=>{facing=facing==="user"?"environment":"user";startCam();});
-document.getElementById("cancelBtn").addEventListener("click",()=>{cancelled=true;setLoading(false);showToast("בוטל");});
+document.getElementById("switchBtn").addEventListener("click",()=>{
+  if(isGen)return;
+  facing=facing==="user"?"environment":"user";
+  startCam();
+});
+document.getElementById("cancelBtn").addEventListener("click",()=>{
+  cancelled=true;
+  setLoading(false);
+  showToast("בוטל");
+});
 document.getElementById("retakeBtn").addEventListener("click",resetApp);
 document.getElementById("newPhotoBtn").addEventListener("click",resetApp);
 document.getElementById("anotherBtn").addEventListener("click",anotherVideo);
-document.getElementById("downloadBtn").addEventListener("click",()=>{const url=currentVideo||currentResult;if(!url)return;fetch(url).then(r=>r.blob()).then(b=>{const o=URL.createObjectURL(b);const a=document.createElement("a");a.href=o;a.download="viral-top-"+Date.now()+(currentVideo?".mp4":".jpg");document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(o),2000);}).catch(()=>window.open(url,"_blank"));});
-document.getElementById("shareBtn").addEventListener("click",()=>{const url=currentVideo||currentResult;if(navigator.share){navigator.share({title:"Viral Studio TOP",text:"ראו מה יצרתי!",url:url}).catch(()=>{});}else{window.open("https://wa.me/?text="+encodeURIComponent("ראו: "+url),"_blank");}});
+document.getElementById("downloadBtn").addEventListener("click",()=>{
+  const url=currentVideo||currentResult;
+  if(!url){showToast("אין מה לשמור",true);return;}
+  fetch(url).then(r=>r.blob()).then(b=>{
+    const o=URL.createObjectURL(b);
+    const a=document.createElement("a");
+    a.href=o;
+    a.download="viral-top-"+Date.now()+(currentVideo?".mp4":".jpg");
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>URL.revokeObjectURL(o),2000);
+    showToast("נשמר!");
+  }).catch(()=>window.open(url,"_blank","noopener,noreferrer"));
+});
+document.getElementById("shareBtn").addEventListener("click",()=>{
+  const url=currentVideo||currentResult;
+  if(!url){showToast("אין מה לשתף",true);return;}
+  if(navigator.share){
+    navigator.share({title:"Viral Studio TOP",text:"ראו מה יצרתי ב-VIRAL TOP!",url:url}).catch(()=>{});
+  }else{
+    window.open("https://wa.me/?text="+encodeURIComponent("ראו מה יצרתי ב-VIRAL TOP: "+url)," _blank","noopener,noreferrer");
+  }
+});
 document.getElementById("animateBtn").addEventListener("click",basicAnimate);
 document.getElementById("talkingBtn").addEventListener("click",talkingAvatar);
 document.getElementById("trendingBtn").addEventListener("click",trendingVideo);
 document.getElementById("cinemaBtn").addEventListener("click",cinematicVideo);
 document.getElementById("memeBtn").addEventListener("click",createMeme);
-document.getElementById("recordBtn").addEventListener("click",()=>{if(mediaRecorder&&mediaRecorder.state==="recording"){stopRecording();}else{startRecording();}});
-document.getElementById("uploadAudioBtn").addEventListener("click",()=>{document.getElementById("audioInput").click();});
-document.getElementById("audioInput").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;const reader=new FileReader();reader.onload=ev=>{audioData=ev.target.result;audioUrl=null;document.getElementById("audioStatus").textContent="אודיו: "+f.name;showToast("אודיו נטען");};reader.readAsDataURL(f);});
+document.getElementById("recordBtn").addEventListener("click",startRecording);
+document.getElementById("uploadAudioBtn").addEventListener("click",()=>{
+  document.getElementById("audioInput").click();
+});
+document.getElementById("audioInput").addEventListener("change",e=>{
+  const f=e.target.files&&e.target.files[0];
+  if(!f){return;}
+  if(!f.type.startsWith("audio/")){showToast("קובץ לא אודיו",true);return;}
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    audioData=ev.target.result;
+    document.getElementById("audioStatus").textContent="✅ אודיו: "+f.name+" ("+(f.size/1000).toFixed(1)+"KB)";
+    document.getElementById("audioStatus").style.color="#25d366";
+    showToast("אודיו נטען: "+f.name);
+  };
+  reader.onerror=()=>showToast("לא ניתן לקרוא אודיו",true);
+  reader.readAsDataURL(f);
+});
 
 document.querySelectorAll(".cat-tab").forEach(tab=>{
- tab.addEventListener("click",()=>{
-   document.querySelectorAll(".cat-tab").forEach(t=>t.classList.remove("active"));
-   tab.classList.add("active");
-   selectedCat=tab.dataset.cat;
-   document.querySelectorAll(".cat-content").forEach(c=>c.hidden=true);
-   document.getElementById("cat-"+selectedCat).hidden=false;
- });
+  tab.addEventListener("click",()=>{
+    document.querySelectorAll(".cat-tab").forEach(t=>t.classList.remove("active"));
+    tab.classList.add("active");
+    selectedCat=tab.dataset.cat;
+    document.querySelectorAll(".cat-content").forEach(c=>c.hidden=true);
+    const target=document.getElementById("cat-"+selectedCat);
+    if(target)target.hidden=false;
+  });
 });
-document.querySelectorAll("[data-motion]").forEach(b=>{b.addEventListener("click",()=>{document.querySelectorAll("[data-motion]").forEach(x=>x.classList.remove("active"));b.classList.add("active");selectedMotion=b.dataset.motion;});});
-document.querySelectorAll("[data-trend]").forEach(b=>{b.addEventListener("click",()=>{document.querySelectorAll("[data-trend]").forEach(x=>x.classList.remove("active"));b.classList.add("active");selectedTrend=b.dataset.trend;});});
-document.querySelectorAll("[data-meme]").forEach(b=>{b.addEventListener("click",()=>{document.querySelectorAll("[data-meme]").forEach(x=>x.style.borderColor="");b.style.borderColor="#00edf5";selectedMeme=b.dataset.meme;});});
+document.querySelectorAll("[data-motion]").forEach(b=>{
+  b.addEventListener("click",()=>{
+    document.querySelectorAll("[data-motion]").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+    selectedMotion=b.dataset.motion;
+  });
+});
+document.querySelectorAll("[data-trend]").forEach(b=>{
+  b.addEventListener("click",()=>{
+    document.querySelectorAll("[data-trend]").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+    selectedTrend=b.dataset.trend;
+  });
+});
+document.querySelectorAll("[data-meme]").forEach(b=>{
+  b.addEventListener("click",()=>{
+    document.querySelectorAll("[data-meme]").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+    selectedMeme=b.dataset.meme;
+  });
+});
 
-function init(){startCam();fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"balance"})}).then(r=>r.json()).then(d=>{if(d.balance||d.total_balance){const bal=d.balance||d.total_balance;balanceEl.textContent=parseFloat(bal).toFixed(2);balance2El.textContent=balanceEl.textContent;}}).catch(()=>{});}
-if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",init,{once:true});}else{init();}
+// INIT - FIXED: No balance fetch, no loading on start
+function init(){
+  setLoading(false);
+  // Ensure loading hidden
+  document.getElementById("loading").hidden=true;
+  // Small delay to let permission prompt show
+  setTimeout(()=>{startCam();},300);
+}
+if(document.readyState==="loading"){
+  document.addEventListener("DOMContentLoaded",init,{once:true});
+} else {
+  init();
+}
+window.addEventListener("pagehide",stopCam);
 </script>
 </body>
 </html>
