@@ -60,6 +60,9 @@
 .preset{padding:10px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;cursor:pointer;font-size:.82rem;line-height:1.4}
 .toast{position:fixed;z-index:100;right:50%;bottom:18px;transform:translateX(50%);width:max-content;max-width:92vw;padding:10px 18px;background:#1a1a2e;border:1px solid var(--border);border-radius:999px;font-size:.85rem;font-weight:600;text-align:center}
 .toast.error{background:#2a1520}
+.duration-row{display:flex;gap:8px;margin-top:10px}
+.duration-btn{flex:1;padding:10px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--muted);font-size:.82rem;font-weight:700;cursor:pointer;text-align:center}
+.duration-btn.active{border-color:var(--p);background:rgba(0,229,255,0.1);color:#fff}
 [hidden]{display:none!important}
 </style>
 </head>
@@ -131,7 +134,7 @@
 </button>
 <button class="choose-card" data-choose="cinema" type="button">
 <div class="choose-icon cine">🎥</div>
-<div class="choose-text"><div class="choose-title">טריילר קולנועי</div><div class="choose-sub">סצנה דרמטית עם מוזיקה וסאונד</div></div>
+<div class="choose-text"><div class="choose-title">טריילר קולנועי</div><div class="choose-sub">סצנה דרמטית עם מוזיקה וסאונד - עכשיו גם ארוך!</div></div>
 <div style="color:var(--muted)">‹</div>
 </button>
 </div>
@@ -160,6 +163,11 @@
 <button class="card" data-meme-motion="meme_shock"><div class="card-title">שוק</div><div class="card-sub">הפתעה</div></button>
 <button class="card" data-meme-motion="meme_dance"><div class="card-title">רוקד</div><div class="card-sub">שמח</div></button>
 </div>
+<div class="h3">אורך וידאו</div>
+<div class="duration-row">
+<button class="duration-btn active" data-duration="6" data-group="meme">6 שניות</button>
+<button class="duration-btn" data-duration="10" data-group="meme">10 שניות</button>
+</div>
 <button id="memeVideoBtn" class="btn btn-meme" style="margin-top:14px" type="button">צור מם וידאו</button>
 <button id="memeImageBtn" class="btn btn-ghost" style="margin-top:8px" type="button">צור רק תמונה</button>
 </div>
@@ -170,6 +178,11 @@
 <button class="card" data-basic-motion="smile"><div class="card-title">חיוך</div><div class="card-sub">עדין</div></button>
 <button class="card" data-basic-motion="cinematic"><div class="card-title">קולנועי</div><div class="card-sub">איטי</div></button>
 <button class="card" data-basic-motion="hero"><div class="card-title">גיבור</div><div class="card-sub">בטוח</div></button>
+</div>
+<div class="h3">אורך וידאו</div>
+<div class="duration-row">
+<button class="duration-btn active" data-duration="6" data-group="basic">6 שניות - מהיר</button>
+<button class="duration-btn" data-duration="10" data-group="basic">10 שניות - ארוך</button>
 </div>
 <button id="animateBtn" class="btn btn-primary" style="margin-top:14px" type="button">צור וידאו</button>
 </div>
@@ -196,6 +209,13 @@
 
 <div id="detail-cinema" class="detail-content" hidden>
 <textarea id="cinemaPrompt" class="input" rows="2" placeholder="למשל: טריילר אקשן, בורח מפיצוץ, תאורה דרמטית עם מוזיקה..."></textarea>
+<div class="h3">אורך וידאו - חדש!</div>
+<div class="duration-row">
+<button class="duration-btn" data-duration="6" data-group="cinema">6 שניות</button>
+<button class="duration-btn active" data-duration="8" data-group="cinema">8 שניות עם קול</button>
+<button class="duration-btn" data-duration="10" data-group="cinema">10 שניות ארוך</button>
+</div>
+<div style="font-size:.7rem;color:var(--muted);margin-top:6px">6-8 שניות = Veo3 עם קול ומוזיקה | 10 שניות = Minimax 10 שניות קולנועי (ללא קול אבל ארוך)</div>
 <button id="cinemaBtn" class="btn btn-cine" style="margin-top:14px" type="button">צור טריילר עם קול</button>
 </div>
 </section>
@@ -237,6 +257,7 @@ const memeCanvas = document.getElementById("memeCanvas");
 
 let stream=null,facing="user",camReady=false,originalImg=null,currentResult=null,currentVideo=null,cancelled=false,toastTimer=null;
 let selectedBasicMotion="alive",selectedMemeMotion="meme_punch",selectedTrend="hug",selectedCat=null,audioData=null;
+let selectedDurations={basic:"6",meme:"6",cinema:"8"};
 let mediaRecorder=null,audioChunks=[],timerInterval=null,startTime=null;
 
 function showToast(msg,err){clearTimeout(toastTimer);toastEl.textContent=msg;toastEl.classList.toggle("error",!!err);toastEl.hidden=false;toastTimer=setTimeout(()=>toastEl.hidden=true,4000);}
@@ -422,15 +443,15 @@ async function createMemeVideo(){
     return;
   }
   cancelled=false;
-  setLoading(true,"יוצר מם וידאו...","כותב טקסט ומנפיש");
+  setLoading(true,"יוצר מם וידאו...","כותב טקסט ומנפיש - Minimax יציב");
   try{
     const meme=await createMemeImage();
     if(cancelled)return;
     if(!meme)throw new Error("");
     resultImg.src=meme.dataUrl;resultImg.hidden=false;resultImg.style.display="block";resultVideo.hidden=true;
     setLoading(true,"מנפיש את המם...","תנועה שמבטאת את הפאנץ'");
-    let prompt=`${selectedMemeMotion}, preserve text`;
-    const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"meme",imageUrl:meme.dataUrl,motion:prompt})});
+    let prompt=`${selectedMemeMotion}, preserve text clearly visible, meme`;
+    const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"meme",imageUrl:meme.dataUrl,motion:prompt,duration:selectedDurations.meme})});
     if(cancelled)return;
     if(data.status==="succeeded"&&data.videoUrl){showVideo(data.videoUrl);return;}
     const reqId=data.requestId||data.request_id;if(!reqId)throw new Error("לא התקבל מזהה");
@@ -441,9 +462,9 @@ async function createMemeVideo(){
 }
 async function basicAnimate(){
   if(!currentResult){showToast("בחר תמונה",true);return;}
-  cancelled=false;setLoading(true,"יוצר וידאו...","תמונה נעה");
+  cancelled=false;setLoading(true,"יוצר וידאו...","תמונה נעה - "+selectedDurations.basic+" שניות");
   try{
-    const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"animate",imageUrl:currentResult,motion:selectedBasicMotion})});
+    const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"animate",imageUrl:currentResult,motion:selectedBasicMotion,duration:selectedDurations.basic})});
     if(cancelled)return;
     if(data.status==="succeeded"&&data.videoUrl){showVideo(data.videoUrl);return;}
     const reqId=data.requestId||data.request_id;
@@ -482,15 +503,18 @@ async function trendingVideo(){
 async function cinematicVideo(){
   if(!currentResult){showToast("בחר תמונה",true);return;}
   const prompt=document.getElementById("cinemaPrompt").value||"טריילר קולנועי אפי עם מוזיקה";
-  cancelled=false;setLoading(true,"יוצר טריילר קולנועי...","עם קול ומוזיקה");
+  cancelled=false;
+  const dur = selectedDurations.cinema;
+  const durText = dur==="8" ? "עם קול ומוזיקה" : dur==="10" ? "10 שניות ארוך" : "6 שניות";
+  setLoading(true,"יוצר טריילר קולנועי..."," "+dur+" שניות - "+durText);
   try{
-    const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"cinematic",imageUrl:currentResult,prompt:prompt})});
+    const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"cinematic",imageUrl:currentResult,prompt:prompt,duration:dur})});
     if(cancelled)return;
     if(data.status==="succeeded"&&data.videoUrl){showVideo(data.videoUrl);return;}
     const reqId=data.requestId||data.request_id;
     if(!reqId)throw new Error("לא התקבל מזהה");
     const videoUrl=await pollForResult(reqId, data.statusUrl||data.status_url, data.responseUrl||data.response_url, (i)=>{
-      if(i>10) document.getElementById("loadingSub").textContent="מעבד עם קול... עוד כמה שניות";
+      if(i>10) document.getElementById("loadingSub").textContent="מעבד "+dur+" שניות... עוד כמה שניות";
     });
     if(cancelled||!videoUrl)return;
     showVideo(videoUrl);
@@ -610,6 +634,14 @@ document.querySelectorAll("[data-basic-motion]").forEach(b=>{b.addEventListener(
 document.querySelectorAll("[data-meme-motion]").forEach(b=>{b.addEventListener("click",()=>{b.closest("#detail-meme").querySelectorAll("[data-meme-motion]").forEach(x=>x.classList.remove("active"));b.classList.add("active");selectedMemeMotion=b.dataset.memeMotion;});});
 document.querySelectorAll("[data-trend]").forEach(b=>{b.addEventListener("click",()=>{document.querySelectorAll("[data-trend]").forEach(x=>x.classList.remove("active"));b.classList.add("active");selectedTrend=b.dataset.trend;});});
 document.querySelectorAll("[data-choose]").forEach(b=>{b.addEventListener("click",()=>openDetail(b.dataset.choose));});
+document.querySelectorAll("[data-duration]").forEach(b=>{
+  b.addEventListener("click",()=>{
+    const group=b.dataset.group;
+    document.querySelectorAll(`[data-duration][data-group="${group}"]`).forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+    selectedDurations[group]=b.dataset.duration;
+  });
+});
 document.getElementById("backToChoose").addEventListener("click",backToChoose);
 document.getElementById("newPhotoBtn").addEventListener("click",resetApp);
 document.getElementById("anotherBtn").addEventListener("click",anotherVideo);
