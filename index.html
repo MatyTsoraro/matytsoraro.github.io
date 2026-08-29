@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -10,6 +10,9 @@
 *{box-sizing:border-box}html{background:var(--bg)}body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
 .topbar{position:sticky;top:0;z-index:30;display:flex;justify-content:space-between;align-items:center;min-height:62px;padding:0 16px;background:rgba(10,10,20,0.95);border-bottom:1px solid var(--border);backdrop-filter:blur(20px)}
 .brand{margin:0;font-size:1.15rem;font-weight:800}.brand span{background:linear-gradient(90deg,var(--p),var(--s));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lang-switch{display:flex;gap:4px;background:var(--surface2);border:1px solid var(--border);border-radius:999px;padding:2px}
+.lang-btn{padding:6px 10px;border-radius:999px;border:0;background:transparent;color:var(--muted);font-size:.75rem;font-weight:700;cursor:pointer}
+.lang-btn.active{background:#fff;color:#000}
 .app{width:min(100%,560px);margin:0 auto;padding:12px;display:grid;gap:14px}
 .glass{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
 .viewport{position:relative;width:100%;aspect-ratio:3/4;background:#08080f;min-height:460px}
@@ -54,6 +57,8 @@
 .toast{position:fixed;z-index:100;right:50%;bottom:18px;transform:translateX(50%);width:max-content;max-width:92vw;padding:10px 18px;background:#1a1a2e;border:1px solid var(--border);border-radius:999px;font-size:.85rem;font-weight:600;text-align:center}
 .toast.error{background:#2a1520}
 [hidden]{display:none!important}
+html[dir="ltr"] .choose-card{text-align:left}
+html[dir="ltr"] .card{text-align:left}
 </style>
 </head>
 <body>
@@ -62,32 +67,38 @@
 <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--p),var(--s));display:flex;align-items:center;justify-content:center;font-weight:800;color:#000">V</div>
 <h1 class="brand">VIRAL <span>STUDIO</span></h1>
 </div>
-<div style="font-size:.75rem;color:var(--muted)">אולפן וידאו ותמונות</div>
+<div style="display:flex;align-items:center;gap:10px">
+<div class="lang-switch">
+<button class="lang-btn" data-lang="en" type="button">EN</button>
+<button class="lang-btn" data-lang="he" type="button">HE</button>
+</div>
+<div style="font-size:.75rem;color:var(--muted)" data-i18n="header_sub">AI Studio</div>
+</div>
 </header>
 
 <main class="app">
 <section class="glass viewport">
 <div id="placeholder" class="placeholder">
 <div style="width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,rgba(0,229,255,0.12),rgba(124,77,255,0.12));display:flex;align-items:center;justify-content:center;font-size:1.8rem">◐</div>
-<div><div style="font-weight:700">העלה תמונה להתחלה</div><div style="font-size:.82rem;color:var(--muted);margin-top:4px">צלם סלפי או בחר מהגלריה</div></div>
-<button id="enableCamBtn" class="btn btn-primary" style="width:auto;padding:10px 20px;font-size:.85rem" type="button">פתח מצלמה</button>
+<div><div style="font-weight:700" data-i18n="upload_title">Upload photo to start</div><div style="font-size:.82rem;color:var(--muted);margin-top:4px" data-i18n="upload_sub">Take selfie or choose from gallery</div></div>
+<button id="enableCamBtn" class="btn btn-primary" style="width:auto;padding:10px 20px;font-size:.85rem" type="button" data-i18n="open_camera">Open camera</button>
 </div>
 <video id="videoElement" class="front" autoplay playsinline muted hidden></video>
 <canvas id="canvasElement" hidden></canvas>
-<img id="resultImage" alt="תוצאה" hidden>
+<img id="resultImage" alt="Result" hidden>
 <video id="resultVideo" controls autoplay loop playsinline hidden></video>
 <div id="guide" class="guide" hidden></div>
 <div id="loading" class="loading" hidden>
 <div class="spinner"></div>
-<div id="loadingText" style="font-weight:700;font-size:.95rem">יוצר...</div>
-<div id="loadingSub" style="font-size:.82rem;color:var(--muted)">כמה שניות</div>
-<button id="cancelBtn" class="btn btn-ghost" style="width:auto;padding:8px 16px;margin-top:12px;font-size:.8rem" type="button">ביטול</button>
+<div id="loadingText" style="font-weight:700;font-size:.95rem" data-i18n="creating">Creating...</div>
+<div id="loadingSub" style="font-size:.82rem;color:var(--muted)" data-i18n="few_seconds">Few seconds</div>
+<button id="cancelBtn" class="btn btn-ghost" style="width:auto;padding:8px 16px;margin-top:12px;font-size:.8rem" type="button" data-i18n="cancel">Cancel</button>
 </div>
 </section>
 
 <section id="cameraMenu" class="glass panel">
-<div class="section-title">שלב 1: צלם או העלה תמונה</div>
-<div class="section-sub">תמונה ברורה עם פנים = תוצאה טובה יותר</div>
+<div class="section-title" data-i18n="step1_title">Step 1: Take or upload photo</div>
+<div class="section-sub" data-i18n="step1_sub">Clear photo with face = better result</div>
 <div class="controls">
 <button id="uploadBtn" class="round" type="button">⬆️</button>
 <input id="uploadInput" type="file" accept="image/*" hidden>
@@ -97,21 +108,21 @@
 </section>
 
 <section id="chooseMenu" class="glass panel" hidden>
-<div class="section-title">שלב 2: מה ליצור?</div>
+<div class="section-title" data-i18n="step2_title">Step 2: What to create?</div>
 <div class="choose-grid">
 <button class="choose-card" data-choose="cinema" type="button">
 <div class="choose-icon cine">🎥</div>
-<div class="choose-text"><div class="choose-title">סצנה קולנועית</div><div class="choose-sub">סרטון עם מוזיקה וקול</div></div>
+<div class="choose-text"><div class="choose-title" data-i18n="cinema_title">Cinematic scene</div><div class="choose-sub" data-i18n="cinema_sub">Video with music and sound</div></div>
 <div style="color:var(--muted)">‹</div>
 </button>
 <button class="choose-card" data-choose="meme" type="button">
 <div class="choose-icon meme">😂</div>
-<div class="choose-text"><div class="choose-title">מם עם טקסט</div><div class="choose-sub">תמונה מצחיקה או וידאו לוואטסאפ</div></div>
+<div class="choose-text"><div class="choose-title" data-i18n="meme_title">Meme with text</div><div class="choose-sub" data-i18n="meme_sub">Funny image or video for WhatsApp</div></div>
 <div style="color:var(--muted)">‹</div>
 </button>
 <button class="choose-card" data-choose="image" type="button">
 <div class="choose-icon image">🎨</div>
-<div class="choose-text"><div class="choose-title">יצירת תמונות</div><div class="choose-sub">תבניות מהירות או תיאור חופשי</div></div>
+<div class="choose-text"><div class="choose-title" data-i18n="image_title">Image creation</div><div class="choose-sub" data-i18n="image_sub">Quick templates or free description</div></div>
 <div style="color:var(--muted)">‹</div>
 </button>
 </div>
@@ -120,52 +131,52 @@
 <section id="detailMenu" class="glass panel" hidden>
 <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
 <button id="backToChoose" class="round" style="width:36px;height:36px;font-size:.9rem" type="button">›</button>
-<div><div id="detailTitle" style="font-weight:800;font-size:1rem">כותרת</div><div id="detailSub" style="font-size:.78rem;color:var(--muted)">הסבר</div></div>
+<div><div id="detailTitle" style="font-weight:800;font-size:1rem">Title</div><div id="detailSub" style="font-size:.78rem;color:var(--muted)">Sub</div></div>
 </div>
 
 <div id="detail-meme" class="detail-content" hidden>
-<div class="h3">מה המם אומר?</div>
-<input id="topText" class="input" placeholder="למעלה - הסיטואציה" maxlength="70" style="margin-bottom:8px">
-<input id="bottomText" class="input" placeholder="למטה - הפאנץ'" maxlength="70">
-<div id="memeTextError" style="font-size:.75rem;color:#ff4d7a;margin:6px 0;display:none">נא למלא טקסט</div>
-<div class="h3">רעיונות מהירים</div>
+<div class="h3" data-i18n="meme_what">What does the meme say?</div>
+<input id="topText" class="input" maxlength="70" style="margin-bottom:8px">
+<input id="bottomText" class="input" maxlength="70">
+<div id="memeTextError" style="font-size:.75rem;color:#ff4d7a;margin:6px 0;display:none" data-i18n="fill_text">Please fill text</div>
+<div class="h3" data-i18n="quick_ideas">Quick ideas</div>
 <div style="display:grid;gap:6px;margin-bottom:12px">
-<div class="preset" data-top="כשאומרים לי תהיה רציני" data-bottom="ואני עם פילטר של כלב 🐶">כשאומרים תהיה רציני → ואני עם פילטר כלב</div>
-<div class="preset" data-top="אמא אומרת תמצא עבודה" data-bottom="אני מכין סרטונים ב-AI">אמא: תמצא עבודה → אני: סרטונים ב-AI</div>
+<div class="preset" data-top-en="When they tell me be serious" data-bottom-en="And I'm with dog filter 🐶" data-top-he="כשאומרים לי תהיה רציני" data-bottom-he="ואני עם פילטר של כלב 🐶"></div>
+<div class="preset" data-top-en="Mom says get a job" data-bottom-en="Me making AI videos" data-top-he="אמא אומרת תמצא עבודה" data-bottom-he="אני מכין סרטונים ב-AI"></div>
 </div>
-<button id="memeVideoBtn" class="btn btn-meme" style="margin-top:14px" type="button">צור מם וידאו לוואטסאפ</button>
-<button id="memeImageBtn" class="btn btn-ghost" style="margin-top:8px" type="button">צור רק תמונה</button>
+<button id="memeVideoBtn" class="btn btn-meme" style="margin-top:14px" type="button" data-i18n="meme_video">Create meme video for WhatsApp</button>
+<button id="memeImageBtn" class="btn btn-ghost" style="margin-top:8px" type="button" data-i18n="meme_image">Create image only</button>
 </div>
 
 <div id="detail-cinema" class="detail-content" hidden>
-<textarea id="cinemaPrompt" class="input" rows="2" placeholder="תאר את הסצנה - למשל: טריילר אקשן, בורח מפיצוץ, תאורה דרמטית..."></textarea>
-<button id="cinemaBtn" class="btn btn-cine" style="margin-top:14px" type="button">צור סרטון קולנועי</button>
+<textarea id="cinemaPrompt" class="input" rows="2"></textarea>
+<button id="cinemaBtn" class="btn btn-cine" style="margin-top:14px" type="button" data-i18n="create_cinema">Create cinematic video</button>
 </div>
 
 <div id="detail-image" class="detail-content" hidden>
-<div class="h3">תבניות מהירות - לחץ לבחירה</div>
+<div class="h3" data-i18n="quick_templates">Quick templates - tap to select</div>
 <div class="grid2" style="margin-bottom:12px">
-<button class="card" data-image-style="מאפיה בוס בחליפה יוקרתית"><div class="card-title">🕶️ בוס מאפיה</div><div class="card-sub">חליפה ועניבה</div></button>
-<button class="card" data-image-style="אסטרונאוט בחלל עם קסדה"><div class="card-title">🚀 אסטרונאוט</div><div class="card-sub">בחלל</div></button>
-<button class="card" data-image-style="גיבור על עם גלימה"><div class="card-title">🦸 גיבור על</div><div class="card-sub">תחפושת</div></button>
-<button class="card" data-image-style="מלך עם כתר וגלימה מלכותית"><div class="card-title">👑 מלך</div><div class="card-sub">כתר וארמון</div></button>
-<button class="card" data-image-style="סגנון סייברפאנק עם אורות ניאון"><div class="card-title">🌃 סייברפאנק</div><div class="card-sub">עתידני</div></button>
-<button class="card" data-image-style="One Punch Man Saitama גיבור עם חליפה צהובה"><div class="card-title">👊 סאיטמה</div><div class="card-sub">וואן פאנץ' מן</div></button>
+<button class="card" data-image-style="mafia boss in expensive suit"><div class="card-title">🕶️ <span data-i18n="tpl_mafia">Mafia Boss</span></div><div class="card-sub" data-i18n="tpl_mafia_sub">Suit & tie</div></button>
+<button class="card" data-image-style="astronaut in space with helmet"><div class="card-title">🚀 <span data-i18n="tpl_astro">Astronaut</span></div><div class="card-sub" data-i18n="tpl_astro_sub">In space</div></button>
+<button class="card" data-image-style="superhero with cape"><div class="card-title">🦸 <span data-i18n="tpl_hero">Superhero</span></div><div class="card-sub" data-i18n="tpl_hero_sub">Costume</div></button>
+<button class="card" data-image-style="king with crown and royal robe"><div class="card-title">👑 <span data-i18n="tpl_king">King</span></div><div class="card-sub" data-i18n="tpl_king_sub">Crown & palace</div></button>
+<button class="card" data-image-style="cyberpunk style with neon lights"><div class="card-title">🌃 <span data-i18n="tpl_cyber">Cyberpunk</span></div><div class="card-sub" data-i18n="tpl_cyber_sub">Futuristic</div></button>
+<button class="card" data-image-style="One Punch Man Saitama hero yellow suit"><div class="card-title">👊 <span data-i18n="tpl_saitama">Saitama</span></div><div class="card-sub">One Punch Man</div></button>
 </div>
-<div class="h3">או תאר מה שאתה רוצה - מלל חופשי</div>
-<textarea id="imagePrompt" class="input" rows="2" placeholder="למשל: שף במטבח יוקרתי, טייס קרב, כוכב רוק על במה..."></textarea>
-<button id="imageBtn" class="btn btn-image" style="margin-top:14px" type="button">צור תמונה</button>
+<div class="h3" data-i18n="free_text">Or describe what you want - free text</div>
+<textarea id="imagePrompt" class="input" rows="2"></textarea>
+<button id="imageBtn" class="btn btn-image" style="margin-top:14px" type="button" data-i18n="create_image">Create image</button>
 </div>
 </section>
 
 <section id="resultMenu" class="glass panel" hidden>
-<div style="padding:12px;background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.15);border-radius:10px;font-size:.88rem;margin-bottom:12px">✅ <span id="resultText">מוכן!</span></div>
+<div style="padding:12px;background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.15);border-radius:10px;font-size:.88rem;margin-bottom:12px">✅ <span id="resultText" data-i18n="ready">Ready!</span></div>
 <div style="display:grid;gap:8px">
-<button id="downloadBtn" class="btn btn-primary" type="button">שמור למכשיר</button>
-<button id="shareBtn" class="btn" style="background:#25d366;color:#000" type="button">שתף לוואטסאפ</button>
+<button id="downloadBtn" class="btn btn-primary" type="button" data-i18n="save">Save to device</button>
+<button id="shareBtn" class="btn" style="background:#25d366;color:#000" type="button" data-i18n="share_whatsapp">Share to WhatsApp</button>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-<button id="anotherBtn" class="btn btn-ghost" type="button">עוד אחד</button>
-<button id="newPhotoBtn" class="btn btn-ghost" type="button">תמונה חדשה</button>
+<button id="anotherBtn" class="btn btn-ghost" type="button" data-i18n="another">Another one</button>
+<button id="newPhotoBtn" class="btn btn-ghost" type="button" data-i18n="new_photo">New photo</button>
 </div>
 </div>
 </section>
@@ -176,6 +187,172 @@
 
 <script>
 "use strict";
+// ===== I18N SYSTEM - Auto detect by browser language =====
+const i18n = {
+  en: {
+    header_sub: "AI Studio",
+    upload_title: "Upload photo to start",
+    upload_sub: "Take selfie or choose from gallery",
+    open_camera: "Open camera",
+    creating: "Creating...",
+    few_seconds: "Few seconds",
+    cancel: "Cancel",
+    step1_title: "Step 1: Take or upload photo",
+    step1_sub: "Clear photo with face = better result",
+    step2_title: "Step 2: What to create?",
+    cinema_title: "Cinematic scene",
+    cinema_sub: "Video with music and sound",
+    meme_title: "Meme with text",
+    meme_sub: "Funny image or video for WhatsApp",
+    image_title: "Image creation",
+    image_sub: "Quick templates or free description",
+    meme_what: "What does the meme say?",
+    top_placeholder: "Top - the situation",
+    bottom_placeholder: "Bottom - the punchline",
+    fill_text: "Please fill text",
+    quick_ideas: "Quick ideas",
+    meme_video: "Create meme video for WhatsApp",
+    meme_image: "Create image only",
+    quick_templates: "Quick templates - tap to select",
+    tpl_mafia: "Mafia Boss", tpl_mafia_sub: "Suit & tie",
+    tpl_astro: "Astronaut", tpl_astro_sub: "In space",
+    tpl_hero: "Superhero", tpl_hero_sub: "Costume",
+    tpl_king: "King", tpl_king_sub: "Crown & palace",
+    tpl_cyber: "Cyberpunk", tpl_cyber_sub: "Futuristic",
+    tpl_saitama: "Saitama",
+    free_text: "Or describe what you want - free text",
+    cinema_placeholder: "Describe scene - e.g: action trailer, escaping explosion, dramatic lighting...",
+    image_placeholder: "E.g: chef in luxury kitchen, fighter pilot, rock star on stage...",
+    create_cinema: "Create cinematic video",
+    create_image: "Create image",
+    ready: "Ready!",
+    save: "Save to device",
+    share_whatsapp: "Share to WhatsApp",
+    another: "Another one",
+    new_photo: "New photo",
+    choose_meme: "Meme with text - Add funny text and send to WhatsApp",
+    choose_cinema: "Cinematic scene - Turn photo to video with music",
+    choose_image: "Image creation - Choose template or describe what you want",
+    need_photo: "Choose photo first",
+    invalid_image: "Not an image",
+    unsupported_format: "Unsupported format",
+    camera_blocked: "Camera blocked, upload image",
+    camera_error: "Camera error",
+    no_audio: "Record or upload audio",
+    audio_ready: "Audio ready",
+    audio_loaded: "Audio loaded",
+    preset_filled: "Text filled",
+    press_play: "Tap video to play with sound",
+    no_save: "Nothing to save",
+    no_share: "Nothing to share",
+    cancelled: "Cancelled",
+    failed: "Failed, try again",
+    takes_longer: "Taking longer than usual, try again",
+    fill_meme_text: "Please fill meme text"
+  },
+  he: {
+    header_sub: "אולפן וידאו",
+    upload_title: "העלה תמונה להתחלה",
+    upload_sub: "צלם סלפי או בחר מהגלריה",
+    open_camera: "פתח מצלמה",
+    creating: "יוצר...",
+    few_seconds: "כמה שניות",
+    cancel: "ביטול",
+    step1_title: "שלב 1: צלם או העלה תמונה",
+    step1_sub: "תמונה ברורה עם פנים = תוצאה טובה יותר",
+    step2_title: "שלב 2: מה ליצור?",
+    cinema_title: "סצנה קולנועית",
+    cinema_sub: "סרטון עם מוזיקה וקול",
+    meme_title: "מם עם טקסט",
+    meme_sub: "תמונה מצחיקה או וידאו לוואטסאפ",
+    image_title: "יצירת תמונות",
+    image_sub: "תבניות מהירות או תיאור חופשי",
+    meme_what: "מה המם אומר?",
+    top_placeholder: "למעלה - הסיטואציה",
+    bottom_placeholder: "למטה - הפאנץ'",
+    fill_text: "נא למלא טקסט",
+    quick_ideas: "רעיונות מהירים",
+    meme_video: "צור מם וידאו לוואטסאפ",
+    meme_image: "צור רק תמונה",
+    quick_templates: "תבניות מהירות - לחץ לבחירה",
+    tpl_mafia: "בוס מאפיה", tpl_mafia_sub: "חליפה ועניבה",
+    tpl_astro: "אסטרונאוט", tpl_astro_sub: "בחלל",
+    tpl_hero: "גיבור על", tpl_hero_sub: "תחפושת",
+    tpl_king: "מלך", tpl_king_sub: "כתר וארמון",
+    tpl_cyber: "סייברפאנק", tpl_cyber_sub: "עתידני",
+    tpl_saitama: "סאיטמה",
+    free_text: "או תאר מה שאתה רוצה - מלל חופשי",
+    cinema_placeholder: "תאר את הסצנה - למשל: טריילר אקשן, בורח מפיצוץ, תאורה דרמטית...",
+    image_placeholder: "למשל: שף במטבח יוקרתי, טייס קרב, כוכב רוק על במה...",
+    create_cinema: "צור סרטון קולנועי",
+    create_image: "צור תמונה",
+    ready: "מוכן!",
+    save: "שמור למכשיר",
+    share_whatsapp: "שתף לוואטסאפ",
+    another: "עוד אחד",
+    new_photo: "תמונה חדשה",
+    choose_meme: "מם עם טקסט - הוסף טקסט מצחיק ושלח לוואטסאפ",
+    choose_cinema: "סצנה קולנועית - הפוך תמונה לסרטון עם מוזיקה",
+    choose_image: "יצירת תמונות - בחר תבנית או תאר מה שאתה רוצה",
+    need_photo: "בחר תמונה קודם",
+    invalid_image: "לא תמונה",
+    unsupported_format: "פורמט לא נתמך",
+    camera_blocked: "מצלמה חסומה, העלה תמונה",
+    camera_error: "שגיאת מצלמה",
+    fill_meme_text: "נא למלא טקסט למם",
+    press_play: "לחץ על הוידאו כדי לנגן עם קול",
+    no_save: "אין מה לשמור",
+    no_share: "אין מה לשתף",
+    cancelled: "בוטל",
+    failed: "נכשל, נסה שוב",
+    takes_longer: "לוקח יותר זמן מהרגיל, נסה שוב"
+  }
+};
+
+let currentLang = 'en';
+function detectLang() {
+  const saved = localStorage.getItem('viral_lang');
+  if (saved && i18n[saved]) return saved;
+  const browserLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+  if (browserLang.startsWith('he')) return 'he';
+  if (browserLang.startsWith('iw')) return 'he'; // old Hebrew code
+  return 'en'; // default global = English
+}
+function applyLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('viral_lang', lang);
+  const dict = i18n[lang] || i18n.en;
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (dict[key]) el.textContent = dict[key];
+  });
+  // placeholders
+  const topInput = document.getElementById('topText');
+  const bottomInput = document.getElementById('bottomText');
+  const cinemaInput = document.getElementById('cinemaPrompt');
+  const imageInput = document.getElementById('imagePrompt');
+  if (topInput) topInput.placeholder = dict.top_placeholder || '';
+  if (bottomInput) bottomInput.placeholder = dict.bottom_placeholder || '';
+  if (cinemaInput) cinemaInput.placeholder = dict.cinema_placeholder || '';
+  if (imageInput) imageInput.placeholder = dict.image_placeholder || '';
+  // presets
+  document.querySelectorAll('.preset').forEach(p => {
+    const top = p.getAttribute(`data-top-${lang}`) || p.getAttribute('data-top-en');
+    const bottom = p.getAttribute(`data-bottom-${lang}`) || p.getAttribute('data-bottom-en');
+    if (top && bottom) p.textContent = `${top} → ${bottom}`;
+  });
+  // lang buttons
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === lang);
+  });
+  // detail titles mapping
+  window.i18nDict = dict;
+}
+function t(key) { return (i18n[currentLang] && i18n[currentLang][key]) || i18n.en[key] || key; }
+
+// ===== APP LOGIC =====
 const API_URL = "https://billowing-shape-1d81.maty-tsoraro.workers.dev";
 const APP_SECRET = "vs_87dTVS5q8rKeTtFahgFgl8GQeKyL78tB_2026";
 const MAX_DIM = 1536;
@@ -204,17 +381,17 @@ function setLoading(on,txt,sub){
 function stopCam(){if(stream){stream.getTracks().forEach(t=>t.stop());}stream=null;camReady=false;if(videoEl.srcObject)videoEl.srcObject=null;videoEl.hidden=true;if(!currentResult){placeholder.hidden=false;guide.hidden=true;}}
 async function startCam(){
   placeholder.hidden=false;videoEl.hidden=true;guide.hidden=true;
-  if(!navigator.mediaDevices?.getUserMedia){showToast("אין מצלמה, העלה תמונה",true);return;}
-  try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:facing},audio:false});}catch(e){try{stream=await navigator.mediaDevices.getUserMedia({video:true,audio:false});}catch(err){showToast("מצלמה חסומה, העלה תמונה",true);return;}}
-  try{videoEl.srcObject=stream;videoEl.hidden=false;placeholder.hidden=true;guide.hidden=false;await videoEl.play();camReady=true;}catch(e){showToast("שגיאת מצלמה",true);}
+  if(!navigator.mediaDevices?.getUserMedia){showToast(t('camera_blocked'),true);return;}
+  try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:facing},audio:false});}catch(e){try{stream=await navigator.mediaDevices.getUserMedia({video:true,audio:false});}catch(err){showToast(t('camera_blocked'),true);return;}}
+  try{videoEl.srcObject=stream;videoEl.hidden=false;placeholder.hidden=true;guide.hidden=false;await videoEl.play();camReady=true;}catch(e){showToast(t('camera_error'),true);}
 }
 function getDim(w,h){const l=Math.max(w,h);if(l<=MAX_DIM)return{w,h};const s=MAX_DIM/l;return{w:Math.round(w*s),h:Math.round(h*s)};}
 function drawToCanvas(src,mirror){
   const sw=src.videoWidth||src.naturalWidth||src.width;const sh=src.videoHeight||src.naturalHeight||src.height;
-  if(!sw||!sh)throw new Error("תמונה לא מוכנה");
+  if(!sw||!sh)throw new Error("Image not ready");
   const d=getDim(sw,sh);canvasEl.width=d.w;canvasEl.height=d.h;const ctx=canvasEl.getContext("2d",{alpha:false});ctx.save();if(mirror){ctx.translate(d.w,0);ctx.scale(-1,1);}ctx.drawImage(src,0,0,d.w,d.h);ctx.restore();return canvasEl.toDataURL("image/jpeg",0.86);
 }
-function takePhoto(){if(!stream||!camReady||videoEl.videoWidth===0){showToast("מצלמה לא מוכנה, העלה תמונה",true);return;}try{selectImage(drawToCanvas(videoEl,facing==="user"));}catch(e){showToast(e.message,true);}}
+function takePhoto(){if(!stream||!camReady||videoEl.videoWidth===0){showToast(t('camera_blocked'),true);return;}try{selectImage(drawToCanvas(videoEl,facing==="user"));}catch(e){showToast(e.message,true);}}
 function selectImage(data){
   originalImg=data;currentResult=data;currentVideo=null;
   resultImg.src=data;resultImg.hidden=false;resultImg.style.display="block";
@@ -228,12 +405,12 @@ function selectImage(data){
   window.scrollTo({top:320,behavior:"smooth"});
 }
 function handleUpload(file){
-  if(!file||!file.type.startsWith("image/")){showToast("לא תמונה",true);return;}
+  if(!file||!file.type.startsWith("image/")){showToast(t('invalid_image'),true);return;}
   const reader=new FileReader();
   reader.onload=ev=>{
     const img=new Image();
     img.onload=()=>{try{selectImage(drawToCanvas(img,false));}catch(e){showToast(e.message,true);}};
-    img.onerror=()=>showToast("פורמט לא נתמך",true);
+    img.onerror=()=>showToast(t('unsupported_format'),true);
     img.src=ev.target.result;
   };
   reader.readAsDataURL(file);
@@ -243,8 +420,8 @@ async function fetchJson(opts){
   opts = opts || {};
   opts.headers = { ...(opts.headers||{}), "X-App-Secret": APP_SECRET };
   const res=await fetch(API_URL,opts);
-  let data;try{data=await res.json();}catch(e){const t=await res.text();throw new Error(t.slice(0,500));}
-  if(!res.ok||data.error)throw new Error(data.error||"שגיאה");
+  let data;try{data=await res.json();}catch(e){const txt=await res.text();throw new Error(txt.slice(0,500));}
+  if(!res.ok||data.error)throw new Error(data.error||t('failed'));
   return data;
 }
 async function pollForResult(reqId, statusUrl, responseUrl){
@@ -254,9 +431,9 @@ async function pollForResult(reqId, statusUrl, responseUrl){
     if(cancelled) return null;
     const p=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"status",requestId:reqId,statusUrl,responseUrl})});
     if(p.status==="succeeded"&&p.videoUrl) return p.videoUrl;
-    if(p.status==="failed") throw new Error(p.error||"נכשל");
+    if(p.status==="failed") throw new Error(p.error||t('failed'));
   }
-  throw new Error("לוקח יותר זמן מהרגיל, נסה שוב");
+  throw new Error(t('takes_longer'));
 }
 function showResult(url){
   currentResult=url;currentVideo=null;
@@ -266,7 +443,7 @@ function showResult(url){
   document.getElementById("detailMenu").hidden=true;
   document.getElementById("cameraMenu").hidden=true;
   document.getElementById("resultMenu").hidden=false;
-  document.getElementById("resultText").textContent="מוכן!";
+  document.getElementById("resultText").textContent=t('ready');
   setLoading(false);
   window.scrollTo({top:0,behavior:"smooth"});
 }
@@ -275,14 +452,14 @@ function showVideo(url){
   resultVideo.src=url;resultVideo.hidden=false;resultVideo.style.display="block";
   resultImg.hidden=true;resultImg.style.display="none";
   resultVideo.load();
-  resultVideo.onloadeddata=()=>{ resultVideo.play().catch(()=>{ showToast("לחץ על הוידאו כדי לנגן עם קול"); }); };
+  resultVideo.onloadeddata=()=>{ resultVideo.play().catch(()=>{ showToast(t('press_play')); }); };
   document.getElementById("chooseMenu").hidden=true;
   document.getElementById("detailMenu").hidden=true;
   document.getElementById("cameraMenu").hidden=true;
   document.getElementById("resultMenu").hidden=false;
-  document.getElementById("resultText").textContent="הסרטון מוכן";
+  document.getElementById("resultText").textContent=t('ready');
   setLoading(false);
-  showToast("מוכן!");
+  showToast(t('ready'));
   window.scrollTo({top:0,behavior:"smooth"});
 }
 function wrapText(ctx,text,maxWidth){
@@ -293,10 +470,10 @@ function wrapText(ctx,text,maxWidth){
 async function createMemeImage(){
   const topText=document.getElementById("topText").value.trim();
   const bottomText=document.getElementById("bottomText").value.trim();
-  if(!topText&&!bottomText){document.getElementById("memeTextError").style.display="block";showToast("נא למלא טקסט למם",true);return null;}
+  if(!topText&&!bottomText){document.getElementById("memeTextError").style.display="block";showToast(t('fill_meme_text'),true);return null;}
   document.getElementById("memeTextError").style.display="none";
   const base=currentResult||originalImg;
-  if(!base){showToast("בחר תמונה קודם",true);return null;}
+  if(!base){showToast(t('need_photo'),true);return null;}
   return new Promise((resolve,reject)=>{
     const ctx=memeCanvas.getContext("2d");
     const img=new Image();
@@ -327,12 +504,12 @@ async function createMemeImage(){
         resolve({dataUrl:memeCanvas.toDataURL("image/jpeg",0.92)});
       }catch(e){reject(e);}
     };
-    img.onerror=()=>reject(new Error("טעינת תמונה למם נכשלה"));
+    img.onerror=()=>reject(new Error("Failed to load meme image"));
     img.src=base;
   });
 }
 async function createMemeImageOnly(){
-  setLoading(true,"יוצר תמונת מם...");
+  setLoading(true,t('creating'));
   try{
     const r=await createMemeImage();
     if(!r)throw new Error("");
@@ -342,15 +519,15 @@ async function createMemeImageOnly(){
 async function createMemeVideo(){
   const topText=document.getElementById("topText").value.trim();
   const bottomText=document.getElementById("bottomText").value.trim();
-  if(!topText&&!bottomText){document.getElementById("memeTextError").style.display="block";showToast("נא למלא טקסט",true);return;}
+  if(!topText&&!bottomText){document.getElementById("memeTextError").style.display="block";showToast(t('fill_meme_text'),true);return;}
   cancelled=false;
-  setLoading(true,"יוצר מם וידאו...");
+  setLoading(true,t('creating'));
   try{
     const meme=await createMemeImage();
     if(cancelled)return;
     if(!meme)throw new Error("");
     resultImg.src=meme.dataUrl;resultImg.hidden=false;resultImg.style.display="block";resultVideo.hidden=true;
-    setLoading(true,"מנפיש את המם...");
+    setLoading(true,t('creating'));
     const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"meme",imageUrl:meme.dataUrl,motion:"meme animation"})});
     if(cancelled)return;
     if(data.status==="succeeded"&&data.videoUrl){showVideo(data.videoUrl);return;}
@@ -361,9 +538,9 @@ async function createMemeVideo(){
   }catch(e){if(!cancelled&&e.message)showToast(e.message,true);setLoading(false);}
 }
 async function cinematicVideo(){
-  if(!currentResult){showToast("בחר תמונה",true);return;}
-  const prompt=document.getElementById("cinemaPrompt").value||"טריילר קולנועי אפי";
-  cancelled=false;setLoading(true,"יוצר סרטון קולנועי...","עם מוזיקה וקול");
+  if(!currentResult){showToast(t('need_photo'),true);return;}
+  const prompt=document.getElementById("cinemaPrompt").value||"epic movie trailer";
+  cancelled=false;setLoading(true,t('creating'),t('few_seconds'));
   try{
     const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"cinematic",imageUrl:currentResult,prompt:prompt})});
     if(cancelled)return;
@@ -375,28 +552,32 @@ async function cinematicVideo(){
   }catch(e){if(!cancelled)showToast(e.message,true);setLoading(false);}
 }
 async function createImage(){
-  if(!currentResult){showToast("בחר תמונה",true);return;}
+  if(!currentResult){showToast(t('need_photo'),true);return;}
   let prompt=document.getElementById("imagePrompt").value.trim();
   if(!prompt) prompt=selectedImageStyle;
-  if(!prompt){showToast("בחר תבנית או כתוב מה שאתה רוצה",true);return;}
-  cancelled=false;setLoading(true,"יוצר תמונה...","תבנית חדשה עם הפנים שלך");
+  if(!prompt){showToast("Choose template or write something",true);return;}
+  cancelled=false;setLoading(true,t('creating'));
   try{
     const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"image",image:currentResult,prompt:prompt})});
     if(data.status==="succeeded"&&(data.resultUrl||data.output?.[0])){
       showResult(data.resultUrl||data.output[0]);
       return;
     }
-    showToast("תמונה נוצרה!",false);
   }catch(e){if(!cancelled)showToast(e.message,true);setLoading(false);}
 }
 function openDetail(cat){
   document.getElementById("chooseMenu").hidden=true;
   document.getElementById("detailMenu").hidden=false;
   document.querySelectorAll(".detail-content").forEach(el=>el.hidden=true);
-  const titles={meme:["מם עם טקסט","הוסף טקסט מצחיק ושלח לוואטסאפ"],cinema:["סצנה קולנועית","הפוך תמונה לסרטון עם מוזיקה"],image:["יצירת תמונות","בחר תבנית או תאר מה שאתה רוצה"]};
-  const t=titles[cat]||["יצירה",""];
-  document.getElementById("detailTitle").textContent=t[0];
-  document.getElementById("detailSub").textContent=t[1];
+  const dict = window.i18nDict || i18n.en;
+  const titles={
+    meme:[dict.meme_title, dict.choose_meme],
+    cinema:[dict.cinema_title, dict.choose_cinema],
+    image:[dict.image_title, dict.choose_image]
+  };
+  const tArr=titles[cat]||["Create",""];
+  document.getElementById("detailTitle").textContent=tArr[0];
+  document.getElementById("detailSub").textContent=tArr[1];
   document.getElementById("detail-"+cat).hidden=false;
   window.scrollTo({top:400,behavior:"smooth"});
 }
@@ -431,13 +612,13 @@ document.getElementById("uploadBtn").addEventListener("click",()=>{document.getE
 document.getElementById("uploadInput").addEventListener("change",e=>{const f=e.target.files&&e.target.files[0];if(f)handleUpload(f);});
 document.getElementById("captureBtn").addEventListener("click",takePhoto);
 document.getElementById("switchBtn").addEventListener("click",()=>{facing=facing==="user"?"environment":"user";startCam();});
-document.getElementById("cancelBtn").addEventListener("click",()=>{cancelled=true;setLoading(false);showToast("בוטל");});
+document.getElementById("cancelBtn").addEventListener("click",()=>{cancelled=true;setLoading(false);showToast(t('cancelled'));});
 document.getElementById("downloadBtn").addEventListener("click",()=>{
-  const url=currentVideo||currentResult;if(!url){showToast("אין מה לשמור",true);return;}
+  const url=currentVideo||currentResult;if(!url){showToast(t('no_save'),true);return;}
   fetch(url).then(r=>r.blob()).then(b=>{const o=URL.createObjectURL(b);const a=document.createElement("a");a.href=o;a.download="viral-"+Date.now()+(currentVideo?".mp4":".jpg");document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(o),2000);}).catch(()=>window.open(url,"_blank"));
 });
 document.getElementById("shareBtn").addEventListener("click", async ()=>{
-  const url=currentVideo||currentResult;if(!url){showToast("אין מה לשתף",true);return;}
+  const url=currentVideo||currentResult;if(!url){showToast(t('no_share'),true);return;}
   try{
     if(navigator.share){
       if(url.startsWith("data:")){
@@ -453,7 +634,11 @@ document.getElementById("memeVideoBtn").addEventListener("click",createMemeVideo
 document.getElementById("memeImageBtn").addEventListener("click",createMemeImageOnly);
 document.getElementById("cinemaBtn").addEventListener("click",cinematicVideo);
 document.getElementById("imageBtn").addEventListener("click",createImage);
-document.querySelectorAll(".preset").forEach(p=>{p.addEventListener("click",()=>{document.getElementById("topText").value=p.dataset.top;document.getElementById("bottomText").value=p.dataset.bottom;});});
+document.querySelectorAll(".preset").forEach(p=>{p.addEventListener("click",()=>{
+  const top = p.getAttribute(`data-top-${currentLang}`) || p.getAttribute('data-top-en');
+  const bottom = p.getAttribute(`data-bottom-${currentLang}`) || p.getAttribute('data-bottom-en');
+  document.getElementById("topText").value=top||"";document.getElementById("bottomText").value=bottom||"";
+});});
 document.querySelectorAll("[data-image-style]").forEach(b=>{
   b.addEventListener("click",()=>{
     document.querySelectorAll("[data-image-style]").forEach(x=>x.classList.remove("active"));
@@ -466,7 +651,15 @@ document.querySelectorAll("[data-choose]").forEach(b=>{b.addEventListener("click
 document.getElementById("backToChoose").addEventListener("click",backToChoose);
 document.getElementById("newPhotoBtn").addEventListener("click",resetApp);
 document.getElementById("anotherBtn").addEventListener("click",anotherVideo);
-function init(){setLoading(false);placeholder.hidden=false;}
+document.querySelectorAll(".lang-btn").forEach(b=>{
+  b.addEventListener("click",()=>applyLang(b.dataset.lang));
+});
+function init(){
+  const lang = detectLang();
+  applyLang(lang);
+  setLoading(false);
+  placeholder.hidden=false;
+}
 if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",init,{once:true});}else{init();}
 </script>
 </body>
