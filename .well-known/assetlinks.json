@@ -1,0 +1,1 @@
+[{"relation": ["delegate_permission/common.handle_all_urls"], "target": {"namespace": "android_app", "package_name": "com.personaai.app", "sha256_cert_fingerprints": ["F2:70:6C:7C:27:A3:4A:21:AC:AF:3F:7C:F6:5E:39:34:7E:4F:1D:EB:9A:45:E4:FD:9E:05:7C:7F:6C:AA:A3:4E"]}}]
