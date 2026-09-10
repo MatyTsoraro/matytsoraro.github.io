@@ -2,8 +2,8 @@
   "name": "PersonaAI - AI Avatar Studio",
   "short_name": "PersonaAI",
   "description": "תמונה אחת הופכת לסרטון, מם או אווטאר אישי - מוכן לשיתוף",
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#0a0a14",
   "theme_color": "#0a0a14",
@@ -21,5 +21,10 @@
       "type": "image/png",
       "purpose": "any"
     }
+  ],
+  "display_override": [
+    "standalone",
+    "fullscreen",
+    "minimal-ui"
   ]
 }
