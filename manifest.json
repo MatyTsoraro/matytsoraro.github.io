@@ -3,16 +3,23 @@
   "short_name": "PersonaAI",
   "description": "תמונה אחת הופכת לסרטון, מם או אווטאר אישי - מוכן לשיתוף",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#0a0a14",
   "theme_color": "#0a0a14",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "./PersonaAI_Icon_512x512.png",
+      "src": "PersonaAI_Icon_512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    },
+    {
+      "src": "PersonaAI_Icon_512x512.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }
