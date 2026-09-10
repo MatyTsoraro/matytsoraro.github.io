@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0a0a14">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="PersonaAI_Icon_512x512.png">
 <title>VIRAL STUDIO</title>
 <style>
 :root{--p:#00e5ff;--s:#7c4dff;--bg:#0a0a14;--surface:#151528;--surface2:#1e1e38;--text:#fff;--muted:#9aa0b8;--border:rgba(255,255,255,0.08);--r:20px;--r2:12px}
@@ -100,7 +102,7 @@ html[dir="ltr"] .card{text-align:left}
 <div class="section-title" data-i18n="step1_title">Step 1: Take or upload photo</div>
 <div class="section-sub" data-i18n="step1_sub">Clear photo with face = better result</div>
 <div class="controls">
-<button id="uploadBtn" class="round" type="button">⬆️</button>
+<button id="uploadBtn" class="round" type="button">⬆</button>
 <input id="uploadInput" type="file" accept="image/*" hidden>
 <button id="captureBtn" class="capture" type="button"></button>
 <button id="switchBtn" class="round" type="button">↻</button>
@@ -156,7 +158,7 @@ html[dir="ltr"] .card{text-align:left}
 <div id="detail-image" class="detail-content" hidden>
 <div class="h3" data-i18n="quick_templates">Quick templates - tap to select</div>
 <div class="grid2" style="margin-bottom:12px">
-<button class="card" data-image-style="mafia boss in expensive suit"><div class="card-title">🕶️ <span data-i18n="tpl_mafia">Mafia Boss</span></div><div class="card-sub" data-i18n="tpl_mafia_sub">Suit & tie</div></button>
+<button class="card" data-image-style="mafia boss in expensive suit"><div class="card-title">🕶 <span data-i18n="tpl_mafia">Mafia Boss</span></div><div class="card-sub" data-i18n="tpl_mafia_sub">Suit & tie</div></button>
 <button class="card" data-image-style="astronaut in space with helmet"><div class="card-title">🚀 <span data-i18n="tpl_astro">Astronaut</span></div><div class="card-sub" data-i18n="tpl_astro_sub">In space</div></button>
 <button class="card" data-image-style="superhero with cape"><div class="card-title">🦸 <span data-i18n="tpl_hero">Superhero</span></div><div class="card-sub" data-i18n="tpl_hero_sub">Costume</div></button>
 <button class="card" data-image-style="king with crown and royal robe"><div class="card-title">👑 <span data-i18n="tpl_king">King</span></div><div class="card-sub" data-i18n="tpl_king_sub">Crown & palace</div></button>
@@ -187,7 +189,6 @@ html[dir="ltr"] .card{text-align:left}
 
 <script>
 "use strict";
-// ===== I18N SYSTEM - Auto detect by browser language =====
 const i18n = {
   en: {
     header_sub: "AI Studio",
@@ -308,15 +309,14 @@ const i18n = {
     takes_longer: "לוקח יותר זמן מהרגיל, נסה שוב"
   }
 };
-
 let currentLang = 'en';
 function detectLang() {
   const saved = localStorage.getItem('viral_lang');
   if (saved && i18n[saved]) return saved;
   const browserLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
   if (browserLang.startsWith('he')) return 'he';
-  if (browserLang.startsWith('iw')) return 'he'; // old Hebrew code
-  return 'en'; // default global = English
+  if (browserLang.startsWith('iw')) return 'he';
+  return 'en';
 }
 function applyLang(lang) {
   currentLang = lang;
@@ -328,7 +328,6 @@ function applyLang(lang) {
     const key = el.getAttribute('data-i18n');
     if (dict[key]) el.textContent = dict[key];
   });
-  // placeholders
   const topInput = document.getElementById('topText');
   const bottomInput = document.getElementById('bottomText');
   const cinemaInput = document.getElementById('cinemaPrompt');
@@ -337,22 +336,18 @@ function applyLang(lang) {
   if (bottomInput) bottomInput.placeholder = dict.bottom_placeholder || '';
   if (cinemaInput) cinemaInput.placeholder = dict.cinema_placeholder || '';
   if (imageInput) imageInput.placeholder = dict.image_placeholder || '';
-  // presets
   document.querySelectorAll('.preset').forEach(p => {
     const top = p.getAttribute(`data-top-${lang}`) || p.getAttribute('data-top-en');
     const bottom = p.getAttribute(`data-bottom-${lang}`) || p.getAttribute('data-bottom-en');
     if (top && bottom) p.textContent = `${top} → ${bottom}`;
   });
-  // lang buttons
   document.querySelectorAll('.lang-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.lang === lang);
   });
-  // detail titles mapping
   window.i18nDict = dict;
 }
 function t(key) { return (i18n[currentLang] && i18n[currentLang][key]) || i18n.en[key] || key; }
 
-// ===== APP LOGIC =====
 const API_URL = "https://billowing-shape-1d81.maty-tsoraro.workers.dev";
 const APP_SECRET = "vs_87dTVS5q8rKeTtFahgFgl8GQeKyL78tB_2026";
 const MAX_DIM = 1536;
@@ -659,6 +654,10 @@ function init(){
   applyLang(lang);
   setLoading(false);
   placeholder.hidden=false;
+  // Register service worker for PWA
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+  }
 }
 if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",init,{once:true});}else{init();}
 </script>
