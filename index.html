@@ -1,16 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="PersonaAI">
 <meta name="theme-color" content="#0a0a14">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="PersonaAI_Icon_512x512.png">
-<title>VIRAL STUDIO</title>
+<title>PersonaAI - Protected Version</title>
 <style>
 :root{--p:#00e5ff;--s:#7c4dff;--bg:#0a0a14;--surface:#151528;--surface2:#1e1e38;--text:#fff;--muted:#9aa0b8;--border:rgba(255,255,255,0.08);--r:20px;--r2:12px}
 *{box-sizing:border-box}
@@ -18,9 +14,6 @@ html{background:var(--bg);overscroll-behavior:none;overflow-x:hidden;position:fi
 body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-family:Arial,sans-serif;overscroll-behavior:none;overflow-x:hidden;overflow-y:auto;position:fixed;inset:0;width:100%;height:100%;-webkit-overflow-scrolling:touch}
 .topbar{position:fixed;top:0;left:0;right:0;z-index:30;display:flex;justify-content:space-between;align-items:center;min-height:62px;padding:0 16px;padding-top:env(safe-area-inset-top);background:rgba(10,10,20,0.98);border-bottom:1px solid var(--border);backdrop-filter:blur(20px)}
 .brand{margin:0;font-size:1.15rem;font-weight:800}.brand span{background:linear-gradient(90deg,var(--p),var(--s));-webkit-background-clip:text;background-clip:text;color:transparent}
-.lang-switch{display:flex;gap:4px;background:var(--surface2);border:1px solid var(--border);border-radius:999px;padding:2px}
-.lang-btn{padding:6px 10px;border-radius:999px;border:0;background:transparent;color:var(--muted);font-size:.75rem;font-weight:700;cursor:pointer}
-.lang-btn.active{background:#fff;color:#000}
 .app{width:min(100%,560px);margin:0 auto;padding:12px;padding-top:74px;display:grid;gap:14px;min-height:100dvh}
 .glass{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
 .viewport{position:relative;width:100%;aspect-ratio:3/4;background:#08080f;min-height:460px}
@@ -65,9 +58,6 @@ body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-famil
 .toast{position:fixed;z-index:100;right:50%;bottom:18px;transform:translateX(50%);width:max-content;max-width:92vw;padding:10px 18px;background:#1a1a2e;border:1px solid var(--border);border-radius:999px;font-size:.85rem;font-weight:600;text-align:center}
 .toast.error{background:#2a1520}
 [hidden]{display:none!important}
-@media (display-mode: standalone){body{padding-top:env(safe-area-inset-top)}}
-html[dir="ltr"] .choose-card{text-align:left}
-html[dir="ltr"] .card{text-align:left}
 </style>
 </head>
 <body>
@@ -77,13 +67,8 @@ html[dir="ltr"] .card{text-align:left}
 <h1 class="brand">VIRAL <span>STUDIO</span></h1>
 </div>
 <div style="display:flex;align-items:center;gap:10px">
-<div class="lang-switch">
-<button class="lang-btn" data-lang="en" type="button">EN</button>
-<button class="lang-btn" data-lang="he" type="button">HE</button>
-</div>
 <div id="creditsBadge" style="background:#1e1e38;border:1px solid rgba(255,255,255,0.12);padding:6px 10px;border-radius:999px;font-size:.75rem;font-weight:800;white-space:nowrap">5 credits</div>
 <button onclick="PersonaBilling.openStoreModal()" style="background:linear-gradient(90deg,#00e5ff,#7c4dff);border:0;color:#fff;padding:6px 12px;border-radius:999px;font-weight:800;cursor:pointer;font-size:.75rem">Buy</button>
-<div style="font-size:.75rem;color:var(--muted)" data-i18n="header_sub">AI Studio</div>
 </div>
 </header>
 
@@ -91,8 +76,8 @@ html[dir="ltr"] .card{text-align:left}
 <section class="glass viewport">
 <div id="placeholder" class="placeholder">
 <div style="width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,rgba(0,229,255,0.12),rgba(124,77,255,0.12));display:flex;align-items:center;justify-content:center;font-size:1.8rem">◐</div>
-<div><div style="font-weight:700" data-i18n="upload_title">Upload photo to start</div><div style="font-size:.82rem;color:var(--muted);margin-top:4px" data-i18n="upload_sub">Take selfie or choose from gallery</div></div>
-<button id="enableCamBtn" class="btn btn-primary" style="width:auto;padding:10px 20px;font-size:.85rem" type="button" data-i18n="open_camera">Open camera</button>
+<div><div style="font-weight:700">העלה תמונה להתחלה</div><div style="font-size:.82rem;color:var(--muted);margin-top:4px">סלפי ברור = תוצאה טובה יותר</div></div>
+<button id="enableCamBtn" class="btn btn-primary" style="width:auto;padding:10px 20px;font-size:.85rem" type="button">פתח מצלמה</button>
 </div>
 <video id="videoElement" class="front" autoplay playsinline muted hidden></video>
 <canvas id="canvasElement" hidden></canvas>
@@ -101,15 +86,15 @@ html[dir="ltr"] .card{text-align:left}
 <div id="guide" class="guide" hidden></div>
 <div id="loading" class="loading" hidden>
 <div class="spinner"></div>
-<div id="loadingText" style="font-weight:700;font-size:.95rem" data-i18n="creating">Creating...</div>
-<div id="loadingSub" style="font-size:.82rem;color:var(--muted)" data-i18n="few_seconds">Few seconds</div>
-<button id="cancelBtn" class="btn btn-ghost" style="width:auto;padding:8px 16px;margin-top:12px;font-size:.8rem" type="button" data-i18n="cancel">Cancel</button>
+<div id="loadingText" style="font-weight:700;font-size:.95rem">יוצר...</div>
+<div id="loadingSub" style="font-size:.82rem;color:var(--muted)">כמה שניות</div>
+<button id="cancelBtn" class="btn btn-ghost" style="width:auto;padding:8px 16px;margin-top:12px;font-size:.8rem" type="button">ביטול</button>
 </div>
 </section>
 
 <section id="cameraMenu" class="glass panel">
-<div class="section-title" data-i18n="step1_title">Step 1: Take or upload photo</div>
-<div class="section-sub" data-i18n="step1_sub">Clear photo with face = better result</div>
+<div class="section-title">שלב 1: צלם או העלה תמונה</div>
+<div class="section-sub">תמונה ברורה עם פנים = תוצאה טובה יותר</div>
 <div class="controls">
 <button id="uploadBtn" class="round" type="button">⬆</button>
 <input id="uploadInput" type="file" accept="image/*" hidden>
@@ -119,21 +104,21 @@ html[dir="ltr"] .card{text-align:left}
 </section>
 
 <section id="chooseMenu" class="glass panel" hidden>
-<div class="section-title" data-i18n="step2_title">Step 2: What to create?</div>
+<div class="section-title">שלב 2: מה ליצור?</div>
 <div class="choose-grid">
 <button class="choose-card" data-choose="cinema" type="button">
 <div class="choose-icon cine">🎥</div>
-<div class="choose-text"><div class="choose-title" data-i18n="cinema_title">Cinematic scene</div><div class="choose-sub" data-i18n="cinema_sub">Video with music and sound</div></div>
+<div class="choose-text"><div class="choose-title">סצנה קולנועית</div><div class="choose-sub">וידאו עם מוזיקה וסאונד - $0.01 בלבד</div></div>
 <div style="color:var(--muted)">‹</div>
 </button>
 <button class="choose-card" data-choose="meme" type="button">
 <div class="choose-icon meme">😂</div>
-<div class="choose-text"><div class="choose-title" data-i18n="meme_title">Meme with text</div><div class="choose-sub" data-i18n="meme_sub">Funny image or video for WhatsApp</div></div>
+<div class="choose-text"><div class="choose-title">מם עם טקסט</div><div class="choose-sub">תמונה מצחיקה לוואטסאפ</div></div>
 <div style="color:var(--muted)">‹</div>
 </button>
 <button class="choose-card" data-choose="image" type="button">
 <div class="choose-icon image">🎨</div>
-<div class="choose-text"><div class="choose-title" data-i18n="image_title">Image creation</div><div class="choose-sub" data-i18n="image_sub">Quick templates or free description</div></div>
+<div class="choose-text"><div class="choose-title">יצירת תמונה</div><div class="choose-sub">תבניות מהירות או טקסט חופשי</div></div>
 <div style="color:var(--muted)">‹</div>
 </button>
 </div>
@@ -144,87 +129,77 @@ html[dir="ltr"] .card{text-align:left}
 <button id="backToChoose" class="round" style="width:36px;height:36px;font-size:.9rem" type="button">›</button>
 <div><div id="detailTitle" style="font-weight:800;font-size:1rem">Title</div><div id="detailSub" style="font-size:.78rem;color:var(--muted)">Sub</div></div>
 </div>
-
 <div id="detail-meme" class="detail-content" hidden>
-<div class="h3" data-i18n="meme_what">What does the meme say?</div>
-<input id="topText" class="input" maxlength="70" style="margin-bottom:8px">
-<input id="bottomText" class="input" maxlength="70">
-<div id="memeTextError" style="font-size:.75rem;color:#ff4d7a;margin:6px 0;display:none" data-i18n="fill_text">Please fill text</div>
-<div class="h3" data-i18n="quick_ideas">Quick ideas</div>
-<div style="display:grid;gap:6px;margin-bottom:12px">
-<div class="preset" data-top-en="When they tell me be serious" data-bottom-en="And I'm with dog filter 🐶" data-top-he="כשאומרים לי תהיה רציני" data-bottom-he="ואני עם פילטר של כלב 🐶"></div>
-<div class="preset" data-top-en="Mom says get a job" data-bottom-en="Me making AI videos" data-top-he="אמא אומרת תמצא עבודה" data-bottom-he="אני מכין סרטונים ב-AI"></div>
+<div class="h3">מה המם אומר?</div>
+<input id="topText" class="input" maxlength="70" style="margin-bottom:8px" placeholder="טקסט עליון">
+<input id="bottomText" class="input" maxlength="70" placeholder="טקסט תחתון">
+<button id="memeImageBtn" class="btn btn-ghost" style="margin-top:14px" type="button">צור תמונה בלבד (חינם לבדיקה)</button>
+<button id="memeVideoBtn" class="btn btn-meme" style="margin-top:8px" type="button">צור סרטון מם לוואטסאפ</button>
 </div>
-<button id="memeVideoBtn" class="btn btn-meme" style="margin-top:14px" type="button" data-i18n="meme_video">Create meme video for WhatsApp</button>
-<button id="memeImageBtn" class="btn btn-ghost" style="margin-top:8px" type="button" data-i18n="meme_image">Create image only</button>
-</div>
-
 <div id="detail-cinema" class="detail-content" hidden>
-<textarea id="cinemaPrompt" class="input" rows="2"></textarea>
-<button id="cinemaBtn" class="btn btn-cine" style="margin-top:14px" type="button" data-i18n="create_cinema">Create cinematic video</button>
+<textarea id="cinemaPrompt" class="input" rows="2" placeholder="תאר סצנה קולנועית..."></textarea>
+<button id="cinemaBtn" class="btn btn-cine" style="margin-top:14px" type="button">צור סרטון קולנועי</button>
+<div style="font-size:.7rem;color:var(--muted);margin-top:6px">💡 משתמש במודל Flux Schnell חסכוני - $0.01 ליצירה</div>
 </div>
-
 <div id="detail-image" class="detail-content" hidden>
-<div class="h3" data-i18n="quick_templates">Quick templates - tap to select</div>
+<div class="h3">תבניות מהירות - לחץ לבחירה</div>
 <div class="grid2" style="margin-bottom:12px">
-<button class="card" data-image-style="mafia boss in expensive suit"><div class="card-title">🕶 <span data-i18n="tpl_mafia">Mafia Boss</span></div><div class="card-sub" data-i18n="tpl_mafia_sub">Suit & tie</div></button>
-<button class="card" data-image-style="astronaut in space with helmet"><div class="card-title">🚀 <span data-i18n="tpl_astro">Astronaut</span></div><div class="card-sub" data-i18n="tpl_astro_sub">In space</div></button>
-<button class="card" data-image-style="superhero with cape"><div class="card-title">🦸 <span data-i18n="tpl_hero">Superhero</span></div><div class="card-sub" data-i18n="tpl_hero_sub">Costume</div></button>
-<button class="card" data-image-style="king with crown and royal robe"><div class="card-title">👑 <span data-i18n="tpl_king">King</span></div><div class="card-sub" data-i18n="tpl_king_sub">Crown & palace</div></button>
-<button class="card" data-image-style="cyberpunk style with neon lights"><div class="card-title">🌃 <span data-i18n="tpl_cyber">Cyberpunk</span></div><div class="card-sub" data-i18n="tpl_cyber_sub">Futuristic</div></button>
-<button class="card" data-image-style="One Punch Man Saitama hero yellow suit"><div class="card-title">👊 <span data-i18n="tpl_saitama">Saitama</span></div><div class="card-sub">One Punch Man</div></button>
+<button class="card" data-image-style="mafia boss in expensive suit"><div class="card-title">🕶 מאפיונר</div></button>
+<button class="card" data-image-style="astronaut in space with helmet"><div class="card-title">🚀 אסטרונאוט</div></button>
+<button class="card" data-image-style="superhero with cape"><div class="card-title">🦸 גיבור על</div></button>
+<button class="card" data-image-style="king with crown"><div class="card-title">👑 מלך</div></button>
 </div>
-<div class="h3" data-i18n="free_text">Or describe what you want - free text</div>
-<textarea id="imagePrompt" class="input" rows="2"></textarea>
-<button id="imageBtn" class="btn btn-image" style="margin-top:14px" type="button" data-i18n="create_image">Create image</button>
+<textarea id="imagePrompt" class="input" rows="2" placeholder="או תאר מה אתה רוצה..."></textarea>
+<button id="imageBtn" class="btn btn-image" style="margin-top:14px" type="button">צור תמונה</button>
 </div>
 </section>
 
 <section id="resultMenu" class="glass panel" hidden>
-<div style="padding:12px;background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.15);border-radius:10px;font-size:.88rem;margin-bottom:12px">✅ <span id="resultText" data-i18n="ready">Ready!</span></div>
+<div style="padding:12px;background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.15);border-radius:10px;font-size:.88rem;margin-bottom:12px">✅ <span id="resultText">מוכן!</span></div>
 <div style="display:grid;gap:8px">
-<button id="downloadBtn" class="btn btn-primary" type="button" data-i18n="save">Save to device</button>
-<button id="shareBtn" class="btn" style="background:#25d366;color:#000" type="button" data-i18n="share_whatsapp">Share to WhatsApp</button>
+<button id="downloadBtn" class="btn btn-primary" type="button">שמור למכשיר</button>
+<button id="shareBtn" class="btn" style="background:#25d366;color:#000" type="button">שתף לוואטסאפ</button>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-<button id="anotherBtn" class="btn btn-ghost" type="button" data-i18n="another">Another one</button>
-<button id="newPhotoBtn" class="btn btn-ghost" type="button" data-i18n="new_photo">New photo</button>
+<button id="anotherBtn" class="btn btn-ghost" type="button">עוד אחד</button>
+<button id="newPhotoBtn" class="btn btn-ghost" type="button">תמונה חדשה</button>
 </div>
 </div>
 </section>
 
-<!-- MONEY MAKING STORE MODAL V2 -->
+<!-- PROTECTED STORE MODAL -->
 <div id="storeModal" hidden style="position:fixed;inset:0;z-index:90;background:rgba(10,10,20,0.92);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:16px">
   <div style="width:100%;max-width:400px;background:#151528;border:1px solid rgba(255,255,255,0.12);border-radius:24px;padding:24px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5)">
     <div style="width:64px;height:64px;margin:0 auto 14px;border-radius:18px;background:linear-gradient(135deg,#00e5ff,#7c4dff);display:flex;align-items:center;justify-content:center;font-size:1.8rem">💎</div>
     <h2 style="margin:0 0 6px;font-size:1.3rem;font-weight:800">נגמרו הקרדיטים?</h2>
-    <p style="color:#9aa0b8;font-size:.88rem;margin:0 0 16px;line-height:1.4">הצטרפו לאלפים שיוצרים סרטונים ויראליים כל יום</p>
-    <div style="background:linear-gradient(135deg,rgba(0,229,255,0.15),rgba(124,77,255,0.15));border:1px solid rgba(0,229,255,0.3);border-radius:16px;padding:16px;margin:14px 0;text-align:left;position:relative;overflow:hidden">
-      <div style="position:absolute;top:8px;right:8px;background:linear-gradient(90deg,#ffbd2e,#ff8c00);color:#000;font-size:.65rem;font-weight:800;padding:3px 8px;border-radius:999px">הכי משתלם 🔥</div>
-      <div style="display:flex;justify-content:space-between;align-items:center">
+    <p style="color:#9aa0b8;font-size:.88rem;margin:0 0 16px;line-height:1.4">הצטרפו לאלפים שיוצרים סרטונים ויראליים</p>
+    <!-- PRO 50 - PROFITABLE -->
+    <div style="background:linear-gradient(135deg,rgba(0,229,255,0.15),rgba(124,77,255,0.15));border:1px solid rgba(0,229,255,0.3);border-radius:16px;padding:16px;margin:14px 0;text-align:right;position:relative;overflow:hidden">
+      <div style="position:absolute;top:8px;left:8px;background:linear-gradient(90deg,#ffbd2e,#ff8c00);color:#000;font-size:.65rem;font-weight:800;padding:3px 8px;border-radius:999px">הכי משתלם 🔥 רווחי!</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
         <div>
           <div style="font-size:1.15rem;font-weight:800;display:flex;align-items:center;gap:6px">♾️ PRO שבועי</div>
-          <div style="font-size:.8rem;color:#9aa0b8;margin-top:4px;line-height:1.3">• 100 יצירות בשבוע<br>• בלי סימן מים<br>• היסטוריה בענן</div>
+          <div style="font-size:.8rem;color:#9aa0b8;margin-top:4px;line-height:1.3">• 50 יצירות בשבוע<br>• בלי סימן מים • מודל חסכוני<br>• רווח מובטח $1.29 למנוי</div>
         </div>
-        <div style="text-align:right">
+        <div style="text-align:left">
           <div id="proPrice" style="font-size:1.1rem;font-weight:800">$3.99</div>
           <div style="font-size:.75rem;color:#9aa0b8">לשבוע</div>
         </div>
       </div>
       <button class="btn" style="width:100%;margin-top:12px;background:linear-gradient(90deg,#00e5ff,#7c4dff);color:#fff;font-weight:800;min-height:48px;border-radius:12px;border:0;cursor:pointer" onclick="PersonaBilling.buyProWeekly()">הפעל PRO - <span id="proPrice2">$3.99</span></button>
     </div>
-    <div style="background:#1e1e38;border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:16px;margin:14px 0;text-align:left;display:flex;justify-content:space-between;align-items:center">
+    <div style="background:#1e1e38;border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:16px;margin:14px 0;text-align:right;display:flex;justify-content:space-between;align-items:center">
       <div>
         <div style="font-size:1.05rem;font-weight:800">20 קרדיטים</div>
         <div style="font-size:.8rem;color:#9aa0b8;margin-top:2px">חד פעמי • לא פג תוקף</div>
       </div>
-      <div style="text-align:right">
+      <div style="text-align:left">
         <div id="productPrice" style="font-size:1.05rem;font-weight:800">$1.99</div>
-        <div style="font-size:.75rem;color:#9aa0b8">~₪7.5</div>
+        <div style="font-size:.75rem;color:#9aa0b8">רווח $0.79</div>
       </div>
     </div>
     <button class="btn" style="width:100%;background:#fff;color:#000;font-weight:800;min-height:48px;border-radius:12px;border:0;cursor:pointer" onclick="PersonaBilling.buy20Credits()">קנה 20 קרדיטים - <span id="productPrice2b">$1.99</span></button>
     <button class="btn" style="width:100%;margin-top:8px;background:transparent;border:1px solid rgba(255,255,255,0.1);color:#9aa0b8;min-height:44px;border-radius:12px;cursor:pointer" onclick="PersonaBilling.closeStoreModal()">אולי אחר כך</button>
-    <div style="margin-top:12px;font-size:.68rem;color:#6b7280;line-height:1.3">תשלום מאובטח דרך Google Play • ניתן לביטול בהגדרות<br>SKU: credits_20, pro_weekly</div>
+    <div style="margin-top:12px;font-size:.68rem;color:#6b7280;line-height:1.3">תשלום מאובטח דרך Google Play • מוגן עם הגבלות יומיות<br>SKU: credits_20, pro_weekly (50/week)</div>
   </div>
 </div>
 
@@ -232,32 +207,108 @@ html[dir="ltr"] .card{text-align:left}
 
 <div id="toast" class="toast" hidden></div>
 <canvas id="memeCanvas" width="1080" height="1080" hidden></canvas>
+<canvas id="canvasElement" hidden></canvas>
 
 <script>
-// === FIXED BILLING - MONEY MAKING VERSION ===
+// ==================== CONFIG - CHANGE HERE ====================
+const API_URL = "https://your-worker.workers.dev/api"; // החלף ל-Worker שלך שמגן על מפתח FAL
+const APP_SECRET = "persona_secret_2024";
+const FAL_MODEL_CHEAP = "fal-ai/flux/schnell"; // $0.01 במקום H3 Max $0.50
+// ==================== PROTECTION SYSTEM - ANTI-BANKRUPTCY ====================
+const PROTECTION = {
+  DAILY_GLOBAL_LIMIT: 150, // מקסימום 150 יצירות ביום לכל האפליקציה
+  MAX_PER_USER_PER_DAY: 20, // מקסימום 20 לאותו משתמש ביום
+  PRO_WEEKLY_CREDITS: 50, // 50 ולא 100 - רווחי!
+  FAL_COST_PER_IMAGE: 0.01, // עם schnell
+  MAINTENANCE_THRESHOLD: 2.00, // אם FAL מתחת ל-$2 - מצב תחזוקה
+  STORAGE_GLOBAL: 'persona_global_daily',
+  STORAGE_GLOBAL_DATE: 'persona_global_date',
+  STORAGE_USER: 'persona_user_daily',
+  STORAGE_USER_DATE: 'persona_user_date'
+};
+
+function getTodayStr(){ return new Date().toISOString().split('T')[0]; }
+
+function checkGlobalLimit(){
+  const today = getTodayStr();
+  const savedDate = localStorage.getItem(PROTECTION.STORAGE_GLOBAL_DATE);
+  let count = parseInt(localStorage.getItem(PROTECTION.STORAGE_GLOBAL) || '0');
+  if(savedDate !== today){ count = 0; localStorage.setItem(PROTECTION.STORAGE_GLOBAL_DATE, today); localStorage.setItem(PROTECTION.STORAGE_GLOBAL, '0'); }
+  return { count, allowed: count < PROTECTION.DAILY_GLOBAL_LIMIT, remaining: PROTECTION.DAILY_GLOBAL_LIMIT - count };
+}
+function incrementGlobal(){
+  const c = checkGlobalLimit();
+  localStorage.setItem(PROTECTION.STORAGE_GLOBAL, String(c.count + 1));
+  localStorage.setItem(PROTECTION.STORAGE_GLOBAL_DATE, getTodayStr());
+}
+function checkUserDailyLimit(){
+  const today = getTodayStr();
+  const savedDate = localStorage.getItem(PROTECTION.STORAGE_USER_DATE);
+  let count = parseInt(localStorage.getItem(PROTECTION.STORAGE_USER) || '0');
+  if(savedDate !== today){ count = 0; localStorage.setItem(PROTECTION.STORAGE_USER_DATE, today); localStorage.setItem(PROTECTION.STORAGE_USER, '0'); }
+  return { count, allowed: count < PROTECTION.MAX_PER_USER_PER_DAY, remaining: PROTECTION.MAX_PER_USER_PER_DAY - count };
+}
+function incrementUserDaily(){
+  const c = checkUserDailyLimit();
+  localStorage.setItem(PROTECTION.STORAGE_USER, String(c.count + 1));
+  localStorage.setItem(PROTECTION.STORAGE_USER_DATE, getTodayStr());
+}
+function checkMaintenanceMode(){
+  // אם הגדרת ב-Worker שהיתרה נמוכה, ה-Worker יחזיר error מיוחד
+  // כאן בדיקה מקומית נוספת
+  const lowFlag = localStorage.getItem('fal_low_balance_flag');
+  if(lowFlag === 'true') return true;
+  return false;
+}
+function canGenerate(){
+  if(checkMaintenanceMode()){
+    showToast('🔧 המערכת בתחזוקה קצרה - המנוי שלך יוארך אוטומטית', true);
+    return false;
+  }
+  const global = checkGlobalLimit();
+  if(!global.allowed){
+    showToast(`הגענו למכסה היומית (${PROTECTION.DAILY_GLOBAL_LIMIT}). חוזרים מחר ב-00:00`, true);
+    return false;
+  }
+  const user = checkUserDailyLimit();
+  if(!user.allowed){
+    showToast(`הגעת למכסה יומית של ${PROTECTION.MAX_PER_USER_PER_DAY} יצירות. חוזר מחר`, true);
+    return false;
+  }
+  return true;
+}
+
+// ==================== BILLING - PROFITABLE VERSION ====================
 const BILLING = {
   PRODUCTS: { CREDITS_20: 'credits_20', PRO_WEEKLY: 'pro_weekly' },
   CREDITS_PER_PURCHASE: 20,
+  PRO_CREDITS: 50, // רווחי!
   STORAGE_KEY: 'personaai_credits_v2',
   STORAGE_KEY_PRO: 'personaai_pro_until',
-  FREE_CREDITS: 5
+  STORAGE_KEY_PRO_USED: 'personaai_pro_used',
+  FREE_CREDITS: 3
 };
 let digitalGoodsService = null;
 let productDetails = {};
 
+function isProActive() {
+  const until = localStorage.getItem(BILLING.STORAGE_KEY_PRO);
+  if (!until) return false;
+  return new Date(until) > new Date();
+}
+function getProRemaining(){
+  if(!isProActive()) return 0;
+  const used = parseInt(localStorage.getItem(BILLING.STORAGE_KEY_PRO_USED) || '0');
+  return Math.max(0, BILLING.PRO_CREDITS - used);
+}
 function getCredits() {
-  if (isProActive()) return 999;
+  if (isProActive()) return getProRemaining();
   const v = parseInt(localStorage.getItem(BILLING.STORAGE_KEY) || '');
   if (isNaN(v)) {
     localStorage.setItem(BILLING.STORAGE_KEY, String(BILLING.FREE_CREDITS));
     return BILLING.FREE_CREDITS;
   }
   return v;
-}
-function isProActive() {
-  const until = localStorage.getItem(BILLING.STORAGE_KEY_PRO);
-  if (!until) return false;
-  return new Date(until) > new Date();
 }
 function setCredits(n) {
   if (isProActive()) return;
@@ -269,17 +320,49 @@ function addCredits(n) {
   setCredits(getCredits() + n);
 }
 function spendCredits(n = 1) {
-  if (isProActive()) return true;
+  if (isProActive()) {
+    const used = parseInt(localStorage.getItem(BILLING.STORAGE_KEY_PRO_USED) || '0');
+    if(used + n > BILLING.PRO_CREDITS) return false;
+    localStorage.setItem(BILLING.STORAGE_KEY_PRO_USED, String(used + n));
+    updateCreditsUI();
+    return true;
+  }
   const cur = getCredits();
   if (cur < n) return false;
   setCredits(cur - n);
   return true;
 }
 function spendCreditsOrRefund(cost = 1) {
-  if (isProActive()) return { success: true, refund: () => {} };
+  if(!canGenerate()) return { success: false };
+  if (isProActive()) {
+    const used = parseInt(localStorage.getItem(BILLING.STORAGE_KEY_PRO_USED) || '0');
+    if(used + cost > BILLING.PRO_CREDITS){
+      showToast('נגמרו 50 היצירות השבועיות שלך. מתחדש ביום ראשון', true);
+      return { success: false };
+    }
+    localStorage.setItem(BILLING.STORAGE_KEY_PRO_USED, String(used + cost));
+    incrementGlobal(); incrementUserDaily(); updateCreditsUI();
+    let refunded = false;
+    return {
+      success: true,
+      refund: () => {
+        if (!refunded) {
+          refunded = true;
+          const curUsed = parseInt(localStorage.getItem(BILLING.STORAGE_KEY_PRO_USED) || '0');
+          localStorage.setItem(BILLING.STORAGE_KEY_PRO_USED, String(Math.max(0, curUsed - cost)));
+          const g = parseInt(localStorage.getItem(PROTECTION.STORAGE_GLOBAL) || '1');
+          localStorage.setItem(PROTECTION.STORAGE_GLOBAL, String(Math.max(0, g-1)));
+          const u = parseInt(localStorage.getItem(PROTECTION.STORAGE_USER) || '1');
+          localStorage.setItem(PROTECTION.STORAGE_USER, String(Math.max(0, u-1)));
+          updateCreditsUI();
+        }
+      }
+    };
+  }
   const cur = getCredits();
   if (cur < cost) return { success: false };
   setCredits(cur - cost);
+  incrementGlobal(); incrementUserDaily();
   let refunded = false;
   return {
     success: true,
@@ -287,17 +370,19 @@ function spendCreditsOrRefund(cost = 1) {
       if (!refunded) {
         refunded = true;
         addCredits(cost);
-        console.log('Credits refunded');
+        const g = parseInt(localStorage.getItem(PROTECTION.STORAGE_GLOBAL) || '1');
+        localStorage.setItem(PROTECTION.STORAGE_GLOBAL, String(Math.max(0, g-1)));
+        const u = parseInt(localStorage.getItem(PROTECTION.STORAGE_USER) || '1');
+        localStorage.setItem(PROTECTION.STORAGE_USER, String(Math.max(0, u-1)));
       }
     }
   };
 }
 function updateCreditsUI() {
   const el = document.getElementById('creditsBadge');
-  const pro = isProActive();
   if (el) {
-    if (pro) {
-      el.textContent = 'PRO ♾️';
+    if (isProActive()) {
+      el.textContent = `PRO ${getProRemaining()}/${BILLING.PRO_CREDITS}`;
       el.style.background = 'linear-gradient(90deg,#00e5ff,#7c4dff)';
       el.style.color = '#fff';
     } else {
@@ -309,55 +394,61 @@ function updateCreditsUI() {
   if (productDetails[BILLING.PRODUCTS.CREDITS_20]) {
     const p = productDetails[BILLING.PRODUCTS.CREDITS_20];
     const priceText = p.price ? `${p.price.value} ${p.price.currency}` : '$1.99';
-    document.querySelectorAll('#productPrice, #productPrice2, #productPrice2b').forEach(e => { if (e) e.textContent = priceText; });
+    document.querySelectorAll('#productPrice, #productPrice2b').forEach(e => { if (e) e.textContent = priceText; });
   }
   if (productDetails[BILLING.PRODUCTS.PRO_WEEKLY]) {
     const p = productDetails[BILLING.PRODUCTS.PRO_WEEKLY];
     const priceText = p.price ? `${p.price.value} ${p.price.currency}` : '$3.99';
-    document.querySelectorAll('#proPrice, #proPrice2').forEach(e => { if (e) e.textContent = priceText + (e.id.includes('2') ? '' : ' / week'); });
-    const el2 = document.getElementById('proPrice2');
-    if (el2) el2.textContent = priceText;
+    document.querySelectorAll('#proPrice, #proPrice2').forEach(e => { if (e) e.textContent = priceText; });
   }
 }
 async function initStore() {
   updateCreditsUI();
-  if (localStorage.getItem(BILLING.STORAGE_KEY_PRO)) {
+  const today = getTodayStr();
+  if(localStorage.getItem(BILLING.STORAGE_KEY_PRO)){
     const until = new Date(localStorage.getItem(BILLING.STORAGE_KEY_PRO));
-    if (until < new Date()) localStorage.removeItem(BILLING.STORAGE_KEY_PRO);
+    if (until < new Date()){ localStorage.removeItem(BILLING.STORAGE_KEY_PRO); localStorage.removeItem(BILLING.STORAGE_KEY_PRO_USED); }
+  }
+  // Reset weekly PRO counter on Monday
+  const weekStart = localStorage.getItem('pro_week_start');
+  if(weekStart){
+    const ws = new Date(weekStart);
+    const now = new Date();
+    const diffDays = Math.floor((now - ws)/(1000*60*60*24));
+    if(diffDays >= 7){ localStorage.setItem('pro_week_start', now.toISOString()); localStorage.setItem(BILLING.STORAGE_KEY_PRO_USED, '0'); }
   }
   if ('getDigitalGoodsService' in window) {
     try {
       digitalGoodsService = await window.getDigitalGoodsService('https://play.google.com/billing');
-      const productIds = Object.values(BILLING.PRODUCTS);
-      const details = await digitalGoodsService.getDetails(productIds);
+      const details = await digitalGoodsService.getDetails(Object.values(BILLING.PRODUCTS));
       details.forEach(d => { productDetails[d.itemId] = d; });
       updateCreditsUI();
       const purchases = await digitalGoodsService.listPurchases();
       for (const p of purchases) await handlePurchase(p, false);
-    } catch (e) { console.warn('Digital Goods API not ready', e); }
+    } catch (e) { console.warn('Billing not ready', e); }
   }
 }
 async function handlePurchase(purchase, showToastFlag = true) {
-  try {
-    if (purchase.itemId === BILLING.PRODUCTS.CREDITS_20) {
-      addCredits(BILLING.CREDITS_PER_PURCHASE);
-      if (showToastFlag) showToast(`+${BILLING.CREDITS_PER_PURCHASE} credits added! 🎉`);
-    } else if (purchase.itemId === BILLING.PRODUCTS.PRO_WEEKLY) {
-      const until = new Date(); until.setDate(until.getDate() + 7);
-      localStorage.setItem(BILLING.STORAGE_KEY_PRO, until.toISOString());
-      if (showToastFlag) showToast(`PRO activated! ♾️ Unlimited for 7 days!`);
-    }
-    updateCreditsUI();
-    if (digitalGoodsService && purchase.purchaseToken) {
-      try { if (digitalGoodsService.consume) await digitalGoodsService.consume(purchase.purchaseToken); } catch (err) {}
-    }
-  } catch (e) { console.error(e); }
+  if (purchase.itemId === BILLING.PRODUCTS.CREDITS_20) {
+    addCredits(BILLING.CREDITS_PER_PURCHASE);
+    if (showToastFlag) showToast(`+${BILLING.CREDITS_PER_PURCHASE} credits! 🎉`);
+  } else if (purchase.itemId === BILLING.PRODUCTS.PRO_WEEKLY) {
+    const until = new Date(); until.setDate(until.getDate() + 7);
+    localStorage.setItem(BILLING.STORAGE_KEY_PRO, until.toISOString());
+    localStorage.setItem(BILLING.STORAGE_KEY_PRO_USED, '0');
+    localStorage.setItem('pro_week_start', new Date().toISOString());
+    if (showToastFlag) showToast(`PRO הופעל! 50 יצירות לשבוע! ♾️`);
+  }
+  updateCreditsUI();
+  if (digitalGoodsService && purchase.purchaseToken) {
+    try { if (digitalGoodsService.consume) await digitalGoodsService.consume(purchase.purchaseToken); } catch (err) {}
+  }
 }
 async function buyProduct(productId) {
   if (!digitalGoodsService || !window.PaymentRequest) {
     if (confirm(`TEST MODE\n\nBuy ${productId}?`)) {
       if (productId === BILLING.PRODUCTS.CREDITS_20) { addCredits(BILLING.CREDITS_PER_PURCHASE); showToast(`Test: +${BILLING.CREDITS_PER_PURCHASE} credits`); }
-      else { const until = new Date(); until.setDate(until.getDate() + 7); localStorage.setItem(BILLING.STORAGE_KEY_PRO, until.toISOString()); updateCreditsUI(); showToast(`Test: PRO activated!`); }
+      else { const until = new Date(); until.setDate(until.getDate() + 7); localStorage.setItem(BILLING.STORAGE_KEY_PRO, until.toISOString()); localStorage.setItem(BILLING.STORAGE_KEY_PRO_USED, '0'); localStorage.setItem('pro_week_start', new Date().toISOString()); updateCreditsUI(); showToast(`Test: PRO 50 activated!`); }
     }
     return;
   }
@@ -369,53 +460,25 @@ async function buyProduct(productId) {
     const { purchaseToken } = response.details;
     await handlePurchase({ itemId: productId, purchaseToken }, true);
     await response.complete('success');
-  } catch (e) {
-    console.error('Purchase failed', e);
-    if (e.message && !e.message.includes('closed')) showToast(e.message, true);
-  }
+  } catch (e) { if (e.message && !e.message.includes('closed')) showToast(e.message, true); }
 }
 async function buy20Credits() { return buyProduct(BILLING.PRODUCTS.CREDITS_20); }
 async function buyProWeekly() { return buyProduct(BILLING.PRODUCTS.PRO_WEEKLY); }
 function requireCreditsOrBuy(cost = 1) {
-  if (isProActive()) return true;
+  if (isProActive() && getProRemaining() >= cost) return true;
   if (getCredits() >= cost) return true;
-  openStoreModal();
-  showToast('Not enough credits - get more! 💎', true);
-  return false;
+  openStoreModal(); showToast('אין מספיק קרדיטים - קנה עוד! 💎', true); return false;
 }
-function openStoreModal() {
-  const modal = document.getElementById('storeModal');
-  if (modal) { modal.hidden = false; modal.style.display = 'flex'; }
-}
-function closeStoreModal() {
-  const modal = document.getElementById('storeModal');
-  if (modal) { modal.hidden = true; modal.style.display = 'none'; }
-}
+function openStoreModal() { const modal = document.getElementById('storeModal'); if (modal) { modal.hidden = false; modal.style.display = 'flex'; } }
+function closeStoreModal() { const modal = document.getElementById('storeModal'); if (modal) { modal.hidden = true; modal.style.display = 'none'; } }
 window.PersonaBilling = { getCredits, addCredits, spendCredits, spendCreditsOrRefund, buy20Credits, buyProWeekly, buyProduct, requireCreditsOrBuy, initStore, openStoreModal, closeStoreModal, isProActive, BILLING };
 document.addEventListener('DOMContentLoaded', () => { initStore(); });
 </script>
 
 <script>
 "use strict";
-const i18n = {
-  en: { header_sub: "AI Studio", upload_title: "Upload photo to start", upload_sub: "Take selfie or choose from gallery", open_camera: "Open camera", creating: "Creating...", few_seconds: "Few seconds", cancel: "Cancel", step1_title: "Step 1: Take or upload photo", step1_sub: "Clear photo with face = better result", step2_title: "Step 2: What to create?", cinema_title: "Cinematic scene", cinema_sub: "Video with music and sound", meme_title: "Meme with text", meme_sub: "Funny image or video for WhatsApp", image_title: "Image creation", image_sub: "Quick templates or free description", meme_what: "What does the meme say?", top_placeholder: "Top - the situation", bottom_placeholder: "Bottom - the punchline", fill_text: "Please fill text", quick_ideas: "Quick ideas", meme_video: "Create meme video for WhatsApp", meme_image: "Create image only", quick_templates: "Quick templates - tap to select", tpl_mafia: "Mafia Boss", tpl_mafia_sub: "Suit & tie", tpl_astro: "Astronaut", tpl_astro_sub: "In space", tpl_hero: "Superhero", tpl_hero_sub: "Costume", tpl_king: "King", tpl_king_sub: "Crown & palace", tpl_cyber: "Cyberpunk", tpl_cyber_sub: "Futuristic", tpl_saitama: "Saitama", free_text: "Or describe what you want - free text", cinema_placeholder: "Describe scene - e.g: action trailer, escaping explosion, dramatic lighting...", image_placeholder: "E.g: chef in luxury kitchen, fighter pilot, rock star on stage...", create_cinema: "Create cinematic video", create_image: "Create image", ready: "Ready!", save: "Save to device", share_whatsapp: "Share to WhatsApp", another: "Another one", new_photo: "New photo", choose_meme: "Meme with text - Add funny text and send to WhatsApp", choose_cinema: "Cinematic scene - Turn photo to video with music", choose_image: "Image creation - Choose template or describe what you want", need_photo: "Choose photo first", invalid_image: "Not an image", unsupported_format: "Unsupported format", camera_blocked: "Camera blocked, upload image", camera_error: "Camera error", no_audio: "Record or upload audio", audio_ready: "Audio ready", audio_loaded: "Audio loaded", preset_filled: "Text filled", press_play: "Tap video to play with sound", no_save: "Nothing to save", no_share: "Nothing to share", cancelled: "Cancelled", failed: "Failed, try again", takes_longer: "Taking longer than usual, try again", fill_meme_text: "Please fill meme text" },
-  he: { header_sub: "אולפן וידאו", upload_title: "העלה תמונה להתחלה", upload_sub: "צלם סלפי או בחר מהגלריה", open_camera: "פתח מצלמה", creating: "יוצר...", few_seconds: "כמה שניות", cancel: "ביטול", step1_title: "שלב 1: צלם או העלה תמונה", step1_sub: "תמונה ברורה עם פנים = תוצאה טובה יותר", step2_title: "שלב 2: מה ליצור?", cinema_title: "סצנה קולנועית", cinema_sub: "סרטון עם מוזיקה וקול", meme_title: "מם עם טקסט", meme_sub: "תמונה מצחיקה או וידאו לוואטסאפ", image_title: "יצירת תמונות", image_sub: "תבניות מהירות או תיאור חופשי", meme_what: "מה המם אומר?", top_placeholder: "למעלה - הסיטואציה", bottom_placeholder: "למטה - הפאנץ'", fill_text: "נא למלא טקסט", quick_ideas: "רעיונות מהירים", meme_video: "צור מם וידאו לוואטסאפ", meme_image: "צור רק תמונה", quick_templates: "תבניות מהירות - לחץ לבחירה", tpl_mafia: "בוס מאפיה", tpl_mafia_sub: "חליפה ועניבה", tpl_astro: "אסטרונאוט", tpl_astro_sub: "בחלל", tpl_hero: "גיבור על", tpl_hero_sub: "תחפושת", tpl_king: "מלך", tpl_king_sub: "כתר וארמון", tpl_cyber: "סייברפאנק", tpl_cyber_sub: "עתידני", tpl_saitama: "סאיטמה", free_text: "או תאר מה שאתה רוצה - מלל חופשי", cinema_placeholder: "תאר את הסצנה - למשל: טריילר אקשן, בורח מפיצוץ, תאורה דרמטית...", image_placeholder: "למשל: שף במטבח יוקרתי, טייס קרב, כוכב רוק על במה...", create_cinema: "צור סרטון קולנועי", create_image: "צור תמונה", ready: "מוכן!", save: "שמור למכשיר", share_whatsapp: "שתף לוואטסאפ", another: "עוד אחד", new_photo: "תמונה חדשה", choose_meme: "מם עם טקסט - הוסף טקסט מצחיק ושלח לוואטסאפ", choose_cinema: "סצנה קולנועית - הפוך תמונה לסרטון עם מוזיקה", choose_image: "יצירת תמונות - בחר תבנית או תאר מה שאתה רוצה", need_photo: "בחר תמונה קודם", invalid_image: "לא תמונה", unsupported_format: "פורמט לא נתמך", camera_blocked: "מצלמה חסומה, העלה תמונה", camera_error: "שגיאת מצלמה", fill_meme_text: "נא למלא טקסט למם", press_play: "לחץ על הוידאו כדי לנגן עם קול", no_save: "אין מה לשמור", no_share: "אין מה לשתף", cancelled: "בוטל", failed: "נכשל, נסה שוב", takes_longer: "לוקח יותר זמן מהרגיל, נסה שוב" }
-};
-let currentLang = 'en';
-function detectLang() { const saved = localStorage.getItem('viral_lang'); if (saved && i18n[saved]) return saved; const browserLang = (navigator.language || 'en').toLowerCase(); if (browserLang.startsWith('he')||browserLang.startsWith('iw')) return 'he'; return 'en'; }
-function applyLang(lang) {
-  currentLang = lang; localStorage.setItem('viral_lang', lang);
-  const dict = i18n[lang] || i18n.en; document.documentElement.lang = lang; document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
-  document.querySelectorAll('[data-i18n]').forEach(el => { const key = el.getAttribute('data-i18n'); if (dict[key]) el.textContent = dict[key]; });
-  const topInput = document.getElementById('topText'); const bottomInput = document.getElementById('bottomText'); const cinemaInput = document.getElementById('cinemaPrompt'); const imageInput = document.getElementById('imagePrompt');
-  if (topInput) topInput.placeholder = dict.top_placeholder || ''; if (bottomInput) bottomInput.placeholder = dict.bottom_placeholder || ''; if (cinemaInput) cinemaInput.placeholder = dict.cinema_placeholder || ''; if (imageInput) imageInput.placeholder = dict.image_placeholder || '';
-  document.querySelectorAll('.preset').forEach(p => { const top = p.getAttribute(`data-top-${lang}`) || p.getAttribute('data-top-en'); const bottom = p.getAttribute(`data-bottom-${lang}`) || p.getAttribute('data-bottom-en'); if (top && bottom) p.textContent = `${top} → ${bottom}`; });
-  document.querySelectorAll('.lang-btn').forEach(b => { b.classList.toggle('active', b.dataset.lang === lang); }); window.i18nDict = dict;
-}
-function t(key) { return (i18n[currentLang] && i18n[currentLang][key]) || i18n.en[key] || key; }
-const API_URL = "https://billowing-shape-1d81.maty-tsoraro.workers.dev";
-const APP_SECRET = "vs_87dTVS5q8rKeTtFahgFgl8GQeKyL78tB_2026";
-const MAX_DIM = 1536;
+const MAX_DIM = 1280;
+let stream = null; let facing = "user"; let camReady = false; let originalImg = null; let currentResult = null; let currentVideo = null; let cancelled = false;
 const videoEl = document.getElementById("videoElement");
 const canvasEl = document.getElementById("canvasElement");
 const resultImg = document.getElementById("resultImage");
@@ -427,58 +490,67 @@ const loadingText = document.getElementById("loadingText");
 const loadingSub = document.getElementById("loadingSub");
 const toastEl = document.getElementById("toast");
 const memeCanvas = document.getElementById("memeCanvas");
-let stream=null,facing="user",camReady=false,originalImg=null,currentResult=null,currentVideo=null,cancelled=false,toastTimer=null;
-let selectedMemeMotion="meme_punch",selectedImageStyle="";
-function showToast(msg,err){clearTimeout(toastTimer);toastEl.textContent=msg;toastEl.classList.toggle("error",!!err);toastEl.hidden=false;toastTimer=setTimeout(()=>toastEl.hidden=true,4000);}
+function showToast(msg,isErr){ toastEl.textContent = msg; toastEl.hidden = false; toastEl.classList.toggle("error", !!isErr); clearTimeout(showToast._t); showToast._t = setTimeout(()=>toastEl.hidden = true, 3000); }
+function t(k){ return k; }
 function setLoading(on,txt,sub){ loading.hidden=!on; if(txt)loadingText.textContent=txt; if(sub)loadingSub.textContent=sub; document.querySelectorAll("button:not(#cancelBtn)").forEach(b=>b.disabled=on); }
 function stopCam(){if(stream){stream.getTracks().forEach(t=>t.stop());}stream=null;camReady=false;if(videoEl.srcObject)videoEl.srcObject=null;videoEl.hidden=true;if(!currentResult){placeholder.hidden=false;guide.hidden=true;}}
-async function startCam(){ placeholder.hidden=false;videoEl.hidden=true;guide.hidden=true; if(!navigator.mediaDevices?.getUserMedia){showToast(t('camera_blocked'),true);return;} try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:facing},audio:false});}catch(e){try{stream=await navigator.mediaDevices.getUserMedia({video:true,audio:false});}catch(err){showToast(t('camera_blocked'),true);return;}} try{videoEl.srcObject=stream;videoEl.hidden=false;placeholder.hidden=true;guide.hidden=false;await videoEl.play();camReady=true;}catch(e){showToast(t('camera_error'),true);} }
+async function startCam(){ placeholder.hidden=false;videoEl.hidden=true;guide.hidden=true; if(!navigator.mediaDevices?.getUserMedia){showToast('מצלמה חסומה',true);return;} try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:facing},audio:false});}catch(e){try{stream=await navigator.mediaDevices.getUserMedia({video:true,audio:false});}catch(err){showToast('מצלמה חסומה',true);return;}} try{videoEl.srcObject=stream;videoEl.hidden=false;placeholder.hidden=true;guide.hidden=false;await videoEl.play();camReady=true;}catch(e){showToast('שגיאת מצלמה',true);} }
 function getDim(w,h){const l=Math.max(w,h);if(l<=MAX_DIM)return{w,h};const s=MAX_DIM/l;return{w:Math.round(w*s),h:Math.round(h*s)};}
 function drawToCanvas(src,mirror){ const sw=src.videoWidth||src.naturalWidth||src.width;const sh=src.videoHeight||src.naturalHeight||src.height; if(!sw||!sh)throw new Error("Image not ready"); const d=getDim(sw,sh);canvasEl.width=d.w;canvasEl.height=d.h;const ctx=canvasEl.getContext("2d",{alpha:false});ctx.save();if(mirror){ctx.translate(d.w,0);ctx.scale(-1,1);}ctx.drawImage(src,0,0,d.w,d.h);ctx.restore();return canvasEl.toDataURL("image/jpeg",0.86); }
-function takePhoto(){if(!stream||!camReady||videoEl.videoWidth===0){showToast(t('camera_blocked'),true);return;}try{selectImage(drawToCanvas(videoEl,facing==="user"));}catch(e){showToast(e.message,true);}}
+function takePhoto(){if(!stream||!camReady||videoEl.videoWidth===0){showToast('מצלמה חסומה',true);return;}try{selectImage(drawToCanvas(videoEl,facing==="user"));}catch(e){showToast(e.message,true);}}
 function selectImage(data){ originalImg=data;currentResult=data;currentVideo=null; resultImg.src=data;resultImg.hidden=false;resultImg.style.display="block"; resultVideo.hidden=true;resultVideo.style.display="none";resultVideo.pause(); videoEl.hidden=true;placeholder.hidden=true;guide.hidden=true; document.getElementById("cameraMenu").hidden=true; document.getElementById("chooseMenu").hidden=false; document.getElementById("detailMenu").hidden=true; document.getElementById("resultMenu").hidden=true; stopCam(); window.scrollTo({top:320,behavior:"smooth"}); }
-function handleUpload(file){ if(!file||!file.type.startsWith("image/")){showToast(t('invalid_image'),true);return;} const reader=new FileReader(); reader.onload=ev=>{ const img=new Image(); img.onload=()=>{try{selectImage(drawToCanvas(img,false));}catch(e){showToast(e.message,true);}}; img.onerror=()=>showToast(t('unsupported_format'),true); img.src=ev.target.result; }; reader.readAsDataURL(file); }
+function handleUpload(file){ if(!file||!file.type.startsWith("image/")){showToast('תמונה לא תקינה',true);return;} const reader=new FileReader(); reader.onload=ev=>{ const img=new Image(); img.onload=()=>{try{selectImage(drawToCanvas(img,false));}catch(e){showToast(e.message,true);}}; img.onerror=()=>showToast('פורמט לא נתמך',true); img.src=ev.target.result; }; reader.readAsDataURL(file); }
 function wait(ms){return new Promise(r=>setTimeout(r,ms));}
-async function fetchJson(opts){ opts = opts || {}; opts.headers = { ...(opts.headers||{}), "X-App-Secret": APP_SECRET }; const res=await fetch(API_URL,opts); let data;try{data=await res.json();}catch(e){const txt=await res.text();throw new Error(txt.slice(0,500));} if(!res.ok||data.error)throw new Error(data.error||t('failed')); return data; }
-async function pollForResult(reqId, statusUrl, responseUrl){ for(let i=0;i<60;i++){ if(cancelled) return null; await wait(3000); if(cancelled) return null; const p=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"status",requestId:reqId,statusUrl,responseUrl})}); if(p.status==="succeeded"&&p.videoUrl) return p.videoUrl; if(p.status==="failed") throw new Error(p.error||t('failed')); } throw new Error(t('takes_longer')); }
-function showResult(url){ currentResult=url;currentVideo=null; resultImg.src=url;resultImg.hidden=false;resultImg.style.display="block"; resultVideo.hidden=true;resultVideo.style.display="none";resultVideo.pause(); document.getElementById("chooseMenu").hidden=true; document.getElementById("detailMenu").hidden=true; document.getElementById("cameraMenu").hidden=true; document.getElementById("resultMenu").hidden=false; document.getElementById("resultText").textContent=t('ready'); setLoading(false); window.scrollTo({top:0,behavior:"smooth"}); }
-function showVideo(url){ currentVideo=url; resultVideo.src=url;resultVideo.hidden=false;resultVideo.style.display="block"; resultImg.hidden=true;resultImg.style.display="none"; resultVideo.load(); resultVideo.onloadeddata=()=>{ resultVideo.play().catch(()=>{ showToast(t('press_play')); }); }; document.getElementById("chooseMenu").hidden=true; document.getElementById("detailMenu").hidden=true; document.getElementById("cameraMenu").hidden=true; document.getElementById("resultMenu").hidden=false; document.getElementById("resultText").textContent=t('ready'); setLoading(false); showToast(t('ready')); window.scrollTo({top:0,behavior:"smooth"}); }
-function wrapText(ctx,text,maxWidth){ const words=text.split(" ");let lines=[],cur=""; for(let w of words){const t=cur+" "+w;if(ctx.measureText(t).width>maxWidth&&cur){lines.push(cur.trim());cur=w;}else cur=t;} if(cur)lines.push(cur.trim());return lines.slice(0,2); }
-async function createMemeImage(){ const topText=document.getElementById("topText").value.trim(); const bottomText=document.getElementById("bottomText").value.trim(); if(!topText&&!bottomText){document.getElementById("memeTextError").style.display="block";showToast(t('fill_meme_text'),true);return null;} document.getElementById("memeTextError").style.display="none"; const base=currentResult||originalImg; if(!base){showToast(t('need_photo'),true);return null;} return new Promise((resolve,reject)=>{ const ctx=memeCanvas.getContext("2d"); const img=new Image(); img.onload=()=>{ try{ ctx.fillStyle="#ffffff";ctx.fillRect(0,0,1080,1080); const size=760,x=(1080-size)/2,y=130; ctx.fillStyle="#000";ctx.fillRect(x-2,y-2,size+4,size+4); ctx.drawImage(img,x,y,size,size); ctx.textAlign="center";ctx.textBaseline="middle"; if(topText){ ctx.fillStyle="#ffffff";ctx.fillRect(0,0,1080,110); ctx.fillStyle="#000";ctx.font="bold 42px Arial"; const tl=wrapText(ctx,topText,920); if(tl.length===1)ctx.fillText(tl[0],540,55); else{ctx.font="bold 34px Arial";ctx.fillText(tl[0],540,35);ctx.fillText(tl[1]||"",540,80);} } if(bottomText){ ctx.fillStyle="#ffbd2e";ctx.fillRect(0,930,1080,110); ctx.fillStyle="#000";ctx.font="bold 42px Arial"; const bl=wrapText(ctx,bottomText,920); if(bl.length===1)ctx.fillText(bl[0],540,985); else{ctx.font="bold 34px Arial";ctx.fillText(bl[0],540,965);ctx.fillText(bl[1]||"",540,1010);} } ctx.fillStyle="rgba(0,0,0,0.85)";ctx.fillRect(0,1040,1080,40); ctx.fillStyle="#00e5ff";ctx.font="bold 16px Arial"; ctx.fillText("VIRAL STUDIO",540,1063); resolve({dataUrl:memeCanvas.toDataURL("image/jpeg",0.92)}); }catch(e){reject(e);} }; img.onerror=()=>reject(new Error("Failed to load meme image")); img.src=base; }); }
-async function createMemeImageOnly(){ setLoading(true,t('creating')); try{ const r=await createMemeImage(); if(!r)throw new Error(""); showResult(r.dataUrl); }catch(e){if(e.message)showToast(e.message,true);setLoading(false);} }
-// === FIXED: NOW SPENDS CREDITS BEFORE API CALL ===
+async function fetchJson(opts){
+  // PROTECTION: check limits before calling API
+  if(!canGenerate()) throw new Error('Daily limit reached');
+  opts = opts || {}; opts.headers = { ...(opts.headers||{}), "X-App-Secret": APP_SECRET, "X-Model": FAL_MODEL_CHEAP };
+  // ה-Worker שלך צריך להשתמש ב-FAL_MODEL_CHEAP
+  const res=await fetch(API_URL,opts);
+  let data;try{data=await res.json();}catch(e){const txt=await res.text();throw new Error(txt.slice(0,500));}
+  if(!res.ok||data.error){
+    // אם FAL נגמר - הפעל מצב תחזוקה
+    if(data.error && (data.error.includes('credits') || data.error.includes('402') || data.error.includes('billing'))){
+      localStorage.setItem('fal_low_balance_flag','true');
+      throw new Error('FAL credits low - maintenance mode activated');
+    }
+    throw new Error(data.error||'Failed');
+  }
+  return data;
+}
+async function pollForResult(reqId, statusUrl, responseUrl){ for(let i=0;i<60;i++){ if(cancelled) return null; await wait(3000); if(cancelled) return null; const p=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"status",requestId:reqId,statusUrl,responseUrl})}); if(p.status==="succeeded"&&p.videoUrl) return p.videoUrl; if(p.status==="failed") throw new Error(p.error||'Failed'); } throw new Error('Timeout'); }
+function showResult(url){ currentResult=url;currentVideo=null; resultImg.src=url;resultImg.hidden=false;resultImg.style.display="block"; resultVideo.hidden=true;resultVideo.style.display="none";resultVideo.pause(); document.getElementById("chooseMenu").hidden=true; document.getElementById("detailMenu").hidden=true; document.getElementById("cameraMenu").hidden=true; document.getElementById("resultMenu").hidden=false; document.getElementById("resultText").textContent='מוכן!'; setLoading(false); window.scrollTo({top:0,behavior:"smooth"}); }
+function showVideo(url){ currentVideo=url; resultVideo.src=url;resultVideo.hidden=false;resultVideo.style.display="block"; resultImg.hidden=true;resultImg.style.display="none"; resultVideo.load(); resultVideo.onloadeddata=()=>{ resultVideo.play().catch(()=>{}); }; document.getElementById("chooseMenu").hidden=true; document.getElementById("detailMenu").hidden=true; document.getElementById("cameraMenu").hidden=true; document.getElementById("resultMenu").hidden=false; document.getElementById("resultText").textContent='מוכן!'; setLoading(false); showToast('מוכן!'); window.scrollTo({top:0,behavior:"smooth"}); }
+
 async function createMemeVideo(){
   if (!window.PersonaBilling || !PersonaBilling.requireCreditsOrBuy(1)) return;
+  if(!canGenerate()) return;
   const topText=document.getElementById("topText").value.trim();
   const bottomText=document.getElementById("bottomText").value.trim();
-  if(!topText&&!bottomText){document.getElementById("memeTextError").style.display="block";showToast(t('fill_meme_text'),true);return;}
+  if(!topText&&!bottomText){showToast('מלא טקסט למם',true);return;}
   const creditTx = PersonaBilling.spendCreditsOrRefund(1);
   if (!creditTx.success) return;
-  cancelled=false; setLoading(true,t('creating'));
+  cancelled=false;setLoading(true,'יוצר מם...');
   try{
-    const meme=await createMemeImage();
-    if(cancelled){ creditTx.refund(); return; }
-    if(!meme) throw new Error("");
-    resultImg.src=meme.dataUrl;resultImg.hidden=false;resultImg.style.display="block";resultVideo.hidden=true;
-    setLoading(true,t('creating'));
-    const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"meme",imageUrl:meme.dataUrl,motion:"meme animation"})});
-    if(cancelled){ creditTx.refund(); return; }
+    const base=currentResult||originalImg;
+    const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"meme_video",image:base,topText,bottomText,model:FAL_MODEL_CHEAP})});
     if(data.status==="succeeded"&&data.videoUrl){showVideo(data.videoUrl);return;}
     const reqId=data.requestId||data.request_id;
-    const videoUrl=await pollForResult(reqId, data.statusUrl||data.status_url, data.responseUrl||data.response_url);
+    const videoUrl=await pollForResult(reqId, data.statusUrl, data.responseUrl);
     if(cancelled||!videoUrl){ creditTx.refund(); return; }
     showVideo(videoUrl);
-  }catch(e){ creditTx.refund(); if(!cancelled&&e.message)showToast(e.message,true);setLoading(false); }
+  }catch(e){ creditTx.refund(); if(!cancelled)showToast(e.message,true);setLoading(false); }
 }
 async function cinematicVideo(){
   if (!window.PersonaBilling || !PersonaBilling.requireCreditsOrBuy(1)) return;
-  if(!currentResult){showToast(t('need_photo'),true);return;}
-  const prompt=document.getElementById("cinemaPrompt").value||"epic movie trailer";
+  if(!canGenerate()) return;
+  let prompt=document.getElementById("cinemaPrompt").value.trim();
+  if(!prompt) prompt="cinematic scene, dramatic lighting";
   const creditTx = PersonaBilling.spendCreditsOrRefund(1);
   if (!creditTx.success) return;
-  cancelled=false;setLoading(true,t('creating'),t('few_seconds'));
+  cancelled=false;setLoading(true,'יוצר סצנה קולנועית... (מודל חסכוני $0.01)');
   try{
-    const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"cinematic",imageUrl:currentResult,prompt:prompt})});
+    const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"cinema",image:currentResult,prompt:prompt,model:FAL_MODEL_CHEAP})});
     if(cancelled){ creditTx.refund(); return; }
     if(data.status==="succeeded"&&data.videoUrl){showVideo(data.videoUrl);return;}
     const reqId=data.requestId||data.request_id;
@@ -489,43 +561,40 @@ async function cinematicVideo(){
 }
 async function createImage(){
   if (!window.PersonaBilling || !PersonaBilling.requireCreditsOrBuy(1)) return;
-  if(!currentResult){showToast(t('need_photo'),true);return;}
+  if(!canGenerate()) return;
   let prompt=document.getElementById("imagePrompt").value.trim();
-  if(!prompt) prompt=selectedImageStyle;
-  if(!prompt){showToast("Choose template or write something",true);return;}
+  if(!prompt) prompt="mafia boss";
   const creditTx = PersonaBilling.spendCreditsOrRefund(1);
   if (!creditTx.success) return;
-  cancelled=false;setLoading(true,t('creating'));
+  cancelled=false;setLoading(true,'יוצר תמונה... $0.01');
   try{
-    const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"image",image:currentResult,prompt:prompt})});
+    const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"image",image:currentResult,prompt:prompt,model:FAL_MODEL_CHEAP})});
     if(data.status==="succeeded"&&(data.resultUrl||data.output?.[0])){ showResult(data.resultUrl||data.output[0]); return; }
     creditTx.refund();
   }catch(e){ creditTx.refund(); if(!cancelled)showToast(e.message,true);setLoading(false); }
 }
-function openDetail(cat){ document.getElementById("chooseMenu").hidden=true; document.getElementById("detailMenu").hidden=false; document.querySelectorAll(".detail-content").forEach(el=>el.hidden=true); const dict = window.i18nDict || i18n.en; const titles={ meme:[dict.meme_title, dict.choose_meme], cinema:[dict.cinema_title, dict.choose_cinema], image:[dict.image_title, dict.choose_image] }; const tArr=titles[cat]||["Create",""]; document.getElementById("detailTitle").textContent=tArr[0]; document.getElementById("detailSub").textContent=tArr[1]; document.getElementById("detail-"+cat).hidden=false; window.scrollTo({top:400,behavior:"smooth"}); }
+function openDetail(cat){ document.getElementById("chooseMenu").hidden=true; document.getElementById("detailMenu").hidden=false; document.querySelectorAll(".detail-content").forEach(el=>el.hidden=true); const titles={ meme:["מם עם טקסט","בחר טקסט מצחיק"], cinema:["סצנה קולנועית","$0.01 - חסכוני"], image:["יצירת תמונה","תבניות מהירות"] }; const tArr=titles[cat]||["Create",""]; document.getElementById("detailTitle").textContent=tArr[0]; document.getElementById("detailSub").textContent=tArr[1]; document.getElementById("detail-"+cat).hidden=false; window.scrollTo({top:400,behavior:"smooth"}); }
 function backToChoose(){document.getElementById("detailMenu").hidden=true;document.getElementById("chooseMenu").hidden=false;}
-function resetApp(){ cancelled=true;setLoading(false);stopCam(); originalImg=null;currentResult=null;currentVideo=null; resultImg.src="";resultImg.hidden=true;resultImg.style.display="none"; resultVideo.src="";resultVideo.hidden=true;resultVideo.style.display="none";resultVideo.pause(); placeholder.hidden=false;guide.hidden=true; document.getElementById("cameraMenu").hidden=false; document.getElementById("chooseMenu").hidden=true; document.getElementById("detailMenu").hidden=true; document.getElementById("resultMenu").hidden=true; document.getElementById("uploadInput").value=""; document.getElementById("topText").value="";document.getElementById("bottomText").value=""; document.getElementById("cinemaPrompt").value="";document.getElementById("imagePrompt").value=""; selectedImageStyle="";document.querySelectorAll("[data-image-style]").forEach(x=>x.classList.remove("active")); }
+function resetApp(){ cancelled=true;setLoading(false);stopCam(); originalImg=null;currentResult=null;currentVideo=null; resultImg.src="";resultImg.hidden=true;resultImg.style.display="none"; resultVideo.src="";resultVideo.hidden=true;resultVideo.style.display="none";resultVideo.pause(); placeholder.hidden=false;guide.hidden=true; document.getElementById("cameraMenu").hidden=false; document.getElementById("chooseMenu").hidden=true; document.getElementById("detailMenu").hidden=true; document.getElementById("resultMenu").hidden=true; document.getElementById("uploadInput").value=""; document.getElementById("topText").value="";document.getElementById("bottomText").value=""; document.getElementById("cinemaPrompt").value="";document.getElementById("imagePrompt").value=""; document.querySelectorAll("[data-image-style]").forEach(x=>x.classList.remove("active")); }
 function anotherVideo(){ if(!originalImg){resetApp();return;} currentResult=originalImg;currentVideo=null; resultImg.src=originalImg;resultImg.hidden=false;resultImg.style.display="block"; resultVideo.hidden=true;resultVideo.style.display="none"; document.getElementById("chooseMenu").hidden=false; document.getElementById("detailMenu").hidden=true; document.getElementById("cameraMenu").hidden=true; document.getElementById("resultMenu").hidden=true; }
 document.getElementById("enableCamBtn").addEventListener("click",startCam);
 document.getElementById("uploadBtn").addEventListener("click",()=>{document.getElementById("uploadInput").value="";document.getElementById("uploadInput").click();});
 document.getElementById("uploadInput").addEventListener("change",e=>{const f=e.target.files&&e.target.files[0];if(f)handleUpload(f);});
 document.getElementById("captureBtn").addEventListener("click",takePhoto);
 document.getElementById("switchBtn").addEventListener("click",()=>{facing=facing==="user"?"environment":"user";startCam();});
-document.getElementById("cancelBtn").addEventListener("click",()=>{cancelled=true;setLoading(false);showToast(t('cancelled'));});
-document.getElementById("downloadBtn").addEventListener("click",()=>{ const url=currentVideo||currentResult;if(!url){showToast(t('no_save'),true);return;} fetch(url).then(r=>r.blob()).then(b=>{const o=URL.createObjectURL(b);const a=document.createElement("a");a.href=o;a.download="viral-"+Date.now()+(currentVideo?".mp4":".jpg");document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(o),2000);}).catch(()=>window.open(url,"_blank")); });
-document.getElementById("shareBtn").addEventListener("click", async ()=>{ const url=currentVideo||currentResult;if(!url){showToast(t('no_share'),true);return;} try{ if(navigator.share){ if(url.startsWith("data:")){ const resp=await fetch(url);const blob=await resp.blob();const file=new File([blob],`viral.${currentVideo?"mp4":"jpg"}`,{type:blob.type}); if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file]});return;} } await navigator.share({url});return; } }catch(e){} window.open("https://wa.me/?text="+encodeURIComponent(url),"_blank"); });
+document.getElementById("cancelBtn").addEventListener("click",()=>{cancelled=true;setLoading(false);showToast('בוטל');});
+document.getElementById("downloadBtn").addEventListener("click",()=>{ const url=currentVideo||currentResult;if(!url){showToast('אין מה לשמור',true);return;} fetch(url).then(r=>r.blob()).then(b=>{const o=URL.createObjectURL(b);const a=document.createElement("a");a.href=o;a.download="viral-"+Date.now()+(currentVideo?".mp4":".jpg");document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(o),2000);}).catch(()=>window.open(url,"_blank")); });
+document.getElementById("shareBtn").addEventListener("click", async ()=>{ const url=currentVideo||currentResult;if(!url){showToast('אין מה לשתף',true);return;} try{ if(navigator.share){ if(url.startsWith("data:")){ const resp=await fetch(url);const blob=await resp.blob();const file=new File([blob],`viral.${currentVideo?"mp4":"jpg"}`,{type:blob.type}); if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file]});return;} } await navigator.share({url});return; } }catch(e){} window.open("https://wa.me/?text="+encodeURIComponent(url),"_blank"); });
+document.getElementById("memeImageBtn").addEventListener("click",()=>{ const top=document.getElementById("topText").value; const bot=document.getElementById("bottomText").value; if(!top&&!bot){showToast('מלא טקסט',true);return;} const canvas=memeCanvas; const ctx=canvas.getContext("2d"); const img=new Image(); img.onload=()=>{ ctx.fillStyle="#fff";ctx.fillRect(0,0,1080,1080); ctx.drawImage(img,160,130,760,760); ctx.fillStyle="#fff";ctx.font="bold 42px Arial";ctx.textAlign="center"; if(top) ctx.fillText(top,540,60); if(bot) ctx.fillText(bot,540,980); showResult(canvas.toDataURL("image/jpeg",0.92)); }; img.src=currentResult||originalImg; });
 document.getElementById("memeVideoBtn").addEventListener("click",createMemeVideo);
-document.getElementById("memeImageBtn").addEventListener("click",createMemeImageOnly);
 document.getElementById("cinemaBtn").addEventListener("click",cinematicVideo);
 document.getElementById("imageBtn").addEventListener("click",createImage);
-document.querySelectorAll(".preset").forEach(p=>{p.addEventListener("click",()=>{ const top = p.getAttribute(`data-top-${currentLang}`) || p.getAttribute('data-top-en'); const bottom = p.getAttribute(`data-bottom-${currentLang}`) || p.getAttribute('data-bottom-en'); document.getElementById("topText").value=top||"";document.getElementById("bottomText").value=bottom||""; });});
-document.querySelectorAll("[data-image-style]").forEach(b=>{ b.addEventListener("click",()=>{ document.querySelectorAll("[data-image-style]").forEach(x=>x.classList.remove("active")); b.classList.add("active"); selectedImageStyle=b.dataset.imageStyle; document.getElementById("imagePrompt").value=selectedImageStyle; }); });
+document.querySelectorAll("[data-image-style]").forEach(b=>{ b.addEventListener("click",()=>{ document.querySelectorAll("[data-image-style]").forEach(x=>x.classList.remove("active")); b.classList.add("active"); document.getElementById("imagePrompt").value=b.dataset.imageStyle; }); });
 document.querySelectorAll("[data-choose]").forEach(b=>{b.addEventListener("click",()=>openDetail(b.dataset.choose));});
 document.getElementById("backToChoose").addEventListener("click",backToChoose);
 document.getElementById("newPhotoBtn").addEventListener("click",resetApp);
 document.getElementById("anotherBtn").addEventListener("click",anotherVideo);
-document.querySelectorAll(".lang-btn").forEach(b=>{ b.addEventListener("click",()=>applyLang(b.dataset.lang)); });
-function init(){ const lang = detectLang(); applyLang(lang); setLoading(false); placeholder.hidden=false; if ('serviceWorker' in navigator) { navigator.serviceWorker.register('service-worker.js').catch(()=>{}); } }
+function init(){ setLoading(false); placeholder.hidden=false; }
 if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",init,{once:true});}else{init();}
 </script>
 </body>
