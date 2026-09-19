@@ -21,7 +21,6 @@ body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-famil
 #videoElement.front{transform:scaleX(-1)}
 .placeholder{position:absolute;z-index:2;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:14px;padding:24px;text-align:center;background:#08080f}
 .guide{position:absolute;top:50%;right:50%;width:56%;aspect-ratio:.78;transform:translate(50%,-50%);border:1.5px dashed rgba(255,255,255,0.22);border-radius:48% 48% 44% 44%;pointer-events:none;z-index:3}
-@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.1)}100%{transform:scale(1)}}
 .loading{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:14px;padding:20px;text-align:center;background:rgba(8,8,15,0.96)}
 .spinner{width:42px;height:42px;border:3px solid rgba(255,255,255,0.1);border-top-color:var(--p);border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
 .panel{padding:16px}
@@ -77,8 +76,8 @@ body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-famil
 <section class="glass viewport">
 <div id="placeholder" class="placeholder">
 <div style="width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,rgba(0,229,255,0.12),rgba(124,77,255,0.12));display:flex;align-items:center;justify-content:center;font-size:1.8rem">🔥</div>
-<div><div style="font-weight:800">מם מושלם מתחיל בתמונה טובה</div><div style="font-size:.82rem;color:var(--muted);margin-top:4px">אם מצלמה לא עובדת - העלה תמונה ⬆ זה עובד תמיד</div></div>
-<div style="display:flex;gap:8px">
+<div><div style="font-weight:800">מם מושלם מתחיל בתמונה טובה</div><div style="font-size:.82rem;color:var(--muted);margin-top:4px">אם מצלמה לא עובדת - העלה תמונה ⬆</div></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
 <button id="enableCamBtn" class="btn btn-primary" style="width:auto;padding:10px 20px;font-size:.85rem" type="button">📷 פתח מצלמה</button>
 <button id="quickUploadBtn" class="btn btn-ghost" style="width:auto;padding:10px 20px;font-size:.85rem" type="button">⬆ העלה תמונה</button>
 </div>
@@ -175,22 +174,21 @@ body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-famil
 <div id="memeLivePreview" class="meme-preview"><span style="color:var(--muted);font-size:.8rem">הקלד טקסט לראות</span></div>
 
 <div style="background:rgba(255,189,46,0.08);border:1px solid rgba(255,189,46,0.2);border-radius:12px;padding:12px;margin-top:12px">
-<div style="font-size:.8rem;font-weight:900;margin-bottom:8px">🎭 איך המם שלך יחייך/יזוז בסרטון? <span style="font-weight:400;color:var(--muted)">- בחר מצב רוח</span></div>
+<div style="font-size:.8rem;font-weight:900;margin-bottom:8px">🎭 איך המם שלך יחייך/יזוז? <span style="font-weight:400;color:var(--muted)">- בחר מצב רוח</span></div>
 <div style="display:flex;gap:6px;flex-wrap:wrap">
 <button class="style-btn emotion-btn" data-emotion="auto" type="button" style="background:#fff;color:#000">✨ אוטומטי לפי הטקסט</button>
-<button class="style-btn emotion-btn" data-emotion="scary" type="button">😨 מפחיד - חיוך קריפי איטי</button>
-<button class="style-btn emotion-btn" data-emotion="creepy" type="button">😈 קריפי - סמיילי מוזר</button>
-<button class="style-btn emotion-btn" data-emotion="funny" type="button">😂 מצחיק - מתגלגל מצחוק</button>
-<button class="style-btn emotion-btn" data-emotion="weird" type="button">🤪 מגחך - פרצוף מוזר</button>
-<button class="style-btn emotion-btn" data-emotion="evil" type="button">😏 מרושע - חיוך מרושע</button>
+<button class="style-btn emotion-btn" data-emotion="scary" type="button">😨 מפחיד</button>
+<button class="style-btn emotion-btn" data-emotion="creepy" type="button">😈 קריפי</button>
+<button class="style-btn emotion-btn" data-emotion="funny" type="button">😂 מצחיק</button>
+<button class="style-btn emotion-btn" data-emotion="weird" type="button">🤪 מגחך</button>
+<button class="style-btn emotion-btn" data-emotion="evil" type="button">😏 מרושע</button>
 </div>
-<input id="customEmotion" class="input" style="margin-top:8px" placeholder="או תכתוב בעצמך: למשל 'חיוך מפחיד עם עיניים פעורות' / 'creepy laugh'" maxlength="80">
-<div style="font-size:.68rem;color:var(--muted);margin-top:4px">דוגמה: המשתמש כותב "אני רוצה שהמם שלי יחייך בצורה מפחידה" - תבחר 😨 מפחיד או תכתוב למטה</div>
+<input id="customEmotion" class="input" style="margin-top:8px" placeholder="או תכתוב: 'חיוך מפחיד עם עיניים פעורות' או 'קם ואז צוחק ואז בוכה'" maxlength="100">
+<div style="font-size:.68rem;color:var(--muted);margin-top:4px">רצף: כתוב "קם ואז צוחק ואז בוכה" - יזהה אוטומטית רצף 🎬</div>
 </div>
-
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px">
 <button id="memeImageBtn" class="btn btn-ultimate" type="button">📸 תמונת מם מושלמת</button>
-<button id="memeVideoBtn" class="btn btn-ghost" type="button">🎥 סרטון מם עם רגש</button>
+<button id="memeVideoBtn" class="btn btn-ghost" type="button">🎥 סרטון עם רגש</button>
 </div>
 </div>
 
@@ -297,47 +295,31 @@ async function startCam(){
   placeholder.hidden=false;
   videoEl.hidden=true;
   guide.hidden=true;
-  
   if(!navigator.mediaDevices?.getUserMedia){
     showToast('הדפדפן לא תומך במצלמה - העלה תמונה ⬆',true);
-    document.getElementById('uploadInput').click();
     return;
   }
-  
-  // Try to get camera with detailed error handling
   const tries = [
     {video:{facingMode:facing, width:{ideal:1280}, height:{ideal:720}}, audio:false},
     {video:{facingMode:facing}, audio:false},
     {video:true, audio:false}
   ];
-  
   for(let i=0;i<tries.length;i++){
     try{
       stream = await navigator.mediaDevices.getUserMedia(tries[i]);
       break;
     }catch(e){
       if(i===tries.length-1){
-        // All tries failed - show specific error
-        let msg = 'מצלמה חסומה';
-        if(e.name==='NotAllowedError' || e.name==='PermissionDeniedError'){
-          msg = 'הרשאת מצלמה נדחתה - לחץ על 🔒 בשורת הכתובת > אפשר מצלמה, או העלה תמונה ⬆';
-        } else if(e.name==='NotFoundError' || e.name==='DevicesNotFoundError'){
-          msg = 'לא נמצאה מצלמה - העלה תמונה ⬆';
-        } else if(e.name==='NotReadableError'){
-          msg = 'מצלמה בשימוש באפליקציה אחרת - סגור אותה ונסה שוב';
-        } else if(e.name==='OverconstrainedError'){
-          msg = 'מצלמה לא נתמכת - מנסה מצלמה אחרת...';
-          continue;
-        }
+        let msg='מצלמה חסומה';
+        if(e.name==='NotAllowedError') msg='הרשאת מצלמה נדחתה - לחץ על 🔒 בשורת הכתובת > אפשר מצלמה, או העלה תמונה ⬆';
+        else if(e.name==='NotFoundError') msg='לא נמצאה מצלמה - העלה תמונה ⬆';
+        else if(e.name==='NotReadableError') msg='מצלמה בשימוש - סגור אפליקציה אחרת';
         showToast(msg,true);
-        console.error('Camera error:', e.name, e.message);
-        // Auto fallback to upload
-        setTimeout(()=>{document.getElementById('uploadBtn').style.animation='pulse 1s infinite';},500);
+        console.error('Camera error:', e.name);
         return;
       }
     }
   }
-  
   try{
     videoEl.srcObject=stream;
     videoEl.hidden=false;
@@ -345,28 +327,17 @@ async function startCam(){
     guide.hidden=false;
     await videoEl.play();
     camReady=true;
-    showToast('מצלמה מוכנה - חייך! 📸');
+    showToast('מצלמה מוכנה 📸');
   }catch(e){
-    showToast('שגיאת ניגון מצלמה: '+e.message,true);
+    showToast('שגיאת ניגון: '+e.message,true);
   }
 }
 function getDim(w,h){const l=Math.max(w,h);if(l<=MAX_DIM)return{w,h};const s=MAX_DIM/l;return{w:Math.round(w*s),h:Math.round(h*s)};}
 function drawToCanvas(src,m){const sw=src.videoWidth||src.naturalWidth||src.width,sh=src.videoHeight||src.naturalHeight||src.height;if(!sw||!sh)throw new Error("Image");const d=getDim(sw,sh);canvasEl.width=d.w;canvasEl.height=d.h;const ctx=canvasEl.getContext("2d",{alpha:false});ctx.save();if(m){ctx.translate(d.w,0);ctx.scale(-1,1);}ctx.drawImage(src,0,0,d.w,d.h);ctx.restore();return canvasEl.toDataURL("image/jpeg",0.86);}
 function takePhoto(){
-  if(!stream || !camReady){
-    showToast('פתח מצלמה קודם או העלה תמונה ⬆',true);
-    return;
-  }
-  if(videoEl.videoWidth===0){
-    showToast('מצלמה עדיין נטענת - חכה שניה...',true);
-    return;
-  }
-  try{
-    selectImage(drawToCanvas(videoEl,facing==="user"));
-    showToast('צילום מעולה! עכשיו בחר סגנון מם 👇');
-  }catch(e){
-    showToast('שגיאת צילום: '+e.message,true);
-  }
+  if(!stream || !camReady){showToast('פתח מצלמה קודם או העלה תמונה ⬆',true);return;}
+  if(videoEl.videoWidth===0){showToast('מצלמה נטענת...',true);return;}
+  try{selectImage(drawToCanvas(videoEl,facing==="user")); showToast('צילום מעולה! 👇');}catch(e){showToast(e.message,true);}
 }
 function selectImage(d){originalImg=d;currentResult=d;currentVideo=null;resultImg.src=d;resultImg.hidden=false;resultImg.style.display="block";resultVideo.hidden=true;resultVideo.style.display="none";resultVideo.pause();videoEl.hidden=true;placeholder.hidden=true;guide.hidden=true;document.getElementById("cameraMenu").hidden=true;document.getElementById("chooseMenu").hidden=false;document.getElementById("detailMenu").hidden=true;document.getElementById("resultMenu").hidden=true;stopCam();updateMemePreview();window.scrollTo({top:320,behavior:"smooth"});}
 function handleUpload(f){if(!f||!f.type.startsWith("image/")){showToast('תמונה לא תקינה',true);return;}const r=new FileReader();r.onload=ev=>{const im=new Image();im.onload=()=>{try{selectImage(drawToCanvas(im,false));}catch(e){showToast(e.message,true);}};im.onerror=()=>showToast('פורמט לא נתמך',true);im.src=ev.target.result;};r.readAsDataURL(f);}
@@ -463,100 +434,70 @@ async function updateMemePreview(){
 async function createMemeImageOnly(){
   const top=document.getElementById('topText').value.trim(),bottom=document.getElementById('bottomText').value.trim();
   if(!top&&!bottom){showToast('כתוב טקסט עליון או תחתון',true);return;}
-  const needed = (typeof isSequence!=='undefined' && isSequence)?2:1;
-  if(!PersonaBilling.requireCreditsOrBuy(needed))return;const tx=PersonaBilling.spendCreditsOrRefund(needed);if(!tx.success)return;
+  if(!PersonaBilling.requireCreditsOrBuy(1))return;const tx=PersonaBilling.spendCreditsOrRefund(1);if(!tx.success)return;
   setLoading(true,'יוצר מם מושלם...');try{const base=currentResult||originalImg;const data=await createMemeCanvas(top,bottom,base,currentStyle);showResult(data);}catch(e){tx.refund();showToast(e.message,true);setLoading(false);}
 }
 
 let selectedEmotion='auto';
 const EMOTION_PROMPTS={
-  auto: '',
   scary: 'person face slowly smiles in a creepy scary way, unsettling horror smile, eyes wide open, slow head tilt, horror atmosphere, keep text sharp and perfectly readable',
   creepy: 'weird creepy uncanny valley smile, strange smirk, slow unsettling head movement, creepy atmosphere, keep text sharp and readable',
   funny: 'person bursts into loud funny laugh, laughing hard, joyful hilarious expression, head shaking from laughter, keep text sharp and readable',
   weird: 'goofy weird face, funny smirk, silly expression, tongue out slightly, comical, keep text sharp and readable',
-  evil: 'evil smirk, villain smile, cunning expression, slow confident head tilt, keep text sharp and readable',
-  sequence: '' // will be built dynamically
+  evil: 'evil smirk, villain smile, cunning expression, slow confident head tilt, keep text sharp and readable'
 };
-
-function buildSequencePrompt(userText){
-  // userText like "קם ויצחק ואז יבכה"
-  const lower = userText.toLowerCase();
-  let prompt = userText + ', ';
-  
-  // Translate common Hebrew sequence to English for model
-  const translations = {
-    'קם': 'person stands up',
-    'קם ו': 'person stands up then',
-    'יצחק': 'laughs loudly',
-    'צוחק': 'laughing',
-    'יבכה': 'then starts crying sadly',
-    'בוכה': 'crying',
-    'מחייך': 'smiling',
-    'מפחיד': 'in a scary creepy way',
-    'רוקד': 'dancing'
-  };
-  
-  let eng = userText;
-  for(let [he,en] of Object.entries(translations)){
-    eng = eng.replace(new RegExp(he,'g'), en);
-  }
-  
-  // Build cinematic sequence prompt
-  prompt = eng + ', cinematic sequence, smooth transition between emotions, person in center, keep text sharp and perfectly readable, 3-stage action';
-  return prompt;
+function containsHebrewForEmo(s){return /[\u0590-\u05FF]/.test(s||'');}
+function buildSequencePrompt(src){
+  let eng = src;
+  const map = {'קם':'stands up','צוחק':'laughs','יצחק':'laughs','בוכה':'cries','יבכה':'cries','מחייך':'smiles','מפחיד':'in scary way','רוקד':'dancing'};
+  for(let k in map) eng = eng.replace(new RegExp(k,'g'), map[k]);
+  return eng + ', cinematic sequence, smooth transition between emotions, person in center, keep text sharp and perfectly readable, 3-stage action';
 }
-
-function detectEmotionFromText(text){
-  const t=(text||'').toLowerCase();
-  // sequence detection - אם יש ואז, אז, then, קם ו...
-  if(t.match(/ואז|אז בוכה|ואז בוכה|קם ו|עומד ו|then.*cry|stand up.*laugh.*cry|laugh.*then.*cry/i)) return 'sequence';
-  if(t.match(/מפחיד|פחד|scary|horror|creep/i)) return 'scary';
-  if(t.match(/קריפי|מוזר.*חיוך|creepy|weird.*smile/i)) return 'creepy';
-  if(t.match(/מצחיק|חחח|צוחק|funny|lol|haha|laugh/i)) return 'funny';
+function detectEmotionFromText(t){
+  t=(t||'').toLowerCase();
+  if(t.match(/ואז|אז בוכה|קם ו|עומד ו|then.*cry|stand up.*laugh.*cry|laugh.*then.*cry/i)) return 'sequence';
+  if(t.match(/מפחיד|פחד|scary|horror/i)) return 'scary';
+  if(t.match(/קריפי|creepy/i)) return 'creepy';
+  if(t.match(/מצחיק|חחח|funny|lol|haha|laugh/i)) return 'funny';
   if(t.match(/מגחך|goofy|silly|weird/i)) return 'weird';
   if(t.match(/מרושע|רשע|evil|villain/i)) return 'evil';
   return 'scary';
 }
-
 async function createMemeVideo(){
   const top=document.getElementById('topText').value.trim(),bottom=document.getElementById('bottomText').value.trim();
-  const customEmo=document.getElementById('customEmotion')?.value.trim()||'';
+  const customInput = (document.getElementById('customEmotion')?.value.trim()||'');
   if(!top&&!bottom){showToast('כתוב טקסט',true);return;}
-  const needed = (typeof isSequence!=='undefined' && isSequence)?2:1;
-  if(!PersonaBilling.requireCreditsOrBuy(needed))return;const tx=PersonaBilling.spendCreditsOrRefund(needed);if(!tx.success)return;
-  cancelled=false;
   
+  const combinedAll = (top+' '+bottom+' '+customInput).toLowerCase();
   let emotion = selectedEmotion;
-  let promptText = '';
+  if(emotion==='auto') emotion = detectEmotionFromText(combinedAll);
+  
   let isSequence = false;
-  const customEmo=document.getElementById('customEmotion')?.value.trim()||'';
-  const combinedText = (top+' '+bottom+' '+customEmo).toLowerCase();
-  
-  if(emotion==='auto'){
-    emotion = detectEmotionFromText(combinedText);
-    if(customEmo && !combinedText.match(/ואז|then/)) emotion='custom';
-  }
-  
-  if(combinedText.match(/ואז|אז|then/) || emotion==='sequence'){
+  let promptText = '';
+  if(combinedAll.match(/ואז|אז|then/) || emotion==='sequence'){
     isSequence = true;
-    emotion='sequence';
-    const seqSource = customEmo || (top+' '+bottom);
-    promptText = buildSequencePrompt(seqSource);
-  } else if(customEmo){
-    promptText = customEmo + ', keep text sharp and perfectly readable, meme video';
+    const src = customInput || (top+' '+bottom);
+    promptText = buildSequencePrompt(src);
+  } else if(customInput){
+    promptText = customInput + ', keep text sharp and perfectly readable, meme video';
   } else {
     promptText = EMOTION_PROMPTS[emotion] || EMOTION_PROMPTS.scary;
   }
   
-  const emotionLabel = {scary:'מפחיד 😨',creepy:'קריפי 😈',funny:'מצחיק 😂',weird:'מגחך 🤪',evil:'מרושע 😏',auto:'מותאם',sequence:'רצף קם-צוחק-בוכה 🎬'}[emotion]||emotion;
-  if(isSequence){
-    setLoading(true,'יוצר סרטון רצף '+emotionLabel+'... (2 קרדיטים - מודל חזק יותר)');
-  } else {
-    setLoading(true,'יוצר סרטון מם '+emotionLabel+'...');
-  }
+  const needed = isSequence?2:1;
+  if(!PersonaBilling.requireCreditsOrBuy(needed))return;
+  const tx=PersonaBilling.spendCreditsOrRefund(needed);
+  if(!tx.success)return;
+  
+  cancelled=false;
+  const labelMap={scary:'מפחיד 😨',creepy:'קריפי 😈',funny:'מצחיק 😂',weird:'מגחך 🤪',evil:'מרושע 😏',sequence:'רצף 🎬',auto:'מותאם'};
+  const lbl = labelMap[emotion]||emotion;
+  if(isSequence) setLoading(true,'יוצר סרטון רצף '+lbl+'... (2 קרדיטים)');
+  else setLoading(true,'יוצר סרטון מם '+lbl+'...');
+
   try{
-    const base=currentResult||originalImg;const memeImg=await createMemeCanvas(top,bottom,base,currentStyle);
+    const baseImg=currentResult||originalImg;
+    const memeImg=await createMemeCanvas(top,bottom,baseImg,currentStyle);
     const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"meme",image:memeImg,prompt:promptText})});
     if(data.status==="succeeded"&&data.videoUrl){showVideo(data.videoUrl);return;}
     if(data.output&&data.output[0]){showVideo(data.output[0]);return;}
@@ -565,8 +506,7 @@ async function createMemeVideo(){
 }
 
 async function cinematicVideo(){
-  const needed = (typeof isSequence!=='undefined' && isSequence)?2:1;
-  if(!PersonaBilling.requireCreditsOrBuy(needed))return;const tx=PersonaBilling.spendCreditsOrRefund(needed);if(!tx.success)return;
+  if(!PersonaBilling.requireCreditsOrBuy(1))return;const tx=PersonaBilling.spendCreditsOrRefund(1);if(!tx.success)return;
   let p=document.getElementById("cinemaPrompt").value.trim()||"epic cinematic trailer";cancelled=false;setLoading(true,'סצנה קולנועית...');try{
     const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"cinematic",image:currentResult,prompt:p})});
     if(data.status==="succeeded"&&data.videoUrl){showVideo(data.videoUrl);return;}const id=data.requestId||data.request_id||data.id;if(!id)throw new Error(data.error||'Failed');const v=await pollForResult(id,data.statusUrl,data.responseUrl);if(!v){tx.refund();return;}showVideo(v);
@@ -575,8 +515,7 @@ async function cinematicVideo(){
 
 async function createImage(){
   let p=document.getElementById("imagePrompt").value.trim();if(!p){const a=document.querySelector("[data-image-style].active");if(a)p=a.dataset.imageStyle;}if(!p){showToast('בחר דמות',true);return;}
-  const needed = (typeof isSequence!=='undefined' && isSequence)?2:1;
-  if(!PersonaBilling.requireCreditsOrBuy(needed))return;const tx=PersonaBilling.spendCreditsOrRefund(needed);if(!tx.success)return;cancelled=false;setLoading(true,'יוצר דמות...');try{
+  if(!PersonaBilling.requireCreditsOrBuy(1))return;const tx=PersonaBilling.spendCreditsOrRefund(1);if(!tx.success)return;cancelled=false;setLoading(true,'יוצר דמות...');try{
     const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"image",image:currentResult,prompt:p})});
     if(data.status==="succeeded"&&(data.resultUrl||data.output?.[0])){showResult(data.resultUrl||data.output[0]);return;}throw new Error('No output');
   }catch(e){tx.refund();if(!cancelled)showToast(e.message,true);setLoading(false);}
@@ -602,6 +541,8 @@ function anotherVideo(){if(!originalImg){resetApp();return;}currentResult=origin
 
 document.getElementById("enableCamBtn").addEventListener("click",startCam);
 document.getElementById("uploadBtn").addEventListener("click",()=>{document.getElementById("uploadInput").value="";document.getElementById("uploadInput").click();});
+const quickBtn = document.getElementById("quickUploadBtn");
+if(quickBtn){quickBtn.addEventListener("click",()=>{document.getElementById("uploadInput").value="";document.getElementById("uploadInput").click();});}
 document.getElementById("uploadInput").addEventListener("change",e=>{const f=e.target.files&&e.target.files[0];if(f)handleUpload(f);});
 document.getElementById("captureBtn").addEventListener("click",takePhoto);
 document.getElementById("switchBtn").addEventListener("click",()=>{facing=facing==="user"?"environment":"user";startCam();});
@@ -624,13 +565,11 @@ document.querySelectorAll(".preset-chip").forEach(ch=>{
   });
 });
 
-document.querySelectorAll(".style-btn").forEach(btn=>{
-  if(btn.dataset.style){
-    btn.addEventListener("click",()=>{
-      document.querySelectorAll("[data-style]").forEach(x=>x.classList.remove("active"));
-      btn.classList.add("active");currentStyle=btn.dataset.style;updateMemePreview();
-    });
-  }
+document.querySelectorAll("[data-style]").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll("[data-style]").forEach(x=>x.classList.remove("active"));
+    btn.classList.add("active");currentStyle=btn.dataset.style;updateMemePreview();
+  });
 });
 document.querySelectorAll(".emotion-btn").forEach(btn=>{
   btn.addEventListener("click",()=>{
@@ -640,7 +579,6 @@ document.querySelectorAll(".emotion-btn").forEach(btn=>{
     showToast('נבחר: '+btn.textContent);
   });
 });
-// default select auto
 setTimeout(()=>{const a=document.querySelector('[data-emotion=auto]'); if(a){a.style.background='#fff';a.style.color='#000';}},500);
 
 
