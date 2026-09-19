@@ -6,7 +6,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0a0a14">
 <link rel="manifest" href="manifest.json">
-<title>VIRAL STUDIO - Ultimate Meme</title>
+<title>PersonaAI - Ultimate Meme</title>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@700;800;900&family=Anton&family=Inter:wght@800;900&display=swap" rel="stylesheet">
 <style>
 :root{--p:#00e5ff;--s:#7c4dff;--bg:#0a0a14;--surface:#151528;--surface2:#1e1e38;--text:#fff;--muted:#9aa0b8;--border:rgba(255,255,255,0.08);--r:20px;--r2:12px}
@@ -304,7 +304,7 @@ function createMemeCanvas(topText,bottomText,baseSrc,style='classic'){
         // פס לבן למטה לטקסט
         const textAreaY=nh;const textAreaH=1350-nh;
         ctx.fillStyle='#fff';ctx.fillRect(0,textAreaY,1080,textAreaH);
-        ctx.fillStyle='#000';ctx.textAlign='center';ctx.textBaseline='middle';
+        const isHebModern=/[\u0590-\u05FF]/.test(combined); ctx.direction=isHebModern?'rtl':'ltr'; ctx.fillStyle='#000';ctx.textAlign='center';ctx.textBaseline='middle';
         const combined=(topText+' '+(bottomText||'')).trim().toUpperCase();
         if(combined){
           let fs=combined.length>40?36:combined.length>20?48:60;
@@ -321,13 +321,15 @@ function createMemeCanvas(topText,bottomText,baseSrc,style='classic'){
         const iw=img.width,ih=img.height,scale=Math.max(1080/iw,1080/ih),nw=iw*scale,nh=ih*scale,nx=(1080-nw)/2,ny=135+(1080-nh)/2;
         ctx.drawImage(img,nx,ny,nw,nh);
         
-        const drawUltimateText=(text,y,isTop)=>{
+        const containsHebrew=(s)=>/[\u0590-\u05FF]/.test(s);
+      const drawUltimateText=(text,y,isTop)=>{
           if(!text)return;
-          // אם סגנון רק עליון/רק תחתון - נצייר רק אם מתאים
           if(style==='top'&&!isTop)return;
           if(style==='bottom'&&isTop)return;
           
-          text=text.toUpperCase();
+          const isHeb = containsHebrew(text);
+          if(!isHeb) text=text.toUpperCase();
+          ctx.direction=isHeb?'rtl':'ltr';
           ctx.textAlign='center';ctx.textBaseline=isTop?'top':'bottom';ctx.lineJoin='round';ctx.miterLimit=2;
           
           // גודל דינמי מושלם - מתאים לאורך
@@ -408,7 +410,7 @@ async function shareAsRealFile(){
   const url=currentVideo||currentResult;if(!url){showToast('אין מה לשתף',true);return;}setLoading(true,'מכין שיתוף כתמונה...');try{
     const res=await fetch(url);const blob=await res.blob();const ext=currentVideo?'mp4':'jpg';const mime=currentVideo?'video/mp4':'image/jpeg';
     const file=new File([blob],`viral-meme-${Date.now()}.${ext}`,{type:mime});
-    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'VIRAL MEME 🔥',text:'נוצר עם VIRAL STUDIO 🔥'});setLoading(false);return;}
+    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'VIRAL MEME 🔥',text:'נוצר עם PersonaAI 🔥'});setLoading(false);return;}
     throw new Error('no share');
   }catch(e){setLoading(false);try{const res=await fetch(url);const blob=await res.blob();const o=URL.createObjectURL(blob);const a=document.createElement('a');a.href=o;a.download=`viral-meme-${Date.now()}.${currentVideo?'mp4':'jpg'}`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(o),2000);showToast('הורד - עכשיו שתף כקובץ!');}catch(err){window.open("https://wa.me/?text="+encodeURIComponent("🔥 "+url),"_blank");}}
 }
