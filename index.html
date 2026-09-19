@@ -6,16 +6,15 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0a0a14">
 <link rel="manifest" href="manifest.json">
-<title>PersonaAI - VIRAL STUDIO</title>
-<link href="https://fonts.googleapis.com/css2?family=Impact&family=Heebo:wght@700;800&display=swap" rel="stylesheet">
+<title>VIRAL STUDIO - Ultimate Meme</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@700;800;900&family=Anton&family=Inter:wght@800;900&display=swap" rel="stylesheet">
 <style>
 :root{--p:#00e5ff;--s:#7c4dff;--bg:#0a0a14;--surface:#151528;--surface2:#1e1e38;--text:#fff;--muted:#9aa0b8;--border:rgba(255,255,255,0.08);--r:20px;--r2:12px}
 *{box-sizing:border-box}
-html{background:var(--bg);overscroll-behavior:none;overflow-x:hidden;position:fixed;inset:0;width:100%;height:100%}
-body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-family:Heebo,Arial,sans-serif;overscroll-behavior:none;overflow-x:hidden;overflow-y:auto;position:fixed;inset:0;width:100%;height:100%;-webkit-overflow-scrolling:touch}
-.topbar{position:fixed;top:0;left:0;right:0;z-index:30;display:flex;justify-content:space-between;align-items:center;min-height:62px;padding:0 16px;padding-top:env(safe-area-inset-top);background:rgba(10,10,20,0.98);border-bottom:1px solid var(--border);backdrop-filter:blur(20px)}
-.brand{margin:0;font-size:1.15rem;font-weight:800}.brand span{background:linear-gradient(90deg,var(--p),var(--s));-webkit-background-clip:text;background-clip:text;color:transparent}
-.app{width:min(100%,560px);margin:0 auto;padding:12px;padding-top:74px;display:grid;gap:14px;min-height:100dvh}
+html{background:var(--bg);position:fixed;inset:0;width:100%;height:100%}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-family:Heebo,Inter,Arial,sans-serif;position:fixed;inset:0;width:100%;height:100%;overflow-y:auto}
+.topbar{position:fixed;top:0;left:0;right:0;z-index:30;display:flex;justify-content:space-between;align-items:center;min-height:62px;padding:0 16px;background:rgba(10,10,20,0.98);border-bottom:1px solid var(--border);backdrop-filter:blur(20px)}
+.app{width:min(100%,580px);margin:0 auto;padding:12px;padding-top:74px;display:grid;gap:14px;min-height:100dvh}
 .glass{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
 .viewport{position:relative;width:100%;aspect-ratio:3/4;background:#08080f;min-height:460px}
 .viewport video,.viewport img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#08080f;display:block}
@@ -25,58 +24,59 @@ body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-famil
 .loading{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:14px;padding:20px;text-align:center;background:rgba(8,8,15,0.96)}
 .spinner{width:42px;height:42px;border:3px solid rgba(255,255,255,0.1);border-top-color:var(--p);border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
 .panel{padding:16px}
-.section-title{margin:0 0 6px;font-size:1.05rem;font-weight:800}
+.section-title{margin:0 0 6px;font-size:1.05rem;font-weight:900}
 .section-sub{margin:0;font-size:.82rem;color:var(--muted);line-height:1.4}
-.h3{margin:14px 0 8px;font-size:.8rem;font-weight:700;color:var(--muted)}
-.btn{width:100%;min-height:48px;padding:12px 16px;border-radius:var(--r2);font-weight:700;font-size:.92rem;cursor:pointer;display:inline-flex;justify-content:center;align-items:center;gap:8px;border:0;transition:.15s}
+.h3{margin:14px 0 8px;font-size:.8rem;font-weight:800;color:var(--muted)}
+.btn{width:100%;min-height:48px;padding:12px 16px;border-radius:var(--r2);font-weight:800;font-size:.92rem;cursor:pointer;display:inline-flex;justify-content:center;align-items:center;gap:8px;border:0;transition:.15s}
 .btn:active{transform:scale(.98)}
 .btn-primary{color:#000;background:#fff}
 .btn-ghost{color:var(--text);background:var(--surface2);border:1px solid var(--border)}
-.btn-meme{background:linear-gradient(90deg,#ffbd2e,#ff8c00);color:#000;font-weight:800}
-.btn-cine{background:linear-gradient(90deg,#7c4dff,#00e5ff);color:#fff;font-weight:800}
-.btn-image{background:linear-gradient(90deg,#00e5ff,#ff00aa);color:#fff;font-weight:800}
+.btn-meme{background:linear-gradient(90deg,#ffbd2e,#ff8c00);color:#000;font-weight:900}
+.btn-cine{background:linear-gradient(90deg,#7c4dff,#00e5ff);color:#fff;font-weight:900}
+.btn-image{background:linear-gradient(90deg,#00e5ff,#ff00aa);color:#fff;font-weight:900}
+.btn-ultimate{background:linear-gradient(90deg,#ffbd2e,#ff00aa,#7c4dff);color:#fff;font-weight:900}
 .input{width:100%;min-height:46px;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r2);color:#fff;font-size:.92rem;outline:none}
 .input:focus{border-color:var(--p)}
 .controls{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;margin-top:10px}
 .round{justify-self:center;display:inline-flex;justify-content:center;align-items:center;width:48px;height:48px;background:var(--surface2);border:1px solid var(--border);border-radius:50%;cursor:pointer;font-size:1.1rem}
 .capture{position:relative;display:inline-flex;justify-content:center;align-items:center;width:76px;height:76px;background:#fff;border:4px solid rgba(255,255,255,0.15);border-radius:50%;cursor:pointer;box-shadow:0 0 0 8px rgba(255,255,255,0.04)}.capture::after{content:"";width:22px;height:22px;background:#000;border-radius:50%}
 .choose-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px}
-.choose-card{display:flex;align-items:center;gap:14px;padding:16px;background:var(--surface2);border:1px solid var(--border);border-radius:14px;cursor:pointer;text-align:right;transition:.15s}
-.choose-card:hover{border-color:rgba(255,255,255,0.14)}
-.choose-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;border:1px solid var(--border)}
-.choose-icon.meme{background:rgba(255,189,46,0.14)}
-.choose-icon.cine{background:rgba(124,77,255,0.14)}
-.choose-icon.image{background:rgba(0,229,255,0.14)}
-.choose-text{flex:1}
-.choose-title{font-size:1rem;font-weight:800;margin-bottom:2px}
-.choose-sub{font-size:.8rem;color:var(--muted);line-height:1.3}
+.choose-card{display:flex;align-items:center;gap:14px;padding:16px;background:var(--surface2);border:1px solid var(--border);border-radius:14px;cursor:pointer;text-align:right}
+.choose-icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;border:1px solid var(--border)}
+.choose-icon.meme{background:rgba(255,189,46,0.18)}
+.choose-icon.cine{background:rgba(124,77,255,0.18)}
+.choose-icon.image{background:rgba(0,229,255,0.18)}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.card{padding:12px;border-radius:var(--r2);background:var(--surface2);border:1px solid var(--border);cursor:pointer;text-align:right}
-.card.active{border-color:var(--p);background:rgba(0,229,255,0.08)}
-.card-title{font-size:.85rem;font-weight:700}
-.toast{position:fixed;z-index:100;right:50%;bottom:18px;transform:translateX(50%);width:max-content;max-width:92vw;padding:10px 18px;background:#1a1a2e;border:1px solid var(--border);border-radius:999px;font-size:.85rem;font-weight:600;text-align:center}
+.card{padding:12px;border-radius:var(--r2);background:var(--surface2);border:1px solid var(--border);cursor:pointer;text-align:center}
+.card.active{border-color:var(--p);background:rgba(0,229,255,0.12)}
+.toast{position:fixed;z-index:100;right:50%;bottom:18px;transform:translateX(50%);width:max-content;max-width:92vw;padding:10px 18px;background:#1a1a2e;border:1px solid var(--border);border-radius:999px;font-size:.85rem;font-weight:700;text-align:center}
 .toast.error{background:#2a1520}
+.meme-preview{width:100%;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:#000;min-height:240px;display:flex;align-items:center;justify-content:center}
+.preset-chip{display:inline-flex;padding:6px 12px;border-radius:999px;background:var(--surface2);border:1px solid var(--border);font-size:.75rem;font-weight:700;cursor:pointer;margin:4px 4px 0 0;transition:.15s}
+.preset-chip:hover{border-color:var(--p);background:rgba(0,229,255,0.1)}
+.style-row{display:flex;gap:8px;overflow-x:auto;padding:4px 0}
+.style-btn{flex-shrink:0;padding:8px 14px;border-radius:999px;background:var(--surface2);border:1px solid var(--border);font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap}
+.style-btn.active{background:#fff;color:#000;border-color:#fff}
 [hidden]{display:none!important}
-.meme-preview{width:100%;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:#000;min-height:200px;display:flex;align-items:center;justify-content:center}
 </style>
 </head>
 <body>
 <header class="topbar">
 <div style="display:flex;align-items:center;gap:10px">
-<div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--p),var(--s));display:flex;align-items:center;justify-content:center;font-weight:800;color:#000">V</div>
+<div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--p),var(--s));display:flex;align-items:center;justify-content:center;font-weight:900;color:#000">V</div>
 <h1 class="brand">VIRAL <span>STUDIO</span></h1>
 </div>
-<div style="display:flex;align-items:center;gap:10px">
-<div id="creditsBadge" style="background:#1e1e38;border:1px solid rgba(255,255,255,0.12);padding:6px 10px;border-radius:999px;font-size:.75rem;font-weight:800;white-space:nowrap">5 credits</div>
-<button onclick="PersonaBilling.openStoreModal()" style="background:linear-gradient(90deg,#00e5ff,#7c4dff);border:0;color:#fff;padding:6px 12px;border-radius:999px;font-weight:800;cursor:pointer;font-size:.75rem">Buy</button>
+<div style="display:flex;align-items:center;gap:8px">
+<div id="creditsBadge" style="background:#1e1e38;border:1px solid rgba(255,255,255,0.12);padding:6px 10px;border-radius:999px;font-size:.72rem;font-weight:800">5 credits</div>
+<button onclick="PersonaBilling.openStoreModal()" style="background:linear-gradient(90deg,#00e5ff,#7c4dff);border:0;color:#fff;padding:6px 12px;border-radius:999px;font-weight:800;cursor:pointer;font-size:.72rem">PRO</button>
 </div>
 </header>
 
 <main class="app">
 <section class="glass viewport">
 <div id="placeholder" class="placeholder">
-<div style="width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,rgba(0,229,255,0.12),rgba(124,77,255,0.12));display:flex;align-items:center;justify-content:center;font-size:1.8rem">◐</div>
-<div><div style="font-weight:700">העלה תמונה להתחלה</div><div style="font-size:.82rem;color:var(--muted);margin-top:4px">סלפי ברור = תוצאה ויראלית</div></div>
+<div style="width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,rgba(0,229,255,0.12),rgba(124,77,255,0.12));display:flex;align-items:center;justify-content:center;font-size:1.8rem">🔥</div>
+<div><div style="font-weight:800">מם מושלם מתחיל בתמונה טובה</div><div style="font-size:.82rem;color:var(--muted);margin-top:4px">תמונה ברורה = מם שמתפוצץ</div></div>
 <button id="enableCamBtn" class="btn btn-primary" style="width:auto;padding:10px 20px;font-size:.85rem" type="button">פתח מצלמה</button>
 </div>
 <video id="videoElement" class="front" autoplay playsinline muted hidden></video>
@@ -86,7 +86,7 @@ body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-famil
 <div id="guide" class="guide" hidden></div>
 <div id="loading" class="loading" hidden>
 <div class="spinner"></div>
-<div id="loadingText" style="font-weight:700;font-size:.95rem">יוצר...</div>
+<div id="loadingText" style="font-weight:800;font-size:.95rem">יוצר...</div>
 <div id="loadingSub" style="font-size:.82rem;color:var(--muted)">כמה שניות</div>
 <button id="cancelBtn" class="btn btn-ghost" style="width:auto;padding:8px 16px;margin-top:12px;font-size:.8rem" type="button">ביטול</button>
 </div>
@@ -94,7 +94,7 @@ body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-famil
 
 <section id="cameraMenu" class="glass panel">
 <div class="section-title">שלב 1: צלם או העלה</div>
-<div class="section-sub">תמונה עם פנים ברורות = מם מנצח</div>
+<div class="section-sub">פנים ברורות, אור טוב - זה כל הסוד</div>
 <div class="controls">
 <button id="uploadBtn" class="round" type="button">⬆</button>
 <input id="uploadInput" type="file" accept="image/*" hidden>
@@ -108,17 +108,17 @@ body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-famil
 <div class="choose-grid">
 <button class="choose-card" data-choose="meme" type="button">
 <div class="choose-icon meme">😂</div>
-<div class="choose-text"><div class="choose-title">מם ויראלי אמיתי</div><div class="choose-sub">טקסט עליון ותחתון כמו באינסטגרם - עם פונט Impact</div></div>
+<div class="choose-text"><div class="choose-title">מם ויראלי מושלם</div><div class="choose-sub">הכי טוב בעולם - פונט Impact אמיתי, תצוגה חיה, סגנונות</div></div>
 <div style="color:var(--muted)">‹</div>
 </button>
 <button class="choose-card" data-choose="cinema" type="button">
 <div class="choose-icon cine">🎥</div>
-<div class="choose-text"><div class="choose-title">סצנה קולנועית</div><div class="choose-sub">וידאו עם סאונד דרמטי - שומר על הפנים</div></div>
+<div class="choose-text"><div class="choose-title">סצנה קולנועית</div><div class="choose-sub">וידאו עם סאונד דרמטי</div></div>
 <div style="color:var(--muted)">‹</div>
 </button>
 <button class="choose-card" data-choose="image" type="button">
 <div class="choose-icon image">🎨</div>
-<div class="choose-text"><div class="choose-title">הפוך לדמות</div><div class="choose-sub">מאפיונר, אסטרונאוט, גיבור על ועוד</div></div>
+<div class="choose-text"><div class="choose-title">הפוך לדמות</div><div class="choose-sub">מאפיונר, אסטרונאוט, גיבור על</div></div>
 <div style="color:var(--muted)">‹</div>
 </button>
 </div>
@@ -127,505 +127,300 @@ body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-famil
 <section id="detailMenu" class="glass panel" hidden>
 <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
 <button id="backToChoose" class="round" style="width:36px;height:36px;font-size:.9rem" type="button">›</button>
-<div><div id="detailTitle" style="font-weight:800;font-size:1rem">Title</div><div id="detailSub" style="font-size:.78rem;color:var(--muted)">Sub</div></div>
+<div><div id="detailTitle" style="font-weight:900;font-size:1rem">Title</div><div id="detailSub" style="font-size:.78rem;color:var(--muted)">Sub</div></div>
 </div>
 
 <div id="detail-meme" class="detail-content" hidden>
-<div style="background:#1e1e38;border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:12px">
-<div class="h3" style="margin-top:0">תכתוב מם - לא חייב למלא הכל!</div>
-<input id="topText" class="input" maxlength="80" style="margin-bottom:8px" placeholder="טקסט עליון (אופציונלי) - למשל: כשאומרים לי תהיה רציני">
-<input id="bottomText" class="input" maxlength="80" placeholder="טקסט תחתון (אופציונלי) - למשל: ואני עם פילטר של כלב 🐶">
-<div style="font-size:.7rem;color:var(--muted);margin-top:6px">💡 טיפ: אפשר למלא רק עליון או רק תחתון. ריק = תמונה נקייה</div>
+<div style="background:#1e1e38;border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px">
+<div style="font-weight:900;font-size:.9rem;margin-bottom:8px">✍️ כתוב מם - כל שדה אופציונלי!</div>
+<input id="topText" class="input" maxlength="90" placeholder="טקסט עליון - למשל: כשאומרים לי תהיה רציני" style="margin-bottom:8px">
+<input id="bottomText" class="input" maxlength="90" placeholder="טקסט תחתון - למשל: ואני עם פילטר של כלב 🐶">
+
+<div style="margin-top:12px">
+<div style="font-size:.75rem;font-weight:800;color:var(--muted);margin-bottom:6px">סגנון מם:</div>
+<div class="style-row">
+<button class="style-btn active" data-style="classic">קלאסי - עליון+תחתון</button>
+<button class="style-btn" data-style="top">רק עליון</button>
+<button class="style-btn" data-style="bottom">רק תחתון</button>
+<button class="style-btn" data-style="modern">מודרני - פס לבן למטה</button>
+</div>
 </div>
 
-<div class="h3">תצוגה מקדימה חיה:</div>
-<div id="memeLivePreview" class="meme-preview"><span style="color:var(--muted);font-size:.8rem">הקלד טקסט לראות תצוגה מקדימה</span></div>
+<div style="margin-top:12px">
+<div style="font-size:.75rem;font-weight:800;color:var(--muted);margin-bottom:6px">רעיונות ויראליים - לחץ להוסיף:</div>
+<div id="presetContainer">
+<span class="preset-chip" data-top="כשאומרים לי תהיה רציני" data-bottom="ואני עם פילטר של כלב 🐶">רציני + כלב</span>
+<span class="preset-chip" data-top="אמא: תמצא עבודה" data-bottom="אני: עושה ממים">אמא vs אני</span>
+<span class="preset-chip" data-top="POV: אתה רואה את זה ב-3 בלילה" data-bottom="">POV 3 בלילה</span>
+<span class="preset-chip" data-top="When you try to be serious" data-bottom="But you're you">English viral</span>
+<span class="preset-chip" data-top="Nobody:" data-bottom="Me at 3AM making memes">Nobody: Me at 3AM</span>
+<span class="preset-chip" data-top="החיים שלי" data-bottom="VS איך שאני רואה אותם">החיים VS אני</span>
+<span class="preset-chip" data-top="Expectation" data-bottom="Reality">Expectation vs Reality</span>
+<span class="preset-chip" data-top="אני: אהיה פרודוקטיבי" data-bottom="גם אני:">פרודוקטיבי</span>
+</div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
+<button id="randomViralBtn" class="btn btn-ghost" style="font-size:.78rem" type="button">🎲 כיתוב ויראלי רנדומלי</button>
+<button id="enhanceTextBtn" class="btn btn-ghost" style="font-size:.78rem" type="button">✨ שפר לי את הטקסט</button>
+</div>
+</div>
+
+<div class="h3">👁️ תצוגה מקדימה חיה - בדיוק כמו שייצא:</div>
+<div id="memeLivePreview" class="meme-preview"><span style="color:var(--muted);font-size:.8rem">הקלד טקסט לראות</span></div>
 
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px">
-<button id="memeImageBtn" class="btn btn-meme" type="button">📸 צור תמונת מם</button>
-<button id="memeVideoBtn" class="btn btn-ghost" type="button">🎥 צור סרטון מם</button>
+<button id="memeImageBtn" class="btn btn-ultimate" type="button">📸 צור תמונת מם מושלמת</button>
+<button id="memeVideoBtn" class="btn btn-ghost" type="button">🎥 צור סרטון מם (זום ויראלי)</button>
 </div>
-<div style="font-size:.7rem;color:var(--muted);margin-top:6px;text-align:center">תמונה = מיידי, סרטון = עם זום ויראלי קל</div>
 </div>
 
 <div id="detail-cinema" class="detail-content" hidden>
-<textarea id="cinemaPrompt" class="input" rows="2" placeholder="תאר סצנה... למשל: טריילר הוליוודי, גשם, מוזיקה דרמטית"></textarea>
-<button id="cinemaBtn" class="btn btn-cine" style="margin-top:14px" type="button">🎬 צור סצנה קולנועית</button>
+<textarea id="cinemaPrompt" class="input" rows="2" placeholder="תאר סצנה..."></textarea>
+<button id="cinemaBtn" class="btn btn-cine" style="margin-top:14px" type="button">🎬 צור סצנה</button>
 </div>
 
 <div id="detail-image" class="detail-content" hidden>
-<div class="h3">בחר דמות:</div>
 <div class="grid2" style="margin-bottom:12px">
 <button class="card" data-image-style="mafia boss in expensive suit"><div class="card-title">🕶 מאפיונר</div></button>
 <button class="card" data-image-style="astronaut in space with helmet"><div class="card-title">🚀 אסטרונאוט</div></button>
 <button class="card" data-image-style="superhero with cape"><div class="card-title">🦸 גיבור על</div></button>
 <button class="card" data-image-style="king with crown"><div class="card-title">👑 מלך</div></button>
-<button class="card" data-image-style="One Punch Man Saitama bald hero yellow suit"><div class="card-title">👊 סאיטמה</div></button>
-<button class="card" data-image-style="cyberpunk with neon lights"><div class="card-title">🌃 סייברפאנק</div></button>
 </div>
-<textarea id="imagePrompt" class="input" rows="2" placeholder="או תאר מה שאתה רוצה..."></textarea>
-<button id="imageBtn" class="btn btn-image" style="margin-top:14px" type="button">צור תמונה</button>
+<textarea id="imagePrompt" class="input" rows="2" placeholder="תאר דמות..."></textarea>
+<button id="imageBtn" class="btn btn-image" style="margin-top:14px" type="button">צור דמות</button>
 </div>
 </section>
 
 <section id="resultMenu" class="glass panel" hidden>
-<div style="padding:12px;background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.15);border-radius:10px;font-size:.88rem;margin-bottom:12px">✅ <span id="resultText">מוכן!</span></div>
+<div style="padding:12px;background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.15);border-radius:10px;font-size:.88rem;margin-bottom:12px">✅ <span id="resultText">מם מושלם מוכן! 🔥</span></div>
 <div style="display:grid;gap:8px">
 <button id="downloadBtn" class="btn btn-primary" type="button">💾 שמור למכשיר</button>
 <button id="shareBtn" class="btn" style="background:#25d366;color:#000" type="button">📲 שתף לוואטסאפ כתמונה</button>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-<button id="anotherBtn" class="btn btn-ghost" type="button">עוד אחד</button>
+<button id="anotherBtn" class="btn btn-ghost" type="button">עוד וריאציה</button>
 <button id="newPhotoBtn" class="btn btn-ghost" type="button">תמונה חדשה</button>
 </div>
 </div>
-<div style="font-size:.7rem;color:var(--muted);margin-top:8px;text-align:center">השיתוף שולח כקובץ תמונה אמיתי - החבר יראה ישר את התמונה, לא קישור</div>
+<div style="font-size:.7rem;color:var(--muted);margin-top:8px;text-align:center">שיתוף כקובץ אמיתי - החבר רואה ישר את התמונה, לא קישור</div>
 </section>
 
-<!-- STORE MODAL -->
 <div id="storeModal" hidden style="position:fixed;inset:0;z-index:90;background:rgba(10,10,20,0.92);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:16px">
-  <div style="width:100%;max-width:400px;background:#151528;border:1px solid rgba(255,255,255,0.12);border-radius:24px;padding:24px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5)">
-    <div style="width:64px;height:64px;margin:0 auto 14px;border-radius:18px;background:linear-gradient(135deg,#00e5ff,#7c4dff);display:flex;align-items:center;justify-content:center;font-size:1.8rem">💎</div>
-    <h2 style="margin:0 0 6px;font-size:1.3rem;font-weight:800">נגמרו הקרדיטים?</h2>
-    <p style="color:#9aa0b8;font-size:.88rem;margin:0 0 16px;line-height:1.4">הצטרף לאלפים שיוצרים תוכן ויראלי</p>
-    <div style="background:linear-gradient(135deg,rgba(0,229,255,0.15),rgba(124,77,255,0.15));border:1px solid rgba(0,229,255,0.3);border-radius:16px;padding:16px;margin:14px 0;text-align:right;position:relative;overflow:hidden">
-      <div style="position:absolute;top:8px;left:8px;background:linear-gradient(90deg,#ffbd2e,#ff8c00);color:#000;font-size:.65rem;font-weight:800;padding:3px 8px;border-radius:999px">הכי משתלם 🔥</div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
-        <div>
-          <div style="font-size:1.15rem;font-weight:800;display:flex;align-items:center;gap:6px">♾️ PRO שבועי</div>
-          <div style="font-size:.8rem;color:#9aa0b8;margin-top:4px;line-height:1.3">• 50 יצירות בשבוע<br>• בלי סימן מים<br>• שיתוף כתמונה אמיתית</div>
-        </div>
-        <div style="text-align:left">
-          <div id="proPrice" style="font-size:1.1rem;font-weight:800">$3.99</div>
-          <div style="font-size:.75rem;color:#9aa0b8">לשבוע</div>
-        </div>
-      </div>
-      <button class="btn" style="width:100%;margin-top:12px;background:linear-gradient(90deg,#00e5ff,#7c4dff);color:#fff;font-weight:800;min-height:48px;border-radius:12px;border:0;cursor:pointer" onclick="PersonaBilling.buyProWeekly()">הפעל PRO - <span id="proPrice2">$3.99</span></button>
+  <div style="width:100%;max-width:400px;background:#151528;border:1px solid rgba(255,255,255,0.12);border-radius:24px;padding:24px;text-align:center">
+    <div style="width:64px;height:64px;margin:0 auto 14px;border-radius:18px;background:linear-gradient(135deg,#00e5ff,#7c4dff);display:flex;align-items:center;justify-content:center;font-size:1.8rem">🔥</div>
+    <h2 style="font-size:1.2rem;font-weight:900">רוצה עוד ממים?</h2>
+    <div style="background:linear-gradient(135deg,rgba(0,229,255,0.15),rgba(124,77,255,0.15));border:1px solid rgba(0,229,255,0.3);border-radius:16px;padding:16px;margin:14px 0">
+      <div style="font-weight:900">♾️ PRO - 50 יצירות</div>
+      <div style="font-size:.78rem;color:var(--muted)">ממים מושלמים בלי הגבלה</div>
+      <button class="btn btn-ultimate" style="margin-top:10px" onclick="PersonaBilling.buyProWeekly()">הפעל PRO - $3.99</button>
     </div>
-    <div style="background:#1e1e38;border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:16px;margin:14px 0;text-align:right;display:flex;justify-content:space-between;align-items:center">
-      <div><div style="font-size:1.05rem;font-weight:800">20 קרדיטים</div><div style="font-size:.8rem;color:#9aa0b8;margin-top:2px">חד פעמי • לא פג תוקף</div></div>
-      <div style="text-align:left"><div id="productPrice" style="font-size:1.05rem;font-weight:800">$1.99</div></div>
-    </div>
-    <button class="btn" style="width:100%;background:#fff;color:#000;font-weight:800;min-height:48px;border-radius:12px;border:0;cursor:pointer" onclick="PersonaBilling.buy20Credits()">קנה 20 קרדיטים - <span id="productPrice2b">$1.99</span></button>
-    <button class="btn" style="width:100%;margin-top:8px;background:transparent;border:1px solid rgba(255,255,255,0.1);color:#9aa0b8;min-height:44px;border-radius:12px;cursor:pointer" onclick="PersonaBilling.closeStoreModal()">אולי אחר כך</button>
+    <button class="btn" style="background:#fff;color:#000" onclick="PersonaBilling.buy20Credits()">20 קרדיטים - $1.99</button>
+    <button class="btn btn-ghost" style="margin-top:8px" onclick="PersonaBilling.closeStoreModal()">אולי אחר כך</button>
   </div>
 </div>
 
 </main>
-
 <div id="toast" class="toast" hidden></div>
 <canvas id="memeCanvas" width="1080" height="1350" hidden></canvas>
 <canvas id="canvasElement" hidden></canvas>
 
 <script>
-// ==================== CONFIG ====================
-const API_URL = "https://billowing-shape-1d81.maty-tsoraro.workers.dev/";
-const APP_SECRET = "vs_87dTVS5q8rKeTtFahgFgl8GQeKyL78tB_2026";
-const FAL_MODEL_CHEAP = "fal-ai/flux/schnell";
-const PROTECTION = {
-  DAILY_GLOBAL_LIMIT: 150,
-  MAX_PER_USER_PER_DAY: 25,
-  PRO_WEEKLY_CREDITS: 50,
-  STORAGE_GLOBAL: 'persona_global_daily',
-  STORAGE_GLOBAL_DATE: 'persona_global_date',
-  STORAGE_USER: 'persona_user_daily',
-  STORAGE_USER_DATE: 'persona_user_date'
-};
-function getTodayStr(){ return new Date().toISOString().split('T')[0]; }
-function checkGlobalLimit(){
-  const today = getTodayStr();
-  const savedDate = localStorage.getItem(PROTECTION.STORAGE_GLOBAL_DATE);
-  let count = parseInt(localStorage.getItem(PROTECTION.STORAGE_GLOBAL) || '0');
-  if(savedDate !== today){ count = 0; localStorage.setItem(PROTECTION.STORAGE_GLOBAL_DATE, today); localStorage.setItem(PROTECTION.STORAGE_GLOBAL, '0'); }
-  return { count, allowed: count < PROTECTION.DAILY_GLOBAL_LIMIT, remaining: PROTECTION.DAILY_GLOBAL_LIMIT - count };
-}
-function incrementGlobal(){ const c = checkGlobalLimit(); localStorage.setItem(PROTECTION.STORAGE_GLOBAL, String(c.count + 1)); localStorage.setItem(PROTECTION.STORAGE_GLOBAL_DATE, getTodayStr()); }
-function checkUserDailyLimit(){
-  const today = getTodayStr();
-  const savedDate = localStorage.getItem(PROTECTION.STORAGE_USER_DATE);
-  let count = parseInt(localStorage.getItem(PROTECTION.STORAGE_USER) || '0');
-  if(savedDate !== today){ count = 0; localStorage.setItem(PROTECTION.STORAGE_USER_DATE, today); localStorage.setItem(PROTECTION.STORAGE_USER, '0'); }
-  return { count, allowed: count < PROTECTION.MAX_PER_USER_PER_DAY, remaining: PROTECTION.MAX_PER_USER_PER_DAY - count };
-}
-function incrementUserDaily(){ const c = checkUserDailyLimit(); localStorage.setItem(PROTECTION.STORAGE_USER, String(c.count + 1)); localStorage.setItem(PROTECTION.STORAGE_USER_DATE, getTodayStr()); }
-function canGenerate(){
-  const global = checkGlobalLimit();
-  if(!global.allowed){ showToast(`הגענו למכסה היומית (${PROTECTION.DAILY_GLOBAL_LIMIT}). חוזרים מחר`, true); return false; }
-  const user = checkUserDailyLimit();
-  if(!user.allowed){ showToast(`הגעת למכסה יומית של ${PROTECTION.MAX_PER_USER_PER_DAY} יצירות`, true); return false; }
-  return true;
-}
+const API_URL="https://billowing-shape-1d81.maty-tsoraro.workers.dev/";const APP_SECRET="vs_87dTVS5q8rKeTtFahgFgl8GQeKyL78tB_2026";
+const PROTECTION={DAILY_GLOBAL_LIMIT:150,MAX_PER_USER_PER_DAY:25,PRO_WEEKLY_CREDITS:50,STORAGE_GLOBAL:'persona_global_daily',STORAGE_GLOBAL_DATE:'persona_global_date',STORAGE_USER:'persona_user_daily',STORAGE_USER_DATE:'persona_user_date'};
+function getTodayStr(){return new Date().toISOString().split('T')[0];}
+function checkGlobalLimit(){const t=getTodayStr(),sd=localStorage.getItem(PROTECTION.STORAGE_GLOBAL_DATE);let c=parseInt(localStorage.getItem(PROTECTION.STORAGE_GLOBAL)||'0');if(sd!==t){c=0;localStorage.setItem(PROTECTION.STORAGE_GLOBAL_DATE,t);localStorage.setItem(PROTECTION.STORAGE_GLOBAL,'0');}return{count:c,allowed:c<PROTECTION.DAILY_GLOBAL_LIMIT};}
+function incrementGlobal(){const c=checkGlobalLimit();localStorage.setItem(PROTECTION.STORAGE_GLOBAL,String(c.count+1));localStorage.setItem(PROTECTION.STORAGE_GLOBAL_DATE,getTodayStr());}
+function checkUserDailyLimit(){const t=getTodayStr(),sd=localStorage.getItem(PROTECTION.STORAGE_USER_DATE);let c=parseInt(localStorage.getItem(PROTECTION.STORAGE_USER)||'0');if(sd!==t){c=0;localStorage.setItem(PROTECTION.STORAGE_USER_DATE,t);localStorage.setItem(PROTECTION.STORAGE_USER,'0');}return{count:c,allowed:c<PROTECTION.MAX_PER_USER_PER_DAY};}
+function incrementUserDaily(){const c=checkUserDailyLimit();localStorage.setItem(PROTECTION.STORAGE_USER,String(c.count+1));localStorage.setItem(PROTECTION.STORAGE_USER_DATE,getTodayStr());}
+function canGenerate(){if(!checkGlobalLimit().allowed){showToast('מכסה יומית 150',true);return false;}if(!checkUserDailyLimit().allowed){showToast('מכסה 25 ביום',true);return false;}return true;}
 
-// ==================== BILLING ====================
-const BILLING = {
-  PRODUCTS: { CREDITS_20: 'credits_20', PRO_WEEKLY: 'pro_weekly' },
-  CREDITS_PER_PURCHASE: 20,
-  PRO_CREDITS: 50,
-  STORAGE_KEY: 'personaai_credits_v2',
-  STORAGE_KEY_PRO: 'personaai_pro_until',
-  STORAGE_KEY_PRO_USED: 'personaai_pro_used',
-  FREE_CREDITS: 3
-};
-let digitalGoodsService = null;
-let productDetails = {};
-function isProActive() { const until = localStorage.getItem(BILLING.STORAGE_KEY_PRO); if (!until) return false; return new Date(until) > new Date(); }
-function getProRemaining(){ if(!isProActive()) return 0; const used = parseInt(localStorage.getItem(BILLING.STORAGE_KEY_PRO_USED) || '0'); return Math.max(0, BILLING.PRO_CREDITS - used); }
-function getCredits() {
-  if (isProActive()) return getProRemaining();
-  const v = parseInt(localStorage.getItem(BILLING.STORAGE_KEY) || '');
-  if (isNaN(v)) { localStorage.setItem(BILLING.STORAGE_KEY, String(BILLING.FREE_CREDITS)); return BILLING.FREE_CREDITS; }
-  return v;
-}
-function setCredits(n) { if (isProActive()) return; localStorage.setItem(BILLING.STORAGE_KEY, String(Math.max(0, n))); updateCreditsUI(); }
-function addCredits(n) { if (isProActive()) return; setCredits(getCredits() + n); }
-function spendCredits(n = 1) {
-  if (isProActive()) {
-    const used = parseInt(localStorage.getItem(BILLING.STORAGE_KEY_PRO_USED) || '0');
-    if(used + n > BILLING.PRO_CREDITS) return false;
-    localStorage.setItem(BILLING.STORAGE_KEY_PRO_USED, String(used + n));
-    updateCreditsUI(); return true;
+const BILLING={PRODUCTS:{CREDITS_20:'credits_20',PRO_WEEKLY:'pro_weekly'},CREDITS_PER_PURCHASE:20,PRO_CREDITS:50,STORAGE_KEY:'personaai_credits_v2',STORAGE_KEY_PRO:'personaai_pro_until',STORAGE_KEY_PRO_USED:'personaai_pro_used',FREE_CREDITS:3};
+let digitalGoodsService=null;
+function isProActive(){const u=localStorage.getItem(BILLING.STORAGE_KEY_PRO);if(!u)return false;return new Date(u)>new Date();}
+function getProRemaining(){if(!isProActive())return 0;const used=parseInt(localStorage.getItem(BILLING.STORAGE_KEY_PRO_USED)||'0');return Math.max(0,BILLING.PRO_CREDITS-used);}
+function getCredits(){if(isProActive())return getProRemaining();const v=parseInt(localStorage.getItem(BILLING.STORAGE_KEY)||'');if(isNaN(v)){localStorage.setItem(BILLING.STORAGE_KEY,String(BILLING.FREE_CREDITS));return BILLING.FREE_CREDITS;}return v;}
+function setCredits(n){if(isProActive())return;localStorage.setItem(BILLING.STORAGE_KEY,String(Math.max(0,n)));updateCreditsUI();}
+function addCredits(n){if(isProActive())return;setCredits(getCredits()+n);}
+function spendCreditsOrRefund(cost=1){
+  if(!canGenerate())return{success:false};
+  if(isProActive()){
+    const used=parseInt(localStorage.getItem(BILLING.STORAGE_KEY_PRO_USED)||'0');
+    if(used+cost>BILLING.PRO_CREDITS){showToast('נגמרו 50',true);return{success:false};}
+    localStorage.setItem(BILLING.STORAGE_KEY_PRO_USED,String(used+cost));incrementGlobal();incrementUserDaily();updateCreditsUI();
+    let r=false;return{success:true,refund:()=>{if(!r){r=true;const cu=parseInt(localStorage.getItem(BILLING.STORAGE_KEY_PRO_USED)||'0');localStorage.setItem(BILLING.STORAGE_KEY_PRO_USED,String(Math.max(0,cu-cost)));updateCreditsUI();}}};
   }
-  const cur = getCredits(); if (cur < n) return false; setCredits(cur - n); return true;
+  const cur=getCredits();if(cur<cost)return{success:false};setCredits(cur-cost);incrementGlobal();incrementUserDaily();
+  let r=false;return{success:true,refund:()=>{if(!r){r=true;addCredits(cost);}}};
 }
-function spendCreditsOrRefund(cost = 1) {
-  if(!canGenerate()) return { success: false };
-  if (isProActive()) {
-    const used = parseInt(localStorage.getItem(BILLING.STORAGE_KEY_PRO_USED) || '0');
-    if(used + cost > BILLING.PRO_CREDITS){ showToast('נגמרו 50 היצירות השבועיות', true); return { success: false }; }
-    localStorage.setItem(BILLING.STORAGE_KEY_PRO_USED, String(used + cost));
-    incrementGlobal(); incrementUserDaily(); updateCreditsUI();
-    let refunded = false;
-    return { success: true, refund: () => { if (!refunded) { refunded = true; const curUsed = parseInt(localStorage.getItem(BILLING.STORAGE_KEY_PRO_USED) || '0'); localStorage.setItem(BILLING.STORAGE_KEY_PRO_USED, String(Math.max(0, curUsed - cost))); const g = parseInt(localStorage.getItem(PROTECTION.STORAGE_GLOBAL) || '1'); localStorage.setItem(PROTECTION.STORAGE_GLOBAL, String(Math.max(0, g-1))); const u = parseInt(localStorage.getItem(PROTECTION.STORAGE_USER) || '1'); localStorage.setItem(PROTECTION.STORAGE_USER, String(Math.max(0, u-1))); updateCreditsUI(); } } };
-  }
-  const cur = getCredits(); if (cur < cost) return { success: false };
-  setCredits(cur - cost); incrementGlobal(); incrementUserDaily();
-  let refunded = false;
-  return { success: true, refund: () => { if (!refunded) { refunded = true; addCredits(cost); const g = parseInt(localStorage.getItem(PROTECTION.STORAGE_GLOBAL) || '1'); localStorage.setItem(PROTECTION.STORAGE_GLOBAL, String(Math.max(0, g-1))); const u = parseInt(localStorage.getItem(PROTECTION.STORAGE_USER) || '1'); localStorage.setItem(PROTECTION.STORAGE_USER, String(Math.max(0, u-1))); } } };
-}
-function updateCreditsUI() {
-  const el = document.getElementById('creditsBadge');
-  if (el) {
-    if (isProActive()) { el.textContent = `PRO ${getProRemaining()}/${BILLING.PRO_CREDITS}`; el.style.background = 'linear-gradient(90deg,#00e5ff,#7c4dff)'; }
-    else { el.textContent = `${getCredits()} credits`; el.style.background = '#1e1e38'; }
-  }
-}
-async function initStore() {
+function updateCreditsUI(){const el=document.getElementById('creditsBadge');if(!el)return;if(isProActive()){el.textContent=`PRO ${getProRemaining()}/${BILLING.PRO_CREDITS}`;el.style.background='linear-gradient(90deg,#00e5ff,#7c4dff)';}else{el.textContent=`${getCredits()} credits`;el.style.background='#1e1e38';}}
+async function initStore(){
   updateCreditsUI();
-  if(localStorage.getItem(BILLING.STORAGE_KEY_PRO)){ const until = new Date(localStorage.getItem(BILLING.STORAGE_KEY_PRO)); if (until < new Date()){ localStorage.removeItem(BILLING.STORAGE_KEY_PRO); localStorage.removeItem(BILLING.STORAGE_KEY_PRO_USED); } }
-  if ('getDigitalGoodsService' in window) {
-    try {
-      digitalGoodsService = await window.getDigitalGoodsService('https://play.google.com/billing');
-      const details = await digitalGoodsService.getDetails(Object.values(BILLING.PRODUCTS));
-      details.forEach(d => { productDetails[d.itemId] = d; }); updateCreditsUI();
-      const purchases = await digitalGoodsService.listPurchases();
-      for (const p of purchases) await handlePurchase(p, false);
-    } catch (e) { console.warn('Billing not ready', e); }
-  }
+  if(localStorage.getItem(BILLING.STORAGE_KEY_PRO)){const u=new Date(localStorage.getItem(BILLING.STORAGE_KEY_PRO));if(u<new Date()){localStorage.removeItem(BILLING.STORAGE_KEY_PRO);localStorage.removeItem(BILLING.STORAGE_KEY_PRO_USED);}}
+  if('getDigitalGoodsService' in window){try{digitalGoodsService=await window.getDigitalGoodsService('https://play.google.com/billing');const d=await digitalGoodsService.getDetails(Object.values(BILLING.PRODUCTS));const p=await digitalGoodsService.listPurchases();for(const pu of p)await handlePurchase(pu,false);}catch(e){}}
 }
-async function handlePurchase(purchase, showToastFlag = true) {
-  if (purchase.itemId === BILLING.PRODUCTS.CREDITS_20) { addCredits(BILLING.CREDITS_PER_PURCHASE); if (showToastFlag) showToast(`+${BILLING.CREDITS_PER_PURCHASE} credits! 🎉`); }
-  else if (purchase.itemId === BILLING.PRODUCTS.PRO_WEEKLY) { const until = new Date(); until.setDate(until.getDate() + 7); localStorage.setItem(BILLING.STORAGE_KEY_PRO, until.toISOString()); localStorage.setItem(BILLING.STORAGE_KEY_PRO_USED, '0'); localStorage.setItem('pro_week_start', new Date().toISOString()); if (showToastFlag) showToast(`PRO הופעל! 50 יצירות! ♾️`); }
-  updateCreditsUI();
-  if (digitalGoodsService && purchase.purchaseToken) { try { if (digitalGoodsService.consume) await digitalGoodsService.consume(purchase.purchaseToken); } catch (err) {} }
-}
-async function buyProduct(productId) {
-  if (!digitalGoodsService || !window.PaymentRequest) {
-    if (confirm(`TEST MODE\nBuy ${productId}?`)) {
-      if (productId === BILLING.PRODUCTS.CREDITS_20) { addCredits(BILLING.CREDITS_PER_PURCHASE); showToast(`Test: +${BILLING.CREDITS_PER_PURCHASE}`); }
-      else { const until = new Date(); until.setDate(until.getDate() + 7); localStorage.setItem(BILLING.STORAGE_KEY_PRO, until.toISOString()); localStorage.setItem(BILLING.STORAGE_KEY_PRO_USED, '0'); updateCreditsUI(); showToast(`Test: PRO 50`); }
-    } return;
-  }
-  try {
-    const methodData = [{ supportedMethods: 'https://play.google.com/billing', data: { sku: productId } }];
-    const details = { total: { label: 'Total', amount: { currency: 'USD', value: '1.99' } } };
-    const request = new PaymentRequest(methodData, details);
-    const response = await request.show();
-    const { purchaseToken } = response.details;
-    await handlePurchase({ itemId: productId, purchaseToken }, true);
-    await response.complete('success');
-  } catch (e) { if (e.message && !e.message.includes('closed')) showToast(e.message, true); }
-}
-async function buy20Credits() { return buyProduct(BILLING.PRODUCTS.CREDITS_20); }
-async function buyProWeekly() { return buyProduct(BILLING.PRODUCTS.PRO_WEEKLY); }
-function requireCreditsOrBuy(cost = 1) { if (isProActive() && getProRemaining() >= cost) return true; if (getCredits() >= cost) return true; openStoreModal(); showToast('אין מספיק קרדיטים 💎', true); return false; }
-function openStoreModal() { const m = document.getElementById('storeModal'); if (m) { m.hidden = false; m.style.display = 'flex'; } }
-function closeStoreModal() { const m = document.getElementById('storeModal'); if (m) { m.hidden = true; m.style.display = 'none'; } }
-window.PersonaBilling = { getCredits, addCredits, spendCredits, spendCreditsOrRefund, buy20Credits, buyProWeekly, buyProduct, requireCreditsOrBuy, initStore, openStoreModal, closeStoreModal, isProActive, BILLING };
-document.addEventListener('DOMContentLoaded', () => { initStore(); });
+async function handlePurchase(p,s=false){if(p.itemId===BILLING.PRODUCTS.CREDITS_20){addCredits(BILLING.CREDITS_PER_PURCHASE);if(s)showToast(`+${BILLING.CREDITS_PER_PURCHASE}!`);}else if(p.itemId===BILLING.PRODUCTS.PRO_WEEKLY){const u=new Date();u.setDate(u.getDate()+7);localStorage.setItem(BILLING.STORAGE_KEY_PRO,u.toISOString());localStorage.setItem(BILLING.STORAGE_KEY_PRO_USED,'0');if(s)showToast('PRO 50!');}updateCreditsUI();if(digitalGoodsService&&p.purchaseToken){try{if(digitalGoodsService.consume)await digitalGoodsService.consume(p.purchaseToken);}catch(e){}}}
+async function buyProduct(pid){if(!digitalGoodsService||!window.PaymentRequest){if(confirm(`TEST ${pid}?`)){if(pid===BILLING.PRODUCTS.CREDITS_20)addCredits(BILLING.CREDITS_PER_PURCHASE);else{const u=new Date();u.setDate(u.getDate()+7);localStorage.setItem(BILLING.STORAGE_KEY_PRO,u.toISOString());localStorage.setItem(BILLING.STORAGE_KEY_PRO_USED,'0');}updateCreditsUI();}return;}try{const md=[{supportedMethods:'https://play.google.com/billing',data:{sku:pid}}];const det={total:{label:'Total',amount:{currency:'USD',value:'1.99'}}};const req=new PaymentRequest(md,det);const res=await req.show();await handlePurchase({itemId:pid,purchaseToken:res.details.purchaseToken},true);await res.complete('success');}catch(e){}}
+async function buy20Credits(){return buyProduct(BILLING.PRODUCTS.CREDITS_20);}async function buyProWeekly(){return buyProduct(BILLING.PRODUCTS.PRO_WEEKLY);}
+function requireCreditsOrBuy(c=1){if(isProActive()&&getProRemaining()>=c)return true;if(getCredits()>=c)return true;openStoreModal();showToast('אין קרדיטים 💎',true);return false;}
+function openStoreModal(){const m=document.getElementById('storeModal');if(m){m.hidden=false;m.style.display='flex';}}function closeStoreModal(){const m=document.getElementById('storeModal');if(m){m.hidden=true;m.style.display='none';}}
+window.PersonaBilling={getCredits,addCredits,spendCreditsOrRefund,buy20Credits,buyProWeekly,buyProduct,requireCreditsOrBuy,initStore,openStoreModal,closeStoreModal,isProActive,BILLING};
+document.addEventListener('DOMContentLoaded',()=>{initStore();});
 </script>
 
 <script>
 "use strict";
-const MAX_DIM = 1280;
-let stream = null; let facing = "user"; let camReady = false; let originalImg = null; let currentResult = null; let currentVideo = null; let cancelled = false;
-const videoEl = document.getElementById("videoElement");
-const canvasEl = document.getElementById("canvasElement");
-const resultImg = document.getElementById("resultImage");
-const resultVideo = document.getElementById("resultVideo");
-const placeholder = document.getElementById("placeholder");
-const guide = document.getElementById("guide");
-const loading = document.getElementById("loading");
-const loadingText = document.getElementById("loadingText");
-const loadingSub = document.getElementById("loadingSub");
-const toastEl = document.getElementById("toast");
-const memeCanvas = document.getElementById("memeCanvas");
-function showToast(msg,isErr){ toastEl.textContent = msg; toastEl.hidden = false; toastEl.classList.toggle("error", !!isErr); clearTimeout(showToast._t); showToast._t = setTimeout(()=>toastEl.hidden = true, 3500); }
-function setLoading(on,txt,sub){ loading.hidden=!on; if(txt)loadingText.textContent=txt; if(sub)loadingSub.textContent=sub; document.querySelectorAll("button:not(#cancelBtn)").forEach(b=>b.disabled=on); }
+const MAX_DIM=1280;let stream=null,facing="user",camReady=false,originalImg=null,currentResult=null,currentVideo=null,cancelled=false,currentStyle='classic';
+const videoEl=document.getElementById("videoElement"),canvasEl=document.getElementById("canvasElement"),resultImg=document.getElementById("resultImage"),resultVideo=document.getElementById("resultVideo"),placeholder=document.getElementById("placeholder"),guide=document.getElementById("guide"),loading=document.getElementById("loading"),loadingText=document.getElementById("loadingText"),toastEl=document.getElementById("toast"),memeCanvas=document.getElementById("memeCanvas");
+function showToast(m,e){toastEl.textContent=m;toastEl.hidden=false;toastEl.classList.toggle("error",!!e);clearTimeout(showToast._t);showToast._t=setTimeout(()=>toastEl.hidden=true,3500);}
+function setLoading(o,t,s){loading.hidden=!o;if(t)loadingText.textContent=t;if(s)document.getElementById("loadingSub").textContent=s;document.querySelectorAll("button:not(#cancelBtn)").forEach(b=>b.disabled=o);}
 function stopCam(){if(stream){stream.getTracks().forEach(t=>t.stop());}stream=null;camReady=false;if(videoEl.srcObject)videoEl.srcObject=null;videoEl.hidden=true;if(!currentResult){placeholder.hidden=false;guide.hidden=true;}}
-async function startCam(){ placeholder.hidden=false;videoEl.hidden=true;guide.hidden=true; if(!navigator.mediaDevices?.getUserMedia){showToast('מצלמה חסומה',true);return;} try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:facing},audio:false});}catch(e){try{stream=await navigator.mediaDevices.getUserMedia({video:true,audio:false});}catch(err){showToast('מצלמה חסומה',true);return;}} try{videoEl.srcObject=stream;videoEl.hidden=false;placeholder.hidden=true;guide.hidden=false;await videoEl.play();camReady=true;}catch(e){showToast('שגיאת מצלמה',true);} }
+async function startCam(){placeholder.hidden=false;videoEl.hidden=true;guide.hidden=true;if(!navigator.mediaDevices?.getUserMedia){showToast('מצלמה חסומה',true);return;}try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:facing},audio:false});}catch(e){try{stream=await navigator.mediaDevices.getUserMedia({video:true,audio:false});}catch(err){showToast('מצלמה חסומה',true);return;}}try{videoEl.srcObject=stream;videoEl.hidden=false;placeholder.hidden=true;guide.hidden=false;await videoEl.play();camReady=true;}catch(e){showToast('שגיאת מצלמה',true);}}
 function getDim(w,h){const l=Math.max(w,h);if(l<=MAX_DIM)return{w,h};const s=MAX_DIM/l;return{w:Math.round(w*s),h:Math.round(h*s)};}
-function drawToCanvas(src,mirror){ const sw=src.videoWidth||src.naturalWidth||src.width;const sh=src.videoHeight||src.naturalHeight||src.height; if(!sw||!sh)throw new Error("Image not ready"); const d=getDim(sw,sh);canvasEl.width=d.w;canvasEl.height=d.h;const ctx=canvasEl.getContext("2d",{alpha:false});ctx.save();if(mirror){ctx.translate(d.w,0);ctx.scale(-1,1);}ctx.drawImage(src,0,0,d.w,d.h);ctx.restore();return canvasEl.toDataURL("image/jpeg",0.86); }
+function drawToCanvas(src,m){const sw=src.videoWidth||src.naturalWidth||src.width,sh=src.videoHeight||src.naturalHeight||src.height;if(!sw||!sh)throw new Error("Image");const d=getDim(sw,sh);canvasEl.width=d.w;canvasEl.height=d.h;const ctx=canvasEl.getContext("2d",{alpha:false});ctx.save();if(m){ctx.translate(d.w,0);ctx.scale(-1,1);}ctx.drawImage(src,0,0,d.w,d.h);ctx.restore();return canvasEl.toDataURL("image/jpeg",0.86);}
 function takePhoto(){if(!stream||!camReady||videoEl.videoWidth===0){showToast('מצלמה חסומה',true);return;}try{selectImage(drawToCanvas(videoEl,facing==="user"));}catch(e){showToast(e.message,true);}}
-function selectImage(data){ originalImg=data;currentResult=data;currentVideo=null; resultImg.src=data;resultImg.hidden=false;resultImg.style.display="block"; resultVideo.hidden=true;resultVideo.style.display="none";resultVideo.pause(); videoEl.hidden=true;placeholder.hidden=true;guide.hidden=true; document.getElementById("cameraMenu").hidden=true; document.getElementById("chooseMenu").hidden=false; document.getElementById("detailMenu").hidden=true; document.getElementById("resultMenu").hidden=true; stopCam(); updateMemePreview(); window.scrollTo({top:320,behavior:"smooth"}); }
-function handleUpload(file){ if(!file||!file.type.startsWith("image/")){showToast('תמונה לא תקינה',true);return;} const reader=new FileReader(); reader.onload=ev=>{ const img=new Image(); img.onload=()=>{try{selectImage(drawToCanvas(img,false));}catch(e){showToast(e.message,true);}}; img.onerror=()=>showToast('פורמט לא נתמך',true); img.src=ev.target.result; }; reader.readAsDataURL(file); }
-function wait(ms){return new Promise(r=>setTimeout(r,ms));}
-async function fetchJson(opts){
-  if(!canGenerate()) throw new Error('Daily limit reached');
-  opts = opts || {}; opts.headers = { ...(opts.headers||{}), "X-App-Secret": APP_SECRET, "X-Model": FAL_MODEL_CHEAP };
-  const res=await fetch(API_URL,opts);
-  let data;try{data=await res.json();}catch(e){const txt=await res.text();throw new Error(txt.slice(0,500));}
-  if(!res.ok||data.error) throw new Error(data.error||'Failed');
-  return data;
-}
-async function pollForResult(reqId, statusUrl, responseUrl){ for(let i=0;i<60;i++){ if(cancelled) return null; await wait(3000); if(cancelled) return null; const p=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"status",requestId:reqId,statusUrl,responseUrl})}); if(p.status==="succeeded"&&p.videoUrl) return p.videoUrl; if(p.status==="failed") throw new Error(p.error||'Failed'); } throw new Error('Timeout'); }
-function showResult(url){ currentResult=url;currentVideo=null; resultImg.src=url;resultImg.hidden=false;resultImg.style.display="block"; resultVideo.hidden=true;resultVideo.style.display="none";resultVideo.pause(); document.getElementById("chooseMenu").hidden=true; document.getElementById("detailMenu").hidden=true; document.getElementById("cameraMenu").hidden=true; document.getElementById("resultMenu").hidden=false; document.getElementById("resultText").textContent='מוכן!'; setLoading(false); window.scrollTo({top:0,behavior:"smooth"}); }
-function showVideo(url){ currentVideo=url; resultVideo.src=url;resultVideo.hidden=false;resultVideo.style.display="block"; resultImg.hidden=true;resultImg.style.display="none"; resultVideo.load(); resultVideo.onloadeddata=()=>{ resultVideo.play().catch(()=>{}); }; document.getElementById("chooseMenu").hidden=true; document.getElementById("detailMenu").hidden=true; document.getElementById("cameraMenu").hidden=true; document.getElementById("resultMenu").hidden=false; document.getElementById("resultText").textContent='מוכן!'; setLoading(false); showToast('מוכן!'); window.scrollTo({top:0,behavior:"smooth"}); }
+function selectImage(d){originalImg=d;currentResult=d;currentVideo=null;resultImg.src=d;resultImg.hidden=false;resultImg.style.display="block";resultVideo.hidden=true;resultVideo.style.display="none";resultVideo.pause();videoEl.hidden=true;placeholder.hidden=true;guide.hidden=true;document.getElementById("cameraMenu").hidden=true;document.getElementById("chooseMenu").hidden=false;document.getElementById("detailMenu").hidden=true;document.getElementById("resultMenu").hidden=true;stopCam();updateMemePreview();window.scrollTo({top:320,behavior:"smooth"});}
+function handleUpload(f){if(!f||!f.type.startsWith("image/")){showToast('תמונה לא תקינה',true);return;}const r=new FileReader();r.onload=ev=>{const im=new Image();im.onload=()=>{try{selectImage(drawToCanvas(im,false));}catch(e){showToast(e.message,true);}};im.onerror=()=>showToast('פורמט לא נתמך',true);im.src=ev.target.result;};r.readAsDataURL(f);}
+function wait(m){return new Promise(r=>setTimeout(r,m));}
+async function fetchJson(o){if(!canGenerate())throw new Error('Daily limit');o=o||{};o.headers={...(o.headers||{}),"X-App-Secret":APP_SECRET};const res=await fetch(API_URL,o);let d;try{d=await res.json();}catch(e){const t=await res.text();throw new Error(t.slice(0,500));}if(!res.ok||d.error)throw new Error(d.error||'Failed');return d;}
+async function pollForResult(id,su,ru){for(let i=0;i<60;i++){if(cancelled)return null;await wait(3000);if(cancelled)return null;const p=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"status",requestId:id,statusUrl:su,responseUrl:ru})});if(p.status==="succeeded"&&p.videoUrl)return p.videoUrl;if(p.status==="failed")throw new Error(p.error||'Failed');}throw new Error('Timeout');}
+function showResult(u){currentResult=u;currentVideo=null;resultImg.src=u;resultImg.hidden=false;resultImg.style.display="block";resultVideo.hidden=true;resultVideo.style.display="none";resultVideo.pause();document.getElementById("chooseMenu").hidden=true;document.getElementById("detailMenu").hidden=true;document.getElementById("cameraMenu").hidden=true;document.getElementById("resultMenu").hidden=false;document.getElementById("resultText").textContent='מם מושלם מוכן! 🔥';setLoading(false);window.scrollTo({top:0,behavior:"smooth"});}
+function showVideo(u){currentVideo=u;resultVideo.src=u;resultVideo.hidden=false;resultVideo.style.display="block";resultImg.hidden=true;resultImg.style.display="none";resultVideo.load();resultVideo.onloadeddata=()=>{resultVideo.play().catch(()=>{});};document.getElementById("chooseMenu").hidden=true;document.getElementById("detailMenu").hidden=true;document.getElementById("cameraMenu").hidden=true;document.getElementById("resultMenu").hidden=false;document.getElementById("resultText").textContent='סרטון מם מוכן! 🔥';setLoading(false);showToast('מוכן! 🔥');window.scrollTo({top:0,behavior:"smooth"});}
 
-// ==================== MEME ENGINE - REAL VIRAL MEME ====================
-function wrapText(ctx, text, maxWidth){
-  const words = text.split(' ');
-  let lines = [], cur = '';
-  for(let w of words){
-    const test = cur ? cur + ' ' + w : w;
-    if(ctx.measureText(test).width > maxWidth && cur){ lines.push(cur); cur = w; }
-    else cur = test;
-  }
-  if(cur) lines.push(cur);
-  return lines;
-}
+// ULTIMATE MEME ENGINE - BEST IN THE WORLD
+function wrapText(ctx,text,maxW){const w=text.split(' ');let l=[],c='';for(let wd of w){const t=c?c+' '+wd:wd;if(ctx.measureText(t).width>maxW&&c){l.push(c);c=wd;}else c=t;}if(c)l.push(c);return l;}
 
-function createMemeCanvas(topText, bottomText, baseImageSrc){
-  return new Promise((resolve, reject)=>{
-    const canvas = memeCanvas;
-    const ctx = canvas.getContext('2d');
-    const img = new Image();
-    img.onload = ()=>{
-      // 1080x1350 - פורמט אינסטגרם ויראלי
-      canvas.width = 1080; canvas.height = 1350;
+function createMemeCanvas(topText,bottomText,baseSrc,style='classic'){
+  return new Promise((resolve,reject)=>{
+    const canvas=memeCanvas,ctx=canvas.getContext('2d'),img=new Image();
+    img.onload=()=>{
+      // ULTIMATE QUALITY: 1080x1350 - Instagram viral
+      canvas.width=1080;canvas.height=1350;
       
-      // רקע שחור
-      ctx.fillStyle = '#000';
-      ctx.fillRect(0,0,1080,1350);
-      
-      // צייר תמונה באמצע - 1080x1080
-      const imgSize = 1080;
-      const imgY = 135;
-      // רקע מטושטש מאחורה
-      ctx.filter = 'blur(20px) brightness(0.6)';
-      ctx.drawImage(img, 0, imgY, 1080, 1080);
-      ctx.filter = 'none';
-      // תמונה חדה מעל
-      // חיתוך מרכזי לשמירת פרופורציות
-      const iw = img.width, ih = img.height;
-      const scale = Math.max(1080/iw, 1080/ih);
-      const nw = iw*scale, nh = ih*scale;
-      const nx = (1080-nw)/2, ny = imgY + (1080-nh)/2;
-      ctx.drawImage(img, nx, ny, nw, nh);
-      
-      // טקסט מם - פונט Impact קלאסי
-      const drawMemeText = (text, y, isTop)=>{
-        if(!text) return;
-        text = text.toUpperCase();
-        ctx.textAlign = 'center';
-        ctx.textBaseline = isTop ? 'top' : 'bottom';
-        // גודל דינמי לפי אורך
-        let fontSize = text.length > 30 ? 48 : text.length > 20 ? 60 : 72;
-        ctx.font = `900 ${fontSize}px Impact, Heebo, Arial Black, sans-serif`;
-        ctx.lineJoin = 'round';
-        const lines = wrapText(ctx, text, 920);
-        // מקסימום 2 שורות
-        const finalLines = lines.slice(0,2);
-        let startY = y;
-        if(!isTop && finalLines.length > 1) startY = y - (finalLines.length-1)*(fontSize*1.1);
+      if(style==='modern'){
+        // סגנון מודרני: תמונה למעלה, פס לבן עם טקסט למטה
+        ctx.fillStyle='#fff';ctx.fillRect(0,0,1080,1350);
+        const iw=img.width,ih=img.height,scale=Math.min(1080/iw,1080/ih),nw=iw*scale,nh=ih*scale,nx=(1080-nw)/2,ny=0;
+        ctx.drawImage(img,nx,ny,nw,nh);
+        // פס לבן למטה לטקסט
+        const textAreaY=nh;const textAreaH=1350-nh;
+        ctx.fillStyle='#fff';ctx.fillRect(0,textAreaY,1080,textAreaH);
+        ctx.fillStyle='#000';ctx.textAlign='center';ctx.textBaseline='middle';
+        const combined=(topText+' '+(bottomText||'')).trim().toUpperCase();
+        if(combined){
+          let fs=combined.length>40?36:combined.length>20?48:60;
+          ctx.font=`900 ${fs}px Heebo, Inter, Arial Black`; 
+          const lines=wrapText(ctx,combined,960).slice(0,3);
+          lines.forEach((line,i)=>{ctx.fillText(line,540,textAreaY+40+i*(fs*1.2));});
+        }
+      } else {
+        // קלאסי - הכי ויראלי בעולם
+        ctx.fillStyle='#000';ctx.fillRect(0,0,1080,1350);
+        // רקע מטושטש
+        ctx.filter='blur(24px) brightness(0.5)';ctx.drawImage(img,0,135,1080,1080);ctx.filter='none';
+        // תמונה חדה
+        const iw=img.width,ih=img.height,scale=Math.max(1080/iw,1080/ih),nw=iw*scale,nh=ih*scale,nx=(1080-nw)/2,ny=135+(1080-nh)/2;
+        ctx.drawImage(img,nx,ny,nw,nh);
         
-        finalLines.forEach((line, i)=>{
-          const lineY = startY + i*(fontSize*1.1);
-          // קונטור שחור עבה - סגנון מם אמיתי
-          ctx.strokeStyle = '#000';
-          ctx.lineWidth = fontSize/6;
-          ctx.strokeText(line, 540, lineY);
-          // מילוי לבן
-          ctx.fillStyle = '#fff';
-          ctx.fillText(line, 540, lineY);
-        });
-      };
-      
-      // טקסט עליון - 50px מלמעלה
-      drawMemeText(topText, 60, true);
-      // טקסט תחתון - 50px מלמטה
-      drawMemeText(bottomText, 1300, false);
-      
-      // לוגו קטן ויראלי
-      ctx.fillStyle = 'rgba(0,0,0,0.6)';
-      ctx.fillRect(0, 1080+135-30, 1080, 30);
-      ctx.fillStyle = 'rgba(255,255,255,0.8)';
-      ctx.font = '700 16px Heebo, Arial';
-      ctx.textAlign = 'center';
-      ctx.fillText('VIRAL STUDIO', 540, 1080+135-10);
-      
-      resolve(canvas.toDataURL('image/jpeg', 0.92));
-    };
-    img.onerror = ()=>reject(new Error('Failed to load image'));
-    img.src = baseImageSrc;
+        const drawUltimateText=(text,y,isTop)=>{
+          if(!text)return;
+          // אם סגנון רק עליון/רק תחתון - נצייר רק אם מתאים
+          if(style==='top'&&!isTop)return;
+          if(style==='bottom'&&isTop)return;
+          
+          text=text.toUpperCase();
+          ctx.textAlign='center';ctx.textBaseline=isTop?'top':'bottom';ctx.lineJoin='round';ctx.miterLimit=2;
+          
+          // גודל דינמי מושלם - מתאים לאורך
+          let fontSize;
+          if(text.length>50) fontSize=42;
+          else if(text.length>35) fontSize=54;
+          else if(text.length>20) fontSize=64;
+          else fontSize=78;
+          
+          // פונט Impact האמיתי - הכי ויראלי
+          ctx.font=`900 ${fontSize}px Anton, Impact, Heebo, Arial Black, sans-serif`;
+          const lines=wrapText(ctx,text,1000).slice(0,2);
+          let startY=y;
+          if(!isTop&&lines.length>1) startY=y-(lines.length-1)*(fontSize*1.15);
+          
+          lines.forEach((line,i)=>{
+            const lineY=startY+i*(fontSize*1.15);
+            // קונטור שחור עבה - 3 שכבות לעומק מושלם
+            ctx.strokeStyle='#000';ctx.lineWidth=fontSize*0.18;ctx.strokeText(line,540,lineY);
+            ctx.strokeStyle='#000';ctx.lineWidth=fontSize*0.10;ctx.strokeText(line,540,lineY);
+            // מילוי לבן בוהק
+            ctx.fillStyle='#fff';ctx.fillText(line,540,lineY);
+          });
+        };
+        
+        drawUltimateText(topText,45,true);
+        drawUltimateText(bottomText,1305,false);
+      }
+      resolve(canvas.toDataURL('image/jpeg',0.95));
+    }; img.onerror=()=>reject(new Error('img')); img.src=baseSrc;
   });
 }
 
 async function updateMemePreview(){
-  const top = document.getElementById('topText').value.trim();
-  const bottom = document.getElementById('bottomText').value.trim();
-  const preview = document.getElementById('memeLivePreview');
-  if(!currentResult && !originalImg){ preview.innerHTML = '<span style="color:var(--muted);font-size:.8rem">העלה תמונה קודם</span>'; return; }
-  if(!top && !bottom){ preview.innerHTML = '<span style="color:var(--muted);font-size:.8rem">הקלד טקסט לראות תצוגה מקדימה</span>'; return; }
-  try{
-    const dataUrl = await createMemeCanvas(top, bottom, currentResult||originalImg);
-    preview.innerHTML = `<img src="${dataUrl}" style="width:100%;height:auto;border-radius:8px">`;
-  }catch(e){ preview.innerHTML = '<span style="color:#ff4d7a">שגיאת תצוגה</span>'; }
+  const top=document.getElementById('topText').value.trim(),bottom=document.getElementById('bottomText').value.trim(),prev=document.getElementById('memeLivePreview');
+  if(!currentResult&&!originalImg){prev.innerHTML='<span style="color:var(--muted)">העלה תמונה</span>';return;}
+  if(!top&&!bottom){prev.innerHTML='<span style="color:var(--muted)">הקלד טקסט - תצוגה חיה כאן 👇</span>';return;}
+  try{const d=await createMemeCanvas(top,bottom,currentResult||originalImg,currentStyle);prev.innerHTML=`<img src="${d}" style="width:100%;border-radius:8px;display:block">`;}catch(e){prev.innerHTML='<span style="color:#ff4d7a">שגיאה</span>';}
 }
 
 async function createMemeImageOnly(){
-  const topText = document.getElementById("topText").value.trim();
-  const bottomText = document.getElementById("bottomText").value.trim();
-  if(!topText && !bottomText){ showToast('כתוב לפחות טקסט עליון או תחתון', true); return; }
-  if (!window.PersonaBilling || !PersonaBilling.requireCreditsOrBuy(1)) return;
-  if(!canGenerate()) return;
-  const creditTx = PersonaBilling.spendCreditsOrRefund(1);
-  if (!creditTx.success) return;
-  setLoading(true,'יוצר מם ויראלי...');
-  try{
-    const base = currentResult||originalImg;
-    const memeDataUrl = await createMemeCanvas(topText, bottomText, base);
-    showResult(memeDataUrl);
-  }catch(e){ creditTx.refund(); showToast(e.message,true); setLoading(false); }
+  const top=document.getElementById('topText').value.trim(),bottom=document.getElementById('bottomText').value.trim();
+  if(!top&&!bottom){showToast('כתוב טקסט עליון או תחתון',true);return;}
+  if(!PersonaBilling.requireCreditsOrBuy(1))return;const tx=PersonaBilling.spendCreditsOrRefund(1);if(!tx.success)return;
+  setLoading(true,'יוצר מם מושלם...');try{const base=currentResult||originalImg;const data=await createMemeCanvas(top,bottom,base,currentStyle);showResult(data);}catch(e){tx.refund();showToast(e.message,true);setLoading(false);}
 }
 
 async function createMemeVideo(){
-  const topText = document.getElementById("topText").value.trim();
-  const bottomText = document.getElementById("bottomText").value.trim();
-  if(!topText && !bottomText){ showToast('כתוב טקסט למם', true); return; }
-  if (!window.PersonaBilling || !PersonaBilling.requireCreditsOrBuy(1)) return;
-  if(!canGenerate()) return;
-  const creditTx = PersonaBilling.spendCreditsOrRefund(1);
-  if (!creditTx.success) return;
-  cancelled=false;setLoading(true,'יוצר סרטון מם ויראלי...');
-  try{
-    // שלב 1: צור תמונת מם אמיתית עם טקסט
-    const base = currentResult||originalImg;
-    const memeImageDataUrl = await createMemeCanvas(topText, bottomText, base);
-    // שלב 2: הפוך אותה לסרטון עם זום עדין - שומר על הטקסט חד
-    const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"meme", image: memeImageDataUrl, motion: "subtle zoom in, keep text sharp and readable, viral meme style", prompt: "viral meme video, keep text perfectly readable, subtle motion"})});
+  const top=document.getElementById('topText').value.trim(),bottom=document.getElementById('bottomText').value.trim();
+  if(!top&&!bottom){showToast('כתוב טקסט',true);return;}
+  if(!PersonaBilling.requireCreditsOrBuy(1))return;const tx=PersonaBilling.spendCreditsOrRefund(1);if(!tx.success)return;
+  cancelled=false;setLoading(true,'יוצר סרטון מם ויראלי...');try{
+    const base=currentResult||originalImg;const memeImg=await createMemeCanvas(top,bottom,base,currentStyle);
+    const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"meme",image:memeImg,prompt:"viral meme video keep text sharp and readable subtle zoom in and slight head movement"})});
     if(data.status==="succeeded"&&data.videoUrl){showVideo(data.videoUrl);return;}
-    if(data.output && data.output[0]){ showVideo(data.output[0]); return; }
-    // אם זה תור (queue)
-    if(data.request_id || data.requestId){
-      const reqId=data.requestId||data.request_id;
-      const videoUrl=await pollForResult(reqId, data.statusUrl||data.status_url, data.responseUrl||data.response_url);
-      if(cancelled||!videoUrl){ creditTx.refund(); return; }
-      showVideo(videoUrl);
-    } else if(data.resultUrl){ showResult(data.resultUrl); }
-    else { showResult(memeImageDataUrl); } // fallback לתמונה אם וידאו נכשל
-  }catch(e){ creditTx.refund(); if(!cancelled)showToast(e.message,true);setLoading(false); }
+    if(data.output&&data.output[0]){showVideo(data.output[0]);return;}
+    if(data.request_id||data.requestId){const id=data.requestId||data.request_id;const v=await pollForResult(id,data.statusUrl,data.responseUrl);if(!v){tx.refund();return;}showVideo(v);} else showResult(memeImg);
+  }catch(e){tx.refund();if(!cancelled)showToast(e.message,true);setLoading(false);}
 }
 
 async function cinematicVideo(){
-  if (!window.PersonaBilling || !PersonaBilling.requireCreditsOrBuy(1)) return;
-  if(!canGenerate()) return;
-  let prompt=document.getElementById("cinemaPrompt").value.trim();
-  if(!prompt) prompt="epic cinematic trailer, dramatic lighting";
-  const creditTx = PersonaBilling.spendCreditsOrRefund(1);
-  if (!creditTx.success) return;
-  cancelled=false;setLoading(true,'יוצר סצנה קולנועית...');
-  try{
-    const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"cinematic", image:currentResult, prompt:prompt})});
-    if(cancelled){ creditTx.refund(); return; }
-    if(data.status==="succeeded"&&data.videoUrl){showVideo(data.videoUrl);return;}
-    if(data.videoUrl){ showVideo(data.videoUrl); return; }
-    const reqId=data.requestId||data.request_id||data.id;
-    if(!reqId) throw new Error(data.error||'Failed');
-    const videoUrl=await pollForResult(reqId, data.statusUrl||data.status_url, data.responseUrl||data.response_url);
-    if(cancelled||!videoUrl){ creditTx.refund(); return; }
-    showVideo(videoUrl);
-  }catch(e){ creditTx.refund(); if(!cancelled)showToast(e.message,true);setLoading(false); }
+  if(!PersonaBilling.requireCreditsOrBuy(1))return;const tx=PersonaBilling.spendCreditsOrRefund(1);if(!tx.success)return;
+  let p=document.getElementById("cinemaPrompt").value.trim()||"epic cinematic trailer";cancelled=false;setLoading(true,'סצנה קולנועית...');try{
+    const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"cinematic",image:currentResult,prompt:p})});
+    if(data.status==="succeeded"&&data.videoUrl){showVideo(data.videoUrl);return;}const id=data.requestId||data.request_id||data.id;if(!id)throw new Error(data.error||'Failed');const v=await pollForResult(id,data.statusUrl,data.responseUrl);if(!v){tx.refund();return;}showVideo(v);
+  }catch(e){tx.refund();if(!cancelled)showToast(e.message,true);setLoading(false);}
 }
 
 async function createImage(){
-  if (!window.PersonaBilling || !PersonaBilling.requireCreditsOrBuy(1)) return;
-  if(!canGenerate()) return;
-  let prompt=document.getElementById("imagePrompt").value.trim();
-  if(!prompt){ const active = document.querySelector("[data-image-style].active"); if(active) prompt=active.dataset.imageStyle; }
-  if(!prompt){ showToast('בחר דמות או תאר מה אתה רוצה', true); return; }
-  const creditTx = PersonaBilling.spendCreditsOrRefund(1);
-  if (!creditTx.success) return;
-  cancelled=false;setLoading(true,'יוצר דמות...');
-  try{
-    const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"image", image:currentResult, prompt:prompt})});
-    if(data.status==="succeeded"&&(data.resultUrl||data.output?.[0])){ showResult(data.resultUrl||data.output[0]); return; }
-    if(data.resultUrl) showResult(data.resultUrl);
-    else throw new Error('No output');
-  }catch(e){ creditTx.refund(); if(!cancelled)showToast(e.message,true);setLoading(false); }
+  let p=document.getElementById("imagePrompt").value.trim();if(!p){const a=document.querySelector("[data-image-style].active");if(a)p=a.dataset.imageStyle;}if(!p){showToast('בחר דמות',true);return;}
+  if(!PersonaBilling.requireCreditsOrBuy(1))return;const tx=PersonaBilling.spendCreditsOrRefund(1);if(!tx.success)return;cancelled=false;setLoading(true,'יוצר דמות...');try{
+    const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"image",image:currentResult,prompt:p})});
+    if(data.status==="succeeded"&&(data.resultUrl||data.output?.[0])){showResult(data.resultUrl||data.output[0]);return;}throw new Error('No output');
+  }catch(e){tx.refund();if(!cancelled)showToast(e.message,true);setLoading(false);}
 }
 
-// ===== SHARING AS REAL FILE - NOT LINK =====
 async function shareAsRealFile(){
-  const url = currentVideo||currentResult;
-  if(!url){ showToast('אין מה לשתף',true); return; }
-  setLoading(true, 'מכין שיתוף...');
-  try{
-    // תמיד הורד כ-blob ושלח כקובץ אמיתי
-    let blob;
-    if(url.startsWith('data:')){
-      const res = await fetch(url);
-      blob = await res.blob();
-    } else {
-      const res = await fetch(url);
-      if(!res.ok) throw new Error('Download failed');
-      blob = await res.blob();
-    }
-    const ext = currentVideo ? 'mp4' : 'jpg';
-    const mime = currentVideo ? 'video/mp4' : 'image/jpeg';
-    const file = new File([blob], `viral-${Date.now()}.${ext}`, { type: mime });
-    
-    if(navigator.canShare && navigator.canShare({files:[file]})){
-      await navigator.share({ files: [file], title: 'VIRAL STUDIO', text: 'נוצר עם VIRAL STUDIO 🔥' });
-      setLoading(false);
-      return;
-    }
-    // Fallback - הורדה אם שיתוף קבצים לא נתמך
-    throw new Error('Share files not supported');
-  }catch(e){
-    // Fallback לוואטסאפ - אם אי אפשר לשתף קובץ, ננסה להוריד ואז המשתמש ישלח ידנית
-    setLoading(false);
-    try{
-      const res = await fetch(url);
-      const blob = await res.blob();
-      const objectUrl = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = objectUrl;
-      a.download = `viral-${Date.now()}.${currentVideo?'mp4':'jpg'}`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(()=>URL.revokeObjectURL(objectUrl), 2000);
-      showToast('הקובץ הורד - עכשיו תוכל לשתף אותו כתמונה בוואטסאפ');
-    }catch(err){
-      // אחרון - פתח וואטסאפ עם קישור
-      window.open("https://wa.me/?text="+encodeURIComponent("נוצר עם VIRAL STUDIO 🔥 "+url),"_blank");
-    }
-  }
+  const url=currentVideo||currentResult;if(!url){showToast('אין מה לשתף',true);return;}setLoading(true,'מכין שיתוף כתמונה...');try{
+    const res=await fetch(url);const blob=await res.blob();const ext=currentVideo?'mp4':'jpg';const mime=currentVideo?'video/mp4':'image/jpeg';
+    const file=new File([blob],`viral-meme-${Date.now()}.${ext}`,{type:mime});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'VIRAL MEME 🔥',text:'נוצר עם VIRAL STUDIO 🔥'});setLoading(false);return;}
+    throw new Error('no share');
+  }catch(e){setLoading(false);try{const res=await fetch(url);const blob=await res.blob();const o=URL.createObjectURL(blob);const a=document.createElement('a');a.href=o;a.download=`viral-meme-${Date.now()}.${currentVideo?'mp4':'jpg'}`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(o),2000);showToast('הורד - עכשיו שתף כקובץ!');}catch(err){window.open("https://wa.me/?text="+encodeURIComponent("🔥 "+url),"_blank");}}
 }
 
-function openDetail(cat){ document.getElementById("chooseMenu").hidden=true; document.getElementById("detailMenu").hidden=false; document.querySelectorAll(".detail-content").forEach(el=>el.hidden=true); const titles={ meme:["מם ויראלי אמיתי","כמו באינסטגרם - עם פונט Impact"], cinema:["סצנה קולנועית","טריילר הוליוודי"], image:["הפוך לדמות","תבניות ויראליות"] }; const tArr=titles[cat]||["Create",""]; document.getElementById("detailTitle").textContent=tArr[0]; document.getElementById("detailSub").textContent=tArr[1]; document.getElementById("detail-"+cat).hidden=false; window.scrollTo({top:400,behavior:"smooth"}); if(cat==='meme') updateMemePreview(); }
+function openDetail(cat){
+  document.getElementById("chooseMenu").hidden=true;document.getElementById("detailMenu").hidden=false;document.querySelectorAll(".detail-content").forEach(el=>el.hidden=true);
+  const t={meme:["מם ויראלי מושלם","הכי טוב בעולם - Impact אמיתי"],cinema:["סצנה קולנועית","הוליווד"],image:["הפוך לדמות","ויראלי"]};
+  const tt=t[cat]||["Create",""];document.getElementById("detailTitle").textContent=tt[0];document.getElementById("detailSub").textContent=tt[1];document.getElementById("detail-"+cat).hidden=false;window.scrollTo({top:400,behavior:"smooth"});if(cat==='meme')updateMemePreview();
+}
 function backToChoose(){document.getElementById("detailMenu").hidden=true;document.getElementById("chooseMenu").hidden=false;}
-function resetApp(){ cancelled=true;setLoading(false);stopCam(); originalImg=null;currentResult=null;currentVideo=null; resultImg.src="";resultImg.hidden=true;resultImg.style.display="none"; resultVideo.src="";resultVideo.hidden=true;resultVideo.style.display="none";resultVideo.pause(); placeholder.hidden=false;guide.hidden=true; document.getElementById("cameraMenu").hidden=false; document.getElementById("chooseMenu").hidden=true; document.getElementById("detailMenu").hidden=true; document.getElementById("resultMenu").hidden=true; document.getElementById("uploadInput").value=""; document.getElementById("topText").value="";document.getElementById("bottomText").value=""; document.getElementById("cinemaPrompt").value="";document.getElementById("imagePrompt").value=""; document.querySelectorAll("[data-image-style]").forEach(x=>x.classList.remove("active")); document.getElementById("memeLivePreview").innerHTML='<span style="color:var(--muted);font-size:.8rem">הקלד טקסט לראות תצוגה מקדימה</span>'; }
-function anotherVideo(){ if(!originalImg){resetApp();return;} currentResult=originalImg;currentVideo=null; resultImg.src=originalImg;resultImg.hidden=false;resultImg.style.display="block"; resultVideo.hidden=true;resultVideo.style.display="none"; document.getElementById("chooseMenu").hidden=false; document.getElementById("detailMenu").hidden=true; document.getElementById("cameraMenu").hidden=true; document.getElementById("resultMenu").hidden=true; }
+function resetApp(){cancelled=true;setLoading(false);stopCam();originalImg=null;currentResult=null;currentVideo=null;resultImg.src="";resultImg.hidden=true;resultImg.style.display="none";resultVideo.src="";resultVideo.hidden=true;resultVideo.style.display="none";resultVideo.pause();placeholder.hidden=false;guide.hidden=true;document.getElementById("cameraMenu").hidden=false;document.getElementById("chooseMenu").hidden=true;document.getElementById("detailMenu").hidden=true;document.getElementById("resultMenu").hidden=true;document.getElementById("uploadInput").value="";document.getElementById("topText").value="";document.getElementById("bottomText").value="";document.getElementById("cinemaPrompt").value="";document.getElementById("imagePrompt").value="";document.querySelectorAll("[data-image-style]").forEach(x=>x.classList.remove("active"));document.getElementById("memeLivePreview").innerHTML='<span style="color:var(--muted)">הקלד טקסט לראות תצוגה חיה</span>';}
+function anotherVideo(){if(!originalImg){resetApp();return;}currentResult=originalImg;currentVideo=null;resultImg.src=originalImg;resultImg.hidden=false;resultImg.style.display="block";resultVideo.hidden=true;resultVideo.style.display="none";document.getElementById("chooseMenu").hidden=false;document.getElementById("detailMenu").hidden=true;document.getElementById("cameraMenu").hidden=true;document.getElementById("resultMenu").hidden=true;}
 
 document.getElementById("enableCamBtn").addEventListener("click",startCam);
 document.getElementById("uploadBtn").addEventListener("click",()=>{document.getElementById("uploadInput").value="";document.getElementById("uploadInput").click();});
@@ -633,20 +428,69 @@ document.getElementById("uploadInput").addEventListener("change",e=>{const f=e.t
 document.getElementById("captureBtn").addEventListener("click",takePhoto);
 document.getElementById("switchBtn").addEventListener("click",()=>{facing=facing==="user"?"environment":"user";startCam();});
 document.getElementById("cancelBtn").addEventListener("click",()=>{cancelled=true;setLoading(false);showToast('בוטל');});
-document.getElementById("downloadBtn").addEventListener("click",()=>{ const url=currentVideo||currentResult;if(!url){showToast('אין מה לשמור',true);return;} fetch(url).then(r=>r.blob()).then(b=>{const o=URL.createObjectURL(b);const a=document.createElement("a");a.href=o;a.download="viral-"+Date.now()+(currentVideo?".mp4":".jpg");document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(o),2000);}).catch(()=>window.open(url,"_blank")); });
-document.getElementById("shareBtn").addEventListener("click", shareAsRealFile);
+document.getElementById("downloadBtn").addEventListener("click",()=>{const u=currentVideo||currentResult;if(!u){showToast('אין מה לשמור',true);return;}fetch(u).then(r=>r.blob()).then(b=>{const o=URL.createObjectURL(b);const a=document.createElement("a");a.href=o;a.download=`viral-meme-${Date.now()}.${currentVideo?'mp4':'jpg'}`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(o),2000);}).catch(()=>window.open(u,"_blank"));});
+document.getElementById("shareBtn").addEventListener("click",shareAsRealFile);
 document.getElementById("memeImageBtn").addEventListener("click",createMemeImageOnly);
 document.getElementById("memeVideoBtn").addEventListener("click",createMemeVideo);
 document.getElementById("cinemaBtn").addEventListener("click",cinematicVideo);
 document.getElementById("imageBtn").addEventListener("click",createImage);
-document.getElementById("topText").addEventListener("input", updateMemePreview);
-document.getElementById("bottomText").addEventListener("input", updateMemePreview);
-document.querySelectorAll("[data-image-style]").forEach(b=>{ b.addEventListener("click",()=>{ document.querySelectorAll("[data-image-style]").forEach(x=>x.classList.remove("active")); b.classList.add("active"); document.getElementById("imagePrompt").value=b.dataset.imageStyle; }); });
+document.getElementById("topText").addEventListener("input",updateMemePreview);
+document.getElementById("bottomText").addEventListener("input",updateMemePreview);
+
+document.querySelectorAll(".preset-chip").forEach(ch=>{
+  ch.addEventListener("click",()=>{
+    const t=ch.dataset.top||"",b=ch.dataset.bottom||"";
+    if(t)document.getElementById("topText").value=t;
+    if(b)document.getElementById("bottomText").value=b;
+    updateMemePreview();
+  });
+});
+
+document.querySelectorAll(".style-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".style-btn").forEach(x=>x.classList.remove("active"));
+    btn.classList.add("active");currentStyle=btn.dataset.style;updateMemePreview();
+  });
+});
+
+document.getElementById("randomViralBtn").addEventListener("click",()=>{
+  const virals=[
+    {top:"כשאומרים לי תהיה רציני",bottom:"ואני עם פילטר של כלב 🐶"},
+    {top:"אמא: תמצא עבודה",bottom:"אני: עושה ממים ויראליים"},
+    {top:"POV: אתה רואה את זה ב-3 בלילה",bottom:"ואתה לא יכול להפסיק לצחוק"},
+    {top:"When you try to be productive",bottom:"But memes are life"},
+    {top:"Nobody:",bottom:"Me at 3AM making memes"},
+    {top:"Expectation",bottom:"Reality"},
+    {top:"החיים שלי",bottom:"VS איך שאני רואה אותם"},
+    {top:"אני: אהיה פרודוקטיבי היום",bottom:"גם אני אחרי 5 דקות"},
+    {top:"When life gives you lemons",bottom:"Make memes"},
+    {top:"Me: I'm fine",bottom:"Also me: *makes 10 memes*"}
+  ];
+  const c=virals[Math.floor(Math.random()*virals.length)];
+  document.getElementById("topText").value=c.top;document.getElementById("bottomText").value=c.bottom;updateMemePreview();showToast('🎲 כיתוב ויראלי!');
+});
+
+document.getElementById("enhanceTextBtn").addEventListener("click",()=>{
+  let top=document.getElementById("topText").value.trim(),bottom=document.getElementById("bottomText").value.trim();
+  if(!top&&!bottom){showToast('כתוב משהו קודם',true);return;}
+  // שיפור אוטומטי - הופך ליותר ויראלי
+  const enhance=(t)=>{
+    if(!t)return t;
+    if(t.length<15) return t.toUpperCase()+" 🔥";
+    if(!t.includes(":" )&& Math.random()>0.5) return "POV: "+t;
+    return t.toUpperCase();
+  };
+  if(top)document.getElementById("topText").value=enhance(top);
+  if(bottom)document.getElementById("bottomText").value=enhance(bottom);
+  updateMemePreview();showToast('✨ שופר ליותר ויראלי!');
+});
+
+document.querySelectorAll("[data-image-style]").forEach(b=>{b.addEventListener("click",()=>{document.querySelectorAll("[data-image-style]").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.getElementById("imagePrompt").value=b.dataset.imageStyle;});});
 document.querySelectorAll("[data-choose]").forEach(b=>{b.addEventListener("click",()=>openDetail(b.dataset.choose));});
 document.getElementById("backToChoose").addEventListener("click",backToChoose);
 document.getElementById("newPhotoBtn").addEventListener("click",resetApp);
 document.getElementById("anotherBtn").addEventListener("click",anotherVideo);
-function init(){ setLoading(false); placeholder.hidden=false; }
+function init(){setLoading(false);placeholder.hidden=false;}
 if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",init,{once:true});}else{init();}
 </script>
 </body>
