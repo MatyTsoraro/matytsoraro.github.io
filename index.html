@@ -21,6 +21,7 @@ body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-famil
 #videoElement.front{transform:scaleX(-1)}
 .placeholder{position:absolute;z-index:2;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:14px;padding:24px;text-align:center;background:#08080f}
 .guide{position:absolute;top:50%;right:50%;width:56%;aspect-ratio:.78;transform:translate(50%,-50%);border:1.5px dashed rgba(255,255,255,0.22);border-radius:48% 48% 44% 44%;pointer-events:none;z-index:3}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.1)}100%{transform:scale(1)}}
 .loading{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:14px;padding:20px;text-align:center;background:rgba(8,8,15,0.96)}
 .spinner{width:42px;height:42px;border:3px solid rgba(255,255,255,0.1);border-top-color:var(--p);border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
 .panel{padding:16px}
@@ -76,8 +77,12 @@ body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-famil
 <section class="glass viewport">
 <div id="placeholder" class="placeholder">
 <div style="width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,rgba(0,229,255,0.12),rgba(124,77,255,0.12));display:flex;align-items:center;justify-content:center;font-size:1.8rem">🔥</div>
-<div><div style="font-weight:800">מם מושלם מתחיל בתמונה טובה</div><div style="font-size:.82rem;color:var(--muted);margin-top:4px">תמונה ברורה = מם שמתפוצץ</div></div>
-<button id="enableCamBtn" class="btn btn-primary" style="width:auto;padding:10px 20px;font-size:.85rem" type="button">פתח מצלמה</button>
+<div><div style="font-weight:800">מם מושלם מתחיל בתמונה טובה</div><div style="font-size:.82rem;color:var(--muted);margin-top:4px">אם מצלמה לא עובדת - העלה תמונה ⬆ זה עובד תמיד</div></div>
+<div style="display:flex;gap:8px">
+<button id="enableCamBtn" class="btn btn-primary" style="width:auto;padding:10px 20px;font-size:.85rem" type="button">📷 פתח מצלמה</button>
+<button id="quickUploadBtn" class="btn btn-ghost" style="width:auto;padding:10px 20px;font-size:.85rem" type="button">⬆ העלה תמונה</button>
+</div>
+<div style="font-size:.68rem;color:var(--muted);margin-top:8px">ב-PersonaAI: הגדרות > אפליקציות > PersonaAI > הרשאות > מצלמה > אפשר</div>
 </div>
 <video id="videoElement" class="front" autoplay playsinline muted hidden></video>
 <canvas id="canvasElement" hidden></canvas>
@@ -288,10 +293,81 @@ const videoEl=document.getElementById("videoElement"),canvasEl=document.getEleme
 function showToast(m,e){toastEl.textContent=m;toastEl.hidden=false;toastEl.classList.toggle("error",!!e);clearTimeout(showToast._t);showToast._t=setTimeout(()=>toastEl.hidden=true,3500);}
 function setLoading(o,t,s){loading.hidden=!o;if(t)loadingText.textContent=t;if(s)document.getElementById("loadingSub").textContent=s;document.querySelectorAll("button:not(#cancelBtn)").forEach(b=>b.disabled=o);}
 function stopCam(){if(stream){stream.getTracks().forEach(t=>t.stop());}stream=null;camReady=false;if(videoEl.srcObject)videoEl.srcObject=null;videoEl.hidden=true;if(!currentResult){placeholder.hidden=false;guide.hidden=true;}}
-async function startCam(){placeholder.hidden=false;videoEl.hidden=true;guide.hidden=true;if(!navigator.mediaDevices?.getUserMedia){showToast('מצלמה חסומה',true);return;}try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:facing},audio:false});}catch(e){try{stream=await navigator.mediaDevices.getUserMedia({video:true,audio:false});}catch(err){showToast('מצלמה חסומה',true);return;}}try{videoEl.srcObject=stream;videoEl.hidden=false;placeholder.hidden=true;guide.hidden=false;await videoEl.play();camReady=true;}catch(e){showToast('שגיאת מצלמה',true);}}
+async function startCam(){
+  placeholder.hidden=false;
+  videoEl.hidden=true;
+  guide.hidden=true;
+  
+  if(!navigator.mediaDevices?.getUserMedia){
+    showToast('הדפדפן לא תומך במצלמה - העלה תמונה ⬆',true);
+    document.getElementById('uploadInput').click();
+    return;
+  }
+  
+  // Try to get camera with detailed error handling
+  const tries = [
+    {video:{facingMode:facing, width:{ideal:1280}, height:{ideal:720}}, audio:false},
+    {video:{facingMode:facing}, audio:false},
+    {video:true, audio:false}
+  ];
+  
+  for(let i=0;i<tries.length;i++){
+    try{
+      stream = await navigator.mediaDevices.getUserMedia(tries[i]);
+      break;
+    }catch(e){
+      if(i===tries.length-1){
+        // All tries failed - show specific error
+        let msg = 'מצלמה חסומה';
+        if(e.name==='NotAllowedError' || e.name==='PermissionDeniedError'){
+          msg = 'הרשאת מצלמה נדחתה - לחץ על 🔒 בשורת הכתובת > אפשר מצלמה, או העלה תמונה ⬆';
+        } else if(e.name==='NotFoundError' || e.name==='DevicesNotFoundError'){
+          msg = 'לא נמצאה מצלמה - העלה תמונה ⬆';
+        } else if(e.name==='NotReadableError'){
+          msg = 'מצלמה בשימוש באפליקציה אחרת - סגור אותה ונסה שוב';
+        } else if(e.name==='OverconstrainedError'){
+          msg = 'מצלמה לא נתמכת - מנסה מצלמה אחרת...';
+          continue;
+        }
+        showToast(msg,true);
+        console.error('Camera error:', e.name, e.message);
+        // Auto fallback to upload
+        setTimeout(()=>{document.getElementById('uploadBtn').style.animation='pulse 1s infinite';},500);
+        return;
+      }
+    }
+  }
+  
+  try{
+    videoEl.srcObject=stream;
+    videoEl.hidden=false;
+    placeholder.hidden=true;
+    guide.hidden=false;
+    await videoEl.play();
+    camReady=true;
+    showToast('מצלמה מוכנה - חייך! 📸');
+  }catch(e){
+    showToast('שגיאת ניגון מצלמה: '+e.message,true);
+  }
+}
 function getDim(w,h){const l=Math.max(w,h);if(l<=MAX_DIM)return{w,h};const s=MAX_DIM/l;return{w:Math.round(w*s),h:Math.round(h*s)};}
 function drawToCanvas(src,m){const sw=src.videoWidth||src.naturalWidth||src.width,sh=src.videoHeight||src.naturalHeight||src.height;if(!sw||!sh)throw new Error("Image");const d=getDim(sw,sh);canvasEl.width=d.w;canvasEl.height=d.h;const ctx=canvasEl.getContext("2d",{alpha:false});ctx.save();if(m){ctx.translate(d.w,0);ctx.scale(-1,1);}ctx.drawImage(src,0,0,d.w,d.h);ctx.restore();return canvasEl.toDataURL("image/jpeg",0.86);}
-function takePhoto(){if(!stream||!camReady||videoEl.videoWidth===0){showToast('מצלמה חסומה',true);return;}try{selectImage(drawToCanvas(videoEl,facing==="user"));}catch(e){showToast(e.message,true);}}
+function takePhoto(){
+  if(!stream || !camReady){
+    showToast('פתח מצלמה קודם או העלה תמונה ⬆',true);
+    return;
+  }
+  if(videoEl.videoWidth===0){
+    showToast('מצלמה עדיין נטענת - חכה שניה...',true);
+    return;
+  }
+  try{
+    selectImage(drawToCanvas(videoEl,facing==="user"));
+    showToast('צילום מעולה! עכשיו בחר סגנון מם 👇');
+  }catch(e){
+    showToast('שגיאת צילום: '+e.message,true);
+  }
+}
 function selectImage(d){originalImg=d;currentResult=d;currentVideo=null;resultImg.src=d;resultImg.hidden=false;resultImg.style.display="block";resultVideo.hidden=true;resultVideo.style.display="none";resultVideo.pause();videoEl.hidden=true;placeholder.hidden=true;guide.hidden=true;document.getElementById("cameraMenu").hidden=true;document.getElementById("chooseMenu").hidden=false;document.getElementById("detailMenu").hidden=true;document.getElementById("resultMenu").hidden=true;stopCam();updateMemePreview();window.scrollTo({top:320,behavior:"smooth"});}
 function handleUpload(f){if(!f||!f.type.startsWith("image/")){showToast('תמונה לא תקינה',true);return;}const r=new FileReader();r.onload=ev=>{const im=new Image();im.onload=()=>{try{selectImage(drawToCanvas(im,false));}catch(e){showToast(e.message,true);}};im.onerror=()=>showToast('פורמט לא נתמך',true);im.src=ev.target.result;};r.readAsDataURL(f);}
 function wait(m){return new Promise(r=>setTimeout(r,m));}
