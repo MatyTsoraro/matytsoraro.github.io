@@ -64,7 +64,7 @@ body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-famil
 <header class="topbar">
 <div style="display:flex;align-items:center;gap:10px">
 <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--p),var(--s));display:flex;align-items:center;justify-content:center;font-weight:900;color:#000">V</div>
-<h1 class="brand">VIRAL <span>STUDIO</span></h1>
+<h1 class="brand">Persona<span>AI</span></h1>
 </div>
 <div style="display:flex;align-items:center;gap:8px">
 <div id="creditsBadge" style="background:#1e1e38;border:1px solid rgba(255,255,255,0.12);padding:6px 10px;border-radius:999px;font-size:.72rem;font-weight:800">5 credits</div>
@@ -169,9 +169,23 @@ body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-famil
 <div class="h3">👁️ תצוגה מקדימה חיה - בדיוק כמו שייצא:</div>
 <div id="memeLivePreview" class="meme-preview"><span style="color:var(--muted);font-size:.8rem">הקלד טקסט לראות</span></div>
 
+<div style="background:rgba(255,189,46,0.08);border:1px solid rgba(255,189,46,0.2);border-radius:12px;padding:12px;margin-top:12px">
+<div style="font-size:.8rem;font-weight:900;margin-bottom:8px">🎭 איך המם שלך יחייך/יזוז בסרטון? <span style="font-weight:400;color:var(--muted)">- בחר מצב רוח</span></div>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<button class="style-btn emotion-btn" data-emotion="auto" type="button" style="background:#fff;color:#000">✨ אוטומטי לפי הטקסט</button>
+<button class="style-btn emotion-btn" data-emotion="scary" type="button">😨 מפחיד - חיוך קריפי איטי</button>
+<button class="style-btn emotion-btn" data-emotion="creepy" type="button">😈 קריפי - סמיילי מוזר</button>
+<button class="style-btn emotion-btn" data-emotion="funny" type="button">😂 מצחיק - מתגלגל מצחוק</button>
+<button class="style-btn emotion-btn" data-emotion="weird" type="button">🤪 מגחך - פרצוף מוזר</button>
+<button class="style-btn emotion-btn" data-emotion="evil" type="button">😏 מרושע - חיוך מרושע</button>
+</div>
+<input id="customEmotion" class="input" style="margin-top:8px" placeholder="או תכתוב בעצמך: למשל 'חיוך מפחיד עם עיניים פעורות' / 'creepy laugh'" maxlength="80">
+<div style="font-size:.68rem;color:var(--muted);margin-top:4px">דוגמה: המשתמש כותב "אני רוצה שהמם שלי יחייך בצורה מפחידה" - תבחר 😨 מפחיד או תכתוב למטה</div>
+</div>
+
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px">
-<button id="memeImageBtn" class="btn btn-ultimate" type="button">📸 צור תמונת מם מושלמת</button>
-<button id="memeVideoBtn" class="btn btn-ghost" type="button">🎥 צור סרטון מם (זום ויראלי)</button>
+<button id="memeImageBtn" class="btn btn-ultimate" type="button">📸 תמונת מם מושלמת</button>
+<button id="memeVideoBtn" class="btn btn-ghost" type="button">🎥 סרטון מם עם רגש</button>
 </div>
 </div>
 
@@ -373,17 +387,101 @@ async function updateMemePreview(){
 async function createMemeImageOnly(){
   const top=document.getElementById('topText').value.trim(),bottom=document.getElementById('bottomText').value.trim();
   if(!top&&!bottom){showToast('כתוב טקסט עליון או תחתון',true);return;}
-  if(!PersonaBilling.requireCreditsOrBuy(1))return;const tx=PersonaBilling.spendCreditsOrRefund(1);if(!tx.success)return;
+  const needed = (typeof isSequence!=='undefined' && isSequence)?2:1;
+  if(!PersonaBilling.requireCreditsOrBuy(needed))return;const tx=PersonaBilling.spendCreditsOrRefund(needed);if(!tx.success)return;
   setLoading(true,'יוצר מם מושלם...');try{const base=currentResult||originalImg;const data=await createMemeCanvas(top,bottom,base,currentStyle);showResult(data);}catch(e){tx.refund();showToast(e.message,true);setLoading(false);}
+}
+
+let selectedEmotion='auto';
+const EMOTION_PROMPTS={
+  auto: '',
+  scary: 'person face slowly smiles in a creepy scary way, unsettling horror smile, eyes wide open, slow head tilt, horror atmosphere, keep text sharp and perfectly readable',
+  creepy: 'weird creepy uncanny valley smile, strange smirk, slow unsettling head movement, creepy atmosphere, keep text sharp and readable',
+  funny: 'person bursts into loud funny laugh, laughing hard, joyful hilarious expression, head shaking from laughter, keep text sharp and readable',
+  weird: 'goofy weird face, funny smirk, silly expression, tongue out slightly, comical, keep text sharp and readable',
+  evil: 'evil smirk, villain smile, cunning expression, slow confident head tilt, keep text sharp and readable',
+  sequence: '' // will be built dynamically
+};
+
+function buildSequencePrompt(userText){
+  // userText like "קם ויצחק ואז יבכה"
+  const lower = userText.toLowerCase();
+  let prompt = userText + ', ';
+  
+  // Translate common Hebrew sequence to English for model
+  const translations = {
+    'קם': 'person stands up',
+    'קם ו': 'person stands up then',
+    'יצחק': 'laughs loudly',
+    'צוחק': 'laughing',
+    'יבכה': 'then starts crying sadly',
+    'בוכה': 'crying',
+    'מחייך': 'smiling',
+    'מפחיד': 'in a scary creepy way',
+    'רוקד': 'dancing'
+  };
+  
+  let eng = userText;
+  for(let [he,en] of Object.entries(translations)){
+    eng = eng.replace(new RegExp(he,'g'), en);
+  }
+  
+  // Build cinematic sequence prompt
+  prompt = eng + ', cinematic sequence, smooth transition between emotions, person in center, keep text sharp and perfectly readable, 3-stage action';
+  return prompt;
+}
+
+function detectEmotionFromText(text){
+  const t=(text||'').toLowerCase();
+  // sequence detection - אם יש ואז, אז, then, קם ו...
+  if(t.match(/ואז|אז בוכה|ואז בוכה|קם ו|עומד ו|then.*cry|stand up.*laugh.*cry|laugh.*then.*cry/i)) return 'sequence';
+  if(t.match(/מפחיד|פחד|scary|horror|creep/i)) return 'scary';
+  if(t.match(/קריפי|מוזר.*חיוך|creepy|weird.*smile/i)) return 'creepy';
+  if(t.match(/מצחיק|חחח|צוחק|funny|lol|haha|laugh/i)) return 'funny';
+  if(t.match(/מגחך|goofy|silly|weird/i)) return 'weird';
+  if(t.match(/מרושע|רשע|evil|villain/i)) return 'evil';
+  return 'scary';
 }
 
 async function createMemeVideo(){
   const top=document.getElementById('topText').value.trim(),bottom=document.getElementById('bottomText').value.trim();
+  const customEmo=document.getElementById('customEmotion')?.value.trim()||'';
   if(!top&&!bottom){showToast('כתוב טקסט',true);return;}
-  if(!PersonaBilling.requireCreditsOrBuy(1))return;const tx=PersonaBilling.spendCreditsOrRefund(1);if(!tx.success)return;
-  cancelled=false;setLoading(true,'יוצר סרטון מם ויראלי...');try{
+  const needed = (typeof isSequence!=='undefined' && isSequence)?2:1;
+  if(!PersonaBilling.requireCreditsOrBuy(needed))return;const tx=PersonaBilling.spendCreditsOrRefund(needed);if(!tx.success)return;
+  cancelled=false;
+  
+  let emotion = selectedEmotion;
+  let promptText = '';
+  let isSequence = false;
+  const customEmo=document.getElementById('customEmotion')?.value.trim()||'';
+  const combinedText = (top+' '+bottom+' '+customEmo).toLowerCase();
+  
+  if(emotion==='auto'){
+    emotion = detectEmotionFromText(combinedText);
+    if(customEmo && !combinedText.match(/ואז|then/)) emotion='custom';
+  }
+  
+  if(combinedText.match(/ואז|אז|then/) || emotion==='sequence'){
+    isSequence = true;
+    emotion='sequence';
+    const seqSource = customEmo || (top+' '+bottom);
+    promptText = buildSequencePrompt(seqSource);
+  } else if(customEmo){
+    promptText = customEmo + ', keep text sharp and perfectly readable, meme video';
+  } else {
+    promptText = EMOTION_PROMPTS[emotion] || EMOTION_PROMPTS.scary;
+  }
+  
+  const emotionLabel = {scary:'מפחיד 😨',creepy:'קריפי 😈',funny:'מצחיק 😂',weird:'מגחך 🤪',evil:'מרושע 😏',auto:'מותאם',sequence:'רצף קם-צוחק-בוכה 🎬'}[emotion]||emotion;
+  if(isSequence){
+    setLoading(true,'יוצר סרטון רצף '+emotionLabel+'... (2 קרדיטים - מודל חזק יותר)');
+  } else {
+    setLoading(true,'יוצר סרטון מם '+emotionLabel+'...');
+  }
+  try{
     const base=currentResult||originalImg;const memeImg=await createMemeCanvas(top,bottom,base,currentStyle);
-    const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"meme",image:memeImg,prompt:"viral meme video keep text sharp and readable subtle zoom in and slight head movement"})});
+    const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"meme",image:memeImg,prompt:promptText})});
     if(data.status==="succeeded"&&data.videoUrl){showVideo(data.videoUrl);return;}
     if(data.output&&data.output[0]){showVideo(data.output[0]);return;}
     if(data.request_id||data.requestId){const id=data.requestId||data.request_id;const v=await pollForResult(id,data.statusUrl,data.responseUrl);if(!v){tx.refund();return;}showVideo(v);} else showResult(memeImg);
@@ -391,7 +489,8 @@ async function createMemeVideo(){
 }
 
 async function cinematicVideo(){
-  if(!PersonaBilling.requireCreditsOrBuy(1))return;const tx=PersonaBilling.spendCreditsOrRefund(1);if(!tx.success)return;
+  const needed = (typeof isSequence!=='undefined' && isSequence)?2:1;
+  if(!PersonaBilling.requireCreditsOrBuy(needed))return;const tx=PersonaBilling.spendCreditsOrRefund(needed);if(!tx.success)return;
   let p=document.getElementById("cinemaPrompt").value.trim()||"epic cinematic trailer";cancelled=false;setLoading(true,'סצנה קולנועית...');try{
     const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"cinematic",image:currentResult,prompt:p})});
     if(data.status==="succeeded"&&data.videoUrl){showVideo(data.videoUrl);return;}const id=data.requestId||data.request_id||data.id;if(!id)throw new Error(data.error||'Failed');const v=await pollForResult(id,data.statusUrl,data.responseUrl);if(!v){tx.refund();return;}showVideo(v);
@@ -400,7 +499,8 @@ async function cinematicVideo(){
 
 async function createImage(){
   let p=document.getElementById("imagePrompt").value.trim();if(!p){const a=document.querySelector("[data-image-style].active");if(a)p=a.dataset.imageStyle;}if(!p){showToast('בחר דמות',true);return;}
-  if(!PersonaBilling.requireCreditsOrBuy(1))return;const tx=PersonaBilling.spendCreditsOrRefund(1);if(!tx.success)return;cancelled=false;setLoading(true,'יוצר דמות...');try{
+  const needed = (typeof isSequence!=='undefined' && isSequence)?2:1;
+  if(!PersonaBilling.requireCreditsOrBuy(needed))return;const tx=PersonaBilling.spendCreditsOrRefund(needed);if(!tx.success)return;cancelled=false;setLoading(true,'יוצר דמות...');try{
     const data=await fetchJson({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"image",image:currentResult,prompt:p})});
     if(data.status==="succeeded"&&(data.resultUrl||data.output?.[0])){showResult(data.resultUrl||data.output[0]);return;}throw new Error('No output');
   }catch(e){tx.refund();if(!cancelled)showToast(e.message,true);setLoading(false);}
@@ -449,11 +549,24 @@ document.querySelectorAll(".preset-chip").forEach(ch=>{
 });
 
 document.querySelectorAll(".style-btn").forEach(btn=>{
+  if(btn.dataset.style){
+    btn.addEventListener("click",()=>{
+      document.querySelectorAll("[data-style]").forEach(x=>x.classList.remove("active"));
+      btn.classList.add("active");currentStyle=btn.dataset.style;updateMemePreview();
+    });
+  }
+});
+document.querySelectorAll(".emotion-btn").forEach(btn=>{
   btn.addEventListener("click",()=>{
-    document.querySelectorAll(".style-btn").forEach(x=>x.classList.remove("active"));
-    btn.classList.add("active");currentStyle=btn.dataset.style;updateMemePreview();
+    document.querySelectorAll(".emotion-btn").forEach(x=>{x.style.background='var(--surface2)';x.style.color='var(--text)';});
+    btn.style.background='#fff';btn.style.color='#000';
+    selectedEmotion=btn.dataset.emotion;
+    showToast('נבחר: '+btn.textContent);
   });
 });
+// default select auto
+setTimeout(()=>{const a=document.querySelector('[data-emotion=auto]'); if(a){a.style.background='#fff';a.style.color='#000';}},500);
+
 
 document.getElementById("randomViralBtn").addEventListener("click",()=>{
   const virals=[
