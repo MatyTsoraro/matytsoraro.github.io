@@ -1,56 +1,16 @@
 {
-  "id": "/",
-  "name": "Viral Studio - AI Meme & Avatar Maker",
-  "short_name": "Viral Studio",
-  "description": "תמונה אחת הופכת לסרטון ויראלי, מם או אווטאר - מוכן לשיתוף בוואטסאפ",
-  "lang": "he",
-  "dir": "rtl",
-  "start_url": "/",
-  "scope": "/",
+  "name": "PersonaAI - AI Meme Maker",
+  "short_name": "PersonaAI",
+  "description": "Create viral memes, AI characters and short videos from your photos.",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
-  "display_override": [
-    "standalone",
-    "fullscreen",
-    "minimal-ui"
-  ],
-  "background_color": "#0a0a14",
-  "theme_color": "#0a0a14",
-  "orientation": "portrait-primary",
-  "categories": [
-    "entertainment",
-    "photo",
-    "social"
-  ],
+  "orientation": "portrait",
+  "background_color": "#07070f",
+  "theme_color": "#07070f",
+  "lang": "en",
+  "categories": ["entertainment", "photography"],
   "icons": [
-    {
-      "src": "/PersonaAI_Icon_512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/PersonaAI_Icon_512x512.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/PersonaAI_Icon_512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "Create Meme",
-      "url": "/?action=meme",
-      "icons": [
-        {
-          "src": "/PersonaAI_Icon_512x512.png",
-          "sizes": "192x192"
-        }
-      ]
-    }
+    {"src":"PersonaAI_Icon_512x512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
   ]
 }
