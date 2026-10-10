@@ -3,11 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="theme-color" content="#07070f">
 <meta name="description" content="PersonaAI - צרו מממים ויראליים, דמויות וסרטונים חיים">
-<link rel="manifest" href="manifest.json">
-<link rel="icon" href="PersonaAI_Icon_512x512.png">
-<title>PersonaAI - AI Meme Studio</title>
+<link rel="manifest" href="manifest.json?v=20260511">
+<link rel="icon" href="PersonaAI_Icon_512x512.png?v=20260511">
+<title>PersonaAI - AI Meme Studio - FINAL AUTO UPDATE</title>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&family=Anton&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box}body{margin:0;background:#07070f;color:#fff;font-family:Heebo,system-ui;overflow-x:hidden}
@@ -34,10 +37,20 @@
 @keyframes spin{to{transform:rotate(360deg)}}
 .confetti{position:absolute;width:8px;height:8px;border-radius:50%;top:-10px;animation:fall 1s ease forwards}
 @keyframes fall{to{transform:translateY(110vh) translateX(var(--x)) rotate(720deg)}}
+.version{position:fixed;top:60px;left:16px;font-size:9px;color:rgba(255,255,255,.25);font-weight:700;z-index:35;background:rgba(0,0,0,.4);padding:3px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.08)}
 </style>
-<script src="billing.js" defer></script>
+<script>
+const BUILD_VERSION = '2026-05-11-v5-FINAL';
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.getRegistrations().then(regs=>{regs.forEach(reg=>{reg.unregister();});});
+  if(window.caches){caches.keys().then(keys=>{keys.forEach(k=>caches.delete(k));});}
+}
+console.log('PersonaAI BUILD:', BUILD_VERSION);
+</script>
+<script src="billing.js?v=20260511" defer></script>
 </head>
 <body>
+<div class="version" id="verTag">v5 FINAL • מתעדכן אוטומטית</div>
 <div class="app">
 <div class="top"><div style="font-weight:900">PersonaAI <span style="color:#00f0ff">AI MEME STUDIO</span></div><div style="display:flex;gap:8px"><button id="creditsBtn" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:6px 12px;font-weight:800;font-size:12px;color:#fff">3 💎</button><button id="helpBtn" style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff">?</button></div></div>
 
@@ -45,10 +58,10 @@
 <video id="cam" autoplay playsinline muted style="width:100%;height:100%;object-fit:cover;display:none"></video>
 <img id="orig" style="width:100%;height:100%;object-fit:cover;display:none">
 <img id="result" style="width:100%;height:100%;object-fit:cover;display:none">
-<video id="resultVideo" style="width:100%;height:100%;object-fit:contain;display:none" controls loop></video>
+<video id="resultVideo" style="width:100%;height:100%;object-fit:contain;display:none" controls loop playsinline></video>
 <canvas id="work" style="display:none"></canvas>
 <div id="empty" style="position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:24px"><div><div style="font-size:32px">📷</div><div style="font-weight:900;margin-top:8px">המצלמה מוכנה</div><div style="color:rgba(255,255,255,.5);font-size:12px;margin-top:4px">צלם סלפי או העלה תמונה<br>תמונה מלאה נשלחת ל-AI ללא חיתוך</div></div></div>
-<div id="loading" style="position:absolute;inset:0;background:rgba(7,7,15,.82);display:none;place-items:center;text-align:center"><div><div style="width:56px;height:56px;border-radius:50%;border:3px solid rgba(255,255,255,.15);border-top-color:#00f0ff;animation:spin 1s linear infinite;margin:0 auto"></div><div id="loadText" style="margin-top:14px;font-weight:900">יוצר...</div><div id="loadSub" style="font-size:11px;color:rgba(255,255,255,.5);margin-top:6px">שומר זהות מלאה</div></div></div>
+<div id="loading" style="position:absolute;inset:0;background:rgba(7,7,15,.85);display:none;place-items:center;text-align:center"><div><div style="width:56px;height:56px;border-radius:50%;border:3px solid rgba(255,255,255,.15);border-top-color:#00f0ff;animation:spin 1s linear infinite;margin:0 auto"></div><div id="loadText" style="margin-top:14px;font-weight:900">יוצר...</div><div id="loadSub" style="font-size:11px;color:rgba(255,255,255,.5);margin-top:6px">שומר זהות מלאה</div></div></div>
 </div>
 
 <div style="display:flex;gap:8px;justify-content:center;margin:10px 0">
@@ -65,14 +78,16 @@
 
 <div style="margin-top:16px"><div style="font-size:10px;font-weight:800;letter-spacing:.1em;color:#00f0ff">EMOTION ENGINE • כתוב ואז לזיהוי רצף</div><div style="display:flex;gap:8px;overflow:auto;margin-top:8px" id="emos"></div><div style="display:flex;gap:8px;margin-top:8px;align-items:center"><span style="opacity:.5">🎭</span><input id="customEmo" class="input" placeholder="למשל: עומד ואז צוחק ואז בוכה" style="font-size:13px"></div></div>
 
-<div style="margin-top:16px"><div style="display:flex;justify-content:space-between;align-items:center"><div style="font-size:10px;font-weight:800;letter-spacing:.1em;color:rgba(255,255,255,.5)">CHARACTERS LAB - בחר דמות להפוך אליה</div><div id="charInfo" style="font-size:10px;color:#00f0ff;font-weight:800"></div></div><div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:4px">למשל: מאפיה = חליפה וסיגר, אסטרונאוט = חלל. הטקסט נשאר, אתה הופך לדמות.</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px" id="chars"></div><button id="clearChar" style="margin-top:8px;background:transparent;border:1px dashed rgba(255,255,255,.15);border-radius:999px;padding:6px 12px;color:rgba(255,255,255,.5);font-size:11px;font-weight:800;display:none">✕ בטל דמות - חזור למם רגיל</button></div>
+<div style="margin-top:16px"><div style="display:flex;justify-content:space-between;align-items:center"><div style="font-size:10px;font-weight:800;letter-spacing:.1em;color:rgba(255,255,255,.5)">CHARACTERS LAB - בחר דמות להפוך אליה</div><div id="charInfo" style="font-size:10px;color:#00f0ff;font-weight:800"></div></div><div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:4px">מאפיה = חליפה וסיגר, אסטרונאוט = חלל. הטקסט נשאר, אתה הופך לדמות.</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px" id="chars"></div><button id="clearChar" style="margin-top:8px;background:transparent;border:1px dashed rgba(255,255,255,.15);border-radius:999px;padding:6px 12px;color:rgba(255,255,255,.5);font-size:11px;font-weight:800;display:none">✕ בטל דמות - חזור למם רגיל</button></div>
 
 <div style="margin-top:18px;border-top:1px solid rgba(255,255,255,.08);padding-top:16px">
-<div style="font-size:11px;font-weight:900;letter-spacing:.08em;color:rgba(255,255,255,.6);margin-bottom:10px">בחר סוג יצירה:</div>
-<button class="btn btn-ghost" id="classicBtn" style="height:56px;border:2px solid rgba(255,255,255,.14)"><div style="text-align:right;width:100%"><div style="font-size:14px">🎨 מם רגיל - חינם לגמרי</div><div style="font-size:11px;opacity:.6;font-weight:700;margin-top:2px">טקסט על התמונה • מיידי • ללא AI • לא מבזבז קרדיט</div></div></button>
-<button class="btn btn-yellow" id="genBtn" style="height:60px;margin-top:10px"><div><div style="font-size:15px">⚡ מם ויראלי AI • 60 שניות</div><div id="genSub" style="font-size:11px;opacity:.8;font-weight:700;margin-top:2px">ה-AI מבין בדיחה ומשנה הבעה</div></div></button>
-<button class="btn btn-grad" id="videoBtn" style="height:60px;margin-top:10px"><div><div style="font-size:15px">🎬 הנפש לוידאו חי • Face Off • 90 שניות</div><div style="font-size:11px;opacity:.9;font-weight:700;margin-top:2px">הפנים שלך זזות, מדברות, חיות</div></div></button>
+<div style="font-size:11px;font-weight:900;letter-spacing:.08em;color:rgba(255,255,255,.6);margin-bottom:10px">בחר סוג יצירה - הכל עובד:</div>
+<button class="btn btn-ghost" id="classicBtn" style="height:60px;border:2px solid rgba(255,255,255,.18)"><div style="text-align:right;width:100%"><div style="font-size:14px">🎨 מם רגיל - חינם לגמרי</div><div style="font-size:11px;opacity:.6;font-weight:700;margin-top:2px">טקסט על התמונה • מיידי • ללא AI • לא מבזבז קרדיט</div></div></button>
+<button class="btn btn-yellow" id="genBtn" style="height:64px;margin-top:10px"><div><div style="font-size:15px">⚡ מם ויראלי AI • 60 שניות</div><div id="genSub" style="font-size:11px;opacity:.8;font-weight:700;margin-top:2px">ה-AI מבין בדיחה ומשנה הבעה • שומר זהות</div></div></button>
+<button class="btn btn-grad" id="videoBtn" style="height:64px;margin-top:10px"><div><div style="font-size:15px">🎬 הנפש לוידאו חי • Face Off • 90 שניות</div><div style="font-size:11px;opacity:.9;font-weight:700;margin-top:2px">הפנים שלך זזות, מדברות, חיות</div></div></button>
 </div>
+
+<div style="font-size:10px;color:rgba(255,255,255,.35);text-align:center;margin-top:12px">מם רגיל חינם תמיד • AI ווידאו צורכים 💎 • מתעדכן אוטומטית בלי לנקות קאש</div>
 </div>
 
 <div style="height:100px"></div>
@@ -83,11 +98,11 @@
 
 <div class="modal" id="wowModal">
 <div style="height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;flex-shrink:0"><button id="closeWow" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff">✕</button><div style="font-weight:900">זה יצא 🔥🔥🔥</div><div style="width:36px"></div></div>
-<div style="flex:1;display:grid;place-items:center;padding:16px;overflow:auto"><div class="m-card" id="wowCard"><img id="wowImg" style="width:100%;height:100%;object-fit:cover;display:none"><video id="wowVideo" style="width:100%;height:100%;object-fit:contain;display:none" controls autoplay loop playsinline></video></div><div style="margin-top:12px;font-size:11px;color:rgba(255,255,255,.5);font-weight:700;text-align:center">תצוגה מיידית • HD • בלי לשתף כדי לראות</div></div>
-<div style="padding:16px;max-width:520px;margin:0 auto;width:100%;flex-shrink:0;background:rgba(7,7,15,.6);border-top:1px solid rgba(255,255,255,.08)">
+<div style="flex:1;display:grid;place-items:center;padding:16px;overflow:auto"><div class="m-card" id="wowCard"><img id="wowImg" style="width:100%;height:100%;object-fit:cover;display:none"><video id="wowVideo" style="width:100%;height:100%;object-fit:contain;display:none" controls autoplay loop playsinline></video></div><div style="margin-top:12px;font-size:11px;color:rgba(255,255,255,.5);font-weight:700;text-align:center">תצוגה מיידית • HD • בלי לשתף כדי לראות • מתעדכן לבד</div></div>
+<div style="padding:16px;max-width:520px;margin:0 auto;width:100%;flex-shrink:0;background:rgba(7,7,15,.7);border-top:1px solid rgba(255,255,255,.08)">
 <div style="display:flex;gap:10px"><button class="btn btn-white" style="flex:1;height:52px" id="saveWow">⬇ שמור HD</button><button class="btn" style="flex:1;height:52px;background:#25D366;color:#000" id="waWow">📲 שיתוף עם קובץ</button></div>
 <div style="display:flex;gap:10px;margin-top:10px"><button class="btn btn-ghost" style="flex:1;height:48px" id="storyWow">📲 סטורי 1080×1920</button><button class="btn" style="flex:1;height:48px;background:rgba(255,0,127,.18);border:1px solid rgba(255,0,127,.3);color:#fff" id="moreWow">עוד אחד 🔥</button></div>
-<div style="font-size:10px;color:rgba(255,255,255,.35);text-align:center;margin-top:8px">שיתוף שולח את התמונה/וידאו עצמו, לא רק טקסט</div>
+<div style="font-size:10px;color:rgba(255,255,255,.35);text-align:center;margin-top:8px">שיתוף שולח את התמונה/וידאו עצמו, לא רק טקסט • מתעדכן אוטומטית</div>
 </div>
 </div>
 
@@ -95,7 +110,7 @@
 const WORKER="https://billowing-shape-1d81.maty-tsoraro.workers.dev/";
 const SECRET="vs_87dTVS5q8rKeTtFahgFgl8GQeKyL78tB_2026";
 const EMOS=[{id:'auto',label:'אוטו',e:'✨'},{id:'scary',label:'מפחיד',e:'😱'},{id:'creepy',label:'קריפי',e:'👀'},{id:'funny',label:'מצחיק',e:'🤣'},{id:'weird',label:'מוזר',e:'🌀'},{id:'evil',label:'מרושע',e:'😈'}];
-const TEMPLATES=[{top:'POV: אני ב-3 בלילה',bottom:'עושה מממים במקום לישון'},{top:'אמא: תמצא עבודה',bottom:'אני: עושה מממים'},{top:'כשאומרים שהמם לא מפחיד',bottom:'הפנים שלי:'}];
+const TEMPLATES=[{top:'POV: אני ב-3 בלילה',bottom:'עושה מממים במקום לישון'},{top:'אמא: תמצא עבודה',bottom:'אני: עושה מממים'},{top:'כשאומרים שהמם לא מפחיד',bottom:'הפנים שלי:'},{top:'זוגיות אחרי שנה',bottom:'עדיין צוחקים מאותו מם'}];
 const CHARS=[{id:'mafia',label:'מאפיה',e:'🕶️',d:'חליפה, סיגר, משקפי שמש'},{id:'astronaut',label:'אסטרונאוט',e:'🚀',d:'חליפת חלל, קסדה'},{id:'superhero',label:'גיבור על',e:'⚡',d:'גלימה, ברקים'},{id:'king',label:'מלך',e:'👑',d:'כתר זהב, גלימה'}];
 let sel=EMOS[1];let selChar=null;let stream=null;let origData=null;let credits=3;
 try{const v=localStorage.getItem('persona_credits');if(v)credits=parseInt(v)||3;}catch{}
@@ -103,25 +118,25 @@ function saveCredits(){try{localStorage.setItem('persona_credits',String(credits
 saveCredits();
 function renderEmos(){const el=document.getElementById('emos');el.innerHTML='';EMOS.forEach(o=>{const b=document.createElement('button');b.className='pill'+(o.id===sel.id?' active':'');b.textContent=o.e+' '+o.label;b.onclick=()=>{sel=o;renderEmos();};el.appendChild(b);});}
 function renderTemplates(){const el=document.getElementById('templates');el.innerHTML='';TEMPLATES.forEach(t=>{const b=document.createElement('button');b.className='pill';b.textContent=t.top;b.onclick=()=>{document.getElementById('topT').value=t.top;document.getElementById('bottomT').value=t.bottom;};el.appendChild(b);});}
-function renderChars(){const el=document.getElementById('chars');el.innerHTML='';CHARS.forEach(c=>{const isSel=selChar===c.id;const b=document.createElement('button');b.style.cssText='text-align:right;border-radius:18px;padding:12px;cursor:pointer;background:'+(isSel?'rgba(0,240,255,.14)':'rgba(255,255,255,.06)')+';border:1px solid '+(isSel?'#00f0ff':'rgba(255,255,255,.10)')+';color:#fff';b.innerHTML='<div style="font-size:22px">'+c.e+'</div><div style="font-weight:900;margin-top:6px;font-size:13px">'+c.label+(isSel?' ✓':'')+'</div><div style="font-size:11px;color:rgba(255,255,255,.55);margin-top:2px">'+c.d+'</div>';b.onclick=()=>{selChar=isSel?null:c.id;document.getElementById('charInfo').textContent=selChar?('נבחר: '+CHARS.find(x=>x.id===selChar).label):'';document.getElementById('clearChar').style.display=selChar?'block':'none';const sub=document.getElementById('genSub');if(selChar){sub.textContent='הופך אותך ל: '+CHARS.find(x=>x.id===selChar).label+' • עם הטקסט שלך';}else{sub.textContent='ה-AI מבין בדיחה ומשנה הבעה';}renderChars();};el.appendChild(b);});}
+function renderChars(){const el=document.getElementById('chars');el.innerHTML='';CHARS.forEach(c=>{const isSel=selChar===c.id;const b=document.createElement('button');b.style.cssText='text-align:right;border-radius:18px;padding:12px;cursor:pointer;background:'+(isSel?'rgba(0,240,255,.14)':'rgba(255,255,255,.06)')+';border:1px solid '+(isSel?'#00f0ff':'rgba(255,255,255,.10)')+';color:#fff';b.innerHTML='<div style="font-size:22px">'+c.e+'</div><div style="font-weight:900;margin-top:6px;font-size:13px">'+c.label+(isSel?' ✓':'')+'</div><div style="font-size:11px;color:rgba(255,255,255,.55);margin-top:2px">'+c.d+'</div>';b.onclick=()=>{selChar=isSel?null:c.id;document.getElementById('charInfo').textContent=selChar?('נבחר: '+CHARS.find(x=>x.id===selChar).label):'';document.getElementById('clearChar').style.display=selChar?'block':'none';const sub=document.getElementById('genSub');if(selChar){sub.textContent='הופך אותך ל: '+CHARS.find(x=>x.id===selChar).label+' • עם הטקסט שלך';}else{sub.textContent='ה-AI מבין בדיחה ומשנה הבעה • שומר זהות';}renderChars();};el.appendChild(b);});}
 renderEmos();renderTemplates();renderChars();
-async function initCam(){try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:1080},height:{ideal:1350}}});const v=document.getElementById('cam');v.srcObject=stream;v.style.display='block';document.getElementById('empty').style.display='none';}catch{}}
+async function initCam(){try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:1080},height:{ideal:1350}}});const v=document.getElementById('cam');v.srcObject=stream;v.style.display='block';document.getElementById('empty').style.display='none';}catch(e){document.getElementById('empty').innerHTML='<div style="color:rgba(255,255,255,.6);font-size:13px">אין גישה למצלמה<br>תעלה תמונה עם 🖼️</div>';}}
 initCam();
-document.getElementById('switchCam').onclick=()=>{if(stream)stream.getTracks().forEach(t=>t.stop());origData=null;document.getElementById('orig').style.display='none';document.getElementById('result').style.display='none';document.getElementById('resultVideo').style.display='none';document.getElementById('cam').style.display='block';initCam();};
+document.getElementById('switchCam').onclick=()=>{if(stream)stream.getTracks().forEach(t=>t.stop());origData=null;document.getElementById('orig').style.display='none';document.getElementById('result').style.display='none';document.getElementById('resultVideo').style.display='none';document.getElementById('cam').style.display='block';document.getElementById('empty').style.display='none';initCam();};
 document.getElementById('uploadBtn').onclick=()=>document.getElementById('fileIn').click();
-document.getElementById('fileIn').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{origData=r.result;document.getElementById('orig').src=r.result;document.getElementById('orig').style.display='block';document.getElementById('cam').style.display='none';document.getElementById('empty').style.display='none';};r.readAsDataURL(f);};
+document.getElementById('fileIn').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{origData=r.result;document.getElementById('orig').src=r.result;document.getElementById('orig').style.display='block';document.getElementById('cam').style.display='none';document.getElementById('empty').style.display='none';document.getElementById('result').style.display='none';document.getElementById('resultVideo').style.display='none';};r.readAsDataURL(f);};
 document.getElementById('shootBtn').onclick=()=>{const cam=document.getElementById('cam');if(!cam.srcObject)return;const c=document.getElementById('work');c.width=cam.videoWidth||1080;c.height=cam.videoHeight||1350;const ctx=c.getContext('2d');ctx.save();ctx.translate(c.width,0);ctx.scale(-1,1);ctx.drawImage(cam,0,0,c.width,c.height);ctx.restore();origData=c.toDataURL('image/jpeg',0.92);document.getElementById('orig').src=origData;document.getElementById('orig').style.display='block';document.getElementById('cam').style.display='none';};
-async function callWorker(payload){const res=await fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json','X-App-Secret':SECRET},body:JSON.stringify(payload)});const txt=await res.text();let j;try{j=JSON.parse(txt);}catch{j={output:txt}}if(!res.ok)throw new Error(j.error||j.message||txt||'שגיאת שרת');return j;}
-async function poll(id){for(let i=0;i<30;i++){try{const r=await fetch(WORKER+'?id='+encodeURIComponent(id),{headers:{'X-App-Secret':SECRET}});if(r.ok){const j=await r.json();if(j.videoUrl||j.video||j.image||j.imageUrl||j.result||j.output)return j;}const r2=await fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json','X-App-Secret':SECRET},body:JSON.stringify({action:'status',id:id,secret:SECRET,app_secret:SECRET})});if(r2.ok){const j=await r2.json();if(j.videoUrl||j.video||j.image||j.result||j.output)return j;}}catch{}await new Promise(r=>setTimeout(r,3000));}throw new Error('timeout');}
+async function callWorker(payload){const res=await fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json','X-App-Secret':SECRET},body:JSON.stringify(payload),cache:'no-store'});const txt=await res.text();let j;try{j=JSON.parse(txt);}catch{j={output:txt}}if(!res.ok)throw new Error(j.error||j.message||txt||'שגיאת שרת');return j;}
+async function poll(id){for(let i=0;i<30;i++){try{const r=await fetch(WORKER+'?id='+encodeURIComponent(id),{headers:{'X-App-Secret':SECRET},cache:'no-store'});if(r.ok){const j=await r.json();if(j.videoUrl||j.video||j.image||j.imageUrl||j.result||j.output)return j;}const r2=await fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json','X-App-Secret':SECRET},body:JSON.stringify({action:'status',id:id,secret:SECRET,app_secret:SECRET}),cache:'no-store'});if(r2.ok){const j=await r2.json();if(j.videoUrl||j.video||j.image||j.result||j.output)return j;}}catch{}await new Promise(r=>setTimeout(r,3000));}throw new Error('timeout');}
 function extract(j){let v=null,i=null;if(!j)return{video:v,image:i};if(j.videoUrl)v=j.videoUrl;else if(j.video)v=j.video;else if(j.imageUrl)i=j.imageUrl;else if(j.image)i=j.image;else if(j.result&&typeof j.result==='string'&&j.result.startsWith('http')){if(j.result.includes('.mp4'))v=j.result;else i=j.result;}if(!v&&!i&&j.output&&typeof j.output==='string'&&j.output.startsWith('http')){if(j.output.includes('.mp4'))v=j.output;else i=j.output;}return{video:v,image:i};}
 function openWow(image,video){const m=document.getElementById('wowModal');const wi=document.getElementById('wowImg');const wv=document.getElementById('wowVideo');if(video){wv.src=video;wv.style.display='block';wi.style.display='none';document.getElementById('resultVideo').src=video;document.getElementById('resultVideo').style.display='block';document.getElementById('result').style.display='none';}else{wi.src=image;wi.style.display='block';wv.style.display='none';document.getElementById('result').src=image;document.getElementById('result').style.display='block';document.getElementById('resultVideo').style.display='none';}m.classList.add('open');for(let i=0;i<20;i++){const d=document.createElement('div');d.className='confetti';d.style.left=(5+Math.random()*90)+'%';d.style.background=['#00f0ff','#ff007f','#FFBD2E','#8B5CF6'][i%4];d.style.setProperty('--x',(Math.random()-0.5)*240+'px');m.appendChild(d);setTimeout(()=>d.remove(),1500);}document.getElementById('orig').style.display='none';}
 document.getElementById('closeWow').onclick=()=>document.getElementById('wowModal').classList.remove('open');
 document.getElementById('moreWow').onclick=()=>document.getElementById('wowModal').classList.remove('open');
-document.getElementById('clearChar').onclick=()=>{selChar=null;document.getElementById('charInfo').textContent='';document.getElementById('clearChar').style.display='none';document.getElementById('genSub').textContent='ה-AI מבין בדיחה ומשנה הבעה';renderChars();};
+document.getElementById('clearChar').onclick=()=>{selChar=null;document.getElementById('charInfo').textContent='';document.getElementById('clearChar').style.display='none';document.getElementById('genSub').textContent='ה-AI מבין בדיחה ומשנה הבעה • שומר זהות';renderChars();};
 async function generate(mode){
 if(!origData){alert('צלם או העלה תמונה קודם 📸');return;}
 if(mode!=='classic'&&credits<=0){alert('נגמרו הקרדיטים 💎');return;}
-document.getElementById('loading').style.display='grid';
+document.getElementById('loading').style.display='grid';document.getElementById('loadText').textContent=mode==='video'?'יוצר וידאו חי... 90 שניות':(mode==='classic'?'יוצר מם רגיל...':'מבין את הבדיחה... AI • 60 שניות');
 try{
 if(mode==='classic'){
 const c=document.createElement('canvas');c.width=1080;c.height=1350;const ctx=c.getContext('2d');const img=new Image();await new Promise((res,rej)=>{img.onload=res;img.onerror=rej;img.src=origData;});ctx.drawImage(img,0,0,1080,1350);ctx.textAlign='center';ctx.lineWidth=14;ctx.strokeStyle='rgba(0,0,0,.92)';ctx.fillStyle='#fff';ctx.font='900 72px Anton, Heebo';function wrap(text,y){if(!text)return y;const words=text.split(' ');let line='';let lines=[];for(const w of words){const test=line?line+' '+w:w;if(ctx.measureText(test).width>980&&line){lines.push(line);line=w;}else line=test;}if(line)lines.push(line);let yy=y;lines.forEach(l=>{ctx.strokeText(l,540,yy);ctx.fillText(l,540,yy);yy+=84;});return yy;}wrap(document.getElementById('topT').value||'POV: אני ב-3 בלילה',140);wrap(document.getElementById('bottomT').value||'עושה מממים במקום לישון',1220);const url=c.toDataURL('image/jpeg',0.92);openWow(url,null);return;
@@ -130,7 +145,7 @@ const custom=document.getElementById('customEmo').value;const seq=custom.include
 const isVideo=mode==='video';
 const payload={image:origData,imageUrl:origData,topText:document.getElementById('topT').value,bottomText:document.getElementById('bottomT').value,emotion:seq?seq[0]:sel.id,custom:custom,character:selChar,sequence:seq,action:isVideo?'video':'image',type:isVideo?'video':undefined,mode:isVideo?'video':(selChar?'character':'meme'),task:isVideo?'meme':undefined,secret:SECRET,app_secret:SECRET,preserveIdentity:true,keepAllPeople:true};
 const res=await callWorker(payload);let out=extract(res);let id=res.id||res.jobId;
-if(!out.image&&!out.video&&id){const polled=await poll(id);out=extract(polled);}
+if(!out.image&&!out.video&&id){document.getElementById('loadText').textContent='בתור AI • ממתין...';const polled=await poll(id);out=extract(polled);}
 if(out.video){openWow(null,out.video);credits=Math.max(0,credits-1);saveCredits();return;}
 if(out.image){openWow(out.image,null);credits=Math.max(0,credits-1);saveCredits();return;}
 throw new Error('ה-AI לא החזיר תמונה');
@@ -140,12 +155,12 @@ document.getElementById('genBtn').onclick=()=>generate('image');
 document.getElementById('videoBtn').onclick=()=>generate('video');
 document.getElementById('classicBtn').onclick=()=>generate('classic');
 document.getElementById('saveWow').onclick=async()=>{
-const img=document.getElementById('wowImg');const vid=document.getElementById('wowVideo');const src=img.style.display!=='none'?img.src:vid.src;if(!src)return;try{const res=await fetch(src);const blob=await res.blob();const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='personaai-'+Date.now()+(src.includes('.mp4')?'.mp4':'.jpg');a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);}catch{const a=document.createElement('a');a.href=src;a.download='personaai.jpg';a.click();}
+const img=document.getElementById('wowImg');const vid=document.getElementById('wowVideo');const src=img.style.display!=='none'?img.src:vid.src;if(!src)return;try{const res=await fetch(src,{cache:'no-store'});const blob=await res.blob();const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='personaai-'+Date.now()+(src.includes('.mp4')?'.mp4':'.jpg');a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);}catch{const a=document.createElement('a');a.href=src;a.download='personaai.jpg';a.click();}
 };
 document.getElementById('waWow').onclick=async()=>{
 const img=document.getElementById('wowImg');const vid=document.getElementById('wowVideo');const src=img.style.display!=='none'?img.src:vid.src;if(!src)return;
 try{
-const res=await fetch(src);
+const res=await fetch(src,{cache:'no-store'});
 const blob=await res.blob();
 const file=new File([blob],src.includes('.mp4')?'personaai-video.mp4':'personaai-meme.jpg',{type:blob.type});
 if(navigator.canShare&&navigator.canShare({files:[file]})){
@@ -154,7 +169,7 @@ return;
 }
 }catch(e){}
 try{
-const res=await fetch(src);
+const res=await fetch(src,{cache:'no-store'});
 const blob=await res.blob();
 const url=URL.createObjectURL(blob);
 const a=document.createElement('a');a.href=url;a.download='personaai-'+Date.now()+(src.includes('.mp4')?'.mp4':'.jpg');a.click();
@@ -169,12 +184,13 @@ let rec=null;
 function startSTT(target){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert('הדפדפן לא תומך בהכתבה 🎤');return;}try{if(rec)rec.stop();}catch{}const r=new SR();rec=r;const lang=(navigator.language||'he').split('-')[0];const map={he:'he-IL',fr:'fr-FR',es:'es-ES',pt:'pt-BR',de:'de-DE',en:'en-US'};r.lang=map[lang]||'he-IL';r.onresult=e=>{document.getElementById(target).value=e.results[0][0].transcript;};r.start();}
 document.getElementById('micTop').onclick=()=>startSTT('topT');
 document.getElementById('micBottom').onclick=()=>startSTT('bottomT');
-document.getElementById('creditsBtn').onclick=()=>alert('יש לך '+credits+' קרדיטים 💎\n3 חינם כל יום');
-document.getElementById('helpBtn').onclick=()=>alert('🎨 מם רגיל = טקסט על התמונה, מיידי, חינם\n⚡ מם ויראלי = AI משנה הבעה\n🎭 דמויות = בחר דמות והפוך אליה\n🎬 וידאו = הפנים זזות\n\nבסוף רואים מיד בפול-סקרין עם וואו 🔥');
+document.getElementById('creditsBtn').onclick=()=>alert('יש לך '+credits+' קרדיטים 💎\n3 חינם כל יום • מתעדכן אוטומטית');
+document.getElementById('helpBtn').onclick=()=>alert('🎨 מם רגיל = טקסט על התמונה, מיידי, חינם\n⚡ מם ויראלי = AI משנה הבעה\n🎭 דמויות = בחר דמות והפוך אליה\n🎬 וידאו = הפנים זזות\n\nבסוף רואים מיד בפול-סקרין עם וואו 🔥\nמתעדכן אוטומטית בלי לנקות קאש!');
 document.getElementById('repBtn').onclick=()=>{const r=prompt('דווח:\n1 פוגעני\n2 לא בטוח\n3 ספאם\n4 אחר');if(r)alert('תודה! הדיווח נשלח.');};
 document.getElementById('navCam').onclick=()=>{document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.getElementById('navCam').classList.add('active');document.getElementById('previewBox').scrollIntoView({behavior:'smooth'});};
 document.getElementById('navMemes').onclick=()=>{document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.getElementById('navMemes').classList.add('active');document.getElementById('genBtn').scrollIntoView({behavior:'smooth'});};
 document.getElementById('navChars').onclick=()=>{document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.getElementById('navChars').classList.add('active');document.getElementById('chars').scrollIntoView({behavior:'smooth'});};
+document.getElementById('verTag').textContent='v5 FINAL • '+BUILD_VERSION+' • מתעדכן אוטומטית';
 </script>
 </body>
 </html>
