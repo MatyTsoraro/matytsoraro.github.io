@@ -10,7 +10,7 @@
 <meta name="description" content="PersonaAI - צרו מממים ויראליים, דמויות וסרטונים חיים">
 <link rel="manifest" href="manifest.json?v=20260511">
 <link rel="icon" href="PersonaAI_Icon_512x512.png?v=20260511">
-<title>PersonaAI - AI Meme Studio - FINAL AUTO UPDATE</title>
+<title>PersonaAI - AI Meme Studio</title>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&family=Anton&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box}body{margin:0;background:#07070f;color:#fff;font-family:Heebo,system-ui;overflow-x:hidden}
@@ -37,20 +37,18 @@
 @keyframes spin{to{transform:rotate(360deg)}}
 .confetti{position:absolute;width:8px;height:8px;border-radius:50%;top:-10px;animation:fall 1s ease forwards}
 @keyframes fall{to{transform:translateY(110vh) translateX(var(--x)) rotate(720deg)}}
-.version{position:fixed;top:60px;left:16px;font-size:9px;color:rgba(255,255,255,.25);font-weight:700;z-index:35;background:rgba(0,0,0,.4);padding:3px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.08)}
 </style>
 <script>
-const BUILD_VERSION = '2026-05-11-v5-FINAL';
+const BUILD_VERSION = '2026-05-11-v6-CLEAN';
 if('serviceWorker' in navigator){
   navigator.serviceWorker.getRegistrations().then(regs=>{regs.forEach(reg=>{reg.unregister();});});
   if(window.caches){caches.keys().then(keys=>{keys.forEach(k=>caches.delete(k));});}
 }
-console.log('PersonaAI BUILD:', BUILD_VERSION);
 </script>
 <script src="billing.js?v=20260511" defer></script>
 </head>
 <body>
-<div class="version" id="verTag">v5 FINAL • מתעדכן אוטומטית</div>
+<div id="verTag" style="display:none"></div>
 <div class="app">
 <div class="top"><div style="font-weight:900">PersonaAI <span style="color:#00f0ff">AI MEME STUDIO</span></div><div style="display:flex;gap:8px"><button id="creditsBtn" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:6px 12px;font-weight:800;font-size:12px;color:#fff">3 💎</button><button id="helpBtn" style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff">?</button></div></div>
 
@@ -86,8 +84,6 @@ console.log('PersonaAI BUILD:', BUILD_VERSION);
 <button class="btn btn-yellow" id="genBtn" style="height:64px;margin-top:10px"><div><div style="font-size:15px">⚡ מם ויראלי AI • 60 שניות</div><div id="genSub" style="font-size:11px;opacity:.8;font-weight:700;margin-top:2px">ה-AI מבין בדיחה ומשנה הבעה • שומר זהות</div></div></button>
 <button class="btn btn-grad" id="videoBtn" style="height:64px;margin-top:10px"><div><div style="font-size:15px">🎬 הנפש לוידאו חי • Face Off • 90 שניות</div><div style="font-size:11px;opacity:.9;font-weight:700;margin-top:2px">הפנים שלך זזות, מדברות, חיות</div></div></button>
 </div>
-
-<div style="font-size:10px;color:rgba(255,255,255,.35);text-align:center;margin-top:12px">מם רגיל חינם תמיד • AI ווידאו צורכים 💎 • מתעדכן אוטומטית בלי לנקות קאש</div>
 </div>
 
 <div style="height:100px"></div>
@@ -98,11 +94,10 @@ console.log('PersonaAI BUILD:', BUILD_VERSION);
 
 <div class="modal" id="wowModal">
 <div style="height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;flex-shrink:0"><button id="closeWow" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff">✕</button><div style="font-weight:900">זה יצא 🔥🔥🔥</div><div style="width:36px"></div></div>
-<div style="flex:1;display:grid;place-items:center;padding:16px;overflow:auto"><div class="m-card" id="wowCard"><img id="wowImg" style="width:100%;height:100%;object-fit:cover;display:none"><video id="wowVideo" style="width:100%;height:100%;object-fit:contain;display:none" controls autoplay loop playsinline></video></div><div style="margin-top:12px;font-size:11px;color:rgba(255,255,255,.5);font-weight:700;text-align:center">תצוגה מיידית • HD • בלי לשתף כדי לראות • מתעדכן לבד</div></div>
+<div style="flex:1;display:grid;place-items:center;padding:16px;overflow:auto"><div class="m-card" id="wowCard"><img id="wowImg" style="width:100%;height:100%;object-fit:cover;display:none"><video id="wowVideo" style="width:100%;height:100%;object-fit:contain;display:none" controls autoplay loop playsinline></video></div><div style="margin-top:12px;font-size:11px;color:rgba(255,255,255,.5);font-weight:700;text-align:center">תצוגה מיידית • HD • בלי לשתף כדי לראות</div></div>
 <div style="padding:16px;max-width:520px;margin:0 auto;width:100%;flex-shrink:0;background:rgba(7,7,15,.7);border-top:1px solid rgba(255,255,255,.08)">
 <div style="display:flex;gap:10px"><button class="btn btn-white" style="flex:1;height:52px" id="saveWow">⬇ שמור HD</button><button class="btn" style="flex:1;height:52px;background:#25D366;color:#000" id="waWow">📲 שיתוף עם קובץ</button></div>
 <div style="display:flex;gap:10px;margin-top:10px"><button class="btn btn-ghost" style="flex:1;height:48px" id="storyWow">📲 סטורי 1080×1920</button><button class="btn" style="flex:1;height:48px;background:rgba(255,0,127,.18);border:1px solid rgba(255,0,127,.3);color:#fff" id="moreWow">עוד אחד 🔥</button></div>
-<div style="font-size:10px;color:rgba(255,255,255,.35);text-align:center;margin-top:8px">שיתוף שולח את התמונה/וידאו עצמו, לא רק טקסט • מתעדכן אוטומטית</div>
 </div>
 </div>
 
@@ -184,13 +179,13 @@ let rec=null;
 function startSTT(target){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert('הדפדפן לא תומך בהכתבה 🎤');return;}try{if(rec)rec.stop();}catch{}const r=new SR();rec=r;const lang=(navigator.language||'he').split('-')[0];const map={he:'he-IL',fr:'fr-FR',es:'es-ES',pt:'pt-BR',de:'de-DE',en:'en-US'};r.lang=map[lang]||'he-IL';r.onresult=e=>{document.getElementById(target).value=e.results[0][0].transcript;};r.start();}
 document.getElementById('micTop').onclick=()=>startSTT('topT');
 document.getElementById('micBottom').onclick=()=>startSTT('bottomT');
-document.getElementById('creditsBtn').onclick=()=>alert('יש לך '+credits+' קרדיטים 💎\n3 חינם כל יום • מתעדכן אוטומטית');
-document.getElementById('helpBtn').onclick=()=>alert('🎨 מם רגיל = טקסט על התמונה, מיידי, חינם\n⚡ מם ויראלי = AI משנה הבעה\n🎭 דמויות = בחר דמות והפוך אליה\n🎬 וידאו = הפנים זזות\n\nבסוף רואים מיד בפול-סקרין עם וואו 🔥\nמתעדכן אוטומטית בלי לנקות קאש!');
+document.getElementById('creditsBtn').onclick=()=>alert('יש לך '+credits+' קרדיטים 💎\n3 חינם כל יום');
+document.getElementById('helpBtn').onclick=()=>alert('🎨 מם רגיל = טקסט על התמונה, מיידי, חינם\n⚡ מם ויראלי = AI משנה הבעה\n🎭 דמויות = בחר דמות והפוך אליה\n🎬 וידאו = הפנים זזות\n\nבסוף רואים מיד בפול-סקרין עם וואו 🔥');
 document.getElementById('repBtn').onclick=()=>{const r=prompt('דווח:\n1 פוגעני\n2 לא בטוח\n3 ספאם\n4 אחר');if(r)alert('תודה! הדיווח נשלח.');};
 document.getElementById('navCam').onclick=()=>{document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.getElementById('navCam').classList.add('active');document.getElementById('previewBox').scrollIntoView({behavior:'smooth'});};
 document.getElementById('navMemes').onclick=()=>{document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.getElementById('navMemes').classList.add('active');document.getElementById('genBtn').scrollIntoView({behavior:'smooth'});};
 document.getElementById('navChars').onclick=()=>{document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.getElementById('navChars').classList.add('active');document.getElementById('chars').scrollIntoView({behavior:'smooth'});};
-document.getElementById('verTag').textContent='v5 FINAL • '+BUILD_VERSION+' • מתעדכן אוטומטית';
+document.getElementById('verTag').textContent=BUILD_VERSION; console.log('PersonaAI version:', BUILD_VERSION);
 </script>
 </body>
 </html>
