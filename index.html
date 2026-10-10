@@ -15,23 +15,21 @@
 .top{height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid rgba(255,255,255,.08);position:sticky;top:0;z-index:40;background:rgba(7,7,15,.92);backdrop-filter:blur(16px)}
 .card{margin:16px;border-radius:24px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);backdrop-filter:blur(20px);padding:16px}
 .input{width:100%;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:12px;color:#fff;font-weight:700;outline:none}
-.btn{width:100%;height:52px;border-radius:16px;border:0;font-weight:900;font-size:14px;cursor:pointer;transition:.15s}
-.btn:active{transform:scale(.98)}
+.btn{width:100%;height:52px;border-radius:16px;border:0;font-weight:900;font-size:14px;cursor:pointer}
 .btn-yellow{background:#FFBD2E;color:#000}.btn-grad{background:linear-gradient(90deg,#ff007f,#00f0ff);color:#fff}.btn-ghost{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#fff}
 .preview{position:relative;aspect-ratio:3/4;border-radius:28px;overflow:hidden;background:#000;border:1px solid rgba(255,255,255,.12);margin:16px}
 .modal{position:fixed;inset:0;z-index:90;background:rgba(5,5,10,.92);backdrop-filter:blur(28px);display:none;flex-direction:column}
 .modal.open{display:flex}
-.m-card{width:100%;max-width:400px;aspect-ratio:3/4;border-radius:28px;overflow:hidden;border:1px solid rgba(255,255,255,.15);box-shadow:0 30px 80px rgba(0,0,0,.7);animation:pop.5s cubic-bezier(.34,1.56,.64,1)}
-@keyframes pop{0%{transform:scale(.85)}100%{transform:scale(1)}}
-@keyframes spin{to{transform:rotate(360deg)}}
-.confetti{position:absolute;width:8px;height:8px;border-radius:50%;top:-10px;animation:fall 1s ease forwards}
-@keyframes fall{to{transform:translateY(110vh) translateX(var(--x)) rotate(720deg)}}
+.m-card{width:100%;max-width:400px;aspect-ratio:3/4;border-radius:28px;overflow:hidden;border:1px solid rgba(255,255,255,.15);box-shadow:0 30px 80px rgba(0,0,0,.7)}
 .report{position:fixed;left:14px;bottom:92px;z-index:40;height:36px;padding:0 14px;border-radius:999px;background:rgba(18,18,30,.94);color:#fff;border:1px solid rgba(255,255,255,.18);font-weight:800;font-size:12px;cursor:pointer}
 .pill{border-radius:999px;padding:8px 14px;font-weight:800;font-size:13px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);cursor:pointer;white-space:nowrap}
 .pill.active{background:#fff;color:#000}
 .nav{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:30;background:rgba(18,18,32,.82);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:6px;display:flex;gap:6px;backdrop-filter:blur(16px)}
 .nav button{border-radius:999px;padding:10px 18px;font-weight:900;font-size:13px;border:0;cursor:pointer;background:transparent;color:rgba(255,255,255,.6)}
 .nav button.active{background:#fff;color:#000}
+@keyframes spin{to{transform:rotate(360deg)}}
+.confetti{position:absolute;width:8px;height:8px;border-radius:50%;top:-10px;animation:fall 1s ease forwards}
+@keyframes fall{to{transform:translateY(110vh) translateX(var(--x)) rotate(720deg)}}
 </style>
 <script src="billing.js" defer></script>
 </head>
@@ -46,7 +44,7 @@
 <video id="resultVideo" style="width:100%;height:100%;object-fit:contain;display:none" controls loop></video>
 <canvas id="work" style="display:none"></canvas>
 <div id="empty" style="position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:24px"><div><div style="font-size:32px">📷</div><div style="font-weight:900;margin-top:8px">המצלמה מוכנה</div><div style="color:rgba(255,255,255,.5);font-size:12px">צלם או העלה תמונה - תמונה מלאה נשלחת ל-AI</div></div></div>
-<div id="loading" style="position:absolute;inset:0;background:rgba(7,7,15,.78);display:none;place-items:center;text-align:center"><div><div style="width:56px;height:56px;border-radius:50%;border:3px solid rgba(255,255,255,.15);border-top-color:#00f0ff;animation:spin 1s linear infinite;margin:0 auto"></div><div id="loadText" style="margin-top:14px;font-weight:900">מנתח הבעה</div><div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:6px">שומר זהות מלאה • ללא חיתוך</div></div></div>
+<div id="loading" style="position:absolute;inset:0;background:rgba(7,7,15,.78);display:none;place-items:center;text-align:center"><div><div style="width:56px;height:56px;border-radius:50%;border:3px solid rgba(255,255,255,.15);border-top-color:#00f0ff;animation:spin 1s linear infinite;margin:0 auto"></div><div id="loadText" style="margin-top:14px;font-weight:900">מנתח הבעה</div></div></div>
 </div>
 
 <div style="display:flex;gap:8px;justify-content:center;margin:10px 0">
@@ -58,10 +56,8 @@
 
 <div class="card">
 <div style="display:flex;gap:8px;overflow:auto;margin-bottom:10px" id="templates"></div>
-<div style="font-size:10px;font-weight:800;letter-spacing:.1em;color:rgba(255,255,255,.4);margin-bottom:6px">TOP TEXT</div>
 <div style="display:flex;gap:8px"><input id="topT" class="input" placeholder="POV: אני ב-3 בלילה" style="flex:1"><button id="micTop" style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)">🎤</button></div>
-<div style="font-size:10px;font-weight:800;letter-spacing:.1em;color:rgba(255,255,255,.4);margin:12px 0 6px">BOTTOM TEXT</div>
-<div style="display:flex;gap:8px"><input id="bottomT" class="input" placeholder="עושה מממים במקום לישון" style="flex:1"><button id="micBottom" style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)">🎤</button></div>
+<div style="display:flex;gap:8px;margin-top:10px"><input id="bottomT" class="input" placeholder="עושה מממים במקום לישון" style="flex:1"><button id="micBottom" style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)">🎤</button></div>
 
 <div style="margin-top:14px"><div style="font-size:10px;font-weight:800;letter-spacing:.1em;color:#00f0ff">EMOTION ENGINE • ואז לזיהוי רצף</div><div style="display:flex;gap:8px;overflow:auto;margin-top:8px" id="emos"></div><div style="display:flex;gap:8px;margin-top:8px"><span style="opacity:.5">🎭</span><input id="customEmo" class="input" placeholder="למשל: עומד ואז צוחק ואז בוכה" style="font-size:13px"></div></div>
 
@@ -69,82 +65,66 @@
 
 <button class="btn btn-yellow" id="genBtn" style="margin-top:14px">צור מם ויראלי AI (60s) ⚡</button>
 <button class="btn btn-grad" id="videoBtn" style="margin-top:8px">🎬 הנפש לוידאו חי • Face Off • 90s</button>
-<button class="btn btn-ghost" id="classicBtn" style="margin-top:8px">🎨 מם קלאסי חינם 1080×1350 • ללא AI • מקומי</button>
-<div style="font-size:10px;color:rgba(255,255,255,.35);text-align:center;margin-top:8px">קלאסי חינם לא מבזבז קרדיט • AI ו-וידאו כן • תמונה מלאה נשלחת ללא חיתוך</div>
+<button class="btn btn-ghost" id="classicBtn" style="margin-top:8px">🎨 מם קלאסי חינם 1080×1350 • ללא AI</button>
 </div>
 
-<div style="height:90px"></div>
 <button class="report" id="repBtn">⚑ דווח על תוכן</button>
 </div>
 
 <div class="nav"><button id="navCam" class="active">📷 מצלמה</button><button id="navMemes">🔥 מממים</button><button id="navChars">🎭 דמויות</button></div>
 
 <div class="modal" id="wowModal">
-<div style="height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px"><button id="closeWow" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff">✕</button><div style="font-weight:900">זה יצא 🔥🔥🔥</div><div style="width:36px"></div></div>
-<div style="flex:1;display:grid;place-items:center;padding:16px"><div class="m-card"><img id="wowImg" style="width:100%;height:100%;object-fit:cover;display:none"><video id="wowVideo" style="width:100%;height:100%;object-fit:contain;display:none" controls autoplay loop></video></div><div style="margin-top:10px;font-size:11px;color:rgba(255,255,255,.4);font-weight:700">תצוגה מיידית • בלי לשתף כדי לראות • HD</div></div>
-<div style="padding:16px;max-width:520px;margin:0 auto;width:100%"><div style="display:flex;gap:8px"><button class="btn" style="flex:1;background:#fff;color:#000" id="saveWow">⬇ שמור HD</button><button class="btn" style="flex:1;background:#25D366;color:#000" id="waWow">ווטסאפ</button></div><div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-ghost" style="flex:1" id="storyWow">📲 סטורי 1080×1920</button><button class="btn" style="flex:1;background:rgba(255,0,127,.18);border:1px solid rgba(255,0,127,.3)" id="moreWow">עוד אחד 🔥</button></div></div>
+<div style="height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px"><button id="closeWow" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.1);color:#fff">✕</button><div style="font-weight:900">זה יצא 🔥🔥🔥</div><div style="width:36px"></div></div>
+<div style="flex:1;display:grid;place-items:center;padding:16px"><div class="m-card"><img id="wowImg" style="width:100%;height:100%;object-fit:cover;display:none"><video id="wowVideo" style="width:100%;height:100%;object-fit:contain;display:none" controls autoplay loop></video></div></div>
+<div style="padding:16px;max-width:520px;margin:0 auto;width:100%"><div style="display:flex;gap:8px"><button class="btn" style="flex:1;background:#fff;color:#000" id="saveWow">⬇ שמור HD</button><button class="btn" style="flex:1;background:#25D366;color:#000" id="waWow">ווטסאפ</button></div><div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-ghost" style="flex:1" id="storyWow">📲 סטורי</button><button class="btn" style="flex:1;background:rgba(255,0,127,.18)" id="moreWow">עוד אחד 🔥</button></div></div>
 </div>
 
 <script>
 const WORKER="https://billowing-shape-1d81.maty-tsoraro.workers.dev/";
 const SECRET="vs_87dTVS5q8rKeTtFahgFgl8GQeKyL78tB_2026";
-const CREDITS_KEY="persona_credits";
 const EMOS=[{id:'auto',label:'אוטו',e:'✨'},{id:'scary',label:'מפחיד',e:'😱'},{id:'creepy',label:'קריפי',e:'👀'},{id:'funny',label:'מצחיק',e:'🤣'},{id:'weird',label:'מוזר',e:'🌀'},{id:'evil',label:'מרושע',e:'😈'}];
-const TEMPLATES=[{top:'POV: אני ב-3 בלילה',bottom:'עושה מממים במקום לישון'},{top:'אמא: תמצא עבודה',bottom:'אני: עושה מממים'},{top:'כשאומרים שהמם לא מפחיד',bottom:'הפנים שלי:'},{top:'זוגיות אחרי שנה',bottom:'עדיין צוחקים מאותו מם'},{top:'כשיש מבחן מחר',bottom:'אבל המם חייב לצאת'}];
-const CHARS=[{id:'mafia',label:'מאפיה',e:'🕶️',d:'חליפה, סיגר'},{id:'astronaut',label:'אסטרונאוט',e:'🚀',d:'חלל, קסדה'},{id:'superhero',label:'גיבור על',e:'⚡',d:'גלימה וברקים'},{id:'king',label:'מלך',e:'👑',d:'כתר זהב'}];
+const TEMPLATES=[{top:'POV: אני ב-3 בלילה',bottom:'עושה מממים במקום לישון'},{top:'אמא: תמצא עבודה',bottom:'אני: עושה מממים'},{top:'כשאומרים שהמם לא מפחיד',bottom:'הפנים שלי:'}];
+const CHARS=[{id:'mafia',label:'מאפיה',e:'🕶️'},{id:'astronaut',label:'אסטרונאוט',e:'🚀'},{id:'superhero',label:'גיבור על',e:'⚡'},{id:'king',label:'מלך',e:'👑'}];
 let sel=EMOS[1];let selChar=null;let stream=null;let origData=null;let credits=3;
-try{const v=localStorage.getItem(CREDITS_KEY);if(v){credits=parseInt(v)||3;}if(window.PersonaBilling&&window.PersonaBilling.getCredits){const c=window.PersonaBilling.getCredits();if(typeof c==='number')credits=c;}}catch{}
-function saveCredits(){try{localStorage.setItem(CREDITS_KEY,String(credits));}catch{}try{if(window.PersonaBilling&&window.PersonaBilling.setCredits)window.PersonaBilling.setCredits(credits);}catch{}document.getElementById('creditsBtn').textContent=credits+' 💎';}
+function saveCredits(){document.getElementById('creditsBtn').textContent=credits+' 💎';}
 saveCredits();
 function renderEmos(){const el=document.getElementById('emos');el.innerHTML='';EMOS.forEach(o=>{const b=document.createElement('button');b.className='pill'+(o.id===sel.id?' active':'');b.textContent=o.e+' '+o.label;b.onclick=()=>{sel=o;renderEmos();};el.appendChild(b);});}
 function renderTemplates(){const el=document.getElementById('templates');el.innerHTML='';TEMPLATES.forEach(t=>{const b=document.createElement('button');b.className='pill';b.textContent=t.top;b.onclick=()=>{document.getElementById('topT').value=t.top;document.getElementById('bottomT').value=t.bottom;};el.appendChild(b);});}
-function renderChars(){const el=document.getElementById('chars');el.innerHTML='';CHARS.forEach(c=>{const b=document.createElement('button');b.style.cssText='text-align:right;border-radius:18px;padding:12px;background:rgba(255,255,255,.06);border:1px solid '+(selChar===c.id?'#00f0ff':'rgba(255,255,255,.10)');b.innerHTML='<div style="font-size:22px">'+c.e+'</div><div style="font-weight:900;margin-top:6px;font-size:13px">'+c.label+'</div><div style="font-size:11px;color:rgba(255,255,255,.5)">'+c.d+'</div>';b.onclick=()=>{selChar=selChar===c.id?null:c.id;renderChars();};el.appendChild(b);});}
+function renderChars(){const el=document.getElementById('chars');el.innerHTML='';CHARS.forEach(c=>{const b=document.createElement('button');b.style.cssText='text-align:right;border-radius:18px;padding:12px;background:rgba(255,255,255,.06);border:1px solid '+(selChar===c.id?'#00f0ff':'rgba(255,255,255,.10)');b.textContent=c.e+' '+c.label;b.onclick=()=>{selChar=selChar===c.id?null:c.id;renderChars();};el.appendChild(b);});}
 renderEmos();renderTemplates();renderChars();
 async function initCam(){try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:1080},height:{ideal:1350}}});const v=document.getElementById('cam');v.srcObject=stream;v.style.display='block';document.getElementById('empty').style.display='none';}catch{}}
 initCam();
-document.getElementById('switchCam').onclick=()=>{if(stream)stream.getTracks().forEach(t=>t.stop());origData=null;document.getElementById('orig').style.display='none';document.getElementById('result').style.display='none';document.getElementById('resultVideo').style.display='none';document.getElementById('cam').style.display='block';initCam();};
 document.getElementById('uploadBtn').onclick=()=>document.getElementById('fileIn').click();
-document.getElementById('fileIn').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{origData=r.result;document.getElementById('orig').src=r.result;document.getElementById('orig').style.display='block';document.getElementById('cam').style.display='none';document.getElementById('empty').style.display='none';};r.readAsDataURL(f);};
+document.getElementById('fileIn').onchange=e=>{const r=new FileReader();r.onload=()=>{origData=r.result;document.getElementById('orig').src=r.result;document.getElementById('orig').style.display='block';document.getElementById('cam').style.display='none';};r.readAsDataURL(e.target.files[0]);};
 document.getElementById('shootBtn').onclick=()=>{const cam=document.getElementById('cam');const c=document.getElementById('work');c.width=cam.videoWidth||720;c.height=cam.videoHeight||960;const ctx=c.getContext('2d');ctx.save();ctx.translate(c.width,0);ctx.scale(-1,1);ctx.drawImage(cam,0,0);ctx.restore();origData=c.toDataURL('image/jpeg',0.92);document.getElementById('orig').src=origData;document.getElementById('orig').style.display='block';document.getElementById('cam').style.display='none';};
-async function callWorker(payload, timeout=60000){const ctrl=new AbortController();const t=setTimeout(()=>ctrl.abort(),timeout);try{const res=await fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json','X-App-Secret':SECRET},body:JSON.stringify({...payload,secret:SECRET,app_secret:SECRET}),signal:ctrl.signal});if(!res.ok)throw new Error('HTTP '+res.status);return await res.json();}finally{clearTimeout(t);}}
-async function poll(id, ms=90000){const start=Date.now();while(Date.now()-start<ms){try{const r=await fetch(WORKER+'?id='+encodeURIComponent(id),{headers:{'X-App-Secret':SECRET}});if(r.ok){const j=await r.json();const s=(j.status||'').toLowerCase();if(s==='succeeded'||s==='completed'||j.videoUrl||j.video||j.image||j.imageUrl)return j;}}catch{}await new Promise(r=>setTimeout(r,3000));}throw new Error('timeout');}
-function extract(j){let v=null,i=null;if(j.videoUrl)v=j.videoUrl;else if(j.video)v=j.video;else if(j.imageUrl)i=j.imageUrl;else if(j.image)i=j.image;else if(typeof j.output==='string'&&j.output.startsWith('http')){if(j.output.includes('.mp4'))v=j.output;else i=j.output;}else if(Array.isArray(j.output)&&j.output[0]){const o=j.output[0];if(o.includes('.mp4'))v=o;else i=o;}return {video:v,image:i};}
-function openWow(image, video){const m=document.getElementById('wowModal');const wi=document.getElementById('wowImg');const wv=document.getElementById('wowVideo');if(video){wv.src=video;wv.style.display='block';wi.style.display='none';}else{wi.src=image;wi.style.display='block';wv.style.display='none';}m.classList.add('open');for(let i=0;i<22;i++){const d=document.createElement('div');d.className='confetti';d.style.left=(10+Math.random()*80)+'%';d.style.background=['#00f0ff','#ff007f','#FFBD2E','#8B5CF6'][i%4];d.style.setProperty('--x',(Math.random()-0.5)*200+'px');m.appendChild(d);setTimeout(()=>d.remove(),1200);}}
+async function callWorker(payload){const res=await fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json','X-App-Secret':SECRET},body:JSON.stringify(payload)});const txt=await res.text();try{return JSON.parse(txt);}catch{return {output:txt};}}
+async function poll(id){for(let i=0;i<30;i++){try{const r=await fetch(WORKER+'?id='+id,{headers:{'X-App-Secret':SECRET}});if(r.ok){const j=await r.json();if(j.videoUrl||j.image||j.imageUrl||j.result||j.output)return j;}const r2=await fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json','X-App-Secret':SECRET},body:JSON.stringify({action:'status',id:id,secret:SECRET,app_secret:SECRET})});if(r2.ok){const j=await r2.json();if(j.videoUrl||j.image||j.result||j.output)return j;}}catch{}await new Promise(r=>setTimeout(r,3000));}throw new Error('timeout');}
+function extract(j){let v=null,i=null;if(j.videoUrl)v=j.videoUrl;else if(j.video)v=j.video;else if(j.imageUrl)i=j.imageUrl;else if(j.image)i=j.image;else if(j.result&&j.result.includes('http')){if(j.result.includes('.mp4'))v=j.result;else i=j.result;}else if(j.output&&typeof j.output==='string'&&j.output.includes('http')){if(j.output.includes('.mp4'))v=j.output;else i=j.output;}return {video:v,image:i};}
+function openWow(img,vid){const m=document.getElementById('wowModal');const wi=document.getElementById('wowImg');const wv=document.getElementById('wowVideo');if(vid){wv.src=vid;wv.style.display='block';wi.style.display='none';}else{wi.src=img;wi.style.display='block';wv.style.display='none';}m.classList.add('open');}
 document.getElementById('closeWow').onclick=()=>document.getElementById('wowModal').classList.remove('open');
 document.getElementById('moreWow').onclick=()=>document.getElementById('wowModal').classList.remove('open');
 async function generate(mode){
-if(!origData){alert('צלם או העלה תמונה קודם 📸');return;}
-if(mode!=='classic'&&credits<=0){try{if(window.PersonaBilling&&window.PersonaBilling.openStoreModal){window.PersonaBilling.openStoreModal();return;}}catch{}alert('נגמרו הקרדיטים! 💎 מתחדש מחר');return;}
-document.getElementById('loading').style.display='grid';document.getElementById('loadText').textContent=mode==='video'?'יוצר וידאו חי... 90s':'מבין את הבדיחה...';
+if(!origData){alert('צלם תמונה');return;}
+document.getElementById('loading').style.display='grid';
 try{
 if(mode==='classic'){
-const c=document.createElement('canvas');c.width=1080;c.height=1350;const ctx=c.getContext('2d');const img=new Image();await new Promise((res,rej)=>{img.onload=res;img.onerror=rej;img.src=origData;});ctx.drawImage(img,0,0,1080,1350);ctx.font='900 70px Anton, Heebo';ctx.textAlign='center';ctx.lineWidth=12;ctx.strokeStyle='rgba(0,0,0,.9)';ctx.fillStyle='#fff';function wrap(t,y){const words=t.split(' ');let line='';let lines=[];for(const w of words){const test=line?line+' '+w:w;if(ctx.measureText(test).width>960&&line){lines.push(line);line=w;}else line=test;}if(line)lines.push(line);let yy=y;lines.forEach(l=>{ctx.strokeText(l,540,yy);ctx.fillText(l,540,yy);yy+=80;});}wrap(document.getElementById('topT').value||'POV: אני ב-3 בלילה',120);wrap(document.getElementById('bottomT').value||'עושה מממים במקום לישון',1220);const url=c.toDataURL('image/jpeg',0.92);document.getElementById('result').src=url;document.getElementById('result').style.display='block';openWow(url,null);return;
+const c=document.createElement('canvas');c.width=1080;c.height=1350;const ctx=c.getContext('2d');const img=new Image();await new Promise(r=>{img.onload=r;img.src=origData;});ctx.drawImage(img,0,0,1080,1350);ctx.font='900 70px Heebo';ctx.textAlign='center';ctx.lineWidth=10;ctx.strokeStyle='#000';ctx.fillStyle='#fff';ctx.strokeText(document.getElementById('topT').value,540,120);ctx.fillText(document.getElementById('topT').value,540,120);ctx.strokeText(document.getElementById('bottomT').value,540,1220);ctx.fillText(document.getElementById('bottomT').value,540,1220);const url=c.toDataURL('image/jpeg',0.92);openWow(url,null);return;
 }
-const custom=document.getElementById('customEmo').value;const seq=custom.includes('ואז')?custom.split('ואז').map(s=>s.trim()).filter(Boolean):null;
-const payload={image:origData,imageUrl:origData,topText:document.getElementById('topT').value,bottomText:document.getElementById('bottomT').value,emotion:seq?seq[0]:sel.id,custom:custom,character:selChar,action:mode,mode:mode,preserveIdentity:true,keepAllPeople:true,sequence:seq};
-const res=await callWorker(payload,60000);let id=res.id||res.jobId;let out=extract(res);
-if(!out.image&&!out.video&&id){document.getElementById('loadText').textContent='בתור AI • ממתין...';const polled=await poll(id,90000);out=extract(polled);}
-if(out.video){document.getElementById('resultVideo').src=out.video;document.getElementById('resultVideo').style.display='block';document.getElementById('result').style.display='none';document.getElementById('orig').style.display='none';credits=Math.max(0,credits-1);saveCredits();openWow(null,out.video);return;}
-if(out.image){document.getElementById('result').src=out.image;document.getElementById('result').style.display='block';document.getElementById('resultVideo').style.display='none';document.getElementById('orig').style.display='none';credits=Math.max(0,credits-1);saveCredits();openWow(out.image,null);return;}
-throw new Error('no output');
-}catch(e){alert('שגיאת AI - נסה שוב');}finally{document.getElementById('loading').style.display='none';}
+const custom=document.getElementById('customEmo').value;const seq=custom.includes('ואז')?custom.split('ואז').map(s=>s.trim()):null;
+const isVideo=mode==='video';
+const payload={image:origData,imageUrl:origData,topText:document.getElementById('topT').value,bottomText:document.getElementById('bottomT').value,emotion:seq?seq[0]:sel.id,custom:custom,character:selChar,sequence:seq,action:isVideo?'video':'image',type:isVideo?'video':undefined,mode:isVideo?'video':(selChar?'character':'meme'),task:isVideo?'meme':undefined,secret:SECRET,app_secret:SECRET,preserveIdentity:true,keepAllPeople:true};
+const res=await callWorker(payload);let out=extract(res);let id=res.id||res.jobId;
+if(!out.image&&!out.video&&id){const polled=await poll(id);out=extract(polled);}
+if(out.video){openWow(null,out.video);credits--;saveCredits();return;}
+if(out.image){openWow(out.image,null);credits--;saveCredits();return;}
+alert('שגיאת AI - נסה שוב');
+}catch(e){alert(e.message);}finally{document.getElementById('loading').style.display='none';}
 }
 document.getElementById('genBtn').onclick=()=>generate('image');
 document.getElementById('videoBtn').onclick=()=>generate('video');
 document.getElementById('classicBtn').onclick=()=>generate('classic');
-document.getElementById('saveWow').onclick=()=>{const img=document.getElementById('wowImg');const vid=document.getElementById('wowVideo');const src=img.style.display!=='none'?img.src:vid.src;const a=document.createElement('a');a.href=src;a.download='personaai-'+Date.now()+(src.includes('.mp4')?'.mp4':'.jpg');a.click();};
-document.getElementById('waWow').onclick=async()=>{const img=document.getElementById('wowImg');const vid=document.getElementById('wowVideo');const src=img.style.display!=='none'?img.src:vid.src;try{const blob=await (await fetch(src)).blob();const file=new File([blob],src.includes('.mp4')?'video.mp4':'meme.jpg',{type:blob.type});if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'PersonaAI'});return;}}catch{}window.open('https://wa.me/?text='+encodeURIComponent('תראה מה יצרתי ב-PersonaAI 🔥'),'blank');};
-document.getElementById('storyWow').onclick=()=>{const src=document.getElementById('wowImg').src;const sc=document.createElement('canvas');sc.width=1080;sc.height=1920;const sctx=sc.getContext('2d');sctx.fillStyle='#07070f';sctx.fillRect(0,0,1080,1920);const im=new Image();im.onload=()=>{sctx.drawImage(im,0,420,1080,1080);sctx.fillStyle='rgba(255,255,255,.6)';sctx.font='700 26px Heebo';sctx.textAlign='center';sctx.fillText('נוצר עם PersonaAI',540,1700);const a=document.createElement('a');a.href=sc.toDataURL('image/png');a.download='story-'+Date.now()+'.png';a.click();};im.src=src;};
-let rec=null;
-function startSTT(target){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert('דפדפן לא תומך בהכתבה 🎤');return;}try{if(rec)rec.stop();}catch{}const r=new SR();rec=r;const lang=(navigator.language||'he').split('-')[0];const map={he:'he-IL',fr:'fr-FR',es:'es-ES',pt:'pt-BR',de:'de-DE',en:'en-US'};r.lang=map[lang]||'he-IL';r.interimResults=false;r.onresult=e=>{const t=e.results[0][0].transcript;document.getElementById(target).value=t;};r.onerror=()=>{};r.start();}
-document.getElementById('micTop').onclick=()=>startSTT('topT');
-document.getElementById('micBottom').onclick=()=>startSTT('bottomT');
-document.getElementById('creditsBtn').onclick=()=>{try{if(window.PersonaBilling&&window.PersonaBilling.openStoreModal){window.PersonaBilling.openStoreModal();return;}}catch{}alert('3 קרדיטים חינם מתחדשים בכל יום ✨');};
-document.getElementById('helpBtn').onclick=()=>alert('כותבים בדיחה, בוחרים וייב, לוחצים צור - רואים מיד בפול-סקרין 🔥');
-document.getElementById('repBtn').onclick=()=>{const r=prompt('דווח על תוכן:\n1 פוגעני\n2 לא בטוח\n3 ספאם\n4 אחר');if(r)alert('תודה! הדיווח נשלח ונבדוק אותו.');};
-document.getElementById('navCam').onclick=()=>{document.getElementById('previewBox').scrollIntoView({behavior:'smooth'});};
-document.getElementById('navMemes').onclick=()=>{document.getElementById('genBtn').scrollIntoView({behavior:'smooth'});};
-document.getElementById('navChars').onclick=()=>{document.getElementById('chars').scrollIntoView({behavior:'smooth'});};
+document.getElementById('saveWow').onclick=()=>{const s=document.getElementById('wowImg').style.display!=='none'?document.getElementById('wowImg').src:document.getElementById('wowVideo').src;const a=document.createElement('a');a.href=s;a.download='personaai.jpg';a.click();};
+document.getElementById('waWow').onclick=()=>window.open('https://wa.me/?text=תראה מה יצרתי ב-PersonaAI 🔥','blank');
 </script>
 </body>
 </html>
