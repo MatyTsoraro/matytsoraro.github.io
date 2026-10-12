@@ -14,7 +14,7 @@
 <style>
 *{box-sizing:border-box}html{background:#07070f}body{margin:0;background:#07070f;color:#fff;font-family:Heebo,system-ui,sans-serif;overflow-x:hidden}.app{max-width:520px;margin:0 auto;min-height:100vh;background:radial-gradient(120% 60% at 20% 0%,rgba(0,240,255,.12),transparent),radial-gradient(100% 50% at 80% 10%,rgba(255,0,127,.10),transparent),#07070f}.top{height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid rgba(255,255,255,.08);position:sticky;top:0;z-index:40;background:rgba(7,7,15,.94);backdrop-filter:blur(16px)}.card{margin:16px;border-radius:24px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);backdrop-filter:blur(20px);padding:16px}.input{width:100%;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:12px;color:#fff;font-weight:700;outline:none;font-size:14px}.input:focus{border-color:#00f0ff}.btn{width:100%;height:52px;border-radius:16px;border:0;font-weight:900;font-size:14px;cursor:pointer;transition:.15s}.btn:active{transform:scale(.97)}.btn:disabled{opacity:.5;cursor:not-allowed}.btn-yellow{background:#FFBD2E;color:#000}.btn-grad{background:linear-gradient(90deg,#ff007f,#00f0ff);color:#fff}.btn-ghost{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:#fff}.btn-white{background:#fff;color:#000}.preview{position:relative;aspect-ratio:3/4;border-radius:28px;overflow:hidden;background:#000;border:1px solid rgba(255,255,255,.12);margin:16px}.modal{position:fixed;inset:0;z-index:90;background:rgba(5,5,10,.92);backdrop-filter:blur(28px);display:none;flex-direction:column}.modal.open{display:flex}.m-card{width:100%;max-width:400px;aspect-ratio:3/4;border-radius:28px;overflow:hidden;border:1px solid rgba(255,255,255,.15);box-shadow:0 30px 80px rgba(0,0,0,.7)}.pill{border-radius:999px;padding:8px 14px;font-weight:800;font-size:13px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);cursor:pointer;white-space:nowrap;color:#fff}.pill.active{background:#fff;color:#000}.report{position:fixed;inset-inline-start:14px;bottom:92px;z-index:40;height:36px;padding:0 14px;border-radius:999px;background:rgba(18,18,30,.94);color:#fff;border:1px solid rgba(255,255,255,.18);font-weight:800;font-size:12px;cursor:pointer}.nav{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:30;background:rgba(18,18,32,.88);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:6px;display:flex;gap:6px;backdrop-filter:blur(16px)}.nav button{border-radius:999px;padding:10px 16px;font-weight:900;font-size:12px;border:0;cursor:pointer;background:transparent;color:rgba(255,255,255,.6)}.nav button.active{background:#fff;color:#000}.report-sheet{width:min(92%,430px);margin:auto;background:#151525;border:1px solid rgba(255,255,255,.14);border-radius:24px;padding:20px;box-shadow:0 25px 80px rgba(0,0,0,.7)}.report-sheet label{display:block;margin:10px 0;font-size:14px}.report-sheet textarea{width:100%;min-height:84px;margin-top:10px;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:#202036;color:#fff;resize:vertical}.small{font-size:11px;color:rgba(255,255,255,.55)}@keyframes spin{to{transform:rotate(360deg)}}.confetti{position:absolute;width:8px;height:8px;border-radius:50%;top:-10px;animation:fall 1s ease forwards}@keyframes fall{to{transform:translateY(110vh) translateX(var(--x)) rotate(720deg)}}
 </style>
-<script src="billing.js?v=20261011" defer></script>
+<script src="billing.js?v=20261012" defer></script>
 </head>
 <body>
 <div id="verTag" hidden></div>
@@ -69,6 +69,26 @@
   <div style="padding:16px;max-width:520px;margin:0 auto;width:100%;flex-shrink:0;background:rgba(7,7,15,.7);border-top:1px solid rgba(255,255,255,.08)"><div style="display:flex;gap:10px"><button class="btn btn-white" style="flex:1" id="saveWow">⬇ שמור HD</button><button class="btn" style="flex:1;background:#25D366;color:#000" id="waWow">📲 שיתוף עם קובץ</button></div><div style="display:flex;gap:10px;margin-top:10px"><button class="btn btn-ghost" style="flex:1;height:48px" id="storyWow">📲 סטורי</button><button class="btn" style="flex:1;height:48px;background:rgba(255,0,127,.18);border:1px solid rgba(255,0,127,.3);color:#fff" id="moreWow">עוד אחד 🔥</button></div></div>
 </div>
 
+<div class="modal" id="storeModal">
+  <div class="report-sheet">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+      <div><h2 style="margin:0">קבלו עוד יצירות</h2><div class="small">תשלום מאובטח באמצעות Google Play</div></div>
+      <button type="button" id="closeStore" class="pill">✕</button>
+    </div>
+    <div style="margin-top:16px;padding:16px;border-radius:18px;background:rgba(0,240,255,.08);border:1px solid rgba(0,240,255,.22)">
+      <div style="font-weight:900;font-size:17px">20 קרדיטים</div>
+      <div class="small">רכישה חד-פעמית. הקרדיטים אינם פוקעים.</div>
+      <button type="button" id="buyCredits20" class="btn btn-white" style="margin-top:12px">רכישה • <span id="creditsProductPrice">₪6.10</span></button>
+    </div>
+    <div style="margin-top:12px;padding:16px;border-radius:18px;background:linear-gradient(135deg,rgba(255,0,127,.12),rgba(124,77,255,.14));border:1px solid rgba(255,0,127,.25)">
+      <div style="font-weight:900;font-size:17px">PRO שבועי • 100 קרדיטים</div>
+      <div class="small">100 קרדיטים בכל שבוע פעיל. המינוי מתחדש אוטומטית וניתן לביטול דרך Google Play.</div>
+      <button type="button" id="buyProWeekly" class="btn btn-grad" style="margin-top:12px">הפעלת PRO • <span id="proProductPrice">₪12.00 לשבוע</span></button>
+    </div>
+    <div class="small" style="margin-top:12px;text-align:center">המחיר הסופי מוצג בחלון התשלום של Google Play לפני אישור.</div>
+  </div>
+</div>
+
 <div class="modal" id="reportModal">
   <div class="report-sheet">
     <h2 style="margin:0 0 6px">דיווח על תוכן AI</h2>
@@ -87,7 +107,7 @@
 
 <script>
 'use strict';
-const BUILD_VERSION='2026-10-11-v7-FIXED';
+const BUILD_VERSION='2026-10-12-v8-BILLING';
 const WORKER='https://billowing-shape-1d81.maty-tsoraro.workers.dev/';
 const SECRET='vs_87dTVS5q8rKeTtFahgFgl8GQeKyL78tB_2026';
 const MAX_FILE_SIZE=8*1024*1024;
@@ -98,6 +118,7 @@ let sel=EMOS[0],selChar=null,stream=null,origData=null,credits=3,facing='user',a
 try{const v=localStorage.getItem('persona_credits');if(v!==null)credits=Math.max(0,parseInt(v,10)||0);}catch{}
 const $=id=>document.getElementById(id);
 function saveCredits(){try{localStorage.setItem('persona_credits',String(credits));}catch{}$('creditsBtn').textContent=credits+' 💎';}
+window.addEventListener('persona-credits-changed',e=>{credits=Math.max(0,parseInt(e.detail?.credits,10)||0);$('creditsBtn').textContent=credits+' 💎';});
 function showLoading(show,text){$('loading').style.display=show?'grid':'none';if(text)$('loadText').textContent=text;document.querySelectorAll('#classicBtn,#genBtn,#videoBtn').forEach(b=>b.disabled=show);}
 function setMedia(image,video){$('cam').style.display='none';$('orig').style.display='none';$('result').style.display=image?'block':'none';$('resultVideo').style.display=video?'block':'none';if(image)$('result').src=image;if(video){$('resultVideo').src=video;$('resultVideo').load();}}
 function renderEmos(){$('emos').innerHTML='';EMOS.forEach(o=>{const b=document.createElement('button');b.className='pill'+(o.id===sel.id?' active':'');b.textContent=o.e+' '+o.label;b.onclick=()=>{sel=o;renderEmos();};$('emos').appendChild(b);});}
@@ -117,7 +138,38 @@ function openWow(image,video){if(video){$('wowVideo').src=video;$('wowVideo').st
 $('closeWow').onclick=$('moreWow').onclick=()=>{$('wowModal').classList.remove('open');$('wowVideo').pause();};
 $('clearChar').onclick=()=>{selChar=null;$('charInfo').textContent='';$('clearChar').style.display='none';$('genSub').textContent='AI משנה סגנון ושומר זהות';renderChars();};
 async function createClassic(){const c=document.createElement('canvas');c.width=1080;c.height=1350;const ctx=c.getContext('2d'),img=new Image();await new Promise((res,rej)=>{img.onload=res;img.onerror=rej;img.src=origData;});ctx.fillStyle='#000';ctx.fillRect(0,0,c.width,c.height);const scale=Math.max(c.width/img.width,c.height/img.height),w=img.width*scale,h=img.height*scale;ctx.drawImage(img,(c.width-w)/2,(c.height-h)/2,w,h);ctx.textAlign='center';ctx.lineJoin='round';ctx.lineWidth=14;ctx.strokeStyle='rgba(0,0,0,.95)';ctx.fillStyle='#fff';ctx.font='900 72px Anton, Heebo, sans-serif';const draw=(text,y,bottom=false)=>{if(!text)return;const words=text.split(/\s+/),lines=[];let line='';for(const word of words){const test=line?line+' '+word:word;if(ctx.measureText(test).width>980&&line){lines.push(line);line=word;}else line=test;}if(line)lines.push(line);if(bottom)y-=Math.max(0,lines.length-1)*84;for(const l of lines.slice(0,3)){ctx.strokeText(l,540,y);ctx.fillText(l,540,y);y+=84;}};draw($('topT').value||'POV: אני ב-3 בלילה',110);draw($('bottomT').value||'עושה ממים במקום לישון',1270,true);return c.toDataURL('image/jpeg',.94);}
-async function generate(mode){if(!origData){alert('צלם או העלה תמונה קודם 📸');return;}if(mode!=='classic'&&credits<=0){alert('נגמרו הקרדיטים 💎');return;}activeController=new AbortController();showLoading(true,mode==='video'?'יוצר וידאו חי... עד 90 שניות':mode==='classic'?'יוצר מם רגיל...':'יוצר תמונת AI... עד 60 שניות');try{if(mode==='classic'){openWow(await createClassic(),null);return;}const custom=$('customEmo').value.trim(),sequence=custom.includes('ואז')?custom.split('ואז').map(s=>s.trim()).filter(Boolean):null,isVideo=mode==='video';const payload={image:origData,imageUrl:origData,prompt:selChar?CHARS.find(x=>x.id===selChar)?.label:custom,topText:$('topT').value,bottomText:$('bottomT').value,emotion:sequence?.[0]||sel.id,custom,character:selChar,sequence,action:isVideo?'video':'image',type:isVideo?'video':undefined,mode:isVideo?'video':selChar?'character':'meme',task:isVideo?'meme':undefined,preserveIdentity:true,keepAllPeople:true};let response=await callWorker(payload,activeController.signal),out=extract(response);currentRequestId=response.id||response.request_id||response.jobId||'';if(!out.image&&!out.video&&currentRequestId){$('loadText').textContent='היצירה בתור • ממתין...';out=await poll(currentRequestId,activeController.signal);}if(out.video)openWow(null,out.video);else if(out.image)openWow(out.image,null);else throw new Error('ה-AI לא החזיר תוצאה');credits=Math.max(0,credits-1);saveCredits();}catch(e){if(e.name!=='AbortError')alert('שגיאה: '+(e.message||'נסה שוב'));}finally{showLoading(false);activeController=null;}}
+async function generate(mode){
+  if(!origData){alert('צלם או העלה תמונה קודם 📸');return;}
+  const isPaid=mode!=='classic';
+  let transaction={success:true,refund:()=>{}};
+  if(isPaid){
+    if(window.PersonaBilling?.spendCreditsOrRefund){
+      transaction=window.PersonaBilling.spendCreditsOrRefund(1);
+    }else if(credits>0){
+      credits-=1;saveCredits();
+      let refunded=false;transaction={success:true,refund:()=>{if(!refunded){refunded=true;credits+=1;saveCredits();}}};
+    }else transaction={success:false,refund:()=>{}};
+    if(!transaction.success){window.PersonaBilling?.openStoreModal?.();alert('אין מספיק קרדיטים 💎');return;}
+  }
+  activeController=new AbortController();
+  showLoading(true,mode==='video'?'יוצר וידאו חי... עד 90 שניות':mode==='classic'?'יוצר מם רגיל...':'יוצר תמונת AI... עד 60 שניות');
+  try{
+    if(mode==='classic'){openWow(await createClassic(),null);return;}
+    const custom=$('customEmo').value.trim(),sequence=custom.includes('ואז')?custom.split('ואז').map(s=>s.trim()).filter(Boolean):null,isVideo=mode==='video';
+    const payload={image:origData,imageUrl:origData,prompt:selChar?CHARS.find(x=>x.id===selChar)?.label:custom,topText:$('topT').value,bottomText:$('bottomT').value,emotion:sequence?.[0]||sel.id,custom,character:selChar,sequence,action:isVideo?'video':'image',type:isVideo?'video':undefined,mode:isVideo?'video':selChar?'character':'meme',task:isVideo?'meme':undefined,preserveIdentity:true,keepAllPeople:true};
+    let response=await callWorker(payload,activeController.signal),out=extract(response);
+    currentRequestId=response.id||response.request_id||response.jobId||'';
+    if(!out.image&&!out.video&&currentRequestId){$('loadText').textContent='היצירה בתור • ממתין...';out=await poll(currentRequestId,activeController.signal);}
+    if(out.video)openWow(null,out.video);else if(out.image)openWow(out.image,null);else throw new Error('ה-AI לא החזיר תוצאה');
+    credits=window.PersonaBilling?.getCredits?.()??credits;
+    saveCredits();
+  }catch(e){
+    if(isPaid)transaction.refund();
+    credits=window.PersonaBilling?.getCredits?.()??credits;
+    saveCredits();
+    if(e.name!=='AbortError')alert('שגיאה: '+(e.message||'נסה שוב'));
+  }finally{showLoading(false);activeController=null;}
+}
 $('cancelBtn').onclick=()=>{activeController?.abort();showLoading(false);};
 $('genBtn').onclick=()=>generate('image');$('videoBtn').onclick=()=>generate('video');$('classicBtn').onclick=()=>generate('classic');
 async function currentBlob(){const imageVisible=$('wowImg').style.display!=='none'&&$('wowImg').src,src=imageVisible?$('wowImg').src:$('wowVideo').src;if(!src)throw new Error('אין תוצאה');return{src,blob:await(await fetch(src,{cache:'no-store'})).blob(),video:!imageVisible};}
@@ -128,6 +180,9 @@ function startSTT(target){const SR=window.SpeechRecognition||window.webkitSpeech
 $('micTop').onclick=()=>startSTT('topT');$('micBottom').onclick=()=>startSTT('bottomT');
 $('creditsBtn').onclick=()=>{if(window.PersonaBilling?.openStoreModal)window.PersonaBilling.openStoreModal();else alert('יש לך '+credits+' קרדיטים 💎');};
 $('helpBtn').onclick=()=>alert('🎨 מם רגיל: מיידי וחינם\n⚡ תמונת AI: קרדיט אחד\n🎭 דמות: בחר דמות ואז צור תמונת AI\n🎬 וידאו: קרדיט אחד בגרסה זו');
+$('closeStore').onclick=()=>window.PersonaBilling?.closeStoreModal?.();
+$('buyCredits20').onclick=()=>window.PersonaBilling?.buy20Credits?.();
+$('buyProWeekly').onclick=()=>window.PersonaBilling?.buyProWeekly?.();
 $('repBtn').onclick=()=>{$('reportModal').classList.add('open');};$('closeReport').onclick=()=>{$('reportModal').classList.remove('open');};
 $('reportForm').onsubmit=async e=>{e.preventDefault();const reason=new FormData(e.currentTarget).get('reason');if(!reason)return;const button=$('sendReport');button.disabled=true;button.textContent='שולח...';try{const response=await callWorker({action:'report',reason,details:$('reportDetails').value.trim(),contentType:$('resultVideo').style.display!=='none'?'video':'image',requestId:currentRequestId,language:navigator.language||'he-IL',createdAt:new Date().toISOString()});if(response.status!=='received')throw new Error('Report was not confirmed');e.currentTarget.reset();$('reportModal').classList.remove('open');alert('הדיווח התקבל. תודה שעזרת לנו לשמור על PersonaAI בטוחה.');}catch{alert('לא הצלחנו לשלוח את הדיווח. נסה שוב.');}finally{button.disabled=false;button.textContent='שלח דיווח';}};
 function activateNav(id,target){document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));$(id).classList.add('active');$(target).scrollIntoView({behavior:'smooth'});}
