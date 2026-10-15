@@ -37,7 +37,6 @@ window.__gifencReady = import("https://cdn.jsdelivr.net/npm/gifenc@1.0.3/+esm").
 <main id="result" class="page"><div style="text-align:center"><span class="tag">התוצאה מוכנה</span><h2 class="hero" style="margin-top:8px">זה יצא 🔥</h2></div><div class="result-card"><img id="resultImage" alt="התוצאה" style="display:none"><video id="resultVideo" controls loop playsinline style="display:none"></video><div class="watermark">Made with PersonaAI ✨</div></div><div style="text-align:center;margin-top:13px;font-weight:900">איך יצא?</div><div class="rating"><button>🔥 מעולה</button><button>🙂 סביר</button><button>👎 לא טוב</button></div><div class="share-after"><b>עכשיו הגיע הזמן לשתף</b><p>שלחו למשפחה, לחברים או לקולגות דרך WhatsApp, Instagram, סטורי וכל אפליקציית שיתוף אחרת.</p></div><div class="grid2" style="margin-top:10px"><button id="shareBtn" class="btn green">↗ שתפו עכשיו</button><button id="saveBtn" class="btn outline">⬇ שמרו למכשיר</button></div><div id="downloadHint" class="download-hint"></div><section id="fxBox" class="fx-box"><h3>✨ GIF Studio Pro</h3><div class="gif-direct-note">בחרו חבילה מוכנה או בנו שילוב אישי. התמונה נשארת הבסיס, והאפקטים מתוזמנים יחד בלולאה.</div><button id="surpriseFxBtn" class="surprise-btn">🎲 תפתיעו אותי בשילוב מושקע</button><div class="studio-tabs"><button class="studio-tab active" data-studio="presets">חבילות</button><button class="studio-tab" data-studio="face">פנים AI</button><button class="studio-tab" data-studio="effects">אפקטים</button><button class="studio-tab" data-studio="scene">תפאורה</button></div>
 <div id="studio-presets" class="studio-panel active"><div class="section-hint">בחירה אחת מחילה שילוב מתוזמן של אנימציות ותפאורה.</div><div id="presetGrid" class="preset-grid"></div></div>
 
-<!-- הלשונית החדשה של ה-Deepfake הפוטוריאליסטי -->
 <div id="studio-face" class="studio-panel">
   <div class="section-hint">הנפשת פוטוריאליזם (Deepfake) עולה 1 קרדיט. פעולה זו תיצור וידאו מלא ומונפש של הפנים שלך.</div>
   <div class="grid2">
@@ -60,7 +59,7 @@ window.__gifencReady = import("https://cdn.jsdelivr.net/npm/gifenc@1.0.3/+esm").
 
 <script>
 'use strict';
-const BUILD_VERSION='2026-10-15-v21-DEEPFAKE-DRAG';
+const BUILD_VERSION='2026-10-15-v22-FIXED-PACKS';
 const WORKER='https://billowing-shape-1d81.maty-tsoraro.workers.dev/';
 const SECRET='vs_87dTVS5q8rKeTtFahgFgl8GQeKyL78tB_2026';
 const MAX_FILE=8*1024*1024;
@@ -112,9 +111,6 @@ $('aiFreeBtn').onclick=()=>createSelectedMeme(false);$('aiFullBtn').onclick=()=>
 async function generate(){if(!sourceData){toast('בחרו תמונה קודם',true);return}let tx={success:true,refund:()=>{}};if(['character','video'].includes(mode)){tx=window.PersonaBilling?.spendCreditsOrRefund?.(1)||{success:false,refund:()=>{}};if(!tx.success){window.PersonaBilling?.openStoreModal?.();return}}activeController=new AbortController();$('busy').classList.add('show');$('busyText').textContent=mode==='video'?'יוצר וידאו... עד 90 שניות':'יוצר את התוצאה...';try{let out;if(mode==='ai_meme'){const top=$('aiTop').value.trim(),bottom=$('aiBottom').value.trim();out={image:await createMeme(top,bottom),video:null}}else if(mode==='quick_meme'){out={image:await createMeme($('quickTop').value.trim(),$('quickBottom').value.trim()),video:null}}else{const isVideo=mode==='video',custom=$('customMotion').value.trim();const payload={image:sourceData,imageUrl:sourceData,prompt:mode==='character'?character:custom,topText:'',bottomText:'',emotion:isVideo?(custom||motion):'auto',custom:isVideo?(custom||motion):'',character:mode==='character'?character:null,sequence:null,action:isVideo?'video':'image',type:isVideo?'video':undefined,mode:isVideo?'video':'character',task:isVideo?'meme':undefined,preserveIdentity:true,keepAllPeople:true};const r=await callWorker(payload,activeController.signal);out=extract(r);currentRequestId=r.id||r.request_id||r.jobId||'';if(!out.image&&!out.video&&currentRequestId)out=await poll(currentRequestId,activeController.signal);if(!out.image&&!out.video)throw new Error('ה-AI לא החזיר תוצאה')}showResult(out)}catch(e){if(['character','video'].includes(mode))tx.refund();if(e.name!=='AbortError')toast('שגיאה: '+e.message,true)}finally{$('busy').classList.remove('show');activeController=null}}
 async function showResult(out){fxRunning=false;cancelAnimationFrame(fxAnimationId);fxBaseImage=null;fxFace=null;$('fxPreview').classList.remove('show');currentResult=out;$('resultImage').style.display=out.image?'block':'none';$('resultVideo').style.display=out.video?'block':'none';if(out.image)$('resultImage').src=out.image;if(out.video){$('resultVideo').src=out.video;$('resultVideo').play().catch(()=>{})}currentCreationId=await saveCreation(out);track('creation_completed',{type:out.video?'video':'image'});page('result');if(gifIntent&&!out.video){setTimeout(()=>{$('fxBox').scrollIntoView({behavior:'smooth',block:'start'});startFxPreview()},350)}}
 
-// =======================================================
-// פונקציית המורפינג / DEEPFAKE לפנים האמיתיות
-// =======================================================
 window.generateAiFaceMorph = async function(emotionType) {
   if (!sourceData) { toast('יש להעלות תמונה קודם', true); return; }
   const tx = window.PersonaBilling?.spendCreditsOrRefund?.(1) || { success: true, refund: ()=>{} };
@@ -145,7 +141,7 @@ let fxFace=null,fxBaseImage=null,fxRunning=false;
 let globalRenderedFaceBox = {x:0, y:0, w:0, h:0};
 
 function applyPreset(id){selectedPreset=id;if(PRESET_CONFIG[id]){const p=PRESET_CONFIG[id];selectedEffects=[...p.effects];selectedScene=p.scene}renderPresetGrid();renderFxChips();renderSceneChips();renderStudioSummary();startFxPreview()}function renderPresetGrid(){const box=$('presetGrid');if(!box)return;box.innerHTML='';PRESETS.forEach(([id,icon,title,desc])=>{const b=document.createElement('button');b.type='button';b.className='preset-card'+(selectedPreset===id?' selected':'');b.innerHTML=`<div class="preset-icon">${icon}</div><b>${title}</b><small>${desc}</small>`;b.onclick=()=>applyPreset(id);box.appendChild(b)})}function renderStudioSummary(){const box=$('studioSummary');if(!box)return;const names=selectedEffects.map(id=>FX_LIST.find(x=>x[0]===id)?.[1]).filter(Boolean).join(' + ')||'ללא אביזרים',scene=SCENE_LIST.find(x=>x[0]===selectedScene)?.[1]||'ללא תפאורה';box.innerHTML=`<b>השילוב שלכם</b><br>${names}<br>${scene}<br>איכות: ${gifQuality==='fast'?'מהירה':gifQuality==='premium'?'פרימיום':'איכותית'}`}function markCustom(){selectedPreset='custom';renderPresetGrid();renderStudioSummary()}
-function renderFxChips(){const box=$('fxChips');box.innerHTML='';FX_LIST.forEach(([value,label,desc])=>{const selected=selectedEffects.includes(value),b=document.createElement('button');b.type='button';b.className='fx-chip'+(selected?' selected':'');b.setAttribute('aria-pressed',String(selected));b.innerHTML=`<span class="fx-chip-check">${selected?'✓':''}</span><span>${label}</span><small>${desc}</small>`;b.onclick=()=>{if(selected){selectedEffects=selectedEffects.filter(x=>x!==value);markCustom()}else{if(selectedEffects.length>=3){toast('כבר נבחרו 3 אפקטים. בטלו אחד כדי לבחור אחר.',true);return}selectedEffects=[...selectedEffects,value];if(!fxOffsets[value]) fxOffsets[value] = {x:0,y:0}; markCustom()}renderFxChips();startFxPreview()};box.appendChild(b)});$('fxCount').textContent=`${selectedEffects.length} מתוך 3 נבחרו`}function renderSceneChips(){const box=$('sceneChips');box.innerHTML='';SCENE_LIST.forEach(([value,label])=>{const b=document.createElement('button');b.className='scene-chip'+(selectedScene===value?' selected':'');b.textContent=label;b.onclick=()=>{selectedScene=value;markCustom();renderSceneChips();startFxPreview()};box.appendChild(b)})}renderFxChips();renderSceneChips();renderPresetGrid();renderStudioSummary();document.querySelectorAll('[data-studio]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.studio-tab').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.studio-panel').forEach(x=>x.classList.toggle('active',x.id==='studio-'+b.dataset.studio))});document.querySelectorAll('[data-quality]').forEach(b=>b.onclick=()=>{gifQuality=b.dataset.quality;document.querySelectorAll('[data-quality]').forEach(x=>x.classList.toggle('selected',x===b));renderStudioSummary()});$('surpriseFxBtn').onclick=()=>{const choices=PRESETS.filter(x=>x[0]!=='custom');applyPreset(choices[Math.floor(Math.random()*choices.length)][0]);toast('יצרתי לכם שילוב מפתיע ✨')};
+function renderFxChips(){const box=$('fxChips');if(!box)return;box.innerHTML='';FX_LIST.forEach(([value,label,desc])=>{const selected=selectedEffects.includes(value),b=document.createElement('button');b.type='button';b.className='fx-chip'+(selected?' selected':'');b.setAttribute('aria-pressed',String(selected));b.innerHTML=`<span class="fx-chip-check">${selected?'✓':''}</span><span>${label}</span><small>${desc}</small>`;b.onclick=()=>{if(selected){selectedEffects=selectedEffects.filter(x=>x!==value);markCustom()}else{if(selectedEffects.length>=3){toast('כבר נבחרו 3 אפקטים. בטלו אחד כדי לבחור אחר.',true);return}selectedEffects=[...selectedEffects,value];if(!fxOffsets[value]) fxOffsets[value] = {x:0,y:0}; markCustom()}renderFxChips();startFxPreview()};box.appendChild(b)});$('fxCount').textContent=`${selectedEffects.length} מתוך 3 נבחרו`}function renderSceneChips(){const box=$('sceneChips');if(!box)return;box.innerHTML='';SCENE_LIST.forEach(([value,label])=>{const b=document.createElement('button');b.className='scene-chip'+(selectedScene===value?' selected':'');b.textContent=label;b.onclick=()=>{selectedScene=value;markCustom();renderSceneChips();startFxPreview()};box.appendChild(b)})}renderFxChips();renderSceneChips();renderPresetGrid();renderStudioSummary();document.querySelectorAll('[data-studio]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.studio-tab').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.studio-panel').forEach(x=>x.classList.toggle('active',x.id==='studio-'+b.dataset.studio))});document.querySelectorAll('[data-quality]').forEach(b=>b.onclick=()=>{gifQuality=b.dataset.quality;document.querySelectorAll('[data-quality]').forEach(x=>x.classList.toggle('selected',x===b));renderStudioSummary()});$('surpriseFxBtn').onclick=()=>{const choices=PRESETS.filter(x=>x[0]!=='custom');applyPreset(choices[Math.floor(Math.random()*choices.length)][0]);toast('יצרתי לכם שילוב מפתיע ✨')};
 async function loadImageElement(source){const img=new Image();if(/^https?:\/\//.test(source)){const r=await fetch(source,{cache:'no-store'});if(!r.ok)throw new Error('לא ניתן לטעון את התמונה');source=URL.createObjectURL(await r.blob());img.dataset.objectUrl=source}await new Promise((res,rej)=>{img.onload=res;img.onerror=rej;img.src=source});return img}
 async function detectFaceBox(img){try{if('FaceDetector' in window){const detector=new FaceDetector({fastMode:true,maxDetectedFaces:1});const faces=await detector.detect(img);if(faces?.[0]?.boundingBox){const b=faces[0].boundingBox;return{x:b.x/img.naturalWidth,y:b.y/img.naturalHeight,w:b.width/img.naturalWidth,h:b.height/img.naturalHeight}}}}catch(e){console.warn('FaceDetector fallback',e)}return{x:.29,y:.16,w:.42,h:.42}}
 function coverRect(img,w,h){const scale=Math.max(w/img.naturalWidth,h/img.naturalHeight),dw=img.naturalWidth*scale,dh=img.naturalHeight*scale;return{x:(w-dw)/2,y:(h-dh)/2,w:dw,h:dh}}
@@ -184,13 +180,32 @@ track('app_open');console.log('PersonaAI version:',BUILD_VERSION);if('serviceWor
 <script>
 window.addEventListener('DOMContentLoaded',()=>{
  const box=document.getElementById('fxBox'); if(!box)return;
- const studio=document.createElement('section');studio.className='v19-studio';studio.innerHTML=`<span class="v19-badge">STUDIO v21 DEEPFAKE</span><h3>🎬 חבילות אנימציה מוכנות</h3><p>לחיצה אחת בוחרת שילוב מאוזן. אפשר אחר כך לשנות כל אפקט ידנית ולגרור בנפרד.</p><div class="v19-grid"><button class="v19-pack" data-pack="party">🎉 מסיבה</button><button class="v19-pack" data-pack="boss">👑 בוס</button><button class="v19-pack" data-pack="wow">🤯 וואו</button><button class="v19-pack" data-pack="soft">✨ עדין</button></div><div class="v19-tools"><button class="v19-random">🎲 הפתיעו אותי</button><button class="v19-clear">ניקוי</button></div><div class="v19-hint">טיפ: לשיתוף ב-WhatsApp השתמשו בכפתור ה-GIF.</div>`;
+ const studio=document.createElement('section');studio.className='v19-studio';studio.innerHTML=`<span class="v19-badge">STUDIO v22 PRO</span><h3>🎬 חבילות אנימציה מוכנות</h3><p>לחיצה אחת בוחרת שילוב מאוזן. אפשר אחר כך לשנות כל אפקט ידנית ולגרור בנפרד.</p><div class="v19-grid"><button class="v19-pack" data-pack="party">🎉 מסיבה</button><button class="v19-pack" data-pack="boss">👑 בוס</button><button class="v19-pack" data-pack="wow">🤯 וואו</button><button class="v19-pack" data-pack="soft">✨ עדין</button></div><div class="v19-tools"><button class="v19-random">🎲 הפתיעו אותי</button><button class="v19-clear">ניקוי</button></div><div class="v19-hint">טיפ: לחצו על חבילה והאפקטים יטענו מיד לתצוגה המקדימה.</div>`;
  box.insertBefore(studio,box.firstChild);
- const cards=()=>[...box.querySelectorAll('[data-fx]')]; const scenes=()=>[...box.querySelectorAll('[data-scene]')];
- function clickFx(i){const a=cards();if(a[i])a[i].click()} function clickScene(i){const a=scenes();if(a[i])a[i].click()}
- function clear(){cards().filter(x=>x.classList.contains('active')||x.getAttribute('aria-pressed')==='true').forEach(x=>x.click());scenes().filter(x=>x.classList.contains('active')||x.getAttribute('aria-pressed')==='true').forEach(x=>x.click())}
- function pack(name){clear();const m={party:[[0,2,5],1],boss:[[1,4],3],wow:[[3,5,6],2],soft:[[0,4],0]}[name]||[[0,2],0];m[0].forEach(clickFx);clickScene(m[1]);if(window.startFxPreview)startFxPreview()}
- studio.querySelectorAll('[data-pack]').forEach(b=>b.onclick=()=>pack(b.dataset.pack));studio.querySelector('.v19-random').onclick=()=>{clear();const a=cards();[...a].sort(()=>Math.random()-.5).slice(0,2+Math.floor(Math.random()*2)).forEach(x=>x.click());const sc=scenes();if(sc.length)sc[Math.floor(Math.random()*sc.length)].click();if(window.startFxPreview)startFxPreview()};studio.querySelector('.v19-clear').onclick=clear;
+ 
+ window.applyStudioPack = function(name){
+   applyPreset(name);
+   if(window.startFxPreview) startFxPreview();
+   toast('החבילה הוחלה בהצלחה ✨');
+ };
+
+ studio.querySelectorAll('[data-pack]').forEach(b=>{
+   b.onclick = ()=> window.applyStudioPack(b.dataset.pack);
+ });
+ studio.querySelector('.v19-random').onclick = ()=>{
+   const keys = ['party', 'boss', 'monday', 'space', 'drama'];
+   const randomKey = keys[Math.floor(Math.random() * keys.length)];
+   window.applyStudioPack(randomKey);
+ };
+ studio.querySelector('.v19-clear').onclick = ()=>{
+   selectedEffects = [];
+   selectedScene = 'none';
+   renderFxChips();
+   renderSceneChips();
+   renderStudioSummary();
+   if(window.startFxPreview) startFxPreview();
+   toast('האפקטים נוקו');
+ };
 });
 </script>
 </body>
