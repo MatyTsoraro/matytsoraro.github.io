@@ -5,7 +5,7 @@
 <script>
 // v12.1 auto cache buster - forces reload when BUILD changes
 (function(){
-  const BUILD_NOW='2026-10-19-v12.10-ULTRA-FIXED-CACHEFIX';
+  const BUILD_NOW='2026-10-19-v12.11-WITH-TEXTBOX-CACHEFIX';
   const last=localStorage.getItem('persona_build');
   if(last && last!==BUILD_NOW){
     console.log('New build detected, clearing cache...');
@@ -47,7 +47,7 @@
 .bg-toggle b{font-size:12px}
 
 </style>
-<script>const BUILD='2026-10-19-v12.10-ULTRA-FIXED';if('serviceWorker'in navigator){navigator.serviceWorker.getRegistrations().then(r=>r.forEach(x=>x.unregister()));if(window.caches){caches.keys().then(k=>k.forEach(x=>caches.delete(x)))}}</script>
+<script>const BUILD='2026-10-19-v12.11-WITH-TEXTBOX';if('serviceWorker'in navigator){navigator.serviceWorker.getRegistrations().then(r=>r.forEach(x=>x.unregister()));if(window.caches){caches.keys().then(k=>k.forEach(x=>caches.delete(x)))}}</script>
 <script>var _wmImg=new Image(); _wmImg.src="PersonaAI_Icon_512x512.png?v=final10";</script>
 </head><body>
 <script>try{if("serviceWorker" in navigator){navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister()})})}if(window.caches&&caches.keys){caches.keys().then(function(ks){ks.forEach(function(k){caches.delete(k)})})}}catch(e){}</script>
@@ -277,4 +277,25 @@ if(typeof window.draw_hearts==='undefined'){
 }
 
 console.log('PersonaAI',BUILD);
-</script></body></html>
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  try{
+    var inp=document.getElementById('textStickerInput');
+    var btn=document.getElementById('textStickerBtn');
+    if(btn && inp){
+      btn.onclick=function(){
+        var val=(inp.value||'').trim();
+        if(!val){ if(window.toast) toast('תכתוב משהו קודם ✍️', true); return; }
+        if(window.caption!==undefined) window.caption=val;
+        if(window.preset!==undefined) window.preset='textsticker';
+        if(window.page) page('choose');
+        else { var h=document.getElementById('home'); if(h) h.classList.remove('active'); var c=document.getElementById('choose'); if(c) c.classList.add('active'); }
+      };
+      inp.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); btn.click(); } });
+    }
+  }catch(e){ console.log('text sticker bind', e); }
+});
+</script>
+
+</body></html>
