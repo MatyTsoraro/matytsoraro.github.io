@@ -5,7 +5,7 @@
 <script>
 // v12.1 auto cache buster - forces reload when BUILD changes
 (function(){
-  const BUILD_NOW='2026-10-19-v12.6-SPLASH-FIXED-CACHEFIX';
+  const BUILD_NOW='2026-10-19-v12.7-CAMERA-FIX-CACHEFIX';
   const last=localStorage.getItem('persona_build');
   if(last && last!==BUILD_NOW){
     console.log('New build detected, clearing cache...');
@@ -58,7 +58,7 @@
 .bg-toggle b{font-size:12px}
 
 </style>
-<script>const BUILD='2026-10-19-v12.6-SPLASH-FIXED';if('serviceWorker'in navigator){navigator.serviceWorker.getRegistrations().then(r=>r.forEach(x=>x.unregister()));if(window.caches){caches.keys().then(k=>k.forEach(x=>caches.delete(x)))}}</script>
+<script>const BUILD='2026-10-19-v12.7-CAMERA-FIX';if('serviceWorker'in navigator){navigator.serviceWorker.getRegistrations().then(r=>r.forEach(x=>x.unregister()));if(window.caches){caches.keys().then(k=>k.forEach(x=>caches.delete(x)))}}</script>
 </head><body>
 <script>
 // FIX: kill old Service Worker that shows old version for a second then replaces
@@ -109,7 +109,36 @@ const EFFECT_LABELS={glasses:'👓 משקפיים',crown:'👑 כתר',hat:'🎩
 const EDITOR_BASE_W=480,EDITOR_BASE_H=600;
 function page(id){pages.forEach(p=>$(p).classList.toggle('active',p===id));$('navHome').classList.toggle('active',id==='home');$('navHistory').classList.toggle('active',id==='history');if(id!=='upload'&&stream){stream.getTracks().forEach(t=>t.stop());stream=null;$('camera').style.display='none';$('captureBtn').style.display='none'}if(id!=='previewPage'){running=false;cancelAnimationFrame(anim);$('previewEditorWrap').classList.remove('editing');document.body.style.overflow=''}scrollTo({top:0,behavior:'smooth'})}function toast(m,e=false){clearTimeout(timer);const x=$('toast');x.textContent=m;x.className='toast'+(e?' error':'');x.style.display='block';timer=setTimeout(()=>x.style.display='none',3200)}window.showToast=toast;function modal(id,on=true){$(id).classList.toggle('open',on)}
 function randomPreset(){const k=Object.keys(PRESETS);preset=k[Math.floor(Math.random()*k.length)];caption=PRESETS[preset].captions[0]}function startGif(random=false){random?randomPreset():(preset='fire',caption=PRESETS.fire.captions[0]);src='';img=null;$('sourceImage').style.display='none';$('photoEmpty').style.display='block';$('captureBtn').style.display='none';page('upload')}
-async function startCamera(){try{if(stream)stream.getTracks().forEach(t=>t.stop());stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false});$('camera').srcObject=stream;$('camera').style.display='block';$('camera').style.transform='scaleX(-1)';$('photoEmpty').style.display='none';$('captureBtn').style.display='block';await $('camera').play()}catch{toast('לא הצלחנו לפתוח מצלמה',true)}}function readFile(f,cb){if(!f)return;if(!['image/jpeg','image/png','image/webp'].includes(f.type))return toast('יש לבחור JPEG, PNG או WebP',true);if(f.size>MAX_FILE)return toast('התמונה גדולה מדי',true);const r=new FileReader();r.onload=()=>cb(r.result);r.readAsDataURL(f)}async function setGifImage(data){src=data;img=new Image();img.onload=async()=>{face=await detectFace(img);$('sourceImage').src=data;$('sourceImage').style.display='block';if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}$('camera').style.display='none';$('captureBtn').style.display='none';renderPresets();page('choose')};img.src=data}async function detectFace(i){try{if('FaceDetector'in window){const d=new FaceDetector({fastMode:true,maxDetectedFaces:1}),a=await d.detect(i),b=a[0]?.boundingBox;if(b&&i.naturalWidth>0)return{x:b.x/i.naturalWidth,y:b.y/i.naturalHeight,w:b.width/i.naturalWidth,h:b.height/i.naturalHeight}}}catch{}return{x:.29,y:.16,w:.42,h:.42}}
+async function startCamera(){
+  try{
+    if(stream) { try{ stream.getTracks().forEach(t=>t.stop()); }catch{} }
+    toast('פותח מצלמה...');
+    let s=null;
+    try{
+      s=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user', width:{ideal:1280}, height:{ideal:720}},audio:false});
+    }catch(e1){
+      console.log('front cam failed', e1);
+      try{ s=await navigator.mediaDevices.getUserMedia({video:true,audio:false}); }catch(e2){ throw e2; }
+    }
+    stream=s;
+    const v=$('camera');
+    v.srcObject=stream;
+    v.style.display='block';
+    v.style.transform='scaleX(-1)';
+    v.setAttribute('playsinline','true');
+    v.muted=true;
+    const empty=$('photoEmpty'); if(empty) empty.style.display='none';
+    const cap=$('captureBtn'); if(cap) cap.style.display='block';
+    try{ await v.play(); }catch(pe){ console.log('play failed', pe); }
+    toast('מצלמה פעילה - חייכו!');
+  }catch(err){
+    console.error('camera error', err);
+    let msg='לא הצלחנו לפתוח מצלמה';
+    if(err && err.name==='NotAllowedError') msg='צריך לאשר גישה למצלמה בהגדרות הדפדפן';
+    if(err && err.name==='NotFoundError') msg='לא נמצאה מצלמה במכשיר';
+    toast(msg+' - אפשר להעלות מהגלריה', true);
+  }
+}function readFile(f,cb){if(!f)return;if(!['image/jpeg','image/png','image/webp'].includes(f.type))return toast('יש לבחור JPEG, PNG או WebP',true);if(f.size>MAX_FILE)return toast('התמונה גדולה מדי',true);const r=new FileReader();r.onload=()=>cb(r.result);r.readAsDataURL(f)}async function setGifImage(data){src=data;img=new Image();img.onload=async()=>{face=await detectFace(img);$('sourceImage').src=data;$('sourceImage').style.display='block';if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}$('camera').style.display='none';$('captureBtn').style.display='none';renderPresets();page('choose')};img.src=data}async function detectFace(i){try{if('FaceDetector'in window){const d=new FaceDetector({fastMode:true,maxDetectedFaces:1}),a=await d.detect(i),b=a[0]?.boundingBox;if(b&&i.naturalWidth>0)return{x:b.x/i.naturalWidth,y:b.y/i.naturalHeight,w:b.width/i.naturalWidth,h:b.height/i.naturalHeight}}}catch{}return{x:.29,y:.16,w:.42,h:.42}}
 const PRESET_EXPRESSIONS={boss:'skeptical',fire:'angry',wow:'surprise',party:'laugh',love:'smile',chill:'wink',chibi:'smile',textsticker:'smile'};const PRESET_AUTO={boss:{captionStyle:'clean',quality:'high',duration:2,motion:'zoom'},fire:{captionStyle:'neon',quality:'high',duration:2,motion:'float'},wow:{captionStyle:'neon',quality:'high',duration:2,motion:'zoom'},party:{captionStyle:'neon',quality:'high',duration:2,motion:'float'},love:{captionStyle:'bubble',quality:'high',duration:2,motion:'zoom'},chill:{captionStyle:'clean',quality:'high',duration:2,motion:'float'},chibi:{captionStyle:'bubble',quality:'high',duration:2,motion:'zoom'},textsticker:{captionStyle:'neon',quality:'high',duration:2,motion:'zoom'}};
 function presetAuto(){return PRESET_AUTO[preset]||PRESET_AUTO.fire}function applyPresetAuto(){if(!quickMode)return;const a=presetAuto();captionStyle=a.captionStyle;gifQuality=a.quality;gifDuration=a.duration;cameraMotion=a.motion;expression='auto';document.querySelectorAll('[data-caption-style]').forEach(x=>x.classList.toggle('selected',x.dataset.captionStyle===captionStyle));document.querySelectorAll('[data-quality]').forEach(x=>x.classList.toggle('selected',x.dataset.quality===gifQuality));document.querySelectorAll('[data-duration]').forEach(x=>x.classList.toggle('selected',Number(x.dataset.duration)===gifDuration));document.querySelectorAll('[data-camera-motion]').forEach(x=>x.classList.toggle('selected',x.dataset.cameraMotion===cameraMotion));document.querySelectorAll('[data-expression]').forEach(x=>x.classList.toggle('selected',x.dataset.expression==='auto'));updateQuickSummary()}function updateQuickSummary(){const p=PRESETS[preset],a=presetAuto(),styles={classic:'קלאסי',bubble:'בועה',neon:'ניאון WOW',clean:'נקי WOW'},motions={still:'יציב',zoom:'זום WOW',float:'ציפה WOW'};$('quickSummary').innerHTML=`<b>${p.emoji} ${p.title}</b><br>${quickMode?'WOW אוטומטי':'עריכה אישית'} • ${styles[quickMode?a.captionStyle:captionStyle]} • ${quickMode?a.duration:gifDuration} שניות • ${motions[quickMode?a.motion:cameraMotion]}`;}
 function renderPresets(){const g=$('presetGrid');g.innerHTML='';Object.entries(PRESETS).forEach(([id,p])=>{const b=document.createElement('button');b.className='preset'+(id===preset?' selected':'');b.innerHTML=`<span class="emoji">${p.emoji}</span><b>${p.title}</b><small>${p.desc}</small>`;b.onclick=()=>{preset=id;caption=p.captions[0];applyPresetAuto();renderPresets()};g.appendChild(b)})}function renderCaptions(){const box=$('captionChips');box.innerHTML='';PRESETS[preset].captions.forEach(t=>{const b=document.createElement('button');b.className='caption-chip'+(t===caption?' selected':'');b.textContent=t;b.onclick=()=>{caption=t;$('captionInput').value=t;renderCaptions()};box.appendChild(b)});$('captionInput').value=caption}
