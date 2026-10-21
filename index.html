@@ -5,7 +5,7 @@
 <script>
 // v12.1 auto cache buster - forces reload when BUILD changes
 (function(){
-  const BUILD_NOW='2026-10-19-v12.4-FIX-SPLASH-CACHEFIX';
+  const BUILD_NOW='2026-10-19-v12.5-MOBILE-FIX-CACHEFIX';
   const last=localStorage.getItem('persona_build');
   if(last && last!==BUILD_NOW){
     console.log('New build detected, clearing cache...');
@@ -18,6 +18,17 @@
   } else {
     localStorage.setItem('persona_build', BUILD_NOW);
   }
+})();
+</script>
+
+
+<script>
+(function(){
+  try{
+    var splash=document.getElementById('splash');
+    var seen=localStorage.getItem('persona_splash_seen_v12');
+    if(splash && seen){ splash.classList.add('hidden'); splash.style.display='none'; }
+  }catch(e){}
 })();
 </script>
 
@@ -38,7 +49,7 @@
 .showcase-item:nth-child(2) .showcase-emoji{animation-delay:.2s}
 .showcase-item:nth-child(3) .showcase-emoji{animation-delay:.4s}
 .showcase-item::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,transparent 45%,#0009);pointer-events:none}
-.splash{position:fixed;inset:0;z-index:9999;background:radial-gradient(120% 70% at 100% 0,#ff4aa830,#070710 60%),radial-gradient(90% 60% at 0 20%,#55efff28,#070710 60%),#070710;display:grid;place-items:center;padding:18px;transition:opacity .4s,transform .4s}
+.splash{position:fixed;pointer-events:auto;inset:0;z-index:9999;background:radial-gradient(120% 70% at 100% 0,#ff4aa830,#070710 60%),radial-gradient(90% 60% at 0 20%,#55efff28,#070710 60%),#070710;display:grid;place-items:center;padding:18px;transition:opacity .4s,transform .4s}
 .splash.hidden{opacity:0;pointer-events:none;transform:scale(1.03)}
 .splash-card{width:min(100%,420px);padding:20px;border:1px solid #ffffff18;border-radius:24px;background:#121222f2;backdrop-filter:blur(14px);text-align:center}
 .splash-card h2{margin:8px 0 4px;font-size:26px;font-weight:900}
@@ -47,7 +58,7 @@
 .bg-toggle b{font-size:12px}
 
 </style>
-<script>const BUILD='2026-10-19-v12.4-FIX-SPLASH';if('serviceWorker'in navigator){navigator.serviceWorker.getRegistrations().then(r=>r.forEach(x=>x.unregister()));if(window.caches){caches.keys().then(k=>k.forEach(x=>caches.delete(x)))}}</script>
+<script>const BUILD='2026-10-19-v12.5-MOBILE-FIX';if('serviceWorker'in navigator){navigator.serviceWorker.getRegistrations().then(r=>r.forEach(x=>x.unregister()));if(window.caches){caches.keys().then(k=>k.forEach(x=>caches.delete(x)))}}</script>
 </head><body>
 <script>
 // FIX: kill old Service Worker that shows old version for a second then replaces
@@ -69,7 +80,7 @@
   }catch(e){ console.log('sw clear', e); }
 })();
 </script>
-<div id="splash" class="splash"><div class="splash-card"><div class="showcase-track" style="margin-bottom:12px"><div class="showcase-item"><div class="showcase-emoji">🔥</div><b>אתה באש</b></div><div class="showcase-item"><div class="showcase-emoji">😂</div><b>אתה קורע</b></div><div class="showcase-item"><div class="showcase-emoji">😎</div><b>אתה סטייל</b></div></div><h2>אתם התגובה <span style="background:linear-gradient(90deg,#55efff,#ff4aa8);-webkit-background-clip:text;color:transparent">בוואטסאפ</span></h2><p>מעלים סלפי אחד, ומקבלים את עצמכם כ-GIF ומדבקות. עכשיו עם הסרת רקע וגרירה כמו בוואטסאפ.</p><button id="splashStart" class="primary" style="margin-top:14px">יאללה, בואו נתחיל 🚀</button><div style="margin-top:8px;color:#6b7280;font-size:10px">נשמר במכשיר • שיתוף ישיר • עובד אופליין</div></div></div>
+<div id="splash" class="splash" style="display:grid;touch-action:manipulation"><div class="splash-card" style="pointer-events:auto"><div class="showcase-track" style="margin-bottom:12px"><div class="showcase-item"><div class="showcase-emoji">🔥</div><b>אתה באש</b></div><div class="showcase-item"><div class="showcase-emoji">😂</div><b>אתה קורע</b></div><div class="showcase-item"><div class="showcase-emoji">😎</div><b>אתה סטייל</b></div></div><h2>אתם התגובה <span style="background:linear-gradient(90deg,#55efff,#ff4aa8);-webkit-background-clip:text;color:transparent">בוואטסאפ</span></h2><p>מעלים סלפי אחד, ומקבלים את עצמכם כ-GIF ומדבקות. עכשיו עם הסרת רקע וגרירה כמו בוואטסאפ.</p><button id="splashStart" class="primary" style="margin-top:14px;pointer-events:auto;touch-action:manipulation;position:relative;z-index:10000" onclick="(function(){try{localStorage.setItem('persona_splash_seen_v12','1')}catch(e){};var s=document.getElementById('splash');if(s){s.classList.add('hidden');s.style.display='none';}try{if(window.page) page('upload');}catch(e){location.href='#upload';}})(); return false;">יאללה, בואו נתחיל 🚀</button><div style="margin-top:8px;color:#6b7280;font-size:10px">נשמר במכשיר • שיתוף ישיר • עובד אופליין</div></div></div>
 <div id="loader" class="loader"><div><div class="spinner"></div><b id="loaderText" style="display:block;margin-top:14px">יוצר WOW...</b></div></div><div id="toast" class="toast"></div><div id="editorBackdrop" class="editor-backdrop"></div>
 <div class="app"><header class="top"><button id="brand" class="brand"><strong>PersonaAI</strong><small>YOU ARE THE REACTION</small></button><div class="top-actions"><button id="creditsBtn" class="pill">5 💎</button><button id="helpBtn" class="icon-btn">?</button></div></header>
 <main id="home" class="page active"><span class="tag">✨ GIF אישי מוכן ל-WhatsApp</span><h1 class="hero">התגובה הבאה שלכם<br><span class="gradient">תהיה אתם</span></h1><p class="muted">סלפי אחד, 4 תגובות ויראליות, שיתוף ב-30 שניות.</p><section class="hero-card"><h2>צרו תגובה אישית תוך 30 שניות</h2><p style="color:#e2dfed;font-size:13px;margin:6px 0 0">בלי פרומפטים. בלי עיצוב. רק אתם.</p><button id="startBtn" class="primary">צרו תגובה אישית ✨</button><button id="surpriseBtn" class="secondary" style="margin-top:9px">🎲 תפתיעו אותי</button><div class="demo-strip"><div class="demo"><span>😎</span>בוס</div><div class="demo"><span>🔥</span>על האש</div><div class="demo"><span>🤯</span>אין מצב</div></div></section><div class="trust"><span>✓ נשמר במכשיר</span><span>✓ מוכן לשיתוף</span><span>✓ 30 שניות</span></div><div class="sticker-pro"><b>💎 חדש: חבילת 8 מדבקות שלכם לווטסאפ</b><small>יוצרים 3 GIFים והופכים אותם למדבקות במקלדת. רק ב-PRO.</small><button id="stickerPackBtn" class="primary" style="margin-top:10px">הפכו למדבקות • PRO</button></div><div style="margin-top:14px"><button id="historyTool" class="secondary">▧ ה-GIFים שלי</button></div></main>
@@ -301,33 +312,7 @@ if(typeof window.draw_hearts==='undefined'){
   };
 }
 
-(function(){
-  const splash=document.getElementById('splash');
-  const btn=document.getElementById('splashStart');
-  try{
-    const seen=localStorage.getItem('persona_splash_seen_v12');
-    if(splash){
-      if(!seen) { splash.classList.remove('hidden'); splash.style.display='grid'; }
-      else { splash.classList.add('hidden'); splash.style.display='none'; }
-    }
-    if(btn){
-      btn.onclick=(e)=>{
-        e.preventDefault();
-        e.stopPropagation();
-        try{ localStorage.setItem('persona_splash_seen_v12','1'); }catch{}
-        if(splash){ splash.classList.add('hidden'); splash.style.display='none'; }
-        try{ toast('מעולה! תעלו סלפי ישר וברור'); }catch{}
-        try{ page('upload'); }catch{ location.hash='#upload'; }
-      };
-      // also touch
-      btn.addEventListener('touchend', (e)=>{
-        e.preventDefault();
-        btn.click();
-      }, {passive:false});
-    }
-  }catch(err){ console.log('splash err', err); }
-  const tg=document.getElementById('bgRemoveToggle'); if(tg) tg.onchange=e=>toggleBgRemove(e.target.checked);
-})();
+
 console.log('PersonaAI',BUILD);
 </script>
 </body></html>
