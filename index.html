@@ -27,7 +27,7 @@
 .bg-toggle b{font-size:12px}
 
 </style>
-<script>const BUILD='2026-10-19-v11-BG-SPLASH-DRAG';if('serviceWorker'in navigator){navigator.serviceWorker.getRegistrations().then(r=>r.forEach(x=>x.unregister()));if(window.caches){caches.keys().then(k=>k.forEach(x=>caches.delete(x)))}}</script>
+<script>const BUILD='2026-10-19-v12-TEXT-CHIBI-VIRAL';if('serviceWorker'in navigator){navigator.serviceWorker.getRegistrations().then(r=>r.forEach(x=>x.unregister()));if(window.caches){caches.keys().then(k=>k.forEach(x=>caches.delete(x)))}}</script>
 </head><body><div id="splash" class="splash"><div class="splash-card"><div class="showcase-track" style="margin-bottom:12px"><div class="showcase-item"><div class="showcase-emoji">🔥</div><b>אתה באש</b></div><div class="showcase-item"><div class="showcase-emoji">😂</div><b>אתה קורע</b></div><div class="showcase-item"><div class="showcase-emoji">😎</div><b>אתה סטייל</b></div></div><h2>אתם התגובה <span style="background:linear-gradient(90deg,#55efff,#ff4aa8);-webkit-background-clip:text;color:transparent">בוואטסאפ</span></h2><p>מעלים סלפי אחד, ומקבלים את עצמכם כ-GIF ומדבקות. עכשיו עם הסרת רקע וגרירה כמו בוואטסאפ.</p><button id="splashStart" class="primary" style="margin-top:14px">יאללה, בואו נתחיל 🚀</button><div style="margin-top:8px;color:#6b7280;font-size:10px">נשמר במכשיר • שיתוף ישיר • עובד אופליין</div></div></div>
 <div id="loader" class="loader"><div><div class="spinner"></div><b id="loaderText" style="display:block;margin-top:14px">יוצר WOW...</b></div></div><div id="toast" class="toast"></div><div id="editorBackdrop" class="editor-backdrop"></div>
 <div class="app"><header class="top"><button id="brand" class="brand"><strong>PersonaAI</strong><small>YOU ARE THE REACTION</small></button><div class="top-actions"><button id="creditsBtn" class="pill">5 💎</button><button id="helpBtn" class="icon-btn">?</button></div></header>
@@ -49,14 +49,16 @@ fire:{emoji:'🔥',title:'על האש • WOW',desc:'להבות, ניצוצות,
 wow:{emoji:'🤯',title:'אין מצב • WOW',desc:'ברקים, פיצוץ, כובע מסיבה',effects:['sparkles','hat','lightning','confetti'],scene:'space',captions:['רגע, מה?','לא ראיתי את זה מגיע','אין מצב שזה קרה']},
 party:{emoji:'🎉',title:'מסיבה • WOW',desc:'קונפטי מתפוצץ, משקפיים',effects:['sparkles','glasses','confetti'],scene:'disco',captions:['יש אישור להשתחרר','אמרתי שאבוא רק לשעה','מחר אני מסביר']},
 love:{emoji:'💖',title:'מלא אהבה • WOW',desc:'לבבות עפים, זוהר ורוד',effects:['hearts','sparkles'],scene:'pink',captions:['שלחתי באהבה','אין עליכם בעולם','זה בשבילכם']},
-chill:{emoji:'🧊',title:'צ׳יל • WOW',desc:'קור, משקפיים, וייב קר',effects:['glasses','snow','sparkles'],scene:'ice',captions:['רגוע, הכול בשליטה','מצב טיסה','בלי לחץ']}
+chill:{emoji:'🧊',title:'צ׳יל • WOW',desc:'קור, משקפיים, וייב קר',effects:['glasses','snow','sparkles'],scene:'ice',captions:['רגוע, הכול בשליטה','מצב טיסה','בלי לחץ']},
+chibi:{emoji:'🧸',title:'צ׳יבי חמוד • VIRAL',desc:'בובת 3D חמודה, עיניים גדולות - טרנד 2026',effects:['hearts','sparkles','confetti'],scene:'pink',captions:['חמודי','אמאלהה','קצת חמוד מדי']},
+textsticker:{emoji:'✍️',title:'טקסט מדבקה',desc:'כל מילה שלך כמדבקה עם הפנים',effects:['sparkles'],scene:'neon',captions:['תודה אהוב!','יאללה ביי','על האש','אין עליכם']}
 };
 const EFFECT_LABELS={glasses:'👓 משקפיים',crown:'👑 כתר',hat:'🎩 כובע',sparkles:'✨ נצנצים WOW',coffee:'☕ קפה',hearts:'💗 לבבות',confetti:'🎊 קונפטי',fire:'🔥 אש WOW',lightning:'⚡ ברקים',snow:'❄ שלג',reaction:'😀 תגובה'};let layerTransforms={},activeLayer='';let src='',img=null,stream=null,preset='fire',caption='',running=false,anim=0,face={x:.29,y:.16,w:.42,h:.42},captionStyle='neon',gifQuality='high',gifDuration=2,cameraMotion='zoom',expression='auto',reactionOffset={x:0,y:0},reactionScale=1,quickMode=true,autoShareAfterCreate=false,gifBlob=null,gifUrl='',timer=null;
 const EDITOR_BASE_W=480,EDITOR_BASE_H=600;
 function page(id){pages.forEach(p=>$(p).classList.toggle('active',p===id));$('navHome').classList.toggle('active',id==='home');$('navHistory').classList.toggle('active',id==='history');if(id!=='upload'&&stream){stream.getTracks().forEach(t=>t.stop());stream=null;$('camera').style.display='none';$('captureBtn').style.display='none'}if(id!=='previewPage'){running=false;cancelAnimationFrame(anim);$('previewEditorWrap').classList.remove('editing');document.body.style.overflow=''}scrollTo({top:0,behavior:'smooth'})}function toast(m,e=false){clearTimeout(timer);const x=$('toast');x.textContent=m;x.className='toast'+(e?' error':'');x.style.display='block';timer=setTimeout(()=>x.style.display='none',3200)}window.showToast=toast;function modal(id,on=true){$(id).classList.toggle('open',on)}
 function randomPreset(){const k=Object.keys(PRESETS);preset=k[Math.floor(Math.random()*k.length)];caption=PRESETS[preset].captions[0]}function startGif(random=false){random?randomPreset():(preset='fire',caption=PRESETS.fire.captions[0]);src='';img=null;$('sourceImage').style.display='none';$('photoEmpty').style.display='block';$('captureBtn').style.display='none';page('upload')}
 async function startCamera(){try{if(stream)stream.getTracks().forEach(t=>t.stop());stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false});$('camera').srcObject=stream;$('camera').style.display='block';$('camera').style.transform='scaleX(-1)';$('photoEmpty').style.display='none';$('captureBtn').style.display='block';await $('camera').play()}catch{toast('לא הצלחנו לפתוח מצלמה',true)}}function readFile(f,cb){if(!f)return;if(!['image/jpeg','image/png','image/webp'].includes(f.type))return toast('יש לבחור JPEG, PNG או WebP',true);if(f.size>MAX_FILE)return toast('התמונה גדולה מדי',true);const r=new FileReader();r.onload=()=>cb(r.result);r.readAsDataURL(f)}async function setGifImage(data){src=data;img=new Image();img.onload=async()=>{face=await detectFace(img);$('sourceImage').src=data;$('sourceImage').style.display='block';if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}$('camera').style.display='none';$('captureBtn').style.display='none';renderPresets();page('choose')};img.src=data}async function detectFace(i){try{if('FaceDetector'in window){const d=new FaceDetector({fastMode:true,maxDetectedFaces:1}),a=await d.detect(i),b=a[0]?.boundingBox;if(b&&i.naturalWidth>0)return{x:b.x/i.naturalWidth,y:b.y/i.naturalHeight,w:b.width/i.naturalWidth,h:b.height/i.naturalHeight}}}catch{}return{x:.29,y:.16,w:.42,h:.42}}
-const PRESET_EXPRESSIONS={boss:'skeptical',fire:'angry',wow:'surprise',party:'laugh',love:'smile',chill:'wink'};const PRESET_AUTO={boss:{captionStyle:'clean',quality:'high',duration:2,motion:'zoom'},fire:{captionStyle:'neon',quality:'high',duration:2,motion:'float'},wow:{captionStyle:'neon',quality:'high',duration:2,motion:'zoom'},party:{captionStyle:'neon',quality:'high',duration:2,motion:'float'},love:{captionStyle:'bubble',quality:'high',duration:2,motion:'zoom'},chill:{captionStyle:'clean',quality:'high',duration:2,motion:'float'}};
+const PRESET_EXPRESSIONS={boss:'skeptical',fire:'angry',wow:'surprise',party:'laugh',love:'smile',chill:'wink',chibi:'smile',textsticker:'smile'};const PRESET_AUTO={boss:{captionStyle:'clean',quality:'high',duration:2,motion:'zoom'},fire:{captionStyle:'neon',quality:'high',duration:2,motion:'float'},wow:{captionStyle:'neon',quality:'high',duration:2,motion:'zoom'},party:{captionStyle:'neon',quality:'high',duration:2,motion:'float'},love:{captionStyle:'bubble',quality:'high',duration:2,motion:'zoom'},chill:{captionStyle:'clean',quality:'high',duration:2,motion:'float'},chibi:{captionStyle:'bubble',quality:'high',duration:2,motion:'zoom'},textsticker:{captionStyle:'neon',quality:'high',duration:2,motion:'zoom'}};
 function presetAuto(){return PRESET_AUTO[preset]||PRESET_AUTO.fire}function applyPresetAuto(){if(!quickMode)return;const a=presetAuto();captionStyle=a.captionStyle;gifQuality=a.quality;gifDuration=a.duration;cameraMotion=a.motion;expression='auto';document.querySelectorAll('[data-caption-style]').forEach(x=>x.classList.toggle('selected',x.dataset.captionStyle===captionStyle));document.querySelectorAll('[data-quality]').forEach(x=>x.classList.toggle('selected',x.dataset.quality===gifQuality));document.querySelectorAll('[data-duration]').forEach(x=>x.classList.toggle('selected',Number(x.dataset.duration)===gifDuration));document.querySelectorAll('[data-camera-motion]').forEach(x=>x.classList.toggle('selected',x.dataset.cameraMotion===cameraMotion));document.querySelectorAll('[data-expression]').forEach(x=>x.classList.toggle('selected',x.dataset.expression==='auto'));updateQuickSummary()}function updateQuickSummary(){const p=PRESETS[preset],a=presetAuto(),styles={classic:'קלאסי',bubble:'בועה',neon:'ניאון WOW',clean:'נקי WOW'},motions={still:'יציב',zoom:'זום WOW',float:'ציפה WOW'};$('quickSummary').innerHTML=`<b>${p.emoji} ${p.title}</b><br>${quickMode?'WOW אוטומטי':'עריכה אישית'} • ${styles[quickMode?a.captionStyle:captionStyle]} • ${quickMode?a.duration:gifDuration} שניות • ${motions[quickMode?a.motion:cameraMotion]}`;}
 function renderPresets(){const g=$('presetGrid');g.innerHTML='';Object.entries(PRESETS).forEach(([id,p])=>{const b=document.createElement('button');b.className='preset'+(id===preset?' selected':'');b.innerHTML=`<span class="emoji">${p.emoji}</span><b>${p.title}</b><small>${p.desc}</small>`;b.onclick=()=>{preset=id;caption=p.captions[0];applyPresetAuto();renderPresets()};g.appendChild(b)})}function renderCaptions(){const box=$('captionChips');box.innerHTML='';PRESETS[preset].captions.forEach(t=>{const b=document.createElement('button');b.className='caption-chip'+(t===caption?' selected':'');b.textContent=t;b.onclick=()=>{caption=t;$('captionInput').value=t;renderCaptions()};box.appendChild(b)});$('captionInput').value=caption}
 function cover(i,w,h){if(!i||!i.naturalWidth||!i.naturalHeight)return{x:0,y:0,w:w,h:h};const s=Math.max(w/i.naturalWidth,h/i.naturalHeight),dw=i.naturalWidth*s,dh=i.naturalHeight*s;return{x:(w-dw)/2,y:(h-dh)/2,w:dw,h:dh}}function fmap(r){return{x:r.x+face.x*r.w,y:r.y+face.y*r.h,w:face.w*r.w,h:face.h*r.h}}
@@ -177,6 +179,63 @@ function setupDragV11(){
 setTimeout(setupDragV11, 900);
 const _origPage=page;
 page=function(id){ _origPage(id); setTimeout(setupDragV11, 350); };
+
+
+// v12 Text Sticker feature - careful, no break
+(function(){
+  const input=$('textStickerInput');
+  const btn=$('textStickerBtn');
+  if(!input||!btn) return;
+  function createTextSticker(){
+    const val=(input.value||'').trim();
+    if(!val){ toast('תכתוב משהו קודם ✍️', true); return; }
+    caption=val;
+    preset='textsticker';
+    // if we have image, go directly to preview, else go to upload but keep caption
+    if(img && src){
+      $('captionInput').value=val;
+      applyPresetAuto();
+      renderPresets();
+      renderCaptions();
+      startPreview();
+      toast('✨ יוצר מדבקת טקסט עם הפנים שלך: '+val);
+    }else{
+      $('captionInput').value=val;
+      toast('מעולה! עכשיו תעלה סלפי וניצור: '+val);
+      page('upload');
+    }
+  }
+  btn.onclick=createTextSticker;
+  input.addEventListener('keydown', e=>{ if(e.key==='Enter') createTextSticker(); });
+})();
+
+// chibi extra draw effect - cute blush
+const _origDrawHearts = typeof draw_hearts!=='undefined'?draw_hearts:null;
+if(typeof window.draw_hearts==='undefined'){
+  // add chibi blush overlay in frame for chibi preset
+  const prevFrameForChibi = frame;
+  frame = function(c,t,w,h){
+    prevFrameForChibi(c,t,w,h);
+    if(preset==='chibi' && img){
+      try{
+        const base=cover(img,w,h);
+        const r={x:(w-base.w)/2,y:(h-base.h)/2,w:base.w,h:base.h};
+        const f=fmap(r);
+        c.save();
+        c.fillStyle='rgba(255,120,180,0.32)';
+        // left blush
+        c.beginPath(); c.ellipse(f.x+f.w*0.18, f.y+f.h*0.58, f.w*0.11, f.h*0.07, 0,0,Math.PI*2); c.fill();
+        // right blush
+        c.beginPath(); c.ellipse(f.x+f.w*0.82, f.y+f.h*0.58, f.w*0.11, f.h*0.07, 0,0,Math.PI*2); c.fill();
+        // big eyes sparkle
+        c.fillStyle='rgba(255,255,255,0.9)';
+        c.beginPath(); c.arc(f.x+f.w*0.28, f.y+f.h*0.38, 3.5,0,Math.PI*2); c.fill();
+        c.beginPath(); c.arc(f.x+f.w*0.72, f.y+f.h*0.38, 3.5,0,Math.PI*2); c.fill();
+        c.restore();
+      }catch(e){}
+    }
+  };
+}
 
 console.log('PersonaAI',BUILD);
 </script></body></html>
