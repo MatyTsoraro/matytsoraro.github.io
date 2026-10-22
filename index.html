@@ -250,6 +250,7 @@ function bindEvents(){
   document.getElementById('btnBuy').addEventListener('click', ()=>{ localStorage.setItem('persona_pro','1'); toast('PRO הופעל! 🔥'); document.getElementById('storeModal').classList.remove('open'); updateCreditsUI(); draw(); });
   loadHistory();
 }
+
 async function makeGif(){
   let creditTx=null;
   try{
@@ -260,24 +261,63 @@ async function makeGif(){
     }
   }catch(e){ console.log('credit',e); }
   try{
-    const gifenc=await window.__gifencReady; if(!gifenc) throw new Error('GIF לא נטען');
+    const m=await window.__gifencReady; 
+    if(!m){ throw new Error('מנוע GIF לא נטען - רענן את הדף'); }
     if(!img.naturalWidth) throw new Error('אין תמונה');
-    const gif=gifenc.GIFEncoder(); const frames=14;
+    const {GIFEncoder, quantize, applyPalette}=m;
+    const g=GIFEncoder();
+    const frames=18;
+    const delay=100;
+    const c=document.createElement('canvas'); c.width=512; c.height=512;
+    const x=c.getContext('2d',{willReadFrequently:true});
+    toast('מכין GIF WOW... 0%');
     for(let i=0;i<frames;i++){
-      const c=document.createElement('canvas'); c.width=512; c.height=512; const x=c.getContext('2d');
-      const s=Math.min(512/img.naturalWidth,512/img.naturalHeight)*0.9; const w=img.naturalWidth*s, h=img.naturalHeight*s;
+      x.clearRect(0,0,512,512);
+      const t=i/frames;
+      // draw base image with drag
+      x.save();
+      x.translate(256+drag.x,256+drag.y);
+      x.rotate(drag.rot*Math.PI/180);
+      x.scale(drag.scale, drag.scale);
+      x.translate(-256,-256);
+      const s=Math.min(512/img.naturalWidth,512/img.naturalHeight)*0.9;
+      const w=img.naturalWidth*s, h=img.naturalHeight*s;
       x.drawImage(img,(512-w)/2,(512-h)/2,w,h);
       if(currentPreset==='fire'){ x.fillStyle='#ff5a1f66'; x.fillRect(0,0,512,512); }
-      const t=document.getElementById('textStickerInput').value.trim();
-      if(t){ x.font='900 44px sans-serif'; x.textAlign='center'; x.lineWidth=8; x.strokeStyle='#000'; x.fillStyle='#fff'; x.strokeText(t,256,460); x.fillText(t,256,460); }
-      const data=x.getImageData(0,0,512,512); gif.addFrame(data.data, {delay:100});
+      if(currentPreset==='neon'){ x.shadowColor='#ff3b9a'; x.shadowBlur=30; x.strokeStyle='#ff3b9a'; x.lineWidth=6; x.strokeRect(20,20,472,472); x.shadowBlur=0; }
+      if(currentPreset==='chibi'){ x.fillStyle='#ff8fa8'; x.beginPath(); x.arc(180,300,18,0,Math.PI*2); x.arc(332,300,18,0,Math.PI*2); x.fill(); }
+      x.restore();
+      const txt=document.getElementById('textStickerInput').value.trim();
+      if(txt){ x.font='900 44px sans-serif'; x.textAlign='center'; x.lineWidth=8; x.strokeStyle='#000'; x.fillStyle='#fff'; x.strokeText(txt,256,460); x.fillText(txt,256,460); }
+      if(!isProUser()){ x.font='700 18px sans-serif'; x.fillStyle='#fff8'; x.textAlign='right'; x.fillText('P',492,22); }
+      const imageData=x.getImageData(0,0,512,512);
+      const rgba=imageData.data;
+      const pal=quantize(rgba, 128);
+      const idx=applyPalette(rgba, pal);
+      g.writeFrame(idx,512,512,{palette:pal,delay,repeat:i?undefined:0});
+      toast('מכין GIF WOW... '+Math.round((i+1)/frames*100)+'%');
+      await new Promise(r=>setTimeout(r,0));
     }
-    gif.finish(); const blob=new Blob([gif.bytesView()],{type:'image/gif'}); const url=URL.createObjectURL(blob);
-    const id=Date.now(); const rec={id, url, blob, createdAt:new Date().toISOString(), preset:currentPreset, text:document.getElementById('textStickerInput').value};
-    saveHistory(rec); showHistory(); toast('GIF מוכן 🔥'); updateCreditsUI();
-    document.getElementById('packGrid').innerHTML='';
-  }catch(e){ try{ if(creditTx?.refund) creditTx.refund(); }catch{} throw e; }
+    g.finish();
+    const blob=new Blob([g.bytes()],{type:'image/gif'});
+    const url=URL.createObjectURL(blob);
+    const rec={id:Date.now(), url, blob, createdAt:new Date().toISOString(), preset:currentPreset, text:document.getElementById('textStickerInput').value};
+    try{ const h=JSON.parse(localStorage.getItem('persona_history')||'[]'); h.unshift({id:rec.id, createdAt:rec.createdAt, preset:rec.preset, text:rec.text, thumb:document.getElementById('editCanvas').toDataURL('image/jpeg',0.6)}); localStorage.setItem('persona_history', JSON.stringify(h.slice(0,50))); }catch{}
+    // show result
+    const packGrid=document.getElementById('packGrid');
+    packGrid.innerHTML='';
+    const div=document.createElement('div'); div.className='pack-item'; div.innerHTML=`<img src="${url}"><span>GIF • עכשיו</span>`; packGrid.appendChild(div);
+    window._lastGif={blob,url};
+    toast('GIF מוכן 🔥'); updateCreditsUI();
+    // enable share
+    const dl=document.getElementById('btnDownload'); if(dl) dl.onclick=()=>{ const a=document.createElement('a'); a.href=url; a.download='persona-'+Date.now()+'.gif'; a.click(); };
+    const sh=document.getElementById('btnShare'); if(sh) sh.onclick=async()=>{ try{ const file=new File([blob],'persona.gif',{type:'image/gif'}); if(navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({files:[file]}); }else{ const a=document.createElement('a'); a.href=url; a.download='persona.gif'; a.click(); } }catch{} };
+  }catch(e){ 
+    try{ if(creditTx?.refund) creditTx.refund(); }catch{}
+    toast(e.message||'שגיאה ביצירת GIF', true); console.error(e);
+  }
 }
+
 async function makePack(){
   if(!img.naturalWidth){ toast('קודם צלם תמונה', true); return; }
   const grid=document.getElementById('packGrid'); grid.innerHTML=''; const packs=[];
