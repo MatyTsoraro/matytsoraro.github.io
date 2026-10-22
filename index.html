@@ -5,111 +5,111 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
-<title>PersonaAI - חבילת התגובות שלך</title>
-<link rel="manifest" href="manifest.json?v=13">
+<title>PersonaAI ULTIMATE - אתם התגובה</title>
 <script type="importmap">{"imports":{"gifenc":"https://cdn.jsdelivr.net/npm/gifenc@1.0.3/dist/gifenc.esm.js"}}</script>
+<script type="module">import * as m from 'gifenc'; window.__gifencReady=Promise.resolve(m);</script>
+<script src="billing.js?v=14"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:#0a0a0f;color:#fff;overflow-x:hidden;touch-action:manipulation}
-.splash{position:fixed;inset:0;background:radial-gradient(120% 120% at 50% 0%,#1a102e 0%,#0a0a0f 60%);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;transition:opacity .4s}
+body{font-family:Heebo,-apple-system,BlinkMacSystemFont,sans-serif;background:#07070d;color:#fff;overflow-x:hidden}
+.splash{position:fixed;inset:0;background:radial-gradient(130% 100% at 50% 0%,#1a1030 0%,#07070d 65%);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;transition:opacity .5s}
 .splash.hidden{opacity:0;pointer-events:none}
-.splash h1{font-size:44px;font-weight:900;letter-spacing:-1px;background:linear-gradient(90deg,#ff3b9a,#7c3aed,#55efff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
-.splash p{color:#a1a1b5;font-size:16px;margin-bottom:28px}
-.cards{display:flex;gap:12px;margin-bottom:30px}
-.card{width:84px;height:84px;border-radius:22px;background:linear-gradient(135deg,#1e1e2f,#151525);border:1px solid #2a2a4a;display:flex;align-items:center;justify-content:center;font-size:34px;animation:bob 2s ease-in-out infinite}
-.card:nth-child(2){animation-delay:.2s} .card:nth-child(3){animation-delay:.4s}
-@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-.btn-primary{background:linear-gradient(90deg,#ff3b9a,#7c3aed);color:#fff;border:0;border-radius:18px;padding:16px 32px;font-size:18px;font-weight:800;cursor:pointer;box-shadow:0 8px 24px #ff3b9a44;touch-action:manipulation}
-.btn-primary:active{transform:scale(.97)}
-.screen{display:none;min-height:100vh;padding:18px 14px 90px}
-.screen.active{display:block}
-.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-.logo{font-weight:900;font-size:22px;background:linear-gradient(90deg,#ff3b9a,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.credits{display:flex;align-items:center;gap:8px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:999px;padding:6px 12px;font-size:13px}
-.cam-wrap{position:relative;width:100%;max-width:420px;margin:0 auto;background:#111;border-radius:28px;overflow:hidden;border:1px solid #2a2a4a;aspect-ratio:3/4}
-#video{width:100%;height:100%;object-fit:cover;display:block}
-#canvasCapture{display:none}
-.cam-actions{display:flex;gap:10px;justify-content:center;margin:16px 0;flex-wrap:wrap}
-.btn{border:1px solid #2a2a4a;background:#1a1a2e;color:#fff;border-radius:14px;padding:12px 18px;font-weight:700;cursor:pointer;touch-action:manipulation}
+.splash h1{font-size:52px;font-weight:900;background:linear-gradient(90deg,#ff3b9a,#7c3aed,#55efff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.splash .sub{color:#a1a1b5;margin:10px 0 22px;font-size:16px}
+.cards{display:flex;gap:12px;margin-bottom:26px}
+.card{width:92px;height:92px;border-radius:24px;background:linear-gradient(135deg,#1e1e32,#141423);border:1px solid #2a2a4a;display:flex;align-items:center;justify-content:center;font-size:36px;animation:bob 2.2s ease-in-out infinite;box-shadow:0 8px 24px #0008}
+.card:nth-child(2){animation-delay:.2s}.card:nth-child(3){animation-delay:.4s}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-12px) rotate(1deg)}}
+.btn-main{background:linear-gradient(90deg,#ff3b9a,#7c3aed);color:#fff;border:0;border-radius:18px;padding:16px 28px;font-size:18px;font-weight:900;box-shadow:0 10px 30px #ff3b9a40;cursor:pointer;touch-action:manipulation}
+.btn{border:1px solid #2a2a4a;background:#151525;color:#fff;border-radius:14px;padding:11px 16px;font-weight:700;cursor:pointer}
 .btn.ghost{background:transparent}
-.edit-wrap{position:relative;width:100%;max-width:420px;margin:0 auto;background:#0e0e1a;border-radius:28px;overflow:hidden;border:1px solid #2a2a4a;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center}
-#editCanvas{max-width:100%;max-height:100%;touch-action:none;display:block;margin:auto}
-.controls{max-width:420px;margin:12px auto;display:flex;flex-direction:column;gap:10px}
+.screen{display:none;min-height:100vh;padding:14px 12px 92px}
+.screen.active{display:block}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;max-width:440px;margin-left:auto;margin-right:auto}
+.logo{font-weight:900;font-size:22px;background:linear-gradient(90deg,#ff3b9a,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.credits{background:#1a1a2e;border:1px solid #2a2a4a;border-radius:999px;padding:6px 12px;font-size:13px}
+.cam-wrap{position:relative;width:100%;max-width:440px;margin:0 auto;background:#111;border-radius:28px;overflow:hidden;border:1px solid #2a2a4a;aspect-ratio:3/4.5}
+#video{width:100%;height:100%;object-fit:cover;display:block;background:#000}
+.cam-actions{display:flex;gap:10px;justify-content:center;margin:14px 0;flex-wrap:wrap;max-width:440px;margin-left:auto;margin-right:auto}
+.edit-wrap{position:relative;width:100%;max-width:440px;margin:0 auto;background:radial-gradient(100% 100% at 50% 0%,#1a1030,#0a0a0f);border-radius:28px;overflow:hidden;border:1px solid #2a2a4a;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;touch-action:none}
+#editCanvas{width:100%;height:100%;display:block;touch-action:none}
+.controls{max-width:440px;margin:12px auto;display:flex;flex-direction:column;gap:10px}
 .textbox{width:100%;background:#1a1a2e;border:2px solid #ff3b9a66;border-radius:16px;padding:14px;font-size:16px;color:#fff;outline:none}
-.textbox:focus{border-color:#ff3b9a}
-.preset-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
-.preset{flex:0 0 auto;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:14px;padding:10px 14px;font-size:13px;font-weight:700;cursor:pointer}
-.preset.active{border-color:#ff3b9a;background:#2a1230}
-.pack-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:16px}
-.pack-item{position:relative;background:#111;border:1px solid #2a2a4a;border-radius:18px;overflow:hidden;aspect-ratio:1/1}
+.preset-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.preset{flex:0 0 auto;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:14px;padding:10px 14px;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap}
+.preset.active{border-color:#ff3b9a;background:#2a1230;box-shadow:0 0 0 2px #ff3b9a33}
+.adv{border:1px solid #2a2a4a;background:#121223;border-radius:16px;padding:12px;display:none}
+.adv.open{display:block}
+.adv-row{display:flex;justify-content:space-between;align-items:center;margin:8px 0;font-size:13px}
+.adv-row input[type=range]{width:56%}
+.pack-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.pack-item{position:relative;background:#10101a;border:1px solid #24243a;border-radius:18px;overflow:hidden;aspect-ratio:1/1}
 .pack-item img{width:100%;height:100%;object-fit:cover}
-.pack-item span{position:absolute;bottom:6px;left:6px;right:6px;background:#0009;backdrop-filter:blur(6px);border-radius:10px;padding:4px 6px;font-size:11px;text-align:center}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#0a0a0fcc;backdrop-filter:blur(18px);border-top:1px solid #1e1e2e;display:flex;justify-content:space-around;padding:10px 0 18px}
+.pack-item .lab{position:absolute;bottom:6px;left:6px;right:6px;background:#000a;backdrop-filter:blur(8px);border-radius:10px;padding:5px 6px;font-size:12px;font-weight:800;text-align:center}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#0a0a0fcc;backdrop-filter:blur(18px);border-top:1px solid #1e1e2e;display:flex;justify-content:space-around;padding:10px 0 18px;z-index:50}
 .nav-btn{background:none;border:0;color:#6b6b82;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
 .nav-btn.active{color:#ff3b9a}
 .modal{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;z-index:100;padding:18px}
 .modal.open{display:flex}
 .modal-box{background:#151525;border:1px solid #2a2a4a;border-radius:22px;padding:18px;width:100%;max-width:360px}
-.watermark{position:absolute;right:8px;bottom:8px;width:22px;height:22px;background:#000a;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:11px;backdrop-filter:blur(4px)}
+.toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%);background:#1a1a2e;border:1px solid #2a2a4a;padding:10px 16px;border-radius:999px;font-size:13px;display:none;z-index:200;max-width:90%;text-align:center}
 </style>
 </head>
 <body>
 
 <div id="splash" class="splash">
   <h1>PersonaAI</h1>
-  <p>סלפי אחד → חבילת תגובות מוכנה לוואטסאפ</p>
-  <div class="cards"><div class="card">😂</div><div class="card">😱</div><div class="card">❤️</div></div>
-  <button id="startAppBtn" class="btn-primary">יאללה בואו נתחיל 🔥</button>
+  <div class="sub">התגובה הבאה שלכם היא אתם — עם אנימציה אמיתית</div>
+  <div class="cards"><div class="card" style="transform:rotate(-6deg)">😂</div><div class="card" style="transform:rotate(3deg)">🔥</div><div class="card" style="transform:rotate(8deg)">❤️</div></div>
+  <button id="startBtn" class="btn-main">יאללה בואו נתחיל 🚀</button>
+  <div style="margin-top:14px;color:#6b6b82;font-size:12px">גרירה • זום • אנימציה • חבילת 8</div>
 </div>
 
 <div id="screenCamera" class="screen active">
-  <div class="topbar"><div class="logo">PersonaAI</div><div class="credits" id="creditsBadge">💎 <span id="creditsCount">3</span></div></div>
-  <div class="cam-wrap">
-    <video id="video" autoplay playsinline muted></video>
-    <canvas id="canvasCapture"></canvas>
-  </div>
-  <div class="cam-actions">
-    <button id="btnCapture" class="btn-primary">📸 צלם</button>
-    <button id="btnGallery" class="btn">🖼️ גלריה</button>
-    <button id="btnSwitch" class="btn ghost">🔄</button>
-  </div>
-  <input id="fileInput" type="file" accept="image/*" hidden>
+  <div class="topbar"><div class="logo">PersonaAI</div><div class="credits">💎 <span id="creditsCount">3</span> <span id="proBadge" style="display:none;background:#ff3b9a;border-radius:999px;padding:2px 6px;font-size:10px;margin-right:6px">PRO</span></div></div>
+  <div class="cam-wrap"><video id="video" autoplay playsinline muted></video><canvas id="capCanvas" style="display:none"></canvas></div>
+  <div class="cam-actions"><button id="btnShoot" class="btn-main">📸 צלם סלפי</button><button id="btnGal" class="btn">🖼️ גלריה</button><button id="btnFlip" class="btn ghost">🔄</button></div>
+  <input id="fileIn" type="file" accept="image/*" hidden>
 </div>
 
 <div id="screenEdit" class="screen">
-  <div class="topbar"><button id="btnBack" class="btn ghost">← חזור</button><div class="logo">עריכה</div><button id="btnSave" class="btn ghost">💾</button></div>
-  <div class="edit-wrap" id="editWrap">
-    <canvas id="editCanvas" width="512" height="512"></canvas>
-    <div class="watermark">P</div>
-  </div>
+  <div class="topbar"><button id="btnBack" class="btn ghost">←</button><div class="logo">סטודיו</div><button id="btnReset" class="btn ghost">↺</button></div>
+  <div class="edit-wrap" id="editWrap"><canvas id="editCanvas" width="512" height="512"></canvas></div>
   <div class="controls">
-    <input id="textStickerInput" class="textbox" placeholder="✍️ כתוב מה בא לך להגיד - LOL, OMG, אוהב...">
+    <input id="txtInput" class="textbox" placeholder="✍️ כתוב מה בא לך להגיד — LOL, אוהב, כן...">
     <div class="preset-row" id="presetRow">
-      <button class="preset active" data-preset="none">רגיל</button>
-      <button class="preset" data-preset="boss">👑 בוס</button>
-      <button class="preset" data-preset="fire">🔥 אש</button>
-      <button class="preset" data-preset="neon">💜 ניאון</button>
-      <button class="preset" data-preset="chibi">🧸 צ'יבי</button>
-      <button class="preset" data-preset="mafia">🕶️ מאפיה</button>
+      <button class="preset active" data-p="none">רגיל</button>
+      <button class="preset" data-p="boss">👑 בוס זוהר</button>
+      <button class="preset" data-p="fire">🔥 אש קופצת</button>
+      <button class="preset" data-p="neon">💜 ניאון פועם</button>
+      <button class="preset" data-p="chibi">🧸 צ'יבי קופץ</button>
+      <button class="preset" data-p="mafia">🕶️ מאפיה</button>
+      <button class="preset" data-p="shake">💥 רועד</button>
     </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;background:#55efff12;border:1px solid #55efff33;border-radius:14px;padding:10px 12px">
-      <b>✂️ הסרת רקע</b><label style="position:relative;display:inline-block;width:48px;height:26px"><input id="bgRemoveToggle" type="checkbox" style="opacity:0;width:0;height:0"><span id="bgToggleBg" style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#333;border-radius:26px;transition:.2s"></span></label>
+    <button id="btnAdv" class="btn" style="width:100%">🎛️ עריכה מתקדמת — גרירה / זום / סיבוב / רקע</button>
+    <div id="advPanel" class="adv">
+      <div class="adv-row"><span>🔍 זום</span><input id="scaleRange" type="range" min="0.5" max="2.8" step="0.02" value="1"><span id="scaleVal">1.0</span></div>
+      <div class="adv-row"><span>↻ סיבוב</span><input id="rotRange" type="range" min="-45" max="45" step="1" value="0"><span id="rotVal">0°</span></div>
+      <div class="adv-row"><span>👻 שקיפות</span><input id="opRange" type="range" min="0.2" max="1" step="0.05" value="1"><span id="opVal">100%</span></div>
+      <div class="adv-row"><span>✂️ הסרת רקע (טשטוש + זוהר)</span><input id="bgToggle" type="checkbox"></div>
+      <div class="adv-row"><span>💃 אנימציית GIF</span><select id="animSelect" class="btn" style="padding:6px"><option value="zoom">זום נושם</option><option value="shake">רעידה</option><option value="bounce">קפיצה</option><option value="spin">סיבוב קל</option><option value="none">סטטי</option></select></div>
+      <div style="font-size:11px;color:#6b6b82;margin-top:6px">טיפ: גרור עם אצבע, צבוט לזום, סובב עם שני אצבעות כמו בוואטסאפ</div>
     </div>
     <div style="display:flex;gap:8px">
-      <button id="btnMakeGif" class="btn-primary" style="flex:1">✨ צור GIF</button>
-      <button id="btnMakePack" class="btn" style="flex:1">🎁 חבילת 8 תגובות</button>
+      <button id="btnGif" class="btn-main" style="flex:1.2">✨ צור GIF אנימציה</button>
+      <button id="btnPack" class="btn" style="flex:1">🎁 חבילת 8 תגובות</button>
     </div>
-    <div id="packGrid" class="pack-grid"></div>
-    <div style="display:flex;gap:8px;margin-top:8px">
-      <button id="btnShare" class="btn" style="flex:1">📤 שתף</button>
-      <button id="btnDownload" class="btn" style="flex:1">⬇️ שמור</button>
-      <button id="btnPackShare" class="btn" style="flex:1;display:none">📦 שמור חבילה</button>
+    <div id="resultGrid" class="pack-grid"></div>
+    <div style="display:flex;gap:8px">
+      <button id="btnShare" class="btn" style="flex:1">📤 שתף GIF</button>
+      <button id="btnSave" class="btn" style="flex:1">⬇️ שמור</button>
+      <button id="btnSavePack" class="btn" style="flex:1;display:none">📦 שמור חבילה</button>
     </div>
   </div>
 </div>
 
 <div id="screenMy" class="screen">
-  <div class="topbar"><div class="logo">שלי</div></div>
+  <div class="topbar"><div class="logo">שלי</div><button id="btnClear" class="btn ghost">נקה</button></div>
   <div id="historyGrid" class="pack-grid"></div>
 </div>
 
@@ -120,263 +120,149 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Ar
   <button class="nav-btn" id="storeBtn">💎<span>חנות</span></button>
 </div>
 
-<div id="storeModal" class="modal"><div class="modal-box"><h3 style="margin-bottom:10px">💎 Persona PRO</h3><p style="color:#a1a1b5;font-size:13px;margin-bottom:12px">חבילות ללא הגבלה + בלי לוגו + הוספה לוואטסאפ</p><div style="background:#1a1a2e;border-radius:14px;padding:12px;margin-bottom:12px">🔥 12₪ / שבוע - הכי משתלם</div><button id="btnBuy" class="btn-primary" style="width:100%">קנה PRO</button><button id="btnCloseStore" class="btn ghost" style="width:100%;margin-top:8px">סגור</button></div></div>
+<div id="storeModal" class="modal"><div class="modal-box"><h3>💎 Persona PRO</h3><p style="color:#a1a1b5;font-size:13px;margin:8px 0 12px">אנימציות ללא לוגו + חבילות ללא הגבלה + ייצוא לוואטסאפ בלחיצה</p><div style="background:#1a1a2e;border-radius:14px;padding:12px;margin-bottom:12px">🔥 12₪ / שבוע • הכי משתלם בישראל</div><button id="btnBuy" class="btn-main" style="width:100%">הפעל PRO</button><button id="btnCloseStore" class="btn ghost" style="width:100%;margin-top:8px">סגור</button></div></div>
+<div id="toast" class="toast"></div>
 
-<div id="toast" style="position:fixed;bottom:88px;left:50%;transform:translateX(-50%);background:#1a1a2e;border:1px solid #2a2a4a;padding:10px 16px;border-radius:999px;font-size:13px;display:none;z-index:200"></div>
-
-<script type="module">
-import * as gifenc from 'gifenc';
-window.__gifencReady = gifenc;
-if('serviceWorker' in navigator){ navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister())); }
-</script>
-<script src="billing.js?v=13"></script>
 <script>
-let stream=null, facing='user', img=new Image(), currentPreset='none', drag={x:0,y:0,scale:1,rot:0}, lastFile=null;
+let stream=null, facing='user', img=new Image(), currentPreset='none', animType='zoom';
+let drag={x:0,y:0,scale:1,rot:0,opacity:1};
 window.bgRemoveEnabled=false;
-const reactions = [
-  {text:'LOL 😂', style:'boss'},
-  {text:'OMG 😱', style:'fire'},
-  {text:'WTF 🤯', style:'neon'},
-  {text:'❤️ אוהב', style:'chibi'},
-  {text:'😭', style:'none'},
-  {text:'כן', style:'boss'},
-  {text:'לא', style:'neon'},
-  {text:'🙏 תודה', style:'mafia'}
+const reactions=[
+  {text:'LOL 😂', preset:'chibi', anim:'bounce', scale:1.15, rot:-6},
+  {text:'OMG 😱', preset:'fire', anim:'shake', scale:1.22, rot:4},
+  {text:'WTF 🤯', preset:'shake', anim:'shake', scale:1.18, rot:-4},
+  {text:'❤️ אוהב', preset:'boss', anim:'zoom', scale:1.12, rot:0},
+  {text:'😭 בכי', preset:'none', anim:'bounce', scale:1.05, rot:2},
+  {text:'כן', preset:'neon', anim:'zoom', scale:1.2, rot:-3},
+  {text:'לא', preset:'mafia', anim:'spin', scale:1.18, rot:5},
+  {text:'🙏 תודה', preset:'boss', anim:'bounce', scale:1.1, rot:-2}
 ];
-function toast(msg, err){
-  const t=document.getElementById('toast'); t.textContent=msg; t.style.display='block'; t.style.borderColor=err?'#ff3b9a':'#2a2a4a';
-  setTimeout(()=>t.style.display='none',2500);
-}
-function isProUser(){
-  try{
-    if(window.PersonaBilling?.isPro?.()) return true;
-    return localStorage.getItem('persona_pro')==='1' || localStorage.getItem('pro')==='1';
-  }catch{ return false; }
-}
-function updateCreditsUI(){
-  try{
-    const c = window.PersonaBilling?.getCredits?.() ?? parseInt(localStorage.getItem('persona_credits')||'3',10);
-    document.getElementById('creditsCount').textContent=c;
-  }catch{}
-}
+function toast(m,e){ const t=document.getElementById('toast'); t.textContent=m; t.style.display='block'; t.style.borderColor=e?'#ff3b9a':'#2a2a4a'; setTimeout(()=>t.style.display='none',2600); }
+function isProUser(){ try{ if(window.PersonaBilling?.isPro?.()) return true; return localStorage.getItem('persona_pro')==='1'; }catch{return false;} }
+function updateCredits(){ try{ const c=window.PersonaBilling?.getCredits?.() ?? parseInt(localStorage.getItem('persona_credits')||'3',10); document.getElementById('creditsCount').textContent=c; document.getElementById('proBadge').style.display=isProUser()?'inline-block':'none'; }catch{} }
 async function startCam(){
-  try{
-    if(stream) stream.getTracks().forEach(t=>t.stop());
-    stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:facing, width:{ideal:1280}, height:{ideal:1280}}, audio:false});
-    const v=document.getElementById('video'); v.srcObject=stream; await v.play();
-  }catch(e){
-    console.log('cam fail', e);
-    toast('לא הצלחתי לפתוח מצלמה - תבחר מהגלריה', true);
-    document.getElementById('fileInput').click();
-  }
+  try{ if(stream) stream.getTracks().forEach(t=>t.stop()); stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:facing,width:{ideal:1280},height:{ideal:1280}},audio:false}); const v=document.getElementById('video'); v.srcObject=stream; await v.play(); }
+  catch(e){ toast('מצלמה חסומה - פותח גלריה',true); document.getElementById('fileIn').click(); }
 }
-function showScreen(name){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById('screen'+name.charAt(0).toUpperCase()+name.slice(1)).classList.add('active');
-  document.querySelectorAll('.nav-btn[data-nav]').forEach(b=>b.classList.toggle('active', b.dataset.nav===name));
-}
-function draw(){
-  const c=document.getElementById('editCanvas'), ctx=c.getContext('2d');
-  if(!img.naturalWidth) return;
-  ctx.clearRect(0,0,512,512);
-  if(window.bgRemoveEnabled){
-    ctx.fillStyle='#0a0a0f'; ctx.fillRect(0,0,512,512);
-    const g=ctx.createRadialGradient(256,256,0,256,256,400); g.addColorStop(0,'#1a102e'); g.addColorStop(1,'#0a0a0f');
-    ctx.fillStyle=g; ctx.fillRect(0,0,512,512);
-    ctx.beginPath(); ctx.ellipse(256,280,140,180,0,0,Math.PI*2); ctx.fillStyle='#0006'; ctx.fill();
-  }
+function showScreen(name){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById('screen'+name.charAt(0).toUpperCase()+name.slice(1)).classList.add('active'); document.querySelectorAll('.nav-btn[data-nav]').forEach(b=>b.classList.toggle('active', b.dataset.nav===name)); }
+function drawFrame(ctx, t=0, opts={}){
+  const preset=opts.preset||currentPreset; const anim=opts.anim||animType; const scaleMul=opts.scaleMul||1; const rotAdd=opts.rotAdd||0; const text=opts.text!==undefined?opts.text:document.getElementById('txtInput').value.trim();
+  const w=ctx.canvas.width, h=ctx.canvas.height;
+  ctx.clearRect(0,0,w,h);
+  if(window.bgRemoveEnabled){ ctx.fillStyle='#07070d'; ctx.fillRect(0,0,w,h); const g=ctx.createRadialGradient(w/2,h/2,0,w/2,h/2,w*0.8); g.addColorStop(0,'#1a1030'); g.addColorStop(1,'#07070d'); ctx.fillStyle=g; ctx.fillRect(0,0,w,h); ctx.beginPath(); ctx.ellipse(w/2,h*0.55,w*0.28,h*0.36,0,0,Math.PI*2); ctx.fillStyle='#0006'; ctx.fill(); }
   ctx.save();
-  ctx.translate(256+drag.x,256+drag.y);
-  ctx.rotate(drag.rot*Math.PI/180);
-  ctx.scale(drag.scale, drag.scale);
-  ctx.translate(-256,-256);
-  const s=Math.min(512/img.naturalWidth,512/img.naturalHeight)*0.9;
-  const w=img.naturalWidth*s, h=img.naturalHeight*s;
-  ctx.drawImage(img,(512-w)/2,(512-h)/2,w,h);
-  if(currentPreset==='chibi'){
-    ctx.fillStyle='#ff8fa8'; ctx.beginPath(); ctx.arc(180,300,18,0,Math.PI*2); ctx.arc(332,300,18,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle='#fff'; ctx.font='28px sans-serif'; ctx.fillText('✨', 360, 120);
-  }
-  if(currentPreset==='fire'){ ctx.fillStyle='#ff5a1f66'; ctx.fillRect(0,0,512,512); }
-  if(currentPreset==='neon'){ ctx.shadowColor='#ff3b9a'; ctx.shadowBlur=30; ctx.strokeStyle='#ff3b9a'; ctx.lineWidth=6; ctx.strokeRect(20,20,472,472); ctx.shadowBlur=0; }
+  let aX=drag.x, aY=drag.y, aS=drag.scale*scaleMul, aR=drag.rot+rotAdd, aO=drag.opacity;
+  if(anim==='zoom'){ const z=1+Math.sin(t*Math.PI*2)*0.07; aS*=z; }
+  if(anim==='bounce'){ aY+=Math.sin(t*Math.PI*2)*-10; aS*=1+Math.abs(Math.sin(t*Math.PI*2))*0.05; }
+  if(anim==='shake'){ aX+=Math.sin(t*18)*6; aY+=Math.cos(t*20)*4; }
+  if(anim==='spin'){ aR+=Math.sin(t*Math.PI*2)*4; }
+  ctx.translate(w/2+aX, h/2+aY); ctx.rotate(aR*Math.PI/180); ctx.scale(aS,aS); ctx.translate(-w/2,-h/2); ctx.globalAlpha=aO;
+  if(!img.naturalWidth){ ctx.restore(); return; }
+  const s=Math.min(w/img.naturalWidth, h/img.naturalHeight)*0.86; const iw=img.naturalWidth*s, ih=img.naturalHeight*s;
+  ctx.drawImage(img,(w-iw)/2,(h-ih)/2,iw,ih);
+  // preset effects
+  if(preset==='fire'){ ctx.fillStyle=`rgba(255,90,31,${0.18+Math.sin(t*12)*0.08})`; ctx.fillRect(0,0,w,h); }
+  if(preset==='neon'){ ctx.shadowColor='#ff3b9a'; ctx.shadowBlur=28+Math.sin(t*8)*10; ctx.strokeStyle='#ff3b9a'; ctx.lineWidth=5; ctx.strokeRect(18,18,w-36,h-36); ctx.shadowBlur=0; }
+  if(preset==='chibi'){ ctx.fillStyle='rgba(255,120,180,0.38)'; ctx.beginPath(); ctx.ellipse(w*0.28,h*0.58,w*0.09,h*0.06,0,0,Math.PI*2); ctx.ellipse(w*0.72,h*0.58,w*0.09,h*0.06,0,0,Math.PI*2); ctx.fill(); ctx.fillStyle='#fff'; ctx.font='26px sans-serif'; ctx.fillText('✨', w*0.7, h*0.22+Math.sin(t*6)*4); }
+  if(preset==='boss'){ const grad=ctx.createLinearGradient(0,0,w,0); grad.addColorStop(0,'#ff3b9a'); grad.addColorStop(1,'#7c3aed'); ctx.strokeStyle=grad; ctx.lineWidth=4; ctx.strokeRect(14,14,w-28,h-28); }
+  if(preset==='mafia'){ ctx.fillStyle='#0007'; ctx.fillRect(0,h*0.72,w,h*0.28); }
+  if(preset==='shake'){ if(Math.random()<0.15){ ctx.fillStyle='#fff'; ctx.fillRect(Math.random()*w,w*0.1, 80,4); } }
   ctx.restore();
-  const t=document.getElementById('textStickerInput').value.trim();
-  if(t){
-    ctx.font='900 44px sans-serif'; ctx.textAlign='center'; ctx.lineWidth=8; ctx.strokeStyle='#000'; ctx.fillStyle='#fff';
-    ctx.strokeText(t,256,460); ctx.fillText(t,256,460);
-  }
-  if(!isProUser()){
-    ctx.font='700 18px sans-serif'; ctx.fillStyle='#fff8'; ctx.textAlign='right'; ctx.fillText('P', 492, 22);
-  }
+  if(text){ ctx.font='900 46px Heebo,sans-serif'; ctx.textAlign='center'; ctx.lineWidth=9; ctx.strokeStyle='#000'; ctx.fillStyle='#fff'; const bounce=anim==='bounce'?Math.sin(t*10)*-6:0; ctx.strokeText(text,w/2,h*0.9+bounce); ctx.fillText(text,w/2,h*0.9+bounce); }
+  if(!isProUser()){ ctx.font='700 18px sans-serif'; ctx.fillStyle='#fff9'; ctx.textAlign='right'; ctx.fillText('P', w-20, 26); }
 }
-function bindEvents(){
-  document.getElementById('startAppBtn').addEventListener('click', ()=>{
-    document.getElementById('splash').classList.add('hidden'); showScreen('camera'); startCam(); updateCreditsUI();
-  });
-  document.getElementById('btnCapture').addEventListener('click', async ()=>{
-    try{
-      const v=document.getElementById('video'), c=document.getElementById('canvasCapture');
-      if(!v.videoWidth){ toast('מצלמה לא מוכנה', true); return; }
-      c.width=v.videoWidth; c.height=v.videoHeight; c.getContext('2d').drawImage(v,0,0);
-      const data=c.toDataURL('image/jpeg',0.9); lastFile=data; img.onload=()=>{ showScreen('edit'); draw(); }; img.src=data;
-    }catch(e){ document.getElementById('fileInput').click(); }
-  });
-  document.getElementById('btnGallery').addEventListener('click', ()=>document.getElementById('fileInput').click());
-  document.getElementById('fileInput').addEventListener('change', (e)=>{
-    const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=()=>{ lastFile=r.result; img.onload=()=>{ showScreen('edit'); draw(); }; img.src=r.result; }; r.readAsDataURL(f);
-  });
-  document.getElementById('btnSwitch').addEventListener('click', ()=>{ facing=facing==='user'?'environment':'user'; startCam(); });
+function draw(){ const c=document.getElementById('editCanvas'); const ctx=c.getContext('2d'); drawFrame(ctx,0); }
+function bind(){
+  document.getElementById('startBtn').addEventListener('click', ()=>{ document.getElementById('splash').classList.add('hidden'); showScreen('camera'); startCam(); updateCredits(); });
+  document.getElementById('btnShoot').addEventListener('click', ()=>{ const v=document.getElementById('video'), cc=document.getElementById('capCanvas'); if(!v.videoWidth){ toast('מצלמה לא מוכנה',true); return; } cc.width=v.videoWidth; cc.height=v.videoHeight; cc.getContext('2d').drawImage(v,0,0); const d=cc.toDataURL('image/jpeg',0.92); img.onload=()=>{ showScreen('edit'); drag={x:0,y:0,scale:1,rot:0,opacity:1}; document.getElementById('scaleRange').value=1; document.getElementById('rotRange').value=0; draw(); }; img.src=d; });
+  document.getElementById('btnGal').addEventListener('click', ()=>document.getElementById('fileIn').click());
+  document.getElementById('fileIn').addEventListener('change', e=>{ const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=()=>{ img.onload=()=>{ showScreen('edit'); drag={x:0,y:0,scale:1,rot:0,opacity:1}; draw(); }; img.src=r.result; }; r.readAsDataURL(f); e.target.value=''; });
+  document.getElementById('btnFlip').addEventListener('click', ()=>{ facing=facing==='user'?'environment':'user'; startCam(); });
   document.getElementById('btnBack').addEventListener('click', ()=>showScreen('camera'));
-  document.getElementById('presetRow').addEventListener('click', (e)=>{
-    const b=e.target.closest('.preset'); if(!b) return; document.querySelectorAll('.preset').forEach(x=>x.classList.remove('active')); b.classList.add('active'); currentPreset=b.dataset.preset; draw();
-  });
-  document.getElementById('textStickerInput').addEventListener('input', draw);
-  document.getElementById('bgRemoveToggle').addEventListener('change', (e)=>{ window.bgRemoveEnabled=!!e.target.checked; const bg=document.getElementById('bgToggleBg'); if(bg) bg.style.background=e.target.checked?'#ff3b9a':'#333'; draw(); });
-  let startX=0,startY=0,isDrag=false;
-  const ec=document.getElementById('editCanvas');
-  ec.addEventListener('pointerdown', (e)=>{ isDrag=true; startX=e.clientX-drag.x; startY=e.clientY-drag.y; ec.setPointerCapture(e.pointerId); });
-  ec.addEventListener('pointermove', (e)=>{ if(!isDrag) return; drag.x=e.clientX-startX; drag.y=e.clientY-startY; draw(); });
-  ec.addEventListener('pointerup', ()=>isDrag=false);
-  ec.addEventListener('wheel', (e)=>{ e.preventDefault(); drag.scale=Math.max(0.5,Math.min(3,drag.scale + (e.deltaY<0?0.1:-0.1))); draw(); }, {passive:false});
-  document.getElementById('btnSave').addEventListener('click', saveToDevice);
-  document.getElementById('btnDownload').addEventListener('click', saveToDevice);
-  document.getElementById('btnShare').addEventListener('click', shareFile);
-  document.getElementById('btnMakeGif').addEventListener('click', ()=>makeGif().catch(err=>{ toast(err.message||'שגיאה', true); }));
-  document.getElementById('btnMakePack').addEventListener('click', makePack);
-  document.getElementById('btnPackShare').addEventListener('click', savePack);
+  document.getElementById('btnReset').addEventListener('click', ()=>{ drag={x:0,y:0,scale:1,rot:0,opacity:1}; document.getElementById('txtInput').value=''; document.getElementById('scaleRange').value=1; document.getElementById('rotRange').value=0; document.getElementById('opRange').value=1; window.bgRemoveEnabled=false; document.getElementById('bgToggle').checked=false; draw(); });
+  document.getElementById('presetRow').addEventListener('click', e=>{ const b=e.target.closest('.preset'); if(!b) return; document.querySelectorAll('.preset').forEach(x=>x.classList.remove('active')); b.classList.add('active'); currentPreset=b.dataset.p; draw(); });
+  document.getElementById('txtInput').addEventListener('input', draw);
+  document.getElementById('btnAdv').addEventListener('click', ()=>document.getElementById('advPanel').classList.toggle('open'));
+  document.getElementById('scaleRange').addEventListener('input', e=>{ drag.scale=parseFloat(e.target.value); document.getElementById('scaleVal').textContent=drag.scale.toFixed(2); draw(); });
+  document.getElementById('rotRange').addEventListener('input', e=>{ drag.rot=parseFloat(e.target.value); document.getElementById('rotVal').textContent=e.target.value+'°'; draw(); });
+  document.getElementById('opRange').addEventListener('input', e=>{ drag.opacity=parseFloat(e.target.value); document.getElementById('opVal').textContent=Math.round(drag.opacity*100)+'%'; draw(); });
+  document.getElementById('bgToggle').addEventListener('change', e=>{ window.bgRemoveEnabled=!!e.target.checked; const bg=document.getElementById('bgToggle'); if(bg){} draw(); });
+  document.getElementById('animSelect').addEventListener('change', e=>{ animType=e.target.value; });
+  // drag like WhatsApp
+  const wrap=document.getElementById('editWrap'); let isDrag=false, startX=0,startY=0, pointers=new Map(), pinchDist=0, pinchScale=1, lastCenter=null;
+  wrap.addEventListener('pointerdown', e=>{ if(e.target.closest('button')) return; pointers.set(e.pointerId,{x:e.clientX,y:e.clientY}); if(pointers.size===1){ isDrag=true; startX=e.clientX-drag.x; startY=e.clientY-drag.y; } else if(pointers.size===2){ const pts=[...pointers.values()]; pinchDist=Math.hypot(pts[0].x-pts[1].x, pts[0].y-pts[1].y); pinchScale=drag.scale; const cx=(pts[0].x+pts[1].x)/2, cy=(pts[0].y+pts[1].y)/2; lastCenter={x:cx,y:cy}; } try{wrap.setPointerCapture(e.pointerId);}catch{} e.preventDefault(); });
+  wrap.addEventListener('pointermove', e=>{ if(!pointers.has(e.pointerId)) return; pointers.set(e.pointerId,{x:e.clientX,y:e.clientY}); if(pointers.size===1 && isDrag){ drag.x=e.clientX-startX; drag.y=e.clientY-startY; draw(); } else if(pointers.size===2){ const pts=[...pointers.values()]; const d=Math.hypot(pts[0].x-pts[1].x, pts[0].y-pts[1].y); if(pinchDist>0){ drag.scale=Math.max(0.5,Math.min(3, pinchScale*(d/pinchDist))); document.getElementById('scaleRange').value=drag.scale; document.getElementById('scaleVal').textContent=drag.scale.toFixed(2); draw(); } } e.preventDefault(); });
+  const end=e=>{ pointers.delete(e.pointerId); if(pointers.size===0){ isDrag=false; pinchDist=0; } };
+  wrap.addEventListener('pointerup', end); wrap.addEventListener('pointercancel', end); wrap.addEventListener('pointerleave', end);
+  wrap.addEventListener('wheel', e=>{ e.preventDefault(); drag.scale=Math.max(0.5,Math.min(3,drag.scale+(e.deltaY<0?0.08:-0.08))); document.getElementById('scaleRange').value=drag.scale; document.getElementById('scaleVal').textContent=drag.scale.toFixed(2); draw(); }, {passive:false});
+  document.getElementById('btnGif').addEventListener('click', makeGif);
+  document.getElementById('btnPack').addEventListener('click', makePack);
+  document.getElementById('btnShare').addEventListener('click', shareGif);
+  document.getElementById('btnSave').addEventListener('click', saveGifFile);
+  document.getElementById('btnSavePack').addEventListener('click', savePackFiles);
   document.querySelectorAll('.nav-btn[data-nav]').forEach(b=>b.addEventListener('click', ()=>showScreen(b.dataset.nav)));
   document.getElementById('storeBtn').addEventListener('click', ()=>document.getElementById('storeModal').classList.add('open'));
   document.getElementById('btnCloseStore').addEventListener('click', ()=>document.getElementById('storeModal').classList.remove('open'));
-  document.getElementById('btnBuy').addEventListener('click', ()=>{ localStorage.setItem('persona_pro','1'); toast('PRO הופעל! 🔥'); document.getElementById('storeModal').classList.remove('open'); updateCreditsUI(); draw(); });
-  loadHistory();
+  document.getElementById('btnBuy').addEventListener('click', ()=>{ localStorage.setItem('persona_pro','1'); toast('PRO הופעל! 🔥'); document.getElementById('storeModal').classList.remove('open'); updateCredits(); draw(); });
+  document.getElementById('btnClear').addEventListener('click', ()=>{ if(confirm('למחוק היסטוריה?')){ localStorage.removeItem('persona_history'); loadHistory(); } });
+  loadHistory(); updateCredits();
 }
-
 async function makeGif(){
-  let creditTx=null;
+  let tx=null;
+  try{ if(!isProUser() && window.PersonaBilling?.spendCreditsOrRefund){ tx=window.PersonaBilling.spendCreditsOrRefund(1); if(!tx?.success){ toast('אין קרדיטים 💎',true); document.getElementById('storeModal').classList.add('open'); return; } } }catch{}
   try{
-    const cost=isProUser()?0:1;
-    if(cost>0 && window.PersonaBilling?.spendCreditsOrRefund){
-      creditTx=window.PersonaBilling.spendCreditsOrRefund(cost);
-      if(!creditTx?.success){ toast('אין קרדיטים 💎', true); document.getElementById('storeModal').classList.add('open'); return; }
-    }
-  }catch(e){ console.log('credit',e); }
-  try{
-    const m=await window.__gifencReady; 
-    if(!m){ throw new Error('מנוע GIF לא נטען - רענן את הדף'); }
-    if(!img.naturalWidth) throw new Error('אין תמונה');
-    const {GIFEncoder, quantize, applyPalette}=m;
-    const g=GIFEncoder();
-    const frames=18;
-    const delay=100;
-    const c=document.createElement('canvas'); c.width=512; c.height=512;
-    const x=c.getContext('2d',{willReadFrequently:true});
-    toast('מכין GIF WOW... 0%');
+    const mod=await window.__gifencReady; if(!mod) throw new Error('מנוע GIF לא נטען');
+    const {GIFEncoder, quantize, applyPalette}=mod; const g=GIFEncoder(); const frames=22; const delay=90;
+    const c=document.createElement('canvas'); c.width=512; c.height=512; const x=c.getContext('2d',{willReadFrequently:true});
+    toast('מכין אנימציה אמיתית... 0%');
     for(let i=0;i<frames;i++){
-      x.clearRect(0,0,512,512);
       const t=i/frames;
-      // draw base image with drag
-      x.save();
-      x.translate(256+drag.x,256+drag.y);
-      x.rotate(drag.rot*Math.PI/180);
-      x.scale(drag.scale, drag.scale);
-      x.translate(-256,-256);
-      const s=Math.min(512/img.naturalWidth,512/img.naturalHeight)*0.9;
-      const w=img.naturalWidth*s, h=img.naturalHeight*s;
-      x.drawImage(img,(512-w)/2,(512-h)/2,w,h);
-      if(currentPreset==='fire'){ x.fillStyle='#ff5a1f66'; x.fillRect(0,0,512,512); }
-      if(currentPreset==='neon'){ x.shadowColor='#ff3b9a'; x.shadowBlur=30; x.strokeStyle='#ff3b9a'; x.lineWidth=6; x.strokeRect(20,20,472,472); x.shadowBlur=0; }
-      if(currentPreset==='chibi'){ x.fillStyle='#ff8fa8'; x.beginPath(); x.arc(180,300,18,0,Math.PI*2); x.arc(332,300,18,0,Math.PI*2); x.fill(); }
-      x.restore();
-      const txt=document.getElementById('textStickerInput').value.trim();
-      if(txt){ x.font='900 44px sans-serif'; x.textAlign='center'; x.lineWidth=8; x.strokeStyle='#000'; x.fillStyle='#fff'; x.strokeText(txt,256,460); x.fillText(txt,256,460); }
-      if(!isProUser()){ x.font='700 18px sans-serif'; x.fillStyle='#fff8'; x.textAlign='right'; x.fillText('P',492,22); }
-      const imageData=x.getImageData(0,0,512,512);
-      const rgba=imageData.data;
-      const pal=quantize(rgba, 128);
-      const idx=applyPalette(rgba, pal);
-      g.writeFrame(idx,512,512,{palette:pal,delay,repeat:i?undefined:0});
-      toast('מכין GIF WOW... '+Math.round((i+1)/frames*100)+'%');
+      drawFrame(x, t, {preset:currentPreset, anim:animType});
+      const data=x.getImageData(0,0,512,512).data; const pal=quantize(data, 128); const idx=applyPalette(data,pal); g.writeFrame(idx,512,512,{palette:pal,delay,repeat:i?undefined:0});
+      toast('מכין GIF • '+Math.round((i+1)/frames*100)+'%');
       await new Promise(r=>setTimeout(r,0));
     }
-    g.finish();
-    const blob=new Blob([g.bytes()],{type:'image/gif'});
-    const url=URL.createObjectURL(blob);
-    const rec={id:Date.now(), url, blob, createdAt:new Date().toISOString(), preset:currentPreset, text:document.getElementById('textStickerInput').value};
-    try{ const h=JSON.parse(localStorage.getItem('persona_history')||'[]'); h.unshift({id:rec.id, createdAt:rec.createdAt, preset:rec.preset, text:rec.text, thumb:document.getElementById('editCanvas').toDataURL('image/jpeg',0.6)}); localStorage.setItem('persona_history', JSON.stringify(h.slice(0,50))); }catch{}
-    // show result
-    const packGrid=document.getElementById('packGrid');
-    packGrid.innerHTML='';
-    const div=document.createElement('div'); div.className='pack-item'; div.innerHTML=`<img src="${url}"><span>GIF • עכשיו</span>`; packGrid.appendChild(div);
+    g.finish(); const blob=new Blob([g.bytes()],{type:'image/gif'}); const url=URL.createObjectURL(blob);
     window._lastGif={blob,url};
-    toast('GIF מוכן 🔥'); updateCreditsUI();
-    // enable share
-    const dl=document.getElementById('btnDownload'); if(dl) dl.onclick=()=>{ const a=document.createElement('a'); a.href=url; a.download='persona-'+Date.now()+'.gif'; a.click(); };
-    const sh=document.getElementById('btnShare'); if(sh) sh.onclick=async()=>{ try{ const file=new File([blob],'persona.gif',{type:'image/gif'}); if(navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({files:[file]}); }else{ const a=document.createElement('a'); a.href=url; a.download='persona.gif'; a.click(); } }catch{} };
-  }catch(e){ 
-    try{ if(creditTx?.refund) creditTx.refund(); }catch{}
-    toast(e.message||'שגיאה ביצירת GIF', true); console.error(e);
-  }
+    const grid=document.getElementById('resultGrid'); grid.innerHTML=''; const d=document.createElement('div'); d.className='pack-item'; d.innerHTML=`<img src="${url}"><span>GIF אנימציה • ${animType}</span>`; grid.appendChild(d);
+    // history
+    try{ const h=JSON.parse(localStorage.getItem('persona_history')||'[]'); h.unshift({id:Date.now(), createdAt:new Date().toISOString(), preset:currentPreset, anim:animType, text:document.getElementById('txtInput').value, thumb:document.getElementById('editCanvas').toDataURL('image/jpeg',0.6)}); localStorage.setItem('persona_history', JSON.stringify(h.slice(0,50))); loadHistory(); }catch{}
+    toast('GIF עם אנימציה אמיתית מוכן 🔥'); updateCredits();
+  }catch(e){ try{ if(tx?.refund) tx.refund(); }catch{} toast(e.message||'שגיאה',true); console.error(e); }
 }
-
 async function makePack(){
-  if(!img.naturalWidth){ toast('קודם צלם תמונה', true); return; }
-  const grid=document.getElementById('packGrid'); grid.innerHTML=''; const packs=[];
+  if(!img.naturalWidth){ toast('צלם תמונה קודם',true); return; }
+  const grid=document.getElementById('resultGrid'); grid.innerHTML=''; const packs=[];
   for(let r of reactions){
     const c=document.createElement('canvas'); c.width=512; c.height=512; const ctx=c.getContext('2d');
-    ctx.fillStyle='#111'; ctx.fillRect(0,0,512,512);
-    const s=Math.min(512/img.naturalWidth,512/img.naturalHeight)*0.85; const w=img.naturalWidth*s, h=img.naturalHeight*s;
-    ctx.drawImage(img,(512-w)/2,(512-h)/2 -20,w,h);
-    ctx.font='900 42px sans-serif'; ctx.textAlign='center'; ctx.lineWidth=8; ctx.strokeStyle='#000'; ctx.fillStyle='#fff';
-    ctx.strokeText(r.text,256,470); ctx.fillText(r.text,256,470);
-    if(r.style==='fire'){ ctx.fillStyle='#ff5a1f33'; ctx.fillRect(0,0,512,512); }
-    if(r.style==='neon'){ ctx.shadowColor='#ff3b9a'; ctx.shadowBlur=20; ctx.strokeStyle='#ff3b9a'; ctx.lineWidth=5; ctx.strokeRect(18,18,476,476); }
-    if(!isProUser()){ ctx.font='700 16px sans-serif'; ctx.fillStyle='#fff8'; ctx.textAlign='right'; ctx.fillText('P',492,22); }
-    const url=c.toDataURL('image/webp',0.9);
-    packs.push({text:r.text, url, canvas:c});
-    const div=document.createElement('div'); div.className='pack-item'; div.innerHTML=`<img src="${url}"><span>${r.text}</span>`; grid.appendChild(div);
+    drawFrame(ctx, 0.18, {preset:r.preset, anim:r.anim, scaleMul:r.scale, rotAdd:r.rot, text:r.text});
+    const url=c.toDataURL('image/webp',0.92);
+    packs.push({text:r.text, url, preset:r.preset});
+    const div=document.createElement('div'); div.className='pack-item'; div.innerHTML=`<img src="${url}"><span>${r.text} • ${r.preset}</span>`; grid.appendChild(div);
   }
-  window._lastPack=packs;
-  document.getElementById('btnPackShare').style.display='block';
-  toast('חבילת 8 תגובות מוכנה 🎁');
-  if(!isProUser()){ setTimeout(()=>document.getElementById('storeModal').classList.add('open'),600); }
+  window._lastPack=packs; document.getElementById('btnSavePack').style.display='block'; toast('חבילת 8 תגובות - כל אחת שונה באמת 🎁');
+  if(!isProUser()) setTimeout(()=>document.getElementById('storeModal').classList.add('open'), 700);
 }
-async function saveToDevice(){
-  const c=document.getElementById('editCanvas'); c.toBlob(async (blob)=>{
-    if(!blob) return;
-    const file=new File([blob],'persona.png',{type:'image/png'});
-    if(navigator.canShare && navigator.canShare({files:[file]})){ try{ await navigator.share({files:[file], title:'PersonaAI'}); return; }catch{} }
-    const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='persona-'+Date.now()+'.png'; a.click();
-  },'image/png');
-}
-async function shareFile(){ saveToDevice(); }
-async function savePack(){
+async function saveGifFile(){ if(!window._lastGif){ toast('תיצור GIF קודם',true); return; } const a=document.createElement('a'); a.href=window._lastGif.url; a.download='persona-'+Date.now()+'.gif'; a.click(); }
+async function shareGif(){ if(!window._lastGif){ toast('תיצור GIF קודם',true); return; } try{ const file=new File([window._lastGif.blob],'persona.gif',{type:'image/gif'}); if(navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({files:[file], title:'PersonaAI'}); } else { saveGifFile(); } }catch{} }
+async function savePackFiles(){
   if(!window._lastPack) return;
   if(!isProUser()){
-    const saved=parseInt(localStorage.getItem('persona_pack_free_used')||'0',10);
-    if(saved>=1){ toast('חבילה ראשונה חינם נוצלה - צריך PRO 💎', true); document.getElementById('storeModal').classList.add('open'); return; }
+    const used=parseInt(localStorage.getItem('persona_pack_free_used')||'0',10);
+    if(used>=1){ toast('חבילה חינם נוצלה - צריך PRO 💎',true); document.getElementById('storeModal').classList.add('open'); return; }
     localStorage.setItem('persona_pack_free_used','1');
   }
-  for(let p of window._lastPack){
-    const a=document.createElement('a'); a.href=p.url; a.download='reaction-'+p.text.replace(/[^a-z0-9]/gi,'')+'.webp'; a.click(); await new Promise(r=>setTimeout(r,300));
-  }
-  toast('8 תגובות נשמרו למכשיר 🎉');
+  for(let p of window._lastPack){ const a=document.createElement('a'); a.href=p.url; a.download='reaction-'+p.text.replace(/[^a-z0-9\u0590-\u05FF]/gi,'')+'.webp'; a.click(); await new Promise(r=>setTimeout(r,250)); }
+  toast('8 תגובות שונות נשמרו 📦');
 }
-function saveHistory(rec){
-  try{
-    const h=JSON.parse(localStorage.getItem('persona_history')||'[]'); h.unshift({id:rec.id, createdAt:rec.createdAt, preset:rec.preset, text:rec.text, thumb:document.getElementById('editCanvas').toDataURL('image/jpeg',0.6)}); localStorage.setItem('persona_history', JSON.stringify(h.slice(0,50)));
-  }catch{}
-}
-function showHistory(){ loadHistory(); }
 function loadHistory(){
   try{
     const h=JSON.parse(localStorage.getItem('persona_history')||'[]'); const g=document.getElementById('historyGrid'); if(!g) return; g.innerHTML='';
-    h.forEach(item=>{
-      const d=new Date(item.createdAt); const dateStr=d.toLocaleDateString('he-IL')+' '+d.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'});
-      const div=document.createElement('div'); div.className='pack-item'; div.innerHTML=`<img src="${item.thumb}"><span>${item.text||item.preset} • ${dateStr}</span>`; g.appendChild(div);
-    });
+    h.forEach(it=>{ const d=new Date(it.createdAt); const ds=d.toLocaleDateString('he-IL')+' '+d.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'}); const div=document.createElement('div'); div.className='pack-item'; div.innerHTML=`<img src="${it.thumb}"><span>${(it.text||it.preset)+' • '+it.anim||''} • ${ds}</span>`; g.appendChild(div); });
   }catch{}
 }
-window.addEventListener('load', ()=>{ bindEvents(); updateCreditsUI(); });
+window.addEventListener('load', bind);
+if('serviceWorker' in navigator){ navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister())); }
 </script>
 </body>
 </html>
