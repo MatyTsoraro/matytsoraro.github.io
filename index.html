@@ -2,441 +2,120 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<title>PersonaAI v18 - תפאורה חכמה</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#090A12">
+<title>PersonaAI - התגובה שלך, עם הפנים שלך</title>
 <script type="importmap">{"imports":{"gifenc":"https://cdn.jsdelivr.net/npm/gifenc@1.0.3/dist/gifenc.esm.js"}}</script>
 <script type="module">import * as m from 'gifenc'; window.__gifencReady=Promise.resolve(m);</script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js" crossorigin="anonymous"></script>
-<script src="billing.js?v=17"></script>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&family=Rubik+Dirt&family=Secular+One&display=swap" rel="stylesheet">
+<script src="billing.js?v=19"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{font-family:Heebo,sans-serif;background:#07070d;color:#fff;overflow-x:hidden}
-.splash{position:fixed;inset:0;background:radial-gradient(140% 90% at 50% 0%,#1a1030 0%,#07070d 70%);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;transition:opacity .45s}
-.splash.hidden{opacity:0;pointer-events:none}
-.splash h1{font-size:52px;font-weight:900;background:linear-gradient(90deg,#ff3b9a,#ffbe0b,#55efff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.sub{color:#a1a1b5;margin:8px 0 16px;text-align:center;line-height:1.45;font-size:14px}
-.btn-main{background:linear-gradient(90deg,#ff3b9a,#7c3aed);color:#fff;border:0;border-radius:18px;padding:14px 24px;font-size:16px;font-weight:900;box-shadow:0 12px 30px #ff3b9a55;cursor:pointer;touch-action:manipulation}
-.btn{border:1px solid #2a2a4a;background:#151525;color:#fff;border-radius:14px;padding:9px 13px;font-weight:700;cursor:pointer;font-size:12px}
-.btn.ghost{background:transparent}
-.btn:disabled,.btn-main:disabled{opacity:.55;cursor:not-allowed;filter:grayscale(.2)}
-.screen{display:none;min-height:100vh;padding:10px 10px 92px}
-.screen.active{display:block}
-.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;max-width:440px;margin-left:auto;margin-right:auto}
-.logo{font-weight:900;font-size:20px;background:linear-gradient(90deg,#ff3b9a,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.credits{background:#1a1a2e;border:1px solid #2a2a4a;border-radius:999px;padding:5px 11px;font-size:11px}
-.edit-wrap{position:relative;width:100%;max-width:440px;margin:0 auto;background:#0a0a0f;border-radius:26px;overflow:hidden;border:1px solid #2a2a4a;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;touch-action:none}
-#editCanvas{width:100%;height:100%;display:block;touch-action:none}
-.controls{max-width:440px;margin:8px auto;display:flex;flex-direction:column;gap:9px}
-.textbox{width:100%;background:#1a1a2e;border:2px solid #2a2a4a;border-radius:14px;padding:12px;font-size:15px;color:#fff;outline:none}
-.textbox:focus{border-color:#ff3b9a66}
-.textbox.prompt{border-color:#55efff66;background:#0f1a2a}
-.row{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
-.chip{flex:0 0 auto;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:999px;padding:7px 11px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap}
-.chip.active{border-color:#ff3b9a;background:#2a1230}
-.preset{flex:0 0 auto;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:14px;padding:8px 11px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap}
-.preset.active{border-color:#ff3b9a;background:#2a1230}
-.adv{border:1px solid #2a2a4a;background:#121223;border-radius:14px;padding:10px;display:none}
-.adv.open{display:block}
-.adv-row{display:flex;justify-content:space-between;align-items:center;margin:6px 0;font-size:11px}
-.adv-row input[type=range]{width:50%}
-.pack-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.pack-item{position:relative;background:#10101a;border:1px solid #24243a;border-radius:16px;overflow:hidden;aspect-ratio:1/1;cursor:pointer}
-.pack-item img{width:100%;height:100%;object-fit:cover;display:block}
-.pack-item .lab{position:absolute;bottom:5px;left:5px;right:5px;background:#000c;backdrop-filter:blur(8px);border-radius:9px;padding:4px 5px;font-size:10px;font-weight:800;text-align:center}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#0a0a0fcc;backdrop-filter:blur(18px);border-top:1px solid #1e1e2e;display:flex;justify-content:space-around;padding:8px 0 14px;z-index:50}
-.nav-btn{background:none;border:0;color:#6b6b82;font-size:9px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}
-.nav-btn.active{color:#ff3b9a}
-.modal{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;z-index:100;padding:14px}
-.modal.open{display:flex}
-.modal-box{background:#151525;border:1px solid #2a2a4a;border-radius:20px;padding:14px;width:100%;max-width:350px}
-.toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:#1a1a2e;border:1px solid #2a2a4a;padding:9px 14px;border-radius:999px;font-size:11px;display:none;z-index:200;max-width:90%;text-align:center}
-#magnifier{position:absolute;top:10px;left:10px;width:88px;height:88px;border-radius:50%;border:3px solid #ff3b9a;overflow:hidden;display:none;z-index:5;box-shadow:0 6px 20px #000a;background:#000}
-#magnifier canvas{width:100%;height:100%}
-.filter-label{font-size:11px;font-weight:900;color:#a1a1b5;margin:8px 2px 2px}
-.bg-preview{width:100%;max-width:440px;margin:6px auto;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.bg-preview button{background:#151525;border:1px solid #2a2a4a;border-radius:12px;padding:6px;font-size:10px;cursor:pointer;text-align:center;line-height:1.2}
+:root{--bg:#090a12;--card:#151728;--card2:#1d2035;--text:#fff;--muted:#a9abc0;--pink:#ff3b9a;--purple:#7c3aed;--blue:#3478f6;--green:#20c66b;--border:#323652;--danger:#ff5f77}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:Heebo,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);overflow-x:hidden}
+button,input{font:inherit}.app{width:min(100%,480px);margin:auto;padding:14px 14px 36px}.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.brand{font-size:23px;font-weight:900;background:linear-gradient(90deg,var(--pink),#ffbd00,#5de7ff);-webkit-background-clip:text;color:transparent}.tag{font-size:11px;color:var(--muted);text-align:left}.hero{background:linear-gradient(145deg,#181229,#101422);border:1px solid var(--border);border-radius:22px;padding:14px;margin-bottom:12px}.hero h1{font-size:22px;line-height:1.2}.hero p{font-size:13px;color:var(--muted);margin-top:5px}.stage{position:relative;width:100%;aspect-ratio:1/1;background:#05060a;border:1px solid var(--border);border-radius:24px;overflow:hidden;box-shadow:0 16px 55px #0008}.stage canvas,.stage video{width:100%;height:100%;display:block;object-fit:cover}.stage video.mirror{transform:scaleX(-1)}.stage-badge{position:absolute;top:10px;right:10px;background:#000b;border:1px solid #ffffff2a;border-radius:999px;padding:6px 9px;font-size:11px;backdrop-filter:blur(8px)}.capture{display:flex;gap:9px;margin:10px 0}.btn{border:1px solid var(--border);border-radius:16px;background:var(--card2);color:#fff;padding:12px 14px;font-weight:800;cursor:pointer;min-height:48px}.btn:disabled{opacity:.5;cursor:not-allowed}.btn-primary{border:0;background:linear-gradient(90deg,var(--pink),var(--purple));box-shadow:0 10px 26px #ff3b9a35}.btn-blue{border:0;background:linear-gradient(90deg,#2d78f6,#674bef)}.btn-green{border:0;background:linear-gradient(90deg,#21c96d,#12a852);font-size:17px}.btn-light{background:#fff;color:#111;border:0}.btn-wide{width:100%}.grow{flex:1}.section{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:14px;margin-top:12px}.section-title{font-size:16px;font-weight:900;margin-bottom:4px}.section-help{font-size:12px;color:var(--muted);margin-bottom:10px}.reaction-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.reaction{border:1px solid var(--border);background:var(--card2);color:#fff;border-radius:16px;padding:10px 4px;min-height:66px;font-size:12px;font-weight:800;cursor:pointer}.reaction b{display:block;font-size:22px;margin-bottom:2px}.reaction.active{border:2px solid var(--pink);background:#32172e;box-shadow:0 0 0 3px #ff3b9a20}.text-input{width:100%;border:1px solid var(--border);background:#0e1020;color:#fff;border-radius:15px;padding:13px 14px;outline:none;font-size:15px}.text-input:focus{border-color:#5e8dff;box-shadow:0 0 0 3px #3478f625}.scene-row{display:flex;gap:8px}.anim-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.anim{border:1px solid var(--border);background:var(--card2);color:#fff;border-radius:14px;padding:10px 5px;font-size:12px;font-weight:800}.anim.active{border-color:#5a8cff;background:#182d54}.status{display:none;margin-top:10px;padding:10px;border-radius:13px;background:#101d31;color:#8dd1ff;font-size:12px;text-align:center}.status.show{display:block}.result{display:none}.result.show{display:block}.result img{width:100%;border-radius:20px;border:1px solid var(--border);display:block;background:#05060a}.result-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}.result-actions .btn-green{grid-column:1/-1}.advanced{margin-top:10px}.advanced summary{font-size:12px;color:var(--muted);cursor:pointer}.advanced-body{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.toast{position:fixed;z-index:100;bottom:22px;left:50%;transform:translateX(-50%);width:min(90%,420px);background:#20243a;border:1px solid var(--border);border-radius:999px;padding:10px 15px;text-align:center;font-size:12px;display:none}.toast.error{border-color:var(--danger);color:#ffd8df}.hide{display:none!important}.progress{height:5px;background:#272b42;border-radius:99px;overflow:hidden;margin-top:8px;display:none}.progress i{display:block;width:0;height:100%;background:linear-gradient(90deg,var(--pink),#5de7ff);transition:width .2s}.legal{font-size:10px;color:#70738a;text-align:center;margin-top:18px;line-height:1.5}
 </style>
 </head>
 <body>
+<main class="app">
+  <header class="header"><div class="brand">PersonaAI</div><div class="tag">התגובה שלך.<br>עם הפנים שלך.</div></header>
+  <section class="hero"><h1>יוצרים תגובה אישית לוואטסאפ</h1><p>סלפי אחד, תגובה אחת, GIF מוכן לשיתוף.</p></section>
 
-<div id="splash" class="splash">
-  <h1>PersonaAI</h1>
-  <div class="sub">תאר איפה אתה רוצה להיות — וזה קורה.<br><b>בלי פילטרים של חתול.</b> אתה נשאר אתה, רק הרקע משתנה.</div>
-  <div style="background:#151525;border:1px solid #2a2a4a;border-radius:16px;padding:12px;width:100%;max-width:320px;margin-bottom:14px">
-    <div style="font-size:11px;color:#a1a1b5;margin-bottom:6px">דוגמאות שתוכל לכתוב:</div>
-    <div style="display:flex;flex-wrap:wrap;gap:6px">
-      <span style="background:#1a1a2e;border-radius:999px;padding:4px 8px;font-size:10px">🏖️ חוף בברזיל בשקיעה</span>
-      <span style="background:#1a1a2e;border-radius:999px;padding:4px 8px;font-size:10px">🚀 בחלל עם כדור הארץ מאחור</span>
-      <span style="background:#1a1a2e;border-radius:999px;padding:4px 8px;font-size:10px">🏢 משרד יוקרה במגדל</span>
-      <span style="background:#1a1a2e;border-radius:999px;padding:4px 8px;font-size:10px">🌃 טוקיו בלילה עם ניאון</span>
-    </div>
+  <div id="stage" class="stage">
+    <video id="video" autoplay playsinline muted class="mirror"></video>
+    <canvas id="canvas" width="512" height="512" class="hide"></canvas>
+    <div id="stageBadge" class="stage-badge">1. מצלמים</div>
   </div>
-  <button id="startBtn" class="btn-main">הבנתי, בואו ניצור תפאורה 🚀</button>
-</div>
-
-<div id="screenCamera" class="screen active">
-  <div class="topbar"><div class="logo">PersonaAI BG</div><div class="credits">💎 <span id="creditsCount">3</span> <span id="proBadge" style="display:none;background:#ff3b9a;border-radius:999px;padding:2px 6px;font-size:10px;margin-right:6px">PRO</span></div></div>
-  <div style="max-width:440px;margin:0 auto 8px;background:#151525;border:1px solid #2a2a4a;border-radius:14px;padding:10px;display:flex;gap:8px;align-items:center"><div style="font-size:20px">💡</div><div style="font-size:11px;color:#a1a1b5"><b style="color:#fff">איך זה עובד?</b> מצלמים סלפי, כותבים תפאורה חופשית, וה-AI מחליף רק את הרקע. אתה נשאר 100% אתה.</div></div>
-  <div class="edit-wrap" style="aspect-ratio:3/4.2;background:#111"><video id="video" autoplay playsinline muted style="width:100%;height:100%;object-fit:cover;display:block;background:#000"></video><canvas id="capCanvas" style="display:none"></canvas></div>
-  <div style="max-width:440px;margin:10px auto;display:flex;gap:8px;justify-content:center"><button id="btnShoot" class="btn-main">📸 סלפי</button><button id="btnGal" class="btn">🖼️ גלריה</button><button id="btnFlip" class="btn ghost">🔄</button></div>
-  <input id="fileIn" type="file" accept="image/*" hidden>
-</div>
-
-<div id="screenEdit" class="screen">
-  <div class="topbar"><button id="btnBack" class="btn ghost">←</button><div class="logo">תפאורה חופשית</div><button id="btnReset" class="btn ghost">↺</button></div>
-  <div class="edit-wrap" id="editWrap"><canvas id="editCanvas" width="512" height="512"></canvas><div id="magnifier"><canvas id="magCanvas" width="88" height="88"></canvas></div></div>
-  <div class="controls">
-    <div class="filter-label">🌍 תאר תפאורה - כתוב חופשי וזה יהיה</div>
-    <input id="bgPrompt" class="textbox prompt" placeholder="למשל: חוף בברזיל בשקיעה, משרד יוקרה, חלל עם כדור הארץ, טוקיו בלילה...">
-    <div style="display:flex;gap:6px">
-      <button id="btnGenBg" class="btn-main" style="flex:1">✨ צור תפאורה מהתיאור</button>
-      <button id="btnVariantBg" class="btn ghost" style="display:none">🎲 וריאציה</button><button id="btnClearBg" class="btn ghost">↺ נקה</button>
-    </div>
-    <div class="bg-preview">
-      <button data-quick="beach in Brazil at sunset, golden hour">🏖️ ברזיל</button>
-      <button data-quick="Tokyo night with neon lights">🌃 טוקיו</button>
-      <button data-quick="luxury office in skyscraper">🏢 משרד יוקרה</button>
-      <button data-quick="in space with Earth behind">🚀 חלל</button>
-      <button data-quick="rainforest jungle">🌴 ג'ונגל</button>
-      <button data-quick="Eiffel Tower Paris">🗼 פריז</button>
-      <button data-quick="cyberpunk city neon">🌆 סייברפאנק</button>
-      <button id="btnTransparentBg" type="button">✂️ שקוף</button>
-    </div>
-    <div style="height:1px;background:#2a2a4a;margin:4px 0"></div>
-    <input id="txtInput" class="textbox" placeholder="✍️ כתבו תגובה, למשל: LOL, תודה, בדרך...">
-    <div class="row" id="fontRow">
-      <button class="chip active" data-font="Heebo">Heebo נקי</button>
-      <button class="chip" data-font="Rubik Dirt">Dirt קשוח</button>
-      <button class="chip" data-font="Secular One">עבה</button>
-    </div>
-    <div class="row" id="presetRow">
-      <button class="preset active" data-p="none">רגיל</button>
-      <button class="preset" data-p="boss">👑 זוהר</button>
-      <button class="preset" data-p="fire">🔥 אש</button>
-      <button class="preset" data-p="neon">💜 ניאון</button>
-      <button class="preset" data-p="chibi">🧸 צ'יבי</button>
-    </div>
-    <button id="btnAdv" class="btn" style="width:100%">🎛️ עריכה - זום/סיבוב/זכוכית מגדלת</button>
-    <div id="advPanel" class="adv">
-      <div class="adv-row"><span>🔍 זום</span><input id="scaleRange" type="range" min="0.5" max="3" step="0.02" value="1"><span id="scaleVal">1.00</span></div>
-      <div class="adv-row"><span>↻ סיבוב</span><input id="rotRange" type="range" min="-60" max="60" step="1" value="0"><span id="rotVal">0°</span></div>
-      <div class="adv-row"><span>💃 אנימציה</span><select id="animSelect" class="btn" style="padding:5px"><option value="zoom">זום נושם</option><option value="bounce">קפיצה</option><option value="shake">רעידה</option><option value="spin">סיבוב קל</option><option value="none">ללא</option></select></div>
-      <div id="aiStatus" style="font-size:10px;color:#55efff;margin-top:6px;display:none"></div>
-    </div>
-    <div style="display:flex;gap:8px">
-      <button id="btnGif" class="btn-main" style="flex:1.2">✨ GIF עם תפאורה</button>
-      <button id="btnPack" class="btn" style="flex:1">🎁 חבילת 8 תפאורות</button>
-    </div>
-    <div id="resultGrid" class="pack-grid"></div>
-    <div style="display:flex;gap:8px">
-      <button id="btnShare" class="btn" style="flex:1">📤 שתף</button>
-      <button id="btnSave" class="btn" style="flex:1">⬇️ שמור</button>
-      <button id="btnSavePack" class="btn" style="flex:1;display:none">📦 שמור 8</button>
-    </div>
+  <div id="captureButtons" class="capture">
+    <button id="shootBtn" class="btn btn-primary grow">📸 צלמו סלפי</button>
+    <button id="galleryBtn" class="btn">🖼️ גלריה</button>
+    <button id="flipBtn" class="btn">🔄</button>
   </div>
-</div>
+  <input id="fileInput" type="file" accept="image/*" hidden>
 
-<div id="screenMy" class="screen">
-  <div class="topbar"><div class="logo">שלי</div><button id="btnClear" class="btn ghost">נקה</button></div>
-  <div id="historyGrid" class="pack-grid"></div>
-</div>
+  <section id="creator" class="section hide">
+    <div class="section-title">2. מה בא לכם להגיד?</div>
+    <div class="section-help">בחרו תגובה. הטקסט והתפאורה יתמלאו אוטומטית.</div>
+    <div id="reactions" class="reaction-grid"></div>
+    <input id="captionInput" class="text-input" maxlength="90" placeholder="או כתבו משהו משלכם..." style="margin-top:10px">
+  </section>
 
-<div class="bottom-nav">
-  <button class="nav-btn active" data-nav="camera">📷<span>מצלמה</span></button>
-  <button class="nav-btn" data-nav="edit">✏️<span>עריכה</span></button>
-  <button class="nav-btn" data-nav="my">🗂️<span>שלי</span></button>
-  <button class="nav-btn" id="storeBtn">💎<span>חנות</span></button>
-</div>
+  <section id="sceneSection" class="section hide">
+    <div class="section-title">3. איפה זה קורה?</div>
+    <div class="section-help">אפשר להשאיר את ההצעה שלנו או לכתוב כל מקום.</div>
+    <div class="scene-row">
+      <input id="sceneInput" class="text-input grow" maxlength="220" placeholder="למשל: חדר פיקוד בחללית">
+      <button id="sceneBtn" class="btn btn-primary">✨ צרו</button>
+    </div>
+    <button id="variantBtn" class="btn btn-wide hide" style="margin-top:8px">🎲 נסו תפאורה אחרת</button>
+    <div id="aiStatus" class="status"></div>
+  </section>
 
-<div id="storeModal" class="modal"><div class="modal-box"><h3>💎 PRO BG</h3><p style="color:#a1a1b5;font-size:12px;margin:6px 0 10px">תפאורה חופשית ללא הגבלה + ללא לוגו + חבילות 8</p><div style="background:#1a1a2e;border-radius:12px;padding:10px;margin-bottom:10px">12₪ / שבוע - תפאורה בלי סוף</div><button id="btnBuy" class="btn-main" style="width:100%">הפעל PRO</button><button id="btnCloseStore" class="btn ghost" style="width:100%;margin-top:8px">סגור</button></div></div>
+  <section id="motionSection" class="section hide">
+    <div class="section-title">4. איך ה־GIF יזוז?</div>
+    <div class="section-help">האנימציה מוצגת מיד בתמונה למעלה.</div>
+    <div class="anim-row">
+      <button class="anim active" data-anim="bounce">↕️ קפיצה</button>
+      <button class="anim" data-anim="zoom">🔍 זום</button>
+      <button class="anim" data-anim="shake">〰️ רעידה</button>
+    </div>
+    <button id="gifBtn" class="btn btn-blue btn-wide" style="margin-top:10px">🎬 צרו GIF</button>
+    <div id="progress" class="progress"><i></i></div>
+    <details class="advanced"><summary>עריכה מתקדמת</summary><div class="advanced-body"><button id="moveLeft" class="btn">ימינה ←</button><button id="moveRight" class="btn">→ שמאלה</button><button id="zoomIn" class="btn">＋ הגדלה</button><button id="zoomOut" class="btn">－ הקטנה</button></div></details>
+  </section>
+
+  <section id="result" class="section result">
+    <div class="section-title">התגובה מוכנה 🎉</div>
+    <img id="gifPreview" alt="GIF שנוצר">
+    <div class="result-actions">
+      <button id="shareBtn" class="btn btn-green">📲 שתפו בוואטסאפ</button>
+      <button id="saveBtn" class="btn btn-light">⬇️ שמרו</button>
+      <button id="anotherBtn" class="btn">✨ צרו תגובה נוספת</button>
+    </div>
+  </section>
+  <div class="legal">התמונה נשלחת לשירות ה־AI רק בעת יצירת תפאורה. יצירת ה־GIF מתבצעת במכשיר.</div>
+</main>
 <div id="toast" class="toast"></div>
-
 <script>
 const WORKER_URL='https://billowing-shape-1d81.maty-tsoraro.workers.dev';
-let stream=null, facing='user', img=new Image(), currentPreset='none', bgMode='none', animType='zoom', currentFont='Heebo';
-let drag={x:0,y:0,scale:1,rot:0,opacity:1};
-let personCanvas=null, maskCanvas=null, selfieSeg=null, segReady=false, generatedBgImg=null, currentBgPrompt='', generatedSceneIsComposite=false, isGeneratingBackground=false, lastBackgroundSeed=null;
-const reactions=[
-  {text:'LOL 😂', bgPrompt:'beach in Brazil at sunset'},
-  {text:'OMG 😱', bgPrompt:'Tokyo night neon city'},
-  {text:'WTF 🤯', bgPrompt:'cyberpunk city with neon lights'},
-  {text:'❤️ אוהב', bgPrompt:'Paris Eiffel Tower romantic'},
-  {text:'כן', bgPrompt:'luxury office skyscraper view'},
-  {text:'לא', bgPrompt:'desert dunes at night'},
-  {text:'🙏 תודה', bgPrompt:'flower field with sunset'},
-  {text:'בדרך 🚀', bgPrompt:'space with Earth behind, stars'}
+const REACTIONS=[
+ {emoji:'😂',label:'מת מצחוק',text:'מת מצחוק 😂',scene:'באולפן קומדיה עם קהל ואורות במה'},
+ {emoji:'😱',label:'אין מצב',text:'אין מצב 😱',scene:'חדר פיקוד עתידני בחללית עם מסכי בקרה'},
+ {emoji:'🙏',label:'תודה',text:'תודה רבה 🙏',scene:'אירוע חגיגי אלגנטי עם תאורה חמה'},
+ {emoji:'❤️',label:'אוהב/ת',text:'אוהב/ת אתכם ❤️',scene:'גג בעיר בשקיעה עם אורות יפים'},
+ {emoji:'🚗',label:'אני בדרך',text:'אני בדרך 🚗',scene:'בתוך מכונית ספורט עתידנית בעיר בלילה'},
+ {emoji:'🎉',label:'מזל טוב',text:'מזל טוב! 🎉',scene:'מסיבת יום הולדת צבעונית עם בלונים וקונפטי'},
+ {emoji:'😴',label:'אין לי כוח',text:'אין לי כוח 😴',scene:'חדר שינה מפואר ונעים בלילה'},
+ {emoji:'🤯',label:'מה הולך פה',text:'מה הולך פה?! 🤯',scene:'מרכז שליטה עמוס במסכים והתראות'},
+ {emoji:'✍️',label:'משהו משלי',text:'',scene:''}
 ];
-function toast(m,e){ const t=document.getElementById('toast'); t.textContent=m; t.style.display='block'; t.style.borderColor=e?'#ff3b9a':'#2a2a4a'; setTimeout(()=>t.style.display='none',3500); }
-function isPro(){ try{ if(window.PersonaBilling?.isPro?.()) return true; return localStorage.getItem('persona_pro')==='1'; }catch{return false;} }
-function updateCredits(){ try{ const c=window.PersonaBilling?.getCredits?.() ?? parseInt(localStorage.getItem('persona_credits')||'3',10); document.getElementById('creditsCount').textContent=c; document.getElementById('proBadge').style.display=isPro()?'inline-block':'none'; }catch{} }
-async function startCam(){ try{ if(stream) stream.getTracks().forEach(t=>t.stop()); stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:facing,width:{ideal:1280},height:{ideal:1280}},audio:false}); const v=document.getElementById('video'); v.srcObject=stream; await v.play(); }catch(e){ toast('מצלמה חסומה - פותח גלריה',true); document.getElementById('fileIn').click(); } }
-function showScreen(n){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById('screen'+n.charAt(0).toUpperCase()+n.slice(1)).classList.add('active'); document.querySelectorAll('.nav-btn[data-nav]').forEach(b=>b.classList.toggle('active',b.dataset.nav===n)); }
-
-async function initSeg(){
-  if(segReady) return true;
-  if(!window.SelfieSegmentation) return false;
-  const st=document.getElementById('aiStatus'); if(st){ st.style.display='block'; st.textContent='טוען AI הסרת רקע...'; }
-  try{
-    selfieSeg = new window.SelfieSegmentation({locateFile:(f)=>`https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${f}`});
-    selfieSeg.setOptions({modelSelection:1});
-    segReady=true;
-    if(st){ st.textContent='AI מוכן ✨'; setTimeout(()=>st.style.display='none',1200); }
-    return true;
-  }catch(e){ if(st) st.textContent='AI לא זמין'; return false; }
-}
-async function runSegmentation(){
-  if(!img.src) return null;
-  await initSeg();
-  if(!selfieSeg) return null;
-  return new Promise(async res=>{
-    let done=false;
-    const to=setTimeout(()=>{ if(!done){ done=true; res(personCanvas); } }, 6000);
-    selfieSeg.onResults(r=>{
-      if(r.segmentationMask && !done){
-        const w=512,h=512; const mc=document.createElement('canvas'); mc.width=w; mc.height=h; mc.getContext('2d').drawImage(r.segmentationMask,0,0,w,h); maskCanvas=mc;
-        const pc=document.createElement('canvas'); pc.width=w; pc.height=h; const pctx=pc.getContext('2d'); pctx.drawImage(img,0,0,w,h); pctx.globalCompositeOperation='destination-in'; pctx.drawImage(mc,0,0,w,h); personCanvas=pc;
-        done=true; clearTimeout(to); res(pc);
-      }
-    });
-    try{ await selfieSeg.send({image: img}); }catch(e){ clearTimeout(to); res(null); }
-  });
-}
-
-function drawBackground(ctx, mode, t, customBgImg){
-  const w=ctx.canvas.width,h=ctx.canvas.height;
-  if(customBgImg && customBgImg.complete && customBgImg.naturalWidth){
-    ctx.drawImage(customBgImg,0,0,w,h);
-    return;
-  }
-  if(mode==='beach'){
-    const g=ctx.createLinearGradient(0,0,0,h); g.addColorStop(0,'#55efff'); g.addColorStop(0.55,'#55efff'); g.addColorStop(0.55,'#f5d76e'); g.addColorStop(1,'#e8c65a'); ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
-  } else if(mode==='space'){
-    ctx.fillStyle='#050510'; ctx.fillRect(0,0,w,h); ctx.fillStyle='#fff'; for(let i=0;i<50;i++){ const x=(i*73)%w, y=(i*37)%h; ctx.beginPath(); ctx.arc(x+Math.sin(t*2+i)*2, y, (i%3)+1,0,Math.PI*2); ctx.fill(); }
-  } else if(mode==='city'){
-    const g=ctx.createLinearGradient(0,0,0,h); g.addColorStop(0,'#0a0a1a'); g.addColorStop(1,'#1a1030'); ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
-  } else {
-    const g=ctx.createRadialGradient(w/2,h/2,0,w/2,h/2,w*0.9); g.addColorStop(0,'#1a1030'); g.addColorStop(1,'#07070d'); ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
-  }
-}
-
-function containsHebrew(s){ return /[\u0590-\u05FF]/.test(s); }
-function wrapAndFit(ctx, text, maxW, fontName, baseSize){
-  let size=baseSize; let lines=[];
-  while(size>=18){
-    ctx.font=`900 ${size}px ${fontName}, Heebo`;
-    const words=text.split(/\s+/); let curLines=[]; let cur='';
-    for(let w of words){
-      const test=cur?cur+' '+w:w;
-      if(ctx.measureText(test).width <= maxW) cur=test;
-      else { if(cur) curLines.push(cur); if(ctx.measureText(w).width > maxW){ let chunk=''; for(let ch of w){ if(ctx.measureText(chunk+ch).width <= maxW) chunk+=ch; else { curLines.push(chunk); chunk=ch; } } cur=chunk; } else cur=w; }
-    }
-    if(cur) curLines.push(cur);
-    const maxLineW=Math.max(...curLines.map(l=>ctx.measureText(l).width));
-    if(maxLineW <= maxW || size<=20){ lines=curLines; break; }
-    size-=3;
-  }
-  return {size, lines};
-}
-
-function drawFrame(ctx, t=0, opts={}){
-  const preset=opts.preset||currentPreset; const anim=opts.anim||animType; const scaleMul=opts.scaleMul||1; const rotAdd=opts.rotAdd||0; const font=opts.font||currentFont; const bg=opts.bg||bgMode; const customBg=opts.customBg!==undefined?opts.customBg:generatedBgImg; const text=opts.text!==undefined?opts.text:document.getElementById('txtInput').value.trim();
-  const w=ctx.canvas.width,h=ctx.canvas.height;
-  drawBackground(ctx, bg, t, customBg);
-  ctx.save();
-  let aX=drag.x + (opts.xOff||0), aY=drag.y + (opts.yOff||0), aS=drag.scale*scaleMul, aR=drag.rot+rotAdd, aO=drag.opacity;
-  if(anim==='zoom'){ aS*=1+Math.sin(t*Math.PI*2)*0.07; }
-  if(anim==='bounce'){ aY+=Math.sin(t*Math.PI*2)*-11; aS*=1+Math.abs(Math.sin(t*Math.PI*2))*0.05; }
-  if(anim==='shake'){ aX+=Math.sin(t*18)*6; aY+=Math.cos(t*22)*4; }
-  if(anim==='spin'){ aR+=Math.sin(t*Math.PI*2)*4; }
-  ctx.translate(w/2+aX,h/2+aY); ctx.rotate(aR*Math.PI/180); ctx.scale(aS,aS); ctx.translate(-w/2,-h/2); ctx.globalAlpha=aO;
-  if(img.naturalWidth && !generatedSceneIsComposite){
-    let src = (personCanvas && (bg!=='none' || customBg)) ? personCanvas : null;
-    if(src){ ctx.drawImage(src,0,0,w,h); }
-    else { const s=Math.min(w/img.naturalWidth,h/img.naturalHeight)*0.9; const iw=img.naturalWidth*s, ih=img.naturalHeight*s; ctx.drawImage(img,(w-iw)/2,(h-ih)/2,iw,ih); }
-  }
-  if(preset==='fire'){ ctx.fillStyle=`rgba(255,80,20,${0.22+Math.sin(t*12)*0.09})`; ctx.fillRect(0,0,w,h); }
-  if(preset==='neon'){ ctx.shadowColor='#ff3b9a'; ctx.shadowBlur=26+Math.sin(t*9)*10; ctx.strokeStyle='#ff3b9a'; ctx.lineWidth=5; ctx.strokeRect(20,20,w-40,h-40); ctx.shadowBlur=0; }
-  if(preset==='chibi'){ ctx.fillStyle='rgba(255,120,180,0.38)'; ctx.beginPath(); ctx.ellipse(w*0.30,h*0.60,w*0.09,h*0.06,0,0,Math.PI*2); ctx.ellipse(w*0.70,h*0.60,w*0.09,h*0.06,0,0,Math.PI*2); ctx.fill(); }
-  if(preset==='boss'){ const grad=ctx.createLinearGradient(0,0,w,0); grad.addColorStop(0,'#ff3b9a'); grad.addColorStop(1,'#7c3aed'); ctx.strokeStyle=grad; ctx.lineWidth=5; ctx.strokeRect(16,16,w-32,h-32); }
-  ctx.restore();
-  if(text){
-    const maxW=w*0.86; const baseSize=46;
-    ctx.direction = containsHebrew(text)?'rtl':'ltr';
-    const fit=wrapAndFit(ctx, text, maxW, font, baseSize);
-    ctx.font=`900 ${fit.size}px ${font}, Heebo`; ctx.textAlign='center'; ctx.lineWidth=Math.max(6, fit.size*0.18); ctx.strokeStyle='#000'; ctx.fillStyle='#fff'; ctx.lineJoin='round';
-    const lineH=fit.size*1.12; const bounce=anim==='bounce'?Math.sin(t*11)*-6:0; const totalH=fit.lines.length*lineH; const startY=h*0.90+bounce - totalH + lineH;
-    fit.lines.forEach((line,i)=>{ const y=startY + i*lineH; ctx.strokeText(line,w/2,y); ctx.fillText(line,w/2,y); });
-    ctx.direction='ltr';
-  }
-  if(!isPro()){ ctx.font='700 12px Heebo'; ctx.fillStyle='#ffffff44'; ctx.textAlign='left'; ctx.fillText('PersonaAI',12,20); }
-}
-
-function draw(){ const c=document.getElementById('editCanvas'); const ctx=c.getContext('2d'); drawFrame(ctx,0); }
-
-async function imageToWorkerDataUrl(source){
-  const c=document.createElement('canvas'), maxSide=1280;
-  const ratio=Math.min(1,maxSide/Math.max(source.naturalWidth,source.naturalHeight));
-  c.width=Math.max(1,Math.round(source.naturalWidth*ratio));
-  c.height=Math.max(1,Math.round(source.naturalHeight*ratio));
-  c.getContext('2d').drawImage(source,0,0,c.width,c.height);
-  return c.toDataURL('image/jpeg',0.9);
-}
-function loadResultImage(url, timeoutMs=45000){
-  return new Promise((resolve,reject)=>{
-    const out=new Image(); out.crossOrigin='anonymous';
-    const timer=setTimeout(()=>reject(new Error('טעינת התוצאה ארכה יותר מדי')),timeoutMs);
-    out.onload=()=>{clearTimeout(timer);resolve(out)};
-    out.onerror=()=>{clearTimeout(timer);reject(new Error('לא ניתן לטעון את תמונת התוצאה'))};
-    out.src=url;
-  });
-}
-async function generateBgFromPrompt(prompt,{variation=false}={}){
-  if(isGeneratingBackground) return null;
-  const st=document.getElementById('aiStatus');
-  const mainBtn=document.getElementById('btnGenBg');
-  const variantBtn=document.getElementById('btnVariantBg');
-  const oldMain=mainBtn.textContent, oldVariant=variantBtn.textContent;
-  isGeneratingBackground=true; mainBtn.disabled=true; variantBtn.disabled=true;
-  (variation?variantBtn:mainBtn).textContent=variation?'⏳ יוצר וריאציה...':'⏳ בונה תפאורה...';
-  if(st){st.style.display='block';st.textContent='מבין את התיאור, מתרגם ובונה תפאורה מדויקת...'}
-  try{
-    const response=await fetch(WORKER_URL,{
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        action:'ai_meme_background', image:await imageToWorkerDataUrl(img),
-        prompt:String(prompt).slice(0,700), variation,
-        previousSeed:variation?lastBackgroundSeed:null
-      })
-    });
-    let data={}; try{data=await response.json()}catch{}
-    if(!response.ok) throw new Error(data.error||`שגיאת שרת ${response.status}`);
-    const resultUrl=data.resultUrl||data.imageUrl||data.output?.[0];
-    if(!resultUrl) throw new Error('השרת לא החזיר תמונת תפאורה');
-    generatedBgImg=await loadResultImage(resultUrl);
-    generatedSceneIsComposite=true; personCanvas=null; currentBgPrompt=prompt;
-    lastBackgroundSeed=data.seed??null; bgMode='custom'; draw();
-    variantBtn.style.display='block';
-    if(st){
-      st.textContent='התפאורה מוכנה ✨';
-      if(data.enhancedPrompt) st.title=data.enhancedPrompt;
-      setTimeout(()=>st.style.display='none',2200);
-    }
-    toast(variation?'נוצרה וריאציה חדשה ✨':'התפאורה הוחלפה בהצלחה ✨');
-    return generatedBgImg;
-  }catch(e){
-    console.error('Background generation failed',e);
-    if(st){st.textContent=e.message||'יצירת התפאורה נכשלה';setTimeout(()=>st.style.display='none',4000)}
-    toast(e.message||'לא הצלחתי ליצור את התפאורה',true); return null;
-  }finally{
-    isGeneratingBackground=false; mainBtn.disabled=false; variantBtn.disabled=false;
-    mainBtn.textContent=oldMain; variantBtn.textContent=oldVariant;
-  }
-}
-function bind(){
-  document.getElementById('startBtn').addEventListener('click', ()=>{ document.getElementById('splash').classList.add('hidden'); showScreen('camera'); startCam(); updateCredits(); initSeg(); });
-  document.getElementById('btnShoot').addEventListener('click', ()=>{ const v=document.getElementById('video'), cc=document.getElementById('capCanvas'); if(!v.videoWidth){ toast('מצלמה לא מוכנה',true); return; } cc.width=v.videoWidth; cc.height=v.videoHeight; cc.getContext('2d').drawImage(v,0,0); const d=cc.toDataURL('image/jpeg',0.92); img.onload=()=>{ showScreen('edit'); drag={x:0,y:0,scale:1,rot:0,opacity:1}; personCanvas=null; generatedBgImg=null; generatedSceneIsComposite=false; lastBackgroundSeed=null; bgMode='none'; draw(); }; img.src=d; });
-  document.getElementById('btnGal').addEventListener('click', ()=>document.getElementById('fileIn').click());
-  document.getElementById('fileIn').addEventListener('change', e=>{ const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=()=>{ img.onload=()=>{ showScreen('edit'); drag={x:0,y:0,scale:1,rot:0,opacity:1}; personCanvas=null; generatedBgImg=null; generatedSceneIsComposite=false; lastBackgroundSeed=null; bgMode='none'; draw(); runSegmentation().then(()=>draw()); }; img.src=r.result; }; r.readAsDataURL(f); e.target.value=''; });
-  document.getElementById('btnFlip').addEventListener('click', ()=>{ facing=facing==='user'?'environment':'user'; startCam(); });
-  document.getElementById('btnBack').addEventListener('click', ()=>showScreen('camera'));
-  document.getElementById('btnReset').addEventListener('click', ()=>{ drag={x:0,y:0,scale:1,rot:0,opacity:1}; generatedBgImg=null; generatedSceneIsComposite=false; lastBackgroundSeed=null; bgMode='none'; currentBgPrompt=''; document.getElementById('bgPrompt').value=''; document.getElementById('txtInput').value=''; draw(); });
-  document.getElementById('bgPrompt').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); document.getElementById('btnGenBg').click(); } });
-  document.getElementById('btnGenBg').addEventListener('click', async ()=>{
-    const p=document.getElementById('bgPrompt').value.trim();
-    if(!p){ toast('תאר תפאורה קודם - לדוגמה: חוף בברזיל',true); return; }
-    if(!img.naturalWidth){ toast('צלם תמונה קודם',true); return; }
-    // credit check
-    let tx=null; try{ if(!isPro() && window.PersonaBilling?.spendCreditsOrRefund){ tx=window.PersonaBilling.spendCreditsOrRefund(1); if(!tx?.success){ toast('אין קרדיטים 💎',true); document.getElementById('storeModal').classList.add('open'); return; } } }catch{}
-    const res=await generateBgFromPrompt(p);
-    if(!res && tx?.refund) try{ tx.refund(); }catch{}
-    else updateCredits();
-  });
-  document.querySelectorAll('.bg-preview button[data-quick]').forEach(b=>{
-    b.addEventListener('click', ()=>{
-      const q=b.dataset.quick;
-      document.getElementById('bgPrompt').value=q;
-      document.getElementById('btnGenBg').click();
-    });
-  });
-  document.getElementById('btnClearBg').addEventListener('click', ()=>{ generatedBgImg=null; generatedSceneIsComposite=false; lastBackgroundSeed=null; bgMode='none'; currentBgPrompt=''; document.getElementById('bgPrompt').value=''; document.getElementById('btnVariantBg').style.display='none'; draw(); });
-  document.getElementById('btnVariantBg').addEventListener('click', ()=>{ const p=document.getElementById('bgPrompt').value.trim()||currentBgPrompt; if(p) generateBgFromPrompt(p,{variation:true}); });
-  document.getElementById('btnTransparentBg').addEventListener('click', async ()=>{ if(!img.naturalWidth){toast('צלם תמונה קודם',true);return;} generatedBgImg=null; generatedSceneIsComposite=false; bgMode='custom'; currentBgPrompt='רקע שקוף'; const result=await runSegmentation(); if(!result){bgMode='none';toast('לא הצלחתי להסיר רקע',true);return;} document.getElementById('btnVariantBg').style.display='none'; draw(); toast('הרקע הוסר ✂️'); });
-  document.getElementById('presetRow').addEventListener('click', e=>{ const b=e.target.closest('.preset'); if(!b) return; document.querySelectorAll('#presetRow .preset').forEach(x=>x.classList.remove('active')); b.classList.add('active'); currentPreset=b.dataset.p; draw(); });
-  document.getElementById('fontRow').addEventListener('click', e=>{ const b=e.target.closest('.chip'); if(!b) return; document.querySelectorAll('#fontRow .chip').forEach(x=>x.classList.remove('active')); b.classList.add('active'); currentFont=b.dataset.font; draw(); });
-  document.getElementById('txtInput').addEventListener('input', draw);
-  document.getElementById('btnAdv').addEventListener('click', ()=>document.getElementById('advPanel').classList.toggle('open'));
-  document.getElementById('scaleRange').addEventListener('input', e=>{ drag.scale=parseFloat(e.target.value); document.getElementById('scaleVal').textContent=drag.scale.toFixed(2); draw(); });
-  document.getElementById('rotRange').addEventListener('input', e=>{ drag.rot=parseFloat(e.target.value); document.getElementById('rotVal').textContent=e.target.value+'°'; draw(); });
-  document.getElementById('animSelect').addEventListener('change', e=>{ animType=e.target.value; });
-  const wrap=document.getElementById('editWrap'); let pointers=new Map(), pinchDist=0, pinchScale=1, pinchAngle=0, startAngle=0, startX=0,startY=0, isDrag=false;
-  wrap.addEventListener('pointerdown', e=>{ pointers.set(e.pointerId,{x:e.clientX,y:e.clientY}); if(pointers.size===1){ isDrag=true; startX=e.clientX-drag.x; startY=e.clientY-drag.y; document.getElementById('magnifier').style.display='block'; } else if(pointers.size===2){ const pts=[...pointers.values()]; pinchDist=Math.hypot(pts[0].x-pts[1].x, pts[0].y-pts[1].y); pinchScale=drag.scale; const ang=Math.atan2(pts[1].y-pts[0].y, pts[1].x-pts[0].x)*180/Math.PI; pinchAngle=ang; startAngle=drag.rot; } try{wrap.setPointerCapture(e.pointerId);}catch{} e.preventDefault(); });
-  wrap.addEventListener('pointermove', e=>{ if(!pointers.has(e.pointerId)) return; pointers.set(e.pointerId,{x:e.clientX,y:e.clientY}); if(pointers.size===1 && isDrag){ drag.x=e.clientX-startX; drag.y=e.clientY-startY; draw(); } else if(pointers.size===2){ const pts=[...pointers.values()]; const d=Math.hypot(pts[0].x-pts[1].x, pts[0].y-pts[1].y); if(pinchDist>0){ drag.scale=Math.max(0.5,Math.min(3, pinchScale*(d/pinchDist))); document.getElementById('scaleRange').value=drag.scale; document.getElementById('scaleVal').textContent=drag.scale.toFixed(2); } const ang=Math.atan2(pts[1].y-pts[0].y, pts[1].x-pts[0].x)*180/Math.PI; drag.rot=startAngle+(ang-pinchAngle); document.getElementById('rotRange').value=drag.rot; document.getElementById('rotVal').textContent=Math.round(drag.rot)+'°'; draw(); } e.preventDefault(); });
-  const end=e=>{ pointers.delete(e.pointerId); if(pointers.size===0){ isDrag=false; document.getElementById('magnifier').style.display='none'; pinchDist=0; } };
-  wrap.addEventListener('pointerup', end); wrap.addEventListener('pointercancel', end); wrap.addEventListener('pointerleave', end);
-  wrap.addEventListener('wheel', e=>{ e.preventDefault(); drag.scale=Math.max(0.5,Math.min(3,drag.scale+(e.deltaY<0?0.08:-0.08))); document.getElementById('scaleRange').value=drag.scale; document.getElementById('scaleVal').textContent=drag.scale.toFixed(2); draw(); }, {passive:false});
-  document.getElementById('btnGif').addEventListener('click', makeGif);
-  document.getElementById('btnPack').addEventListener('click', makePack);
-  document.getElementById('btnShare').addEventListener('click', shareGif);
-  document.getElementById('btnSave').addEventListener('click', saveGifFile);
-  document.getElementById('btnSavePack').addEventListener('click', savePackFiles);
-  document.querySelectorAll('.nav-btn[data-nav]').forEach(b=>b.addEventListener('click', ()=>showScreen(b.dataset.nav)));
-  document.getElementById('storeBtn').addEventListener('click', ()=>document.getElementById('storeModal').classList.add('open'));
-  document.getElementById('btnCloseStore').addEventListener('click', ()=>document.getElementById('storeModal').classList.remove('open'));
-  document.getElementById('btnBuy').addEventListener('click', ()=>{ localStorage.setItem('persona_pro','1'); toast('PRO BG הופעל! 🔥'); document.getElementById('storeModal').classList.remove('open'); updateCredits(); draw(); });
-  document.getElementById('btnClear').addEventListener('click', ()=>{ if(confirm('למחוק?')){ localStorage.removeItem('persona_history'); loadHistory(); } });
-  loadHistory(); updateCredits();
-}
-async function makeGif(){
-  if(!img.naturalWidth){toast('צלם תמונה קודם',true);return;}
-  try{
-    const mod=await window.__gifencReady; const {GIFEncoder, quantize, applyPalette}=mod; const g=GIFEncoder(); const frames=22; const delay=85;
-    const c=document.createElement('canvas'); c.width=512; c.height=512; const x=c.getContext('2d',{willReadFrequently:true});
-    toast('מכין GIF עם תפאורה...'); 
-    for(let i=0;i<frames;i++){ const t=i/frames; drawFrame(x,t,{preset:currentPreset,bg:bgMode,customBg:generatedBgImg,font:currentFont,anim:animType}); const data=x.getImageData(0,0,512,512).data; const pal=quantize(data,128); const idx=applyPalette(data,pal); g.writeFrame(idx,512,512,{palette:pal,delay,repeat:i?undefined:0}); await new Promise(r=>setTimeout(r,0)); }
-    g.finish(); const blob=new Blob([g.bytes()],{type:'image/gif'}); const url=URL.createObjectURL(blob); window._lastGif={blob,url};
-    const grid=document.getElementById('resultGrid'); grid.innerHTML=''; const d=document.createElement('div'); d.className='pack-item'; d.innerHTML=`<img src="${url}"><div class="lab">GIF • ${currentBgPrompt||bgMode}</div>`; grid.appendChild(d);
-    try{ const h=JSON.parse(localStorage.getItem('persona_history')||'[]'); h.unshift({id:Date.now(), createdAt:new Date().toISOString(), bgPrompt:currentBgPrompt||bgMode, preset:currentPreset, text:document.getElementById('txtInput').value, thumb:document.getElementById('editCanvas').toDataURL('image/jpeg',0.6)}); localStorage.setItem('persona_history', JSON.stringify(h.slice(0,60))); loadHistory(); }catch{}
-    toast('GIF עם תפאורה מוכן 🔥'); updateCredits();
-  }catch(e){ toast(e.message||'שגיאה',true); console.error(e); }
-}
-async function makePack(){
-  if(!img.naturalWidth){ toast('צלם תמונה קודם',true); return; }
-  const grid=document.getElementById('resultGrid'); grid.innerHTML=''; const packs=[];
-  for(let r of reactions){
-    const c=document.createElement('canvas'); c.width=512; c.height=512; const ctx=c.getContext('2d');
-    // generate bg for each reaction
-    const prompt=r.bgPrompt;
-    const enc=encodeURIComponent(prompt+', highly detailed background, no people');
-    const bgUrl=`https://image.pollinations.ai/prompt/${enc}?width=512&height=512&nologo=true&seed=${Math.floor(Math.random()*100000)}`;
-    const bgImg=new Image(); bgImg.crossOrigin='anonymous'; bgImg.src=bgUrl;
-    try{ await new Promise((res,rej)=>{ bgImg.onload=res; bgImg.onerror=res; setTimeout(res,4000); }); }catch{}
-    drawFrame(ctx, 0.22, {preset:r.preset||'none', bg:'custom', customBg:bgImg, scaleMul:1.1, rotAdd:(Math.random()-0.5)*8, font:'Heebo', text:r.text, xOff:(Math.random()-0.5)*14, yOff:(Math.random()-0.5)*10, anim:'zoom'});
-    const url=c.toDataURL('image/webp',0.92);
-    packs.push({text:r.text, url, prompt});
-    const div=document.createElement('div'); div.className='pack-item'; div.innerHTML=`<img src="${url}"><div class="lab">${r.text} • ${prompt}</div>`; grid.appendChild(div);
-  }
-  window._lastPack=packs; document.getElementById('btnSavePack').style.display='block'; toast('חבילת 8 תפאורות - כל אחת במקום אחר 🌍');
-  if(!isPro()) setTimeout(()=>document.getElementById('storeModal').classList.add('open'),800);
-}
-async function saveGifFile(){ if(!window._lastGif){ toast('תיצור GIF קודם',true); return; } const a=document.createElement('a'); a.href=window._lastGif.url; a.download='persona-bg-'+Date.now()+'.gif'; a.click(); }
-async function shareGif(){ if(!window._lastGif){ toast('תיצור GIF קודם',true); return; } try{ const f=new File([window._lastGif.blob],'persona.gif',{type:'image/gif'}); if(navigator.canShare && navigator.canShare({files:[f]})){ await navigator.share({files:[f],title:'PersonaAI BG'}); } else saveGifFile(); }catch{} }
-async function savePackFiles(){
-  if(!window._lastPack) return;
-  if(!isPro()){
-    const used=parseInt(localStorage.getItem('persona_pack_free_used')||'0',10);
-    if(used>=1){ toast('חבילה חינם נוצלה - צריך PRO 💎',true); document.getElementById('storeModal').classList.add('open'); return; }
-    localStorage.setItem('persona_pack_free_used','1');
-  }
-  for(let p of window._lastPack){ const a=document.createElement('a'); a.href=p.url; a.download='bg-'+p.text.replace(/[^a-z0-9\u0590-\u05FF]/gi,'')+'.webp'; a.click(); await new Promise(r=>setTimeout(r,400)); }
-  toast('8 תפאורות נשמרו 📦');
-}
-function loadHistory(){
-  try{ const h=JSON.parse(localStorage.getItem('persona_history')||'[]'); const g=document.getElementById('historyGrid'); if(!g) return; g.innerHTML=''; h.forEach(it=>{ const d=new Date(it.createdAt); const ds=d.toLocaleDateString('he-IL')+' '+d.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'}); const div=document.createElement('div'); div.className='pack-item'; div.innerHTML=`<img src="${it.thumb}"><div class="lab">${(it.bgPrompt||it.bg||it.text||'תפאורה')} • ${ds}</div>`; g.appendChild(div); }); }catch{}
-}
-window.addEventListener('load', bind);
-if('serviceWorker' in navigator){ navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister())); }
+let stream=null,facing='user',sourceImage=new Image(),sceneImage=null,lastSeed=null,currentAnim='bounce';
+let transform={x:0,y:0,scale:1};let previewRaf=0,previewStart=0,isSceneBusy=false,isGifBusy=false,lastGif=null;
+const $=id=>document.getElementById(id);
+function toast(message,error=false){const el=$('toast');el.textContent=message;el.className='toast'+(error?' error':'');el.style.display='block';clearTimeout(el._timer);el._timer=setTimeout(()=>el.style.display='none',3500)}
+function setStageMode(hasImage){$('video').classList.toggle('hide',hasImage);$('canvas').classList.toggle('hide',!hasImage);$('captureButtons').classList.toggle('hide',hasImage);$('creator').classList.toggle('hide',!hasImage);$('sceneSection').classList.toggle('hide',!hasImage);$('motionSection').classList.toggle('hide',!hasImage);$('stageBadge').textContent=hasImage?'תצוגה חיה':'1. מצלמים'}
+async function startCamera(){try{if(stream)stream.getTracks().forEach(t=>t.stop());stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:facing,width:{ideal:1280},height:{ideal:1280}},audio:false});$('video').srcObject=stream;await $('video').play()}catch(e){toast('לא ניתן לפתוח מצלמה. בחרו תמונה מהגלריה.',true);$('fileInput').click()}}
+function imageCover(ctx,image,x,y,w,h){const sw=image.videoWidth||image.naturalWidth,sh=image.videoHeight||image.naturalHeight;if(!sw||!sh)return;const s=Math.max(w/sw,h/sh),dw=sw*s,dh=sh*s;ctx.drawImage(image,x+(w-dw)/2,y+(h-dh)/2,dw,dh)}
+function captureSource(source,mirror=false){const c=document.createElement('canvas');c.width=768;c.height=768;const ctx=c.getContext('2d');if(mirror){ctx.translate(c.width,0);ctx.scale(-1,1)}imageCover(ctx,source,0,0,c.width,c.height);sourceImage.onload=()=>{sceneImage=null;lastSeed=null;transform={x:0,y:0,scale:1};setStageMode(true);startPreview();window.scrollTo({top:0,behavior:'smooth'})};sourceImage.src=c.toDataURL('image/jpeg',.92)}
+function containsHebrew(s){return /[\u0590-\u05FF]/.test(s)}
+function wrapText(ctx,text,maxWidth){const words=text.trim().split(/\s+/),lines=[];let line='';for(const word of words){const test=line?line+' '+word:word;if(ctx.measureText(test).width<=maxWidth)line=test;else{if(line)lines.push(line);line=word}}if(line)lines.push(line);return lines.slice(0,3)}
+function drawFrame(ctx,t){const w=ctx.canvas.width,h=ctx.canvas.height,image=sceneImage||sourceImage;ctx.fillStyle='#080914';ctx.fillRect(0,0,w,h);let ox=transform.x,oy=transform.y,scale=transform.scale;if(currentAnim==='bounce')oy+=-Math.abs(Math.sin(t*Math.PI*2))*22;if(currentAnim==='zoom')scale*=1+Math.sin(t*Math.PI*2)*.065;if(currentAnim==='shake'){ox+=Math.sin(t*28)*7;oy+=Math.cos(t*23)*4}ctx.save();ctx.translate(w/2+ox,h/2+oy);ctx.scale(scale,scale);ctx.translate(-w/2,-h/2);imageCover(ctx,image,0,0,w,h);ctx.restore();const text=$('captionInput').value.trim();if(text){ctx.save();ctx.direction=containsHebrew(text)?'rtl':'ltr';let size=46;ctx.font=`900 ${size}px Heebo,Arial`;let lines=wrapText(ctx,text,w*.84);while(lines.some(l=>ctx.measureText(l).width>w*.84)&&size>24){size-=2;ctx.font=`900 ${size}px Heebo,Arial`;lines=wrapText(ctx,text,w*.84)}ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineJoin='round';ctx.lineWidth=Math.max(7,size*.18);ctx.strokeStyle='#000';ctx.fillStyle='#fff';const lh=size*1.12,start=h-lines.length*lh-28;lines.forEach((line,i)=>{const y=start+i*lh;ctx.strokeText(line,w/2,y);ctx.fillText(line,w/2,y)});ctx.restore()}drawWatermark(ctx)}
+function drawWatermark(ctx){const x=31,y=31;ctx.save();ctx.globalAlpha=.78;ctx.fillStyle='#190d28';ctx.beginPath();ctx.arc(x,y,20,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#ff3b9a';ctx.lineWidth=2;ctx.stroke();ctx.fillStyle='#fff';ctx.font='900 20px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('P',x,y+1);ctx.restore()}
+function startPreview(){cancelAnimationFrame(previewRaf);previewStart=performance.now();const loop=now=>{if(!isGifBusy){drawFrame($('canvas').getContext('2d'),((now-previewStart)%1400)/1400)}previewRaf=requestAnimationFrame(loop)};previewRaf=requestAnimationFrame(loop)}
+function renderReactions(){const root=$('reactions');REACTIONS.forEach((r,i)=>{const b=document.createElement('button');b.className='reaction';b.innerHTML=`<b>${r.emoji}</b><span></span>`;b.querySelector('span').textContent=r.label;b.addEventListener('click',()=>{document.querySelectorAll('.reaction').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('captionInput').value=r.text;$('sceneInput').value=r.scene;if(i===REACTIONS.length-1)$('captionInput').focus()});root.appendChild(b)})}
+async function sourceDataUrl(){const c=document.createElement('canvas');c.width=768;c.height=768;imageCover(c.getContext('2d'),sourceImage,0,0,768,768);return c.toDataURL('image/jpeg',.9)}
+function loadImage(url){return new Promise((resolve,reject)=>{const im=new Image();im.crossOrigin='anonymous';const timer=setTimeout(()=>reject(new Error('טעינת התוצאה ארכה מדי')),45000);im.onload=()=>{clearTimeout(timer);resolve(im)};im.onerror=()=>{clearTimeout(timer);reject(new Error('לא ניתן לטעון את התוצאה'))};im.src=url})}
+async function createScene(variation=false){const prompt=$('sceneInput').value.trim();if(!prompt){toast('כתבו איפה הסצנה מתרחשת',true);return}if(isSceneBusy)return;isSceneBusy=true;$('sceneBtn').disabled=true;$('variantBtn').disabled=true;$('sceneBtn').textContent='⏳ יוצר...';$('aiStatus').classList.add('show');$('aiStatus').textContent='מבין את התיאור ובונה תפאורה מדויקת...';let tx=null;try{if(!variation&&window.PersonaBilling?.spendCreditsOrRefund){tx=window.PersonaBilling.spendCreditsOrRefund(1);if(!tx.success)throw new Error('נגמרו יצירות הניסיון')}const res=await fetch(WORKER_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'ai_meme_background',image:await sourceDataUrl(),prompt,variation,previousSeed:variation?lastSeed:null})});let data={};try{data=await res.json()}catch{}if(!res.ok)throw new Error(data.error||`שגיאת שרת ${res.status}`);const url=data.resultUrl||data.imageUrl||data.output?.[0];if(!url)throw new Error('לא התקבלה תמונה');sceneImage=await loadImage(url);lastSeed=data.seed||null;$('variantBtn').classList.remove('hide');$('aiStatus').textContent='התפאורה מוכנה ✨';toast('התפאורה מוכנה ✨')}catch(e){if(tx?.refund)tx.refund();$('aiStatus').textContent=e.message;toast(e.message,true)}finally{isSceneBusy=false;$('sceneBtn').disabled=false;$('variantBtn').disabled=false;$('sceneBtn').textContent='✨ צרו';setTimeout(()=>$('aiStatus').classList.remove('show'),3200)}}
+async function makeGif(){if(isGifBusy)return;isGifBusy=true;$('gifBtn').disabled=true;$('progress').style.display='block';const bar=$('progress').querySelector('i');try{const {GIFEncoder,quantize,applyPalette}=await window.__gifencReady;const enc=GIFEncoder(),c=document.createElement('canvas');c.width=512;c.height=512;const ctx=c.getContext('2d',{willReadFrequently:true}),frames=16;for(let i=0;i<frames;i++){drawFrame(ctx,i/frames);const rgba=ctx.getImageData(0,0,512,512).data,pal=quantize(rgba,96),idx=applyPalette(rgba,pal);enc.writeFrame(idx,512,512,{palette:pal,delay:85,repeat:i?undefined:0});bar.style.width=Math.round((i+1)/frames*100)+'%';await new Promise(r=>setTimeout(r,0))}enc.finish();if(lastGif?.url)URL.revokeObjectURL(lastGif.url);const blob=new Blob([enc.bytes()],{type:'image/gif'}),url=URL.createObjectURL(blob);lastGif={blob,url};$('gifPreview').src=url;$('result').classList.add('show');$('result').scrollIntoView({behavior:'smooth',block:'start'});toast('ה־GIF מוכן 🎉')}catch(e){console.error(e);toast(e.message||'יצירת ה־GIF נכשלה',true)}finally{isGifBusy=false;$('gifBtn').disabled=false;setTimeout(()=>{$('progress').style.display='none';bar.style.width='0'},500)}}
+async function shareGif(){if(!lastGif)return;const file=new File([lastGif.blob],'PersonaAI.gif',{type:'image/gif'});try{if(navigator.canShare?.({files:[file]})){await navigator.share({files:[file],title:'PersonaAI'});}else{saveGif();toast('הקובץ נשמר. אפשר לצרף אותו בוואטסאפ.')}}catch(e){if(e.name!=='AbortError')toast('השיתוף לא זמין, שמרתי את הקובץ',true)}}
+function saveGif(){if(!lastGif)return;const a=document.createElement('a');a.href=lastGif.url;a.download=`PersonaAI-${Date.now()}.gif`;a.click()}
+$('shootBtn').addEventListener('click',()=>{if(!$('video').videoWidth){toast('המצלמה עדיין לא מוכנה',true);return}captureSource($('video'),facing==='user');if(stream)stream.getTracks().forEach(t=>t.stop())});
+$('galleryBtn').addEventListener('click',()=>$('fileInput').click());$('fileInput').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>captureSource(im,false);im.src=r.result};r.readAsDataURL(f);e.target.value=''});
+$('flipBtn').addEventListener('click',()=>{facing=facing==='user'?'environment':'user';$('video').classList.toggle('mirror',facing==='user');startCamera()});
+$('sceneBtn').addEventListener('click',()=>createScene(false));$('variantBtn').addEventListener('click',()=>createScene(true));$('sceneInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();createScene(false)}});
+document.querySelectorAll('.anim').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.anim').forEach(x=>x.classList.remove('active'));b.classList.add('active');currentAnim=b.dataset.anim}));
+$('captionInput').addEventListener('input',()=>{});$('gifBtn').addEventListener('click',makeGif);$('shareBtn').addEventListener('click',shareGif);$('saveBtn').addEventListener('click',saveGif);$('anotherBtn').addEventListener('click',()=>{$('result').classList.remove('show');$('captionInput').focus();window.scrollTo({top:$('creator').offsetTop-10,behavior:'smooth'})});
+$('moveLeft').addEventListener('click',()=>transform.x+=12);$('moveRight').addEventListener('click',()=>transform.x-=12);$('zoomIn').addEventListener('click',()=>transform.scale=Math.min(1.5,transform.scale+.06));$('zoomOut').addEventListener('click',()=>transform.scale=Math.max(.7,transform.scale-.06));
+renderReactions();startCamera();window.addEventListener('beforeunload',()=>{if(lastGif?.url)URL.revokeObjectURL(lastGif.url);if(stream)stream.getTracks().forEach(t=>t.stop())});
 </script>
 </body>
 </html>
