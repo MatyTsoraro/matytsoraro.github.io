@@ -238,7 +238,48 @@ function drawFrame(ctx,t=0,opts={}){
   if(preset==='bw'){ ctx.globalCompositeOperation='saturation'; ctx.fillStyle='#808080'; ctx.fillRect(0,0,w,h); ctx.globalCompositeOperation='source-over'; }
   if(preset==='shake' && Math.random()<0.18){ ctx.fillStyle='#fff'; ctx.fillRect(Math.random()*w, Math.random()*h, 90,5); }
   ctx.restore();
-  if(text){ const f=font.includes('Black')?`900 52px ${font}`:`900 48px ${font}, Heebo`; ctx.font=f; ctx.textAlign='center'; ctx.lineWidth=10; ctx.strokeStyle='#000'; ctx.fillStyle='#fff'; const bounce=anim==='bounce'?Math.sin(t*11)*-7:0; ctx.strokeText(text,w/2,h*0.90+bounce); ctx.fillText(text,w/2,h*0.90+bounce); }
+
+  function containsHebrew(str){ return /[\u0590-\u05FF]/.test(str); }
+  function wrapAndFit(ctx, text, maxW, fontName, baseSize){
+    let size=baseSize;
+    let lines=[];
+    while(size>=18){
+      ctx.font=`900 ${size}px ${fontName}, Heebo`;
+      // measure whole text first
+      const words=text.split(/\s+/);
+      let curLines=[]; let cur='';
+      for(let w of words){
+        const test=cur?cur+' '+w:w;
+        if(ctx.measureText(test).width <= maxW) cur=test;
+        else {
+          if(cur) curLines.push(cur);
+          // word too long - split chars
+          if(ctx.measureText(w).width > maxW){
+            let chunk=''; for(let ch of w){ if(ctx.measureText(chunk+ch).width <= maxW) chunk+=ch; else { curLines.push(chunk); chunk=ch; } } cur=chunk;
+          } else cur=w;
+        }
+      }
+      if(cur) curLines.push(cur);
+      const maxLineW=Math.max(...curLines.map(l=>ctx.measureText(l).width));
+      if(maxLineW <= maxW || size<=20){ lines=curLines; break; }
+      size-=4;
+    }
+    return {size, lines};
+  }
+  if(text){
+    const maxW=w*0.88; const baseSize=font.includes('Black')?50:48;
+    ctx.direction = containsHebrew(text)?'rtl':'ltr';
+    const fit=wrapAndFit(ctx, text, maxW, font, baseSize);
+    ctx.font=`900 ${fit.size}px ${font}, Heebo`;
+    ctx.textAlign='center'; ctx.lineWidth=Math.max(6, fit.size*0.18); ctx.strokeStyle='#000'; ctx.fillStyle='#fff'; ctx.lineJoin='round'; ctx.miterLimit=2;
+    const lineH=fit.size*1.15; const bounce=anim==='bounce'?Math.sin(t*11)*-7:0;
+    const totalH=fit.lines.length*lineH; const startY=h*0.90+bounce - totalH + lineH;
+    fit.lines.forEach((line,i)=>{
+      const y=startY + i*lineH;
+      ctx.strokeText(line,w/2,y); ctx.fillText(line,w/2,y);
+    });
+    ctx.direction='ltr';
+  }
   if(!isPro()){ ctx.font='700 16px Heebo'; ctx.fillStyle='#ffffff66'; ctx.textAlign='left'; ctx.fillText('PersonaAI',14,26); }
 }
 function draw(){ const c=document.getElementById('editCanvas'); const ctx=c.getContext('2d'); drawFrame(ctx,0); drawMag(); }
