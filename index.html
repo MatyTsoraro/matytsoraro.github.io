@@ -12,7 +12,7 @@
 <script type="importmap">{"imports":{"gifenc":"https://cdn.jsdelivr.net/npm/gifenc@1.0.3/dist/gifenc.esm.js"}}</script>
 <script type="module">import * as m from 'gifenc'; window.__gifencReady=Promise.resolve(m);</script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js" crossorigin="anonymous"></script>
-<script src="billing.js?v=28"></script>
+<script src="billing.js?v=25"></script>
 <style>
 :root{--bg:#090a12;--card:#151728;--card2:#1d2035;--text:#fff;--muted:#a9abc0;--pink:#ff3b9a;--purple:#7c3aed;--blue:#3478f6;--green:#20c66b;--border:#323652}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -64,8 +64,8 @@ body{font-family:Heebo,Arial,sans-serif;background:var(--bg);color:var(--text);m
 </head>
 <body>
 <main class="app">
-<header class="header"><div class="brand">PersonaAI</div><div class="credits"><span id="creditsCount">3</span> 💎<span id="proBadge" class="pro-badge">PRO</span></div></header>
-<section class="hero"><h1>התגובה שלך</h1><p>כמו ה-GIF שיצרת - הפנים זזות באמת</p></section>
+<header class="header"><div class="brand">PersonaAI v25</div><div class="credits"><span id="creditsCount">3</span> 💎<span id="proBadge" class="pro-badge">PRO</span></div></header>
+<section class="hero"><h1>מה בא לכם להגיד?</h1><p>סלפי אחד ומשפט אחד - ויש לכם תגובה</p></section>
 <div id="stage" class="stage"><video id="video" autoplay playsinline muted class="mirror"></video><canvas id="canvas" width="512" height="512" class="hide"></canvas><div id="stageBadge" class="stage-badge">מצלמים</div></div>
 <div id="captureButtons" class="capture"><button id="shootBtn" class="btn btn-primary grow">📸 צלמו סלפי</button><button id="galleryBtn" class="btn">🖼 גלריה</button><button id="flipBtn" class="btn">🔄</button></div>
 <input id="fileInput" type="file" accept="image/*" hidden>
