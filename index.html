@@ -1,192 +1,580 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#090A12">
-<title>PersonaAI</title>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
-<script type="importmap">{"imports":{"gifenc":"https://cdn.jsdelivr.net/npm/gifenc@1.0.3/dist/gifenc.esm.js"}}</script>
-<script type="module">import * as m from 'gifenc'; window.__gifencReady=Promise.resolve(m);</script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js" crossorigin="anonymous"></script>
-<script src="billing.js?v=25"></script>
-<style>
-:root{--bg:#090a12;--card:#151728;--card2:#1d2035;--text:#fff;--muted:#a9abc0;--pink:#ff3b9a;--purple:#7c3aed;--blue:#3478f6;--green:#20c66b;--border:#323652}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:Heebo,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
-.app{width:min(100%,480px);margin:auto;padding:14px 14px 40px}
-.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.brand{font-size:23px;font-weight:900;background:linear-gradient(90deg,var(--pink),#ffbd00,#5de7ff);-webkit-background-clip:text;color:transparent}
-.credits{display:flex;align-items:center;gap:6px;background:#1a1d30;border:1px solid var(--border);border-radius:999px;padding:6px 10px;font-size:12px}
-.pro-badge{background:var(--pink);border-radius:999px;padding:2px 7px;font-size:10px;font-weight:900;display:none}
-.hero{background:linear-gradient(145deg,#181229,#101422);border:1px solid var(--border);border-radius:22px;padding:14px;margin-bottom:12px}
-.hero h1{font-size:21px;line-height:1.2}
-.hero p{font-size:13px;color:var(--muted);margin-top:5px}
-.stage{position:relative;width:100%;aspect-ratio:1/1;background:#05060a;border:1px solid var(--border);border-radius:24px;overflow:hidden;box-shadow:0 16px 55px #0008;touch-action:none}
-.stage canvas,.stage video{width:100%;height:100%;display:block;object-fit:cover}
-.stage video.mirror{transform:scaleX(-1)}
-.stage-badge{position:absolute;top:10px;right:10px;background:#000b;border:1px solid #ffffff2a;border-radius:999px;padding:6px 9px;font-size:11px;backdrop-filter:blur(8px)}
-.capture{display:flex;gap:9px;margin:10px 0}
-.btn{border:1px solid var(--border);border-radius:16px;background:var(--card2);color:#fff;padding:12px 14px;font-weight:800;cursor:pointer;min-height:48px}
-.btn:disabled{opacity:.5}
-.btn-primary{border:0;background:linear-gradient(90deg,var(--pink),var(--purple))}
-.btn-blue{border:0;background:linear-gradient(90deg,#2d78f6,#674bef)}
-.btn-green{border:0;background:linear-gradient(90deg,#21c96d,#12a852);font-size:17px}
-.btn-light{background:#fff;color:#111;border:0}
-.btn-wide{width:100%}
-.grow{flex:1}
-.section{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:14px;margin-top:12px}
-.section-title{font-size:16px;font-weight:900;margin-bottom:4px}
-.section-help{font-size:12px;color:var(--muted);margin-bottom:10px}
-.reaction-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.reaction{border:1px solid var(--border);background:var(--card2);color:#fff;border-radius:16px;padding:10px 4px;min-height:66px;font-size:12px;font-weight:800;cursor:pointer}
-.reaction b{display:block;font-size:22px;margin-bottom:2px}
-.reaction.active{border:2px solid var(--pink);background:#32172e}
-.text-input{width:100%;border:1px solid var(--border);background:#0e1020;color:#fff;border-radius:15px;padding:13px 14px;outline:none;font-size:15px}
-.text-input:focus{border-color:#5e8dff;box-shadow:0 0 0 3px #3478f625}
-.status{display:none;margin-top:10px;padding:10px;border-radius:13px;background:#101d31;color:#8dd1ff;font-size:12px;text-align:center}
-.status.show{display:block}
-.result{display:none}
-.result.show{display:block}
-.result img{width:100%;border-radius:20px;border:1px solid var(--border);display:block;background:#05060a}
-.result-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}
-.result-actions .btn-green{grid-column:1/-1}
-.hide{display:none!important}
-.progress{height:5px;background:#272b42;border-radius:99px;overflow:hidden;margin-top:8px;display:none}
-.progress i{display:block;width:0;height:100%;background:linear-gradient(90deg,var(--pink),#5de7ff);transition:width .2s}
-.toast{position:fixed;z-index:100;bottom:22px;left:50%;transform:translateX(-50%);width:min(90%,420px);background:#20243a;border:1px solid var(--border);border-radius:999px;padding:10px 15px;text-align:center;font-size:12px;display:none}
-.toast.error{border-color:#ff5f77;color:#ffd8df}
-.legal{font-size:10px;color:#70738a;text-align:center;margin-top:18px}
-</style>
+  <meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#090A12">
+  <meta name="description" content="PersonaAI הופכת סלפי ל-GIF תגובה אישי ומוכן לשיתוף">
+  <title>PersonaAI - הסלפי שלך הופך לתגובה</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <script type="importmap">{"imports":{"gifenc":"https://cdn.jsdelivr.net/npm/gifenc@1.0.3/dist/gifenc.esm.js"}}</script>
+  <script type="module">import * as gifenc from 'gifenc'; window.__gifencReady = Promise.resolve(gifenc);</script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js" crossorigin="anonymous"></script>
+  <script src="billing-v2.2.js?v=32"></script>
+  <style>
+    :root{--bg:#080912;--card:#141728;--card2:#1b1f34;--text:#fff;--muted:#a9aec3;--pink:#ff3b9a;--purple:#7c3aed;--blue:#377df8;--green:#1fc86b;--border:#313650;--danger:#ff6177}
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    html{background:var(--bg);scroll-behavior:smooth}
+    body{font-family:Heebo,Arial,sans-serif;background:radial-gradient(circle at 50% -15%,#29113d 0,#0d0f1b 38%,var(--bg) 70%);color:var(--text);min-height:100vh;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+    button,input{font:inherit}.app{width:min(100%,500px);margin:auto;padding:14px 14px 42px}
+    .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.brand{font-size:24px;font-weight:900;background:linear-gradient(90deg,var(--pink),#ffbd00,#5de7ff);-webkit-background-clip:text;color:transparent}
+    .credits{display:flex;align-items:center;gap:6px;background:#191c30;border:1px solid var(--border);border-radius:999px;padding:7px 11px;font-size:12px}.pro-badge{background:var(--pink);border-radius:999px;padding:2px 7px;font-size:10px;font-weight:900;display:none}
+    .hero{background:linear-gradient(145deg,#22132e,#111726);border:1px solid var(--border);border-radius:24px;padding:16px;margin-bottom:12px;box-shadow:0 16px 55px #0005}.eyebrow{font-size:11px;color:#ff8fc5;font-weight:900;letter-spacing:.4px}.hero h1{font-size:25px;line-height:1.15;margin-top:2px}.hero p{font-size:13px;color:var(--muted);margin-top:7px}.steps{display:flex;gap:5px;margin-top:12px}.step-pill{flex:1;border-radius:999px;background:#ffffff0c;border:1px solid #ffffff12;padding:5px;text-align:center;font-size:10px;color:#d8d9e5}
+    .stage{position:relative;width:100%;aspect-ratio:1/1;background:#05060a;border:1px solid var(--border);border-radius:25px;overflow:hidden;box-shadow:0 18px 60px #0009;touch-action:none}.stage canvas,.stage video{width:100%;height:100%;display:block;object-fit:cover}.stage video.mirror{transform:scaleX(-1)}
+    .stage-badge{position:absolute;top:10px;right:10px;background:#000c;border:1px solid #ffffff2a;border-radius:999px;padding:6px 10px;font-size:11px;backdrop-filter:blur(8px)}.stage-tip{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);width:max-content;max-width:88%;background:#000b;border-radius:999px;padding:7px 12px;font-size:11px;color:#f2f2f6}
+    .capture{display:flex;gap:9px;margin:10px 0}.btn{border:1px solid var(--border);border-radius:16px;background:var(--card2);color:#fff;padding:12px 14px;font-weight:800;cursor:pointer;min-height:49px}.btn:disabled{opacity:.5;cursor:not-allowed}.btn-primary{border:0;background:linear-gradient(90deg,var(--pink),var(--purple))}.btn-blue{border:0;background:linear-gradient(90deg,#2d78f6,#674bef)}.btn-green{border:0;background:linear-gradient(90deg,#20c96c,#0da95a);font-size:17px}.btn-light{background:#fff;color:#111;border:0}.btn-wide{width:100%}.grow{flex:1}
+    .section{background:var(--card);border:1px solid var(--border);border-radius:23px;padding:14px;margin-top:12px}.section-title{font-size:17px;font-weight:900}.section-help{font-size:12px;color:var(--muted);margin:3px 0 11px}.reaction-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.reaction{position:relative;border:1px solid var(--border);background:linear-gradient(145deg,#20243a,#171a2c);color:#fff;border-radius:18px;padding:12px 9px;min-height:83px;font-size:12px;font-weight:800;cursor:pointer;text-align:right;overflow:hidden}.reaction b{display:block;font-size:27px;margin-bottom:2px}.reaction small{display:block;color:var(--muted);font-size:10px;font-weight:600}.reaction.active{border:2px solid var(--pink);background:linear-gradient(145deg,#39182f,#21172d);box-shadow:0 0 0 3px #ff3b9a1c}.reaction.active:after{content:'✓';position:absolute;left:9px;top:8px;width:22px;height:22px;display:grid;place-items:center;border-radius:50%;background:var(--pink);font-size:12px}
+    .custom-wrap{margin-top:12px}.custom-toggle{background:transparent;color:#b9c7ff;border:0;font-weight:800;cursor:pointer;padding:5px}.text-input{width:100%;border:1px solid var(--border);background:#0d1020;color:#fff;border-radius:15px;padding:13px 14px;outline:none;font-size:15px}.text-input:focus{border-color:#5e8dff;box-shadow:0 0 0 3px #3478f625}.caption-row{margin-top:9px}
+    .status{display:none;margin-top:11px;padding:12px;border-radius:15px;background:#101d31;color:#a4dcff;font-size:12px;text-align:center}.status.show{display:block}.progress{height:7px;background:#272b42;border-radius:99px;overflow:hidden;margin-top:9px;display:none}.progress i{display:block;width:0;height:100%;background:linear-gradient(90deg,var(--pink),#5de7ff);transition:width .35s}.phase-list{display:none;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:10px}.phase-list.show{display:grid}.phase{padding:7px 3px;border-radius:10px;background:#0e1120;color:#747a93;text-align:center;font-size:10px}.phase.active{color:#fff;background:#2a2140}.phase.done{color:#8cf0b5;background:#123122}
+    .result{display:none}.result.show{display:block}.result-media{position:relative}.result img{width:100%;border-radius:20px;border:1px solid var(--border);display:block;background:#05060a}.result-chip{position:absolute;right:10px;top:10px;background:#000c;border-radius:999px;padding:6px 10px;font-size:10px}.result-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}.result-actions .btn-green{grid-column:1/-1}.hide{display:none!important}.toast{position:fixed;z-index:100;bottom:22px;left:50%;transform:translateX(-50%);width:min(90%,430px);background:#20243a;border:1px solid var(--border);border-radius:999px;padding:11px 15px;text-align:center;font-size:12px;display:none;box-shadow:0 10px 40px #0008}.toast.error{border-color:var(--danger);color:#ffd8df}.legal{font-size:10px;color:#74788e;text-align:center;margin-top:18px;line-height:1.5}
+    @media(max-width:360px){.reaction-grid{grid-template-columns:1fr}.hero h1{font-size:22px}}
+  </style>
 </head>
 <body>
 <main class="app">
-<header class="header"><div class="brand">PersonaAI</div><div class="credits"><span id="creditsCount">3</span> 💎<span id="proBadge" class="pro-badge">PRO</span></div></header>
-<section class="hero"><h1>מה בא לכם להגיד?</h1><p>סלפי אחד ומשפט אחד - ויש לכם תגובה</p></section>
-<div id="stage" class="stage"><video id="video" autoplay playsinline muted class="mirror"></video><canvas id="canvas" width="512" height="512" class="hide"></canvas><div id="stageBadge" class="stage-badge">מצלמים</div></div>
-<div id="captureButtons" class="capture"><button id="shootBtn" class="btn btn-primary grow">📸 צלמו סלפי</button><button id="galleryBtn" class="btn">🖼 גלריה</button><button id="flipBtn" class="btn">🔄</button></div>
-<input id="fileInput" type="file" accept="image/*" hidden>
-<section id="creator" class="section hide">
-<div class="section-title">רעיונות מהירים</div>
-<div id="reactions" class="reaction-grid"></div>
-<input id="mainInput" class="text-input" maxlength="120" placeholder="למשל: מבוהל בתחנת חלל" style="margin-top:12px">
-<input id="captionInput" class="text-input" maxlength="80" placeholder="כיתוב: אין מצב 😱" style="margin-top:8px">
-<button id="createBtn" class="btn btn-blue btn-wide" style="margin-top:12px;font-size:18px;padding:16px">✨ צרו GIF כמו המקור</button>
-<div id="aiStatus" class="status"></div><div id="progress" class="progress"><i></i></div>
-</section>
-<section id="result" class="section result"><div class="section-title">מוכן 🎉</div><img id="gifPreview" alt="GIF"><div class="result-actions"><button id="shareBtn" class="btn btn-green">📲 שתפו בוואטסאפ</button><button id="saveBtn" class="btn btn-light">⬇ שמרו</button><button id="anotherBtn" class="btn">✨ עוד אחד</button></div></section>
-<div class="legal">ה-GIF נוצר כמו המקור - הפנים זזות באמת</div>
+  <header class="header"><div class="brand">PersonaAI</div><div class="credits"><span id="creditsCount">3</span> 💎<span id="proBadge" class="pro-badge">PRO</span></div></header>
+  <section class="hero">
+    <div class="eyebrow">AI REACTION GIF</div>
+    <h1>הסלפי שלכם הופך לתגובה</h1>
+    <p>מצלמים, בוחרים סצנה ומשתפים GIF אישי בוואטסאפ.</p>
+    <div class="steps"><div class="step-pill">1. סלפי</div><div class="step-pill">2. סצנה</div><div class="step-pill">3. שיתוף</div></div>
+  </section>
+
+  <div id="stage" class="stage">
+    <video id="video" autoplay playsinline muted class="mirror"></video>
+    <canvas id="canvas" width="768" height="768" class="hide"></canvas>
+    <div id="stageBadge" class="stage-badge">מצלמים</div>
+    <div id="stageTip" class="stage-tip">מקמו את הפנים במרכז ובתאורה טובה</div>
+  </div>
+
+  <div id="captureButtons" class="capture">
+    <button id="shootBtn" class="btn btn-primary grow">📸 צלמו סלפי</button>
+    <button id="galleryBtn" class="btn">🖼 גלריה</button>
+    <button id="flipBtn" class="btn" aria-label="החלפת מצלמה">🔄</button>
+  </div>
+  <input id="fileInput" type="file" accept="image/*" hidden>
+
+  <section id="creator" class="section hide">
+    <div class="section-title">בחרו תגובה</div>
+    <div class="section-help">שש סצנות שבנויות במיוחד לתגובה קצרה וברורה.</div>
+    <div id="reactions" class="reaction-grid"></div>
+    <div class="custom-wrap">
+      <button id="customToggle" class="custom-toggle">✍️ יש לי רעיון משלי</button>
+      <input id="mainInput" class="text-input hide" maxlength="120" placeholder="למשל: מופתע בתוך צוללת" style="margin-top:8px">
+    </div>
+    <div class="caption-row"><input id="captionInput" class="text-input" maxlength="52" placeholder="כיתוב אופציונלי: אין מצב 😱"></div>
+    <button id="createBtn" class="btn btn-blue btn-wide" style="margin-top:12px;font-size:18px;padding:16px">✨ צרו את ה-GIF שלי</button>
+    <div id="aiStatus" class="status"></div>
+    <div id="progress" class="progress"><i></i></div>
+    <div id="phaseList" class="phase-list"><div class="phase" data-phase="background">יוצרים סצנה</div><div class="phase" data-phase="compose">מכניסים אתכם</div><div class="phase" data-phase="animate">מנפישים</div></div>
+  </section>
+
+  <section id="result" class="section result">
+    <div class="section-title">התגובה שלכם מוכנה 🎉</div>
+    <div class="section-help">GIF לשיתוף מהיר, ו-MP4 באיכות גבוהה יותר.</div>
+    <div class="result-media"><img id="gifPreview" alt="GIF תגובה שנוצר ב-PersonaAI"><div class="result-chip">נוצר ב-PersonaAI</div></div>
+    <div class="result-actions">
+      <button id="shareBtn" class="btn btn-green">📲 שתפו בוואטסאפ</button>
+      <button id="saveBtn" class="btn btn-light">⬇ שמרו GIF</button>
+      <button id="saveVideoBtn" class="btn">🎬 שמרו MP4</button>
+      <button id="anotherBtn" class="btn">✨ צרו עוד אחד</button>
+    </div>
+  </section>
+  <div class="legal">התמונה נשלחת לשירותי AI לצורך היצירה. אין להעלות תמונה של אדם אחר ללא רשות.</div>
 </main>
 <div id="toast" class="toast"></div>
+
 <script>
-const WORKER_URL='https://billowing-shape-1d81.maty-tsoraro.workers.dev';
-const REACTIONS=[
-{emoji:'😱',label:'מבוהל בחלל',prompt:'מבוהל בתחנת חלל',text:'אין מצב 😱',ai:'Interior of large space station command module, curved metallic walls, illuminated control panels, panoramic windows showing Earth and stars'},
-{emoji:'😂',label:'מת מצחוק',prompt:'מת מצחוק באולפן קומדיה',text:'מת מצחוק 😂',ai:'Indoor television comedy studio stage, red curtains, spotlights, audience, indoors'},
-{emoji:'🤯',label:'מה הולך',prompt:'המום בחדר פיקוד',text:'מה הולך פה?! 🤯',ai:'High-tech control room interior with large screens, indoors'},
-{emoji:'❤️',label:'מאוהב',prompt:'מאוהב על גג בשקיעה',text:'אוהב אתכם ❤️',ai:'City rooftop at sunset, romantic lights'},
-{emoji:'🎉',label:'חוגג',prompt:'חוגג במסיבה מטורפת',text:'מזל טוב! 🎉',ai:'Birthday party indoors with balloons and confetti'},
-{emoji:'😴',label:'עייף',prompt:'עייף בחדר שינה מפואר',text:'אין כוח 😴',ai:'Cozy luxury bedroom at night'},
-{emoji:'🙏',label:'תודה',prompt:'אומר תודה באירוע חגיגי',text:'תודה רבה 🙏',ai:'Elegant celebration hall, warm lighting'},
-{emoji:'🚗',label:'בדרך',prompt:'נוהג במכונית ספורט בעיר',text:'אני בדרך 🚗',ai:'Inside futuristic sports car at night in city'},
-{emoji:'✍️',label:'חופשי',prompt:'',text:'',ai:''}
+'use strict';
+const WORKER_URL = 'https://billowing-shape-1d81.maty-tsoraro.workers.dev';
+const OUTPUT_SIZE = 768;
+const GIF_SIZE = 384;
+const CREATION_COST = 1;
+const REACTIONS = [
+  { emoji:'😱', label:'רעידת אדמה', sub:'הכול זז מסביב', prompt:'מבוהל בזמן רעידת אדמה', caption:'מה קורה פה?! 😱' },
+  { emoji:'🚀', label:'חללית מתרסקת', sub:'אזעקות וחלקיקים', prompt:'מבוהל בתוך חללית מתרסקת', caption:'אין מצב 😱' },
+  { emoji:'🎢', label:'רכבת הרים', sub:'רגע לפני הירידה', prompt:'מופתע ברכבת הרים ענקית', caption:'למה הסכמתי?!' },
+  { emoji:'🎉', label:'זכייה גדולה', sub:'קונפטי וחגיגה', prompt:'חוגג זכייה גדולה בלוטו', caption:'זכיתי!!! 🎉' },
+  { emoji:'💼', label:'עוד ישיבה', sub:'כאוס במשרד', prompt:'המום בישיבת עבודה כאוטית', caption:'עוד ישיבה?!' },
+  { emoji:'💥', label:'אקשן קולנועי', sub:'פיצוץ ברקע', prompt:'מופתע כשפיצוץ קולנועי מתרחש מאחור', caption:'אני בסדר 😎' }
 ];
-let selectedHint='',stream=null,facing='user',sourceImage=new Image(),personCanvas=null,selfieSeg=null,segReady=false,transform={x:0,y:0,scale:1,rot:0},previewRaf=0,isBusy=false,lastGif=null;
-const $=id=>document.getElementById(id);
-function toast(m,e){const el=$('toast');el.textContent=m;el.className='toast'+(e?' error':'');el.style.display='block';clearTimeout(el._t);el._t=setTimeout(()=>el.style.display='none',4000)}
-function setMode(has){$('video').classList.toggle('hide',has);$('canvas').classList.toggle('hide',!has);$('captureButtons').classList.toggle('hide',has);$('creator').classList.toggle('hide',!has);$('stageBadge').textContent=has?'תצוגה חיה':'מצלמים'}
-async function startCamera(){try{if(stream)stream.getTracks().forEach(t=>t.stop());stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:facing,width:{ideal:1280},height:{ideal:1280}},audio:false});$('video').srcObject=stream;await $('video').play()}catch{$('fileInput').click()}}
-function imageCover(ctx,img,x,y,w,h){const sw=img.videoWidth||img.naturalWidth,sh=img.videoHeight||img.naturalHeight;if(!sw||!sh)return;const s=Math.max(w/sw,h/sh),dw=sw*s,dh=sh*s;ctx.drawImage(img,x+(w-dw)/2,y+(h-dh)/2,dw,dh)}
-function captureSource(src,mirror){const c=document.createElement('canvas');c.width=768;c.height=768;const ctx=c.getContext('2d');if(mirror){ctx.translate(c.width,0);ctx.scale(-1,1)}imageCover(ctx,src,0,0,c.width,c.height);sourceImage.onload=async()=>{transform={x:0,y:0,scale:1,rot:0};setMode(true);startPreview();await runSeg();};sourceImage.src=c.toDataURL('image/jpeg',.92)}
-function drawPreview(){const ctx=$('canvas').getContext('2d');const w=512,h=512;ctx.fillStyle='#080914';ctx.fillRect(0,0,w,h);if(personCanvas){ctx.drawImage(personCanvas,0,0,w,h)}else if(sourceImage.naturalWidth){imageCover(ctx,sourceImage,0,0,w,h)}}
-function startPreview(){cancelAnimationFrame(previewRaf);const loop=()=>{drawPreview();previewRaf=requestAnimationFrame(loop)};previewRaf=requestAnimationFrame(loop)}
-function renderReactions(){const root=$('reactions');REACTIONS.forEach(r=>{const b=document.createElement('button');b.className='reaction';b.innerHTML=`<b>${r.emoji}</b><span>${r.label}</span>`;b.addEventListener('click',()=>{document.querySelectorAll('.reaction').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('mainInput').value=r.prompt;$('captionInput').value=r.text;selectedHint=r.ai;});root.appendChild(b)})}
-async function initSeg(){if(segReady&&selfieSeg)return true;if(!window.SelfieSegmentation)return false;try{selfieSeg=new window.SelfieSegmentation({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${f}`});selfieSeg.setOptions({modelSelection:1});segReady=true;return true}catch{return false}}
-async function runSeg(){if(!sourceImage.src)return null;const ok=await initSeg();if(!ok||!selfieSeg)return null;return new Promise(async res=>{let done=false;const to=setTimeout(()=>{if(!done){done=true;res(null)}},5000);selfieSeg.onResults(r=>{if(r.segmentationMask&&!done){const w=512,h=512;const pc=document.createElement('canvas');pc.width=w;pc.height=h;const pctx=pc.getContext('2d');pctx.drawImage(sourceImage,0,0,w,h);pctx.globalCompositeOperation='destination-in';pctx.drawImage(r.segmentationMask,0,0,w,h);personCanvas=pc;done=true;clearTimeout(to);res(pc)}});try{await selfieSeg.send({image:sourceImage})}catch{clearTimeout(to);res(null)}})}
-async function createOneButtonGIF(){
-if(isBusy) return;
-const prompt=$('mainInput').value.trim(); if(!prompt){toast('כתבו מה בא לכם - למשל מבוהל בתחנת חלל',true);return}
-isBusy=true; $('createBtn').disabled=true; $('createBtn').textContent='⏳ יוצר כמו המקור...'; $('aiStatus').classList.add('show'); $('aiStatus').textContent='יוצר GIF עם פנים זזות כמו המקור שלך...'; $('progress').style.display='block'; const bar=$('progress').querySelector('i'); bar.style.width='5%';
-let tx=null;
-try{
-if(window.PersonaBilling?.spendCreditsOrRefund){tx=window.PersonaBilling.spendCreditsOrRefund(2); if(!tx.success) throw new Error('נגמרו הקרדיטים');}
-bar.style.width='15%';
-const canvasTmp=document.createElement('canvas'); canvasTmp.width=768; canvasTmp.height=768; canvasTmp.getContext('2d').drawImage(sourceImage,0,0,768,768);
-const imageDataUrl=canvasTmp.toDataURL('image/jpeg',0.88);
-bar.style.width='25%';
-let res=await fetch(WORKER_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'generate_animated_reaction',image:imageDataUrl,prompt:prompt,promptHint:selectedHint,caption:$('captionInput').value.trim(),expression:prompt})});
-let data={}; try{data=await res.json()}catch{} 
-if(!res.ok) throw new Error(data.error||'שגיאת שרת');
-let videoUrl=data.videoUrl||data.resultUrl;
-let requestId=data.requestId;
-bar.style.width='35%';
-if(!videoUrl && requestId){
-  $('aiStatus').textContent='מעבד וידאו... 30 שניות';
-  for(let i=0;i<20;i++){
-    await new Promise(r=>setTimeout(r,3000));
-    bar.style.width=(35+i*2)+'%';
-    try{
-      const check=await fetch(WORKER_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'check_video',requestId:requestId})});
-      const cj=await check.json();
-      if(cj.videoUrl){videoUrl=cj.videoUrl; break;}
-      if(cj.status==='failed') throw new Error('יצירת וידאו נכשלה');
-      $('aiStatus').textContent=`מעבד... ${i*3} שניות`;
-    }catch(e){ if(e.message.includes('נכשלה')) throw e; }
+
+let stream = null;
+let facing = 'user';
+let sourceImage = new Image();
+let personCanvas = null;
+let segmentation = null;
+let segmentationReady = false;
+let selectedReaction = null;
+let previewFrame = 0;
+let isBusy = false;
+let lastGif = null;
+let lastVideo = null;
+const $ = id => document.getElementById(id);
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+function toast(message, isError = false) {
+  const element = $('toast');
+  element.textContent = message;
+  element.className = `toast${isError ? ' error' : ''}`;
+  element.style.display = 'block';
+  clearTimeout(element._timer);
+  element._timer = setTimeout(() => { element.style.display = 'none'; }, 4200);
+}
+
+function setProgress(percent, message, phase) {
+  $('progress').style.display = 'block';
+  $('progress').querySelector('i').style.width = `${Math.max(0, Math.min(100, percent))}%`;
+  $('aiStatus').classList.add('show');
+  $('aiStatus').textContent = message;
+  $('phaseList').classList.add('show');
+  const order = ['background', 'compose', 'animate'];
+  const current = order.indexOf(phase);
+  document.querySelectorAll('.phase').forEach((element, index) => {
+    element.classList.toggle('done', current > index || percent === 100);
+    element.classList.toggle('active', current === index && percent < 100);
+  });
+}
+
+function resetProgressLater() {
+  setTimeout(() => {
+    $('progress').style.display = 'none';
+    $('progress').querySelector('i').style.width = '0';
+    $('aiStatus').classList.remove('show');
+    $('phaseList').classList.remove('show');
+  }, 3500);
+}
+
+function setPhotoMode(hasPhoto) {
+  $('video').classList.toggle('hide', hasPhoto);
+  $('canvas').classList.toggle('hide', !hasPhoto);
+  $('captureButtons').classList.toggle('hide', hasPhoto);
+  $('creator').classList.toggle('hide', !hasPhoto);
+  $('stageBadge').textContent = hasPhoto ? 'הסלפי שלכם' : 'מצלמים';
+  $('stageTip').classList.toggle('hide', hasPhoto);
+}
+
+async function startCamera() {
+  try {
+    if (!navigator.mediaDevices?.getUserMedia) throw new Error('המצלמה אינה זמינה');
+    if (stream) stream.getTracks().forEach(track => track.stop());
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: facing, width: { ideal: 1280 }, height: { ideal: 1280 } },
+      audio: false
+    });
+    $('video').srcObject = stream;
+    await $('video').play();
+  } catch (_) {
+    toast('לא הצלחנו לפתוח מצלמה. אפשר לבחור תמונה מהגלריה.', true);
   }
 }
-if(!videoUrl) throw new Error('הוידאו עדיין בעיבוד - לחצו שוב בעוד 15 שניות, הוא יגיע');
-bar.style.width='70%'; $('aiStatus').textContent='הופך ל-GIF...';
-const vid=document.createElement('video'); vid.crossOrigin='anonymous'; vid.src=videoUrl; vid.muted=true; vid.loop=true; vid.playsInline=true;
-await new Promise((resolve,reject)=>{const t=setTimeout(()=>resolve(),12000); vid.onloadeddata=()=>{clearTimeout(t); resolve();}; vid.onerror=()=>{clearTimeout(t); reject(new Error('שגיאת וידאו'));};});
-try{await vid.play();}catch{}
-bar.style.width='80%';
-const {GIFEncoder,quantize,applyPalette}=await window.__gifencReady;
-const enc=GIFEncoder(); const c=document.createElement('canvas'); c.width=512; c.height=512; const ctx=c.getContext('2d',{willReadFrequently:true});
-const frames=18;
-for(let i=0;i<frames;i++){
-  try{vid.currentTime=(i/frames)*(vid.duration||3);}catch{}
-  await new Promise(r=>setTimeout(r,80));
-  ctx.drawImage(vid,0,0,512,512);
-  const cap=$('captionInput').value.trim();
-  if(cap){
-    ctx.font='900 40px Heebo,Arial'; ctx.textAlign='center'; ctx.lineWidth=7; ctx.strokeStyle='#000'; ctx.fillStyle='#fff';
-    ctx.strokeText(cap,256,470); ctx.fillText(cap,256,470);
+
+function drawCover(context, image, x, y, width, height) {
+  const sourceWidth = image.videoWidth || image.naturalWidth || image.width;
+  const sourceHeight = image.videoHeight || image.naturalHeight || image.height;
+  if (!sourceWidth || !sourceHeight) return;
+  const scale = Math.max(width / sourceWidth, height / sourceHeight);
+  const drawWidth = sourceWidth * scale;
+  const drawHeight = sourceHeight * scale;
+  context.drawImage(image, x + (width - drawWidth) / 2, y + (height - drawHeight) / 2, drawWidth, drawHeight);
+}
+
+function captureSource(source, mirror) {
+  const capture = document.createElement('canvas');
+  capture.width = OUTPUT_SIZE;
+  capture.height = OUTPUT_SIZE;
+  const context = capture.getContext('2d');
+  if (mirror) { context.translate(OUTPUT_SIZE, 0); context.scale(-1, 1); }
+  drawCover(context, source, 0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
+  sourceImage = new Image();
+  sourceImage.onload = async () => {
+    personCanvas = null;
+    setPhotoMode(true);
+    startPreview();
+    setProgress(5, 'מפרידים אתכם מהרקע...', 'compose');
+    const cutout = await createPersonCutout();
+    if (!cutout) toast('לא הצלחנו להסיר את הרקע במדויק. נסו תמונה עם תאורה טובה.', true);
+    $('progress').style.display = 'none';
+    $('aiStatus').classList.remove('show');
+    $('phaseList').classList.remove('show');
+    $('creator').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+  sourceImage.src = capture.toDataURL('image/jpeg', 0.94);
+}
+
+function drawPreview() {
+  const context = $('canvas').getContext('2d');
+  context.fillStyle = '#080914';
+  context.fillRect(0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
+  if (sourceImage.naturalWidth) context.drawImage(sourceImage, 0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
+  if (personCanvas) {
+    context.fillStyle = 'rgba(5,6,12,.72)';
+    context.fillRect(0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
+    context.drawImage(personCanvas, 0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
   }
-  const rgba=ctx.getImageData(0,0,512,512).data; const pal=quantize(rgba,96); const idx=applyPalette(rgba,pal);
-  enc.writeFrame(idx,512,512,{palette:pal,delay:100,repeat:i?undefined:0});
-  bar.style.width=Math.round(80+(i/frames)*20)+'%';
 }
-enc.finish();
-if(lastGif&&lastGif.url) URL.revokeObjectURL(lastGif.url);
-const blob=new Blob([enc.bytes()],{type:'image/gif'}); const url=URL.createObjectURL(blob); lastGif={blob,url};
-$('gifPreview').src=url; $('result').classList.add('show'); $('result').scrollIntoView({behavior:'smooth'});
-$('aiStatus').textContent='מוכן!'; bar.style.width='100%'; toast('GIF כמו המקור מוכן 🎉');
-}catch(e){
-if(tx&&tx.refund) tx.refund();
-$('aiStatus').textContent=e.message; toast(e.message,true);
-}finally{
-isBusy=false; $('createBtn').disabled=false; $('createBtn').textContent='✨ צרו GIF כמו המקור';
-setTimeout(()=>{$('progress').style.display='none'; $('aiStatus').classList.remove('show'); $('progress').querySelector('i').style.width='0';},3000);
+
+function startPreview() {
+  cancelAnimationFrame(previewFrame);
+  const loop = () => { drawPreview(); previewFrame = requestAnimationFrame(loop); };
+  previewFrame = requestAnimationFrame(loop);
 }
+
+async function initSegmentation() {
+  if (segmentationReady && segmentation) return true;
+  if (!window.SelfieSegmentation) return false;
+  try {
+    segmentation = new window.SelfieSegmentation({
+      locateFile: file => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`
+    });
+    segmentation.setOptions({ modelSelection: 1 });
+    segmentationReady = true;
+    return true;
+  } catch (_) { return false; }
 }
-function saveGif(){if(!lastGif)return;const a=document.createElement('a');a.href=lastGif.url;a.download=`PersonaAI-${Date.now()}.gif`;a.click()}
-async function shareGif(){if(!lastGif)return;const file=new File([lastGif.blob],'PersonaAI.gif',{type:'image/gif'});try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file]})}else{saveGif()}}catch{}}
-$('shootBtn').addEventListener('click',()=>{if(!$('video').videoWidth){toast('מצלמה לא מוכנה',true);return}captureSource($('video'),facing==='user');if(stream)stream.getTracks().forEach(t=>t.stop())});
-$('galleryBtn').addEventListener('click',()=>$('fileInput').click());
-$('fileInput').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>captureSource(im,false);im.src=r.result};r.readAsDataURL(f);e.target.value=''});
-$('flipBtn').addEventListener('click',()=>{facing=facing==='user'?'environment':'user';$('video').classList.toggle('mirror',facing==='user');startCamera()});
-$('createBtn').addEventListener('click',createOneButtonGIF);
-$('saveBtn').addEventListener('click',saveGif);$('shareBtn').addEventListener('click',shareGif);
-$('anotherBtn').addEventListener('click',()=>{$('result').classList.remove('show');window.scrollTo({top:$('creator').offsetTop-10,behavior:'smooth'})});
-$('mainInput').addEventListener('input',()=>{selectedHint='';});
+
+async function createPersonCutout() {
+  if (!sourceImage.src || !(await initSegmentation())) return null;
+  return new Promise(resolve => {
+    let settled = false;
+    const timeout = setTimeout(() => { if (!settled) { settled = true; resolve(null); } }, 9000);
+    segmentation.onResults(results => {
+      if (settled || !results.segmentationMask) return;
+      const cutout = document.createElement('canvas');
+      cutout.width = OUTPUT_SIZE;
+      cutout.height = OUTPUT_SIZE;
+      const context = cutout.getContext('2d');
+      context.drawImage(sourceImage, 0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
+      context.globalCompositeOperation = 'destination-in';
+      context.filter = 'blur(1px)';
+      context.drawImage(results.segmentationMask, 0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
+      context.filter = 'none';
+      context.globalCompositeOperation = 'source-over';
+      personCanvas = cutout;
+      settled = true;
+      clearTimeout(timeout);
+      resolve(cutout);
+    });
+    segmentation.send({ image: sourceImage }).catch(() => {
+      if (!settled) { settled = true; clearTimeout(timeout); resolve(null); }
+    });
+  });
+}
+
+function renderReactions() {
+  REACTIONS.forEach((reaction, index) => {
+    const button = document.createElement('button');
+    button.className = 'reaction';
+    button.innerHTML = `<b>${reaction.emoji}</b><span>${reaction.label}</span><small>${reaction.sub}</small>`;
+    button.addEventListener('click', () => selectReaction(index, button));
+    $('reactions').appendChild(button);
+  });
+}
+
+function selectReaction(index, button) {
+  document.querySelectorAll('.reaction').forEach(item => item.classList.remove('active'));
+  button.classList.add('active');
+  selectedReaction = REACTIONS[index];
+  $('mainInput').value = selectedReaction.prompt;
+  $('captionInput').value = selectedReaction.caption;
+  $('mainInput').classList.add('hide');
+  $('customToggle').textContent = '✍️ יש לי רעיון משלי';
+}
+
+async function api(body) {
+  const response = await fetch(WORKER_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  let data = {};
+  try { data = await response.json(); } catch (_) {}
+  if (!response.ok && response.status !== 202) throw new Error(data.error || `שגיאת שרת ${response.status}`);
+  return data;
+}
+
+function proxiedAsset(url) {
+  return `${WORKER_URL}?asset=${encodeURIComponent(url)}`;
+}
+
+async function loadImageFromUrl(url) {
+  const response = await fetch(proxiedAsset(url), { cache: 'no-store' });
+  if (!response.ok) throw new Error('לא הצלחנו לטעון את הסצנה החדשה');
+  const blob = await response.blob();
+  const objectUrl = URL.createObjectURL(blob);
+  try {
+    const image = new Image();
+    image.src = objectUrl;
+    await image.decode();
+    return image;
+  } finally {
+    setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+  }
+}
+
+async function buildComposite(backgroundUrl) {
+  if (!personCanvas) {
+    personCanvas = await createPersonCutout();
+    if (!personCanvas) throw new Error('לא הצלחנו לזהות את הדמות. נסו סלפי ברור יותר.');
+  }
+  const background = await loadImageFromUrl(backgroundUrl);
+  const canvas = document.createElement('canvas');
+  canvas.width = OUTPUT_SIZE;
+  canvas.height = OUTPUT_SIZE;
+  const context = canvas.getContext('2d');
+  drawCover(context, background, 0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
+  const gradient = context.createLinearGradient(0, 0, 0, OUTPUT_SIZE);
+  gradient.addColorStop(0, 'rgba(0,0,0,.03)');
+  gradient.addColorStop(1, 'rgba(0,0,0,.18)');
+  context.fillStyle = gradient;
+  context.fillRect(0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
+  context.save();
+  context.shadowColor = 'rgba(0,0,0,.45)';
+  context.shadowBlur = 18;
+  context.shadowOffsetY = 8;
+  context.drawImage(personCanvas, 0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
+  context.restore();
+  return canvas;
+}
+
+async function waitForVideo(requestId) {
+  const started = Date.now();
+  const timeout = 180000;
+  let attempt = 0;
+  while (Date.now() - started < timeout) {
+    await sleep(attempt === 0 ? 2500 : 3500);
+    attempt += 1;
+    const seconds = Math.round((Date.now() - started) / 1000);
+    setProgress(Math.min(82, 48 + attempt * 1.4), `מנפישים את התגובה... ${seconds} שניות`, 'animate');
+    try {
+      const data = await api({ action: 'check_video', requestId });
+      if (data.videoUrl) return data.videoUrl;
+      if (data.status === 'failed') throw new Error(data.error || 'יצירת הווידאו נכשלה');
+    } catch (error) {
+      if (/נכשלה|failed|cancelled/i.test(error.message)) throw error;
+      if (attempt > 3) console.warn('Polling retry:', error.message);
+    }
+  }
+  throw new Error('היצירה נמשכת זמן רב מדי. הקרדיט הוחזר, אפשר לנסות שוב.');
+}
+
+async function fetchVideoBlob(videoUrl) {
+  const response = await fetch(proxiedAsset(videoUrl), { cache: 'no-store' });
+  if (!response.ok) throw new Error('לא הצלחנו להוריד את הווידאו שנוצר');
+  return response.blob();
+}
+
+function seekVideo(video, time) {
+  return new Promise(resolve => {
+    const timer = setTimeout(resolve, 1200);
+    video.addEventListener('seeked', () => { clearTimeout(timer); resolve(); }, { once: true });
+    video.currentTime = Math.min(time, Math.max(0, (video.duration || time) - 0.03));
+  });
+}
+
+async function videoToGif(videoBlob, caption) {
+  const objectUrl = URL.createObjectURL(videoBlob);
+  try {
+    const video = document.createElement('video');
+    video.src = objectUrl;
+    video.muted = true;
+    video.playsInline = true;
+    video.preload = 'auto';
+    await new Promise((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error('טעינת הווידאו ארכה זמן רב מדי')), 15000);
+      video.onloadedmetadata = () => { clearTimeout(timer); resolve(); };
+      video.onerror = () => { clearTimeout(timer); reject(new Error('הווידאו שהתקבל אינו תקין')); };
+    });
+
+    const { GIFEncoder, quantize, applyPalette } = await window.__gifencReady;
+    const encoder = GIFEncoder();
+    const canvas = document.createElement('canvas');
+    canvas.width = GIF_SIZE;
+    canvas.height = GIF_SIZE;
+    const context = canvas.getContext('2d', { willReadFrequently: true });
+    const duration = Math.min(Number.isFinite(video.duration) ? video.duration : 4, 4.2);
+    const frameCount = 22;
+
+    for (let index = 0; index < frameCount; index += 1) {
+      await seekVideo(video, (index / frameCount) * duration);
+      context.clearRect(0, 0, GIF_SIZE, GIF_SIZE);
+      drawCover(context, video, 0, 0, GIF_SIZE, GIF_SIZE);
+      if (caption) {
+        const fontSize = caption.length > 25 ? 24 : 29;
+        context.font = `900 ${fontSize}px Heebo, Arial`;
+        context.textAlign = 'center';
+        context.textBaseline = 'middle';
+        context.lineJoin = 'round';
+        context.lineWidth = 6;
+        context.strokeStyle = '#000';
+        context.fillStyle = '#fff';
+        context.strokeText(caption, GIF_SIZE / 2, GIF_SIZE - 34, GIF_SIZE - 24);
+        context.fillText(caption, GIF_SIZE / 2, GIF_SIZE - 34, GIF_SIZE - 24);
+      }
+      const rgba = context.getImageData(0, 0, GIF_SIZE, GIF_SIZE).data;
+      const palette = quantize(rgba, 96);
+      const indexed = applyPalette(rgba, palette);
+      encoder.writeFrame(indexed, GIF_SIZE, GIF_SIZE, { palette, delay: 110, repeat: index === 0 ? 0 : undefined });
+      setProgress(84 + Math.round((index / frameCount) * 15), 'אורזים את התגובה ל-GIF...', 'animate');
+    }
+    encoder.finish();
+    return new Blob([encoder.bytes()], { type: 'image/gif' });
+  } finally {
+    URL.revokeObjectURL(objectUrl);
+  }
+}
+
+function clearPreviousResult() {
+  if (lastGif?.url) URL.revokeObjectURL(lastGif.url);
+  if (lastVideo?.url) URL.revokeObjectURL(lastVideo.url);
+  lastGif = null;
+  lastVideo = null;
+}
+
+async function createReactionGif() {
+  if (isBusy) return;
+  const prompt = $('mainInput').value.trim();
+  if (!sourceImage.src) return toast('קודם מצלמים סלפי או בוחרים תמונה', true);
+  if (!prompt) return toast('בחרו תגובה או כתבו רעיון משלכם', true);
+
+  isBusy = true;
+  $('createBtn').disabled = true;
+  $('createBtn').textContent = '⏳ יוצרים את התגובה...';
+  $('result').classList.remove('show');
+  let transaction = null;
+
+  try {
+    if (window.PersonaBilling?.spendCreditsOrRefund) {
+      transaction = window.PersonaBilling.spendCreditsOrRefund(CREATION_COST);
+      if (!transaction.success) throw new Error('נגמרו הקרדיטים. הוסיפו קרדיטים כדי ליצור תגובה נוספת.');
+    }
+
+    setProgress(8, 'יוצרים סצנה חדשה במיוחד בשבילכם...', 'background');
+    const backgroundData = await api({ action: 'generate_background_only', prompt });
+    if (!backgroundData.imageUrl) throw new Error('מנוע התמונות לא החזיר רקע');
+
+    setProgress(28, 'מכניסים אתכם לתוך הסצנה...', 'compose');
+    const composite = await buildComposite(backgroundData.imageUrl);
+    $('canvas').getContext('2d').drawImage(composite, 0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
+    const composedImage = composite.toDataURL('image/jpeg', 0.91);
+
+    setProgress(43, 'הסצנה מוכנה. מתחילים להנפיש...', 'animate');
+    const queued = await api({ action: 'generate_animated_reaction', image: composedImage, prompt });
+    if (!queued.requestId) throw new Error('מנוע הווידאו לא התחיל את העבודה');
+    const videoUrl = await waitForVideo(queued.requestId);
+
+    setProgress(83, 'הווידאו מוכן. יוצרים GIF...', 'animate');
+    const videoBlob = await fetchVideoBlob(videoUrl);
+    const gifBlob = await videoToGif(videoBlob, $('captionInput').value.trim());
+
+    clearPreviousResult();
+    lastVideo = { blob: videoBlob, url: URL.createObjectURL(videoBlob) };
+    lastGif = { blob: gifBlob, url: URL.createObjectURL(gifBlob) };
+    $('gifPreview').src = lastGif.url;
+    $('result').classList.add('show');
+    setProgress(100, 'מוכן! אפשר לשתף עכשיו 🎉', 'animate');
+    $('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    toast('ה-GIF שלכם מוכן 🎉');
+  } catch (error) {
+    if (transaction?.refund) transaction.refund();
+    setProgress(0, error.message || 'משהו השתבש', 'background');
+    toast(error.message || 'משהו השתבש ביצירה', true);
+  } finally {
+    isBusy = false;
+    $('createBtn').disabled = false;
+    $('createBtn').textContent = '✨ צרו את ה-GIF שלי';
+    resetProgressLater();
+  }
+}
+
+function downloadBlob(blobInfo, extension) {
+  if (!blobInfo) return;
+  const link = document.createElement('a');
+  link.href = blobInfo.url;
+  link.download = `PersonaAI-${Date.now()}.${extension}`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+}
+
+async function shareResult() {
+  if (!lastGif) return;
+  const gifFile = new File([lastGif.blob], 'PersonaAI-Reaction.gif', { type: 'image/gif' });
+  const videoFile = lastVideo ? new File([lastVideo.blob], 'PersonaAI-Reaction.mp4', { type: lastVideo.blob.type || 'video/mp4' }) : null;
+  try {
+    if (navigator.canShare?.({ files: [gifFile] })) {
+      await navigator.share({ title: 'PersonaAI', text: 'יצרתי תגובת AI אישית ב-PersonaAI', files: [gifFile] });
+    } else if (videoFile && navigator.canShare?.({ files: [videoFile] })) {
+      await navigator.share({ title: 'PersonaAI', text: 'יצרתי תגובת AI אישית ב-PersonaAI', files: [videoFile] });
+    } else {
+      downloadBlob(lastGif, 'gif');
+      toast('ה-GIF נשמר. עכשיו אפשר לצרף אותו בוואטסאפ.');
+    }
+  } catch (error) {
+    if (error.name !== 'AbortError') toast('השיתוף בוטל או אינו זמין במכשיר הזה', true);
+  }
+}
+
+$('shootBtn').addEventListener('click', () => {
+  if (!$('video').videoWidth) return toast('המצלמה עדיין לא מוכנה', true);
+  captureSource($('video'), facing === 'user');
+  if (stream) stream.getTracks().forEach(track => track.stop());
+});
+$('galleryBtn').addEventListener('click', () => $('fileInput').click());
+$('fileInput').addEventListener('change', event => {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  if (!file.type.startsWith('image/')) return toast('בחרו קובץ תמונה', true);
+  const reader = new FileReader();
+  reader.onload = () => {
+    const image = new Image();
+    image.onload = () => captureSource(image, false);
+    image.onerror = () => toast('לא הצלחנו לפתוח את התמונה', true);
+    image.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+});
+$('flipBtn').addEventListener('click', () => {
+  facing = facing === 'user' ? 'environment' : 'user';
+  $('video').classList.toggle('mirror', facing === 'user');
+  startCamera();
+});
+$('customToggle').addEventListener('click', () => {
+  const isHidden = $('mainInput').classList.toggle('hide');
+  $('customToggle').textContent = isHidden ? '✍️ יש לי רעיון משלי' : '✕ סגרו רעיון אישי';
+  if (!isHidden) {
+    selectedReaction = null;
+    document.querySelectorAll('.reaction').forEach(item => item.classList.remove('active'));
+    $('mainInput').value = '';
+    $('mainInput').focus();
+  }
+});
+$('createBtn').addEventListener('click', createReactionGif);
+$('shareBtn').addEventListener('click', shareResult);
+$('saveBtn').addEventListener('click', () => downloadBlob(lastGif, 'gif'));
+$('saveVideoBtn').addEventListener('click', () => downloadBlob(lastVideo, 'mp4'));
+$('anotherBtn').addEventListener('click', () => {
+  $('result').classList.remove('show');
+  $('creator').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+window.addEventListener('persona-credits-changed', event => {
+  $('creditsCount').textContent = event.detail?.credits ?? 0;
+});
+
 renderReactions();
-if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister()));}
-if('caches' in window){caches.keys().then(keys=>keys.forEach(k=>caches.delete(k)));}
+try {
+  $('creditsCount').textContent = window.PersonaBilling?.getCredits?.() ?? 3;
+  $('proBadge').style.display = window.PersonaBilling?.isPro?.() ? 'inline-block' : 'none';
+} catch (_) {}
+if ('serviceWorker' in navigator) navigator.serviceWorker.getRegistrations().then(registrations => registrations.forEach(registration => registration.unregister()));
+if ('caches' in window) caches.keys().then(keys => keys.forEach(key => caches.delete(key)));
 startCamera();
-try{const c=window.PersonaBilling?.getCredits?.()??3;$('creditsCount').textContent=c;const isPro=window.PersonaBilling?.isPro?.();$('proBadge').style.display=isPro?'inline-block':'none'}catch{}
 </script>
 </body>
 </html>
