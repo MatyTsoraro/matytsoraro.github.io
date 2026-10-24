@@ -8,14 +8,15 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="theme-color" content="#090A12">
   <meta name="description" content="PersonaAI הופכת סלפי ל-GIF תגובה אישי ומוכן לשיתוף">
-  <title>PersonaAI - הסלפי שלך הופך לתגובה</title>
+  <title>PersonaAI V33 - הסלפי שלך הופך לתגובה</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <script type="importmap">{"imports":{"gifenc":"https://cdn.jsdelivr.net/npm/gifenc@1.0.3/dist/gifenc.esm.js"}}</script>
-  <script type="module">import * as gifenc from 'gifenc'; window.__gifencReady = Promise.resolve(gifenc);</script>
+  <script type="module">
+    window.__gifencReady = import('https://cdn.jsdelivr.net/npm/gifenc@1.0.3/dist/gifenc.esm.js');
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js" crossorigin="anonymous"></script>
-  <script src="billing-v2.2.js?v=32"></script>
+  <script src="billing-v2.2.js?v=33"></script>
   <style>
     :root{--bg:#080912;--card:#141728;--card2:#1b1f34;--text:#fff;--muted:#a9aec3;--pink:#ff3b9a;--purple:#7c3aed;--blue:#377df8;--green:#1fc86b;--border:#313650;--danger:#ff6177}
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -342,7 +343,7 @@ async function buildComposite(backgroundUrl) {
   return canvas;
 }
 
-async function waitForVideo(requestId) {
+async function waitForVideo(job) {
   const started = Date.now();
   const timeout = 180000;
   let attempt = 0;
@@ -352,7 +353,14 @@ async function waitForVideo(requestId) {
     const seconds = Math.round((Date.now() - started) / 1000);
     setProgress(Math.min(82, 48 + attempt * 1.4), `מנפישים את התגובה... ${seconds} שניות`, 'animate');
     try {
-      const data = await api({ action: 'check_video', requestId });
+      const data = await api({
+        action: 'check_video',
+        requestId: job.requestId,
+        statusUrl: job.statusUrl,
+        responseUrl: job.responseUrl
+      });
+      if (data.statusUrl) job.statusUrl = data.statusUrl;
+      if (data.responseUrl) job.responseUrl = data.responseUrl;
       if (data.videoUrl) return data.videoUrl;
       if (data.status === 'failed') throw new Error(data.error || 'יצירת הווידאו נכשלה');
     } catch (error) {
@@ -466,14 +474,24 @@ async function createReactionGif() {
     setProgress(43, 'הסצנה מוכנה. מתחילים להנפיש...', 'animate');
     const queued = await api({ action: 'generate_animated_reaction', image: composedImage, prompt });
     if (!queued.requestId) throw new Error('מנוע הווידאו לא התחיל את העבודה');
-    const videoUrl = await waitForVideo(queued.requestId);
+    const videoUrl = await waitForVideo({
+      requestId: queued.requestId,
+      statusUrl: queued.statusUrl,
+      responseUrl: queued.responseUrl
+    });
 
     setProgress(83, 'הווידאו מוכן. יוצרים GIF...', 'animate');
     const videoBlob = await fetchVideoBlob(videoUrl);
-    const gifBlob = await videoToGif(videoBlob, $('captionInput').value.trim());
-
     clearPreviousResult();
     lastVideo = { blob: videoBlob, url: URL.createObjectURL(videoBlob) };
+
+    let gifBlob = null;
+    try {
+      gifBlob = await videoToGif(videoBlob, $('captionInput').value.trim());
+    } catch (gifError) {
+      console.error('GIF conversion failed:', gifError);
+      throw new Error(`הווידאו נוצר בהצלחה, אך ההמרה ל-GIF נכשלה: ${gifError.message}`);
+    }
     lastGif = { blob: gifBlob, url: URL.createObjectURL(gifBlob) };
     $('gifPreview').src = lastGif.url;
     $('result').classList.add('show');
