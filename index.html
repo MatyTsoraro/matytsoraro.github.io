@@ -12,7 +12,7 @@
 <script type="importmap">{"imports":{"gifenc":"https://cdn.jsdelivr.net/npm/gifenc@1.0.3/dist/gifenc.esm.js"}}</script>
 <script type="module">import * as m from 'gifenc'; window.__gifencReady=Promise.resolve(m);</script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js" crossorigin="anonymous"></script>
-<script src="billing.js?v=25"></script>
+<script src="billing.js"></script>
 <style>
 :root{--bg:#090a12;--card:#151728;--card2:#1d2035;--text:#fff;--muted:#a9abc0;--pink:#ff3b9a;--purple:#7c3aed;--blue:#3478f6;--green:#20c66b;--border:#323652}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -64,8 +64,8 @@ body{font-family:Heebo,Arial,sans-serif;background:var(--bg);color:var(--text);m
 </head>
 <body>
 <main class="app">
-<header class="header"><div class="brand">PersonaAI v25</div><div class="credits"><span id="creditsCount">3</span> 💎<span id="proBadge" class="pro-badge">PRO</span></div></header>
-<section class="hero"><h1>מה בא לכם להגיד?</h1><p>סלפי אחד ומשפט אחד - ויש לכם תגובה</p></section>
+<header class="header"><div class="brand">PersonaAI</div><div class="credits"><span id="creditsCount">3</span> 💎<span id="proBadge" class="pro-badge">PRO</span></div></header>
+<section class="hero"><h1>התגובה שלך</h1><p>כמו ה-GIF שיצרת - הפנים זזות באמת</p></section>
 <div id="stage" class="stage"><video id="video" autoplay playsinline muted class="mirror"></video><canvas id="canvas" width="512" height="512" class="hide"></canvas><div id="stageBadge" class="stage-badge">מצלמים</div></div>
 <div id="captureButtons" class="capture"><button id="shootBtn" class="btn btn-primary grow">📸 צלמו סלפי</button><button id="galleryBtn" class="btn">🖼 גלריה</button><button id="flipBtn" class="btn">🔄</button></div>
 <input id="fileInput" type="file" accept="image/*" hidden>
@@ -74,7 +74,7 @@ body{font-family:Heebo,Arial,sans-serif;background:var(--bg);color:var(--text);m
 <div id="reactions" class="reaction-grid"></div>
 <input id="mainInput" class="text-input" maxlength="120" placeholder="למשל: מבוהל בתחנת חלל" style="margin-top:12px">
 <input id="captionInput" class="text-input" maxlength="80" placeholder="כיתוב: אין מצב 😱" style="margin-top:8px">
-<button id="createBtn" class="btn btn-blue btn-wide" style="margin-top:12px;font-size:18px;padding:16px">✨ צרו GIF כמו המקור</button>
+<button id="createBtn" class="btn btn-blue btn-wide" style="margin-top:12px;font-size:18px;padding:16px">✨ צרו GIF עם פנים זזות כמו המקור</button>
 <div id="aiStatus" class="status"></div><div id="progress" class="progress"><i></i></div>
 </section>
 <section id="result" class="section result"><div class="section-title">מוכן 🎉</div><img id="gifPreview" alt="GIF"><div class="result-actions"><button id="shareBtn" class="btn btn-green">📲 שתפו בוואטסאפ</button><button id="saveBtn" class="btn btn-light">⬇ שמרו</button><button id="anotherBtn" class="btn">✨ עוד אחד</button></div></section>
@@ -168,7 +168,7 @@ $('aiStatus').textContent='מוכן!'; bar.style.width='100%'; toast('GIF כמו
 if(tx&&tx.refund) tx.refund();
 $('aiStatus').textContent=e.message; toast(e.message,true);
 }finally{
-isBusy=false; $('createBtn').disabled=false; $('createBtn').textContent='✨ צרו GIF כמו המקור';
+isBusy=false; $('createBtn').disabled=false; $('createBtn').textContent='✨ צרו GIF עם פנים זזות כמו המקור';
 setTimeout(()=>{$('progress').style.display='none'; $('aiStatus').classList.remove('show'); $('progress').querySelector('i').style.width='0';},3000);
 }
 }
