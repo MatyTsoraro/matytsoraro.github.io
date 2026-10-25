@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="theme-color" content="#090A12">
   <meta name="description" content="PersonaAI הופכת סלפי ל-GIF תגובה אישי ומוכן לשיתוף">
-  <title>PersonaAI V35 - תגובות אישיות לוואטסאפ</title>
+  <title>PersonaAI V36 - תגובות אישיות לוואטסאפ</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -16,7 +16,7 @@
     window.__gifencReady = import('https://cdn.jsdelivr.net/npm/gifenc@1.0.3/dist/gifenc.esm.js');
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js" crossorigin="anonymous"></script>
-  <script src="billing.js?v=35"></script>
+  <script src="billing.js?v=36"></script>
   <style>
     :root{--bg:#080912;--card:#141728;--card2:#1b1f34;--text:#fff;--muted:#a9aec3;--pink:#ff3b9a;--purple:#7c3aed;--blue:#377df8;--green:#1fc86b;--border:#313650;--danger:#ff6177}
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -71,6 +71,7 @@
       <textarea id="customPromptInput" class="text-input" maxlength="240" rows="4" placeholder="לדוגמה: צוללת עתידנית" style="resize:vertical;min-height:112px"></textarea>
       <div id="customCounter" class="section-help" style="margin-top:6px;margin-bottom:0">0 מתוך 240 תווים</div>
       <input id="mainInput" type="hidden">
+      <div id="ideaUnderstanding" class="status" style="margin-top:10px"></div>
     </div>
     <button id="createBtn" class="btn btn-blue btn-wide" style="margin-top:12px;font-size:18px;padding:16px">✨ צרו את התגובה שלי</button>
     <div id="aiStatus" class="status"></div>
@@ -287,6 +288,8 @@ function selectReaction(index, button) {
   creationMode = 'preset';
   $('customPromptInput').value = '';
   $('customCounter').textContent = '0 מתוך 240 תווים';
+  $('ideaUnderstanding').classList.remove('show');
+  $('ideaUnderstanding').textContent = '';
   document.querySelectorAll('.reaction').forEach(item => item.classList.remove('active'));
   button.classList.add('active');
   selectedReaction = REACTIONS[index];
@@ -468,6 +471,18 @@ async function createReactionGif() {
   let transaction = null;
 
   try {
+    setProgress(3, 'מבינים את הרעיון ומכינים סצנה...', 'background');
+    const ideaCheck = await api({ action: 'analyze_idea', prompt, custom: isCustomCreation });
+    if (ideaCheck.allowed === false) {
+      $('ideaUnderstanding').classList.add('show');
+      $('ideaUnderstanding').textContent = ideaCheck.message || 'לא ניתן ליצור את הרעיון הזה. נסו סצנה אחרת.';
+      throw new Error(ideaCheck.message || 'לא ניתן ליצור את הרעיון הזה. נסו סצנה אחרת.');
+    }
+    if (isCustomCreation && ideaCheck.summary) {
+      $('ideaUnderstanding').classList.add('show');
+      $('ideaUnderstanding').textContent = `הבנו: ${ideaCheck.summary}`;
+    }
+
     if (window.PersonaBilling?.spendCreditsOrRefund) {
       transaction = window.PersonaBilling.spendCreditsOrRefund(CREATION_COST);
       if (!transaction.success) throw new Error('נגמרו הקרדיטים. הוסיפו קרדיטים כדי ליצור תגובה נוספת.');
@@ -590,12 +605,14 @@ $('customPromptInput').addEventListener('input', event => {
   selectedReaction = null;
   $('mainInput').value = '';
   $('customCounter').textContent = `${event.target.value.length} מתוך 240 תווים`;
+  $('ideaUnderstanding').classList.remove('show');
+  $('ideaUnderstanding').textContent = '';
   document.querySelectorAll('.reaction').forEach(item => item.classList.remove('active'));
   $('createBtn').textContent = event.target.value.trim() ? '✨ צרו את הרעיון שלי' : '✨ צרו את התגובה שלי';
 });
 $('retakeBtn').addEventListener('click', () => {
   sourceImage = new Image(); personCanvas = null; selectedReaction = null; creationMode = 'preset';
-  $('customPromptInput').value = ''; $('customCounter').textContent = '0 מתוך 240 תווים';
+  $('customPromptInput').value = ''; $('customCounter').textContent = '0 מתוך 240 תווים'; $('ideaUnderstanding').classList.remove('show'); $('ideaUnderstanding').textContent = '';
   $('creator').classList.add('hide'); $('result').classList.remove('show');
   $('captureButtons').classList.remove('hide'); $('video').classList.remove('hide'); $('canvas').classList.add('hide');
   startCamera(); window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -607,7 +624,7 @@ $('saveVideoBtn').addEventListener('click', () => downloadBlob(lastVideo, 'mp4')
 $('anotherBtn').addEventListener('click', () => {
   $('result').classList.remove('show');
   selectedReaction = null; creationMode = 'preset'; $('mainInput').value = '';
-  $('customPromptInput').value = ''; $('customCounter').textContent = '0 מתוך 240 תווים';
+  $('customPromptInput').value = ''; $('customCounter').textContent = '0 מתוך 240 תווים'; $('ideaUnderstanding').classList.remove('show'); $('ideaUnderstanding').textContent = '';
   document.querySelectorAll('.reaction').forEach(item => item.classList.remove('active'));
   $('createBtn').textContent = '✨ צרו את התגובה שלי';
   $('creator').scrollIntoView({ behavior: 'smooth', block: 'start' });
