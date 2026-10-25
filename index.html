@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="theme-color" content="#090A12">
   <meta name="description" content="PersonaAI הופכת סלפי ל-GIF תגובה אישי ומוכן לשיתוף">
-  <title>PersonaAI V34.3 - התגובה האישית שלך לוואטסאפ</title>
+  <title>PersonaAI V34.4 - התגובה האישית שלך לוואטסאפ</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -16,7 +16,7 @@
     window.__gifencReady = import('https://cdn.jsdelivr.net/npm/gifenc@1.0.3/dist/gifenc.esm.js');
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js" crossorigin="anonymous"></script>
-  <script src="billing.js?v=34.3"></script>
+  <script src="billing.js?v=34.4"></script>
   <style>
     :root{--bg:#080912;--card:#141728;--card2:#1b1f34;--text:#fff;--muted:#a9aec3;--pink:#ff3b9a;--purple:#7c3aed;--blue:#377df8;--green:#1fc86b;--border:#313650;--danger:#ff6177}
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -62,17 +62,14 @@
 
   <section id="creator" class="section hide">
     <div class="section-title">מה אתם רוצים להגיד?</div>
-    <div class="section-help">יש שתי אפשרויות נפרדות: לבחור תגובה מוכנה או ליצור רעיון חופשי משלכם.</div>
+    <div class="section-help">בחרו תגובה מוכנה, או דלגו על הבחירה וכתבו רעיון אישי בתיבה שמתחת.</div>
     <button id="retakeBtn" class="btn" style="margin-bottom:12px">📸 החליפו תמונה</button>
     <div id="reactions" class="reaction-grid"></div>
-    <div class="custom-wrap">
-      <button id="customToggle" type="button" class="custom-toggle">✍️ רעיון אישי במקום תגובה מוכנה</button>
-      <div id="customIdeaPanel" class="hide" style="margin-top:10px">
-        <div style="margin-bottom:8px;color:#5de7ff;font-weight:800">✓ מצב רעיון אישי פעיל. אין צורך לבחור תגובה מוכנה.</div>
-        <div class="section-help" style="margin-bottom:8px">כתבו בתוך התיבה הגדולה איפה אתם נמצאים, מה קורה מסביב ואיזו תגובה תרצו.</div>
-        <textarea id="customPromptInput" class="text-input" maxlength="240" rows="4" placeholder="לדוגמה: אני מופתע בתוך צוללת כשהמים מתחילים להיכנס והאורות מהבהבים" style="resize:vertical;min-height:104px"></textarea>
-        <div id="customCounter" class="section-help" style="margin-top:6px;margin-bottom:0">0 מתוך 240 תווים</div>
-      </div>
+    <div class="custom-wrap" style="margin-top:16px">
+      <div style="margin-bottom:6px;font-weight:900;font-size:17px">או כתבו רעיון אישי</div>
+      <div class="section-help" style="margin-bottom:8px">אין צורך לבחור תגובה מוכנה. כתבו כאן ישירות את הסצנה שתרצו ליצור.</div>
+      <textarea id="customPromptInput" class="text-input" maxlength="240" rows="4" placeholder="לדוגמה: אני מופתע בתוך צוללת כשהמים מתחילים להיכנס והאורות מהבהבים" style="resize:vertical;min-height:112px"></textarea>
+      <div id="customCounter" class="section-help" style="margin-top:6px;margin-bottom:0">0 מתוך 240 תווים</div>
       <input id="mainInput" type="hidden">
     </div>
     <div class="caption-row"><input id="captionInput" class="text-input" maxlength="52" placeholder="כיתוב אופציונלי בלבד"></div>
@@ -289,17 +286,13 @@ function renderReactions() {
 
 function setCreationMode(mode) {
   creationMode = mode;
-  const custom = mode === 'custom';
-  $('customIdeaPanel').classList.toggle('hide', !custom);
-  $('customToggle').textContent = custom ? '↩ חזרה לתגובות המוכנות' : '✍️ רעיון אישי במקום תגובה מוכנה';
-  if (custom) {
+  if (mode === 'custom') {
     selectedReaction = null;
     $('mainInput').value = '';
-    $('captionInput').value = '';
     document.querySelectorAll('.reaction').forEach(item => item.classList.remove('active'));
-    setTimeout(() => $('customPromptInput').focus(), 50);
+    $('createBtn').textContent = '✨ צרו את הרעיון שלי';
   } else {
-    $('mainInput').value = '';
+    $('createBtn').textContent = '✨ צרו את התגובה שלי';
   }
 }
 
@@ -476,12 +469,10 @@ async function createReactionGif() {
   if (isBusy) return;
   const customPrompt = String($('customPromptInput')?.value || '').trim();
   const presetPrompt = String(selectedReaction?.prompt || $('mainInput')?.value || '').trim();
-  const customPanelOpen = !$('customIdeaPanel').classList.contains('hide');
-  const isCustomCreation = customPanelOpen || customPrompt.length > 0;
+  const isCustomCreation = customPrompt.length > 0;
   const prompt = isCustomCreation ? customPrompt : presetPrompt;
   if (!sourceImage.src) return toast('קודם מצלמים סלפי או בוחרים תמונה', true);
-  if (isCustomCreation && !customPrompt) return toast('כתבו את הרעיון בתוך התיבה הגדולה של רעיון אישי', true);
-  if (!isCustomCreation && !presetPrompt) return toast('בחרו תגובה מוכנה, או פתחו רעיון אישי וכתבו בתיבה הגדולה', true);
+  if (!prompt) return toast('בחרו תגובה מוכנה או כתבו רעיון אישי בתיבה הגדולה', true);
   if (isCustomCreation && customPrompt.length < 12) return toast('תארו קצת יותר: איפה אתם נמצאים ומה קורה מסביב', true);
 
   isBusy = true;
@@ -597,18 +588,8 @@ $('flipBtn').addEventListener('click', () => {
   $('video').classList.toggle('mirror', facing === 'user');
   startCamera();
 });
-$('customToggle').addEventListener('click', () => {
-  if (creationMode === 'custom') {
-    $('customPromptInput').value = '';
-    $('customCounter').textContent = '0 מתוך 240 תווים';
-    setCreationMode('preset');
-  } else {
-    setCreationMode('custom');
-  }
-  $('createBtn').textContent = creationMode === 'custom' ? '✨ צרו את הרעיון שלי' : '✨ צרו את התגובה שלי';
-});
 $('customPromptInput').addEventListener('focus', () => {
-  if (creationMode !== 'custom') setCreationMode('custom');
+  if ($('customPromptInput').value.trim()) setCreationMode('custom');
 });
 $('customPromptInput').addEventListener('input', event => {
   creationMode = 'custom';
@@ -622,6 +603,8 @@ $('retakeBtn').addEventListener('click', () => {
   sourceImage = new Image();
   personCanvas = null;
   selectedReaction = null;
+  $('customPromptInput').value = '';
+  $('customCounter').textContent = '0 מתוך 240 תווים';
   setCreationMode('preset');
   document.querySelectorAll('.reaction').forEach(item => item.classList.remove('active'));
   $('creator').classList.add('hide');
