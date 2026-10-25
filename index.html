@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="theme-color" content="#090A12">
   <meta name="description" content="PersonaAI הופכת סלפי ל-GIF תגובה אישי ומוכן לשיתוף">
-  <title>PersonaAI V33 - הסלפי שלך הופך לתגובה</title>
+  <title>PersonaAI V34 - התגובה האישית שלך לוואטסאפ</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -16,7 +16,7 @@
     window.__gifencReady = import('https://cdn.jsdelivr.net/npm/gifenc@1.0.3/dist/gifenc.esm.js');
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js" crossorigin="anonymous"></script>
-  <script src="billing-v2.2.js?v=33"></script>
+  <script src="billing.js?v=34"></script>
   <style>
     :root{--bg:#080912;--card:#141728;--card2:#1b1f34;--text:#fff;--muted:#a9aec3;--pink:#ff3b9a;--purple:#7c3aed;--blue:#377df8;--green:#1fc86b;--border:#313650;--danger:#ff6177}
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -40,10 +40,10 @@
 <main class="app">
   <header class="header"><div class="brand">PersonaAI</div><div class="credits"><span id="creditsCount">3</span> 💎<span id="proBadge" class="pro-badge">PRO</span></div></header>
   <section class="hero">
-    <div class="eyebrow">AI REACTION GIF</div>
-    <h1>הסלפי שלכם הופך לתגובה</h1>
-    <p>מצלמים, בוחרים סצנה ומשתפים GIF אישי בוואטסאפ.</p>
-    <div class="steps"><div class="step-pill">1. סלפי</div><div class="step-pill">2. סצנה</div><div class="step-pill">3. שיתוף</div></div>
+    <div class="eyebrow">PERSONAL REACTIONS</div>
+    <h1>הפנים שלכם. התגובה שלכם.</h1>
+    <p>בוחרים מה רוצים להגיד, מצלמים סלפי ומקבלים תגובת AI אישית שמוכנה לשיתוף.</p>
+    <div class="steps"><div class="step-pill">1. סלפי</div><div class="step-pill">2. תגובה</div><div class="step-pill">3. שיתוף</div></div>
   </section>
 
   <div id="stage" class="stage">
@@ -61,15 +61,16 @@
   <input id="fileInput" type="file" accept="image/*" hidden>
 
   <section id="creator" class="section hide">
-    <div class="section-title">בחרו תגובה</div>
-    <div class="section-help">שש סצנות שבנויות במיוחד לתגובה קצרה וברורה.</div>
+    <div class="section-title">מה אתם רוצים להגיד?</div>
+    <div class="section-help">בחרו תגובה מוכנה. PersonaAI תתאים לה הבעה, תנועה וסצנה קולנועית.</div>
+    <button id="retakeBtn" class="btn" style="margin-bottom:12px">📸 החליפו תמונה</button>
     <div id="reactions" class="reaction-grid"></div>
     <div class="custom-wrap">
       <button id="customToggle" class="custom-toggle">✍️ יש לי רעיון משלי</button>
       <input id="mainInput" class="text-input hide" maxlength="120" placeholder="למשל: מופתע בתוך צוללת" style="margin-top:8px">
     </div>
-    <div class="caption-row"><input id="captionInput" class="text-input" maxlength="52" placeholder="כיתוב אופציונלי: אין מצב 😱"></div>
-    <button id="createBtn" class="btn btn-blue btn-wide" style="margin-top:12px;font-size:18px;padding:16px">✨ צרו את ה-GIF שלי</button>
+    <div class="caption-row"><input id="captionInput" class="text-input" maxlength="52" placeholder="כיתוב אופציונלי בלבד"></div>
+    <button id="createBtn" class="btn btn-blue btn-wide" style="margin-top:12px;font-size:18px;padding:16px">✨ צרו את התגובה שלי</button>
     <div id="aiStatus" class="status"></div>
     <div id="progress" class="progress"><i></i></div>
     <div id="phaseList" class="phase-list"><div class="phase" data-phase="background">יוצרים סצנה</div><div class="phase" data-phase="compose">מכניסים אתכם</div><div class="phase" data-phase="animate">מנפישים</div></div>
@@ -77,10 +78,10 @@
 
   <section id="result" class="section result">
     <div class="section-title">התגובה שלכם מוכנה 🎉</div>
-    <div class="section-help">GIF לשיתוף מהיר, ו-MP4 באיכות גבוהה יותר.</div>
-    <div class="result-media"><img id="gifPreview" alt="GIF תגובה שנוצר ב-PersonaAI"><div class="result-chip">נוצר ב-PersonaAI</div></div>
+    <div id="resultHelp" class="section-help">התגובה מוכנה לשיתוף. GIF נוח לצ׳אט ו-MP4 שומר איכות גבוהה יותר.</div>
+    <div class="result-media"><img id="gifPreview" alt="GIF תגובה שנוצר ב-PersonaAI"><video id="videoPreview" class="hide" autoplay muted loop playsinline></video><div class="result-chip">נוצר ב-PersonaAI</div></div>
     <div class="result-actions">
-      <button id="shareBtn" class="btn btn-green">📲 שתפו בוואטסאפ</button>
+      <button id="shareBtn" class="btn btn-green">📲 שתפו עכשיו</button>
       <button id="saveBtn" class="btn btn-light">⬇ שמרו GIF</button>
       <button id="saveVideoBtn" class="btn">🎬 שמרו MP4</button>
       <button id="anotherBtn" class="btn">✨ צרו עוד אחד</button>
@@ -97,12 +98,14 @@ const OUTPUT_SIZE = 768;
 const GIF_SIZE = 384;
 const CREATION_COST = 1;
 const REACTIONS = [
-  { emoji:'😱', label:'רעידת אדמה', sub:'הכול זז מסביב', prompt:'מבוהל בזמן רעידת אדמה', caption:'מה קורה פה?! 😱' },
-  { emoji:'🚀', label:'חללית מתרסקת', sub:'אזעקות וחלקיקים', prompt:'מבוהל בתוך חללית מתרסקת', caption:'אין מצב 😱' },
-  { emoji:'🎢', label:'רכבת הרים', sub:'רגע לפני הירידה', prompt:'מופתע ברכבת הרים ענקית', caption:'למה הסכמתי?!' },
-  { emoji:'🎉', label:'זכייה גדולה', sub:'קונפטי וחגיגה', prompt:'חוגג זכייה גדולה בלוטו', caption:'זכיתי!!! 🎉' },
-  { emoji:'💼', label:'עוד ישיבה', sub:'כאוס במשרד', prompt:'המום בישיבת עבודה כאוטית', caption:'עוד ישיבה?!' },
-  { emoji:'💥', label:'אקשן קולנועי', sub:'פיצוץ ברקע', prompt:'מופתע כשפיצוץ קולנועי מתרחש מאחור', caption:'אני בסדר 😎' }
+  { emoji:'😱', label:'מה?!', sub:'הלם מוחלט בחללית', prompt:'תגובה של הלם מוחלט, עיניים נפתחות והראש נסוג מעט, בתוך חללית שמיטלטלת', caption:'מה?!' },
+  { emoji:'😂', label:'אני מת מצחוק', sub:'צחוק ברור ומדבק', prompt:'פורץ בצחוק טבעי וחזק עם תנועת ראש וכתפיים עדינה, רקע חגיגי נע', caption:'אני מת מצחוק' },
+  { emoji:'😎', label:'ידעתי!', sub:'רגע ניצחון קולנועי', prompt:'תגובה בטוחה של ידעתי, חיוך קצר והנהון קטן, תאורת ניצחון וקונפטי ברקע', caption:'ידעתי!' },
+  { emoji:'😩', label:'אין לי כוח', sub:'כאוס של יום עבודה', prompt:'תגובה מותשת ומשעשעת בתוך משרד כאוטי, הראש נשמט מעט וניירות נעים ברקע', caption:'אין לי כוח' },
+  { emoji:'🏃', label:'אני בדרך', sub:'אקשן מהיר ברקע', prompt:'תגובה נחושה של אני בדרך בתוך סצנת אקשן מהירה, תנועת ראש קצרה ורקע דינמי', caption:'אני בדרך' },
+  { emoji:'🎉', label:'ניצחנו!', sub:'חגיגה וקונפטי', prompt:'חוגג ניצחון גדול, חיוך רחב ותנועת ראש שמחה, קונפטי ואורות חגיגה ברקע', caption:'ניצחנו!' },
+  { emoji:'💼', label:'עוד ישיבה?!', sub:'המשרד מתחיל להשתגע', prompt:'תגובה המומה ומשעשעת בישיבת עבודה כאוטית, עיניים מתרחבות וחפצים זזים ברקע', caption:'עוד ישיבה?!' },
+  { emoji:'🎢', label:'למה הסכמתי?', sub:'רכבת הרים לפני הירידה', prompt:'תגובה מופתעת ברכבת הרים רגע לפני ירידה תלולה, רוח ותנועה ברקע', caption:'למה הסכמתי?' }
 ];
 
 let stream = null;
@@ -282,7 +285,7 @@ function selectReaction(index, button) {
   button.classList.add('active');
   selectedReaction = REACTIONS[index];
   $('mainInput').value = selectedReaction.prompt;
-  $('captionInput').value = selectedReaction.caption;
+  $('captionInput').value = ''; // כיתוב נשאר אופציונלי באמת
   $('mainInput').classList.add('hide');
   $('customToggle').textContent = '✍️ יש לי רעיון משלי';
 }
@@ -344,6 +347,7 @@ async function buildComposite(backgroundUrl) {
 }
 
 async function waitForVideo(job) {
+  try { localStorage.setItem('persona_active_job', JSON.stringify({ ...job, savedAt: Date.now() })); } catch (_) {}
   const started = Date.now();
   const timeout = 180000;
   let attempt = 0;
@@ -484,16 +488,27 @@ async function createReactionGif() {
     const videoBlob = await fetchVideoBlob(videoUrl);
     clearPreviousResult();
     lastVideo = { blob: videoBlob, url: URL.createObjectURL(videoBlob) };
+    $('videoPreview').src = lastVideo.url;
 
     let gifBlob = null;
     try {
       gifBlob = await videoToGif(videoBlob, $('captionInput').value.trim());
+      lastGif = { blob: gifBlob, url: URL.createObjectURL(gifBlob) };
+      $('gifPreview').src = lastGif.url;
+      $('gifPreview').classList.remove('hide');
+      $('videoPreview').classList.add('hide');
+      $('saveBtn').disabled = false;
+      $('resultHelp').textContent = 'התגובה מוכנה. אפשר לשתף GIF או לשמור MP4 באיכות גבוהה יותר.';
     } catch (gifError) {
       console.error('GIF conversion failed:', gifError);
-      throw new Error(`הווידאו נוצר בהצלחה, אך ההמרה ל-GIF נכשלה: ${gifError.message}`);
+      lastGif = null;
+      $('gifPreview').classList.add('hide');
+      $('videoPreview').classList.remove('hide');
+      $('saveBtn').disabled = true;
+      $('resultHelp').textContent = 'הווידאו מוכן. יצירת GIF לא הצליחה במכשיר הזה, אבל אפשר לשתף או לשמור MP4.';
+      toast('הווידאו מוכן. נשתף אותו כ-MP4.', false);
     }
-    lastGif = { blob: gifBlob, url: URL.createObjectURL(gifBlob) };
-    $('gifPreview').src = lastGif.url;
+    transaction?.complete?.({ format: lastGif ? 'gif_and_mp4' : 'mp4' });
     $('result').classList.add('show');
     setProgress(100, 'מוכן! אפשר לשתף עכשיו 🎉', 'animate');
     $('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -505,7 +520,7 @@ async function createReactionGif() {
   } finally {
     isBusy = false;
     $('createBtn').disabled = false;
-    $('createBtn').textContent = '✨ צרו את ה-GIF שלי';
+    $('createBtn').textContent = '✨ צרו את התגובה שלי';
     resetProgressLater();
   }
 }
@@ -521,17 +536,17 @@ function downloadBlob(blobInfo, extension) {
 }
 
 async function shareResult() {
-  if (!lastGif) return;
-  const gifFile = new File([lastGif.blob], 'PersonaAI-Reaction.gif', { type: 'image/gif' });
+  if (!lastGif && !lastVideo) return;
+  const gifFile = lastGif ? new File([lastGif.blob], 'PersonaAI-Reaction.gif', { type: 'image/gif' }) : null;
   const videoFile = lastVideo ? new File([lastVideo.blob], 'PersonaAI-Reaction.mp4', { type: lastVideo.blob.type || 'video/mp4' }) : null;
   try {
-    if (navigator.canShare?.({ files: [gifFile] })) {
+    if (gifFile && navigator.canShare?.({ files: [gifFile] })) {
       await navigator.share({ title: 'PersonaAI', text: 'יצרתי תגובת AI אישית ב-PersonaAI', files: [gifFile] });
     } else if (videoFile && navigator.canShare?.({ files: [videoFile] })) {
       await navigator.share({ title: 'PersonaAI', text: 'יצרתי תגובת AI אישית ב-PersonaAI', files: [videoFile] });
     } else {
-      downloadBlob(lastGif, 'gif');
-      toast('ה-GIF נשמר. עכשיו אפשר לצרף אותו בוואטסאפ.');
+      if (lastGif) { downloadBlob(lastGif, 'gif'); toast('ה-GIF נשמר. עכשיו אפשר לצרף אותו.'); }
+      else if (lastVideo) { downloadBlob(lastVideo, 'mp4'); toast('הווידאו נשמר. עכשיו אפשר לצרף אותו.'); }
     }
   } catch (error) {
     if (error.name !== 'AbortError') toast('השיתוף בוטל או אינו זמין במכשיר הזה', true);
@@ -572,6 +587,20 @@ $('customToggle').addEventListener('click', () => {
     $('mainInput').value = '';
     $('mainInput').focus();
   }
+});
+$('retakeBtn').addEventListener('click', () => {
+  sourceImage = new Image();
+  personCanvas = null;
+  selectedReaction = null;
+  $('creator').classList.add('hide');
+  $('result').classList.remove('show');
+  $('captureButtons').classList.remove('hide');
+  $('video').classList.remove('hide');
+  $('canvas').classList.add('hide');
+  $('stageBadge').textContent = 'מצלמים';
+  $('stageTip').textContent = 'מקמו את הפנים במרכז ובתאורה טובה';
+  startCamera();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 $('createBtn').addEventListener('click', createReactionGif);
 $('shareBtn').addEventListener('click', shareResult);
