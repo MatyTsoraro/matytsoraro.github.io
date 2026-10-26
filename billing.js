@@ -6,7 +6,7 @@
 (function () {
   'use strict';
 
-  const VERSION = '2.3-mvp';
+  const VERSION = '3.0-product';
 
   const STORAGE = Object.freeze({
     CREDITS: 'persona_credits',
@@ -14,7 +14,8 @@
     PRO: 'persona_pro',
     LEGACY_PRO: 'pro',
     PROCESSED_TOKENS: 'persona_processed_tokens',
-    PENDING_TRANSACTIONS: 'persona_pending_transactions'
+    PENDING_TRANSACTIONS: 'persona_pending_transactions',
+    QUALITY_REFUNDS: 'persona_quality_refunds_v3'
   });
 
   const DEFAULT_CREDITS = 3;
@@ -484,6 +485,30 @@
     };
   }
 
+  function grantQualityRetry(transactionId, reason = 'poor_result') {
+    const id = String(transactionId || '').trim();
+    if (!id) return { success: false, reason: 'missing_transaction', credits: getCredits() };
+    const transaction = getTransaction(id);
+    if (!transaction || transaction.status !== 'completed' || transaction.cost <= 0) {
+      return { success: false, reason: 'ineligible_transaction', credits: getCredits() };
+    }
+    const refundedIds = readJson(STORAGE.QUALITY_REFUNDS, []);
+    const list = Array.isArray(refundedIds) ? refundedIds : [];
+    if (list.includes(id)) return { success: false, reason: 'already_granted', credits: getCredits() };
+    list.push(id);
+    writeJson(STORAGE.QUALITY_REFUNDS, list.slice(-100));
+    const credits = addCredits(1);
+    const updated = updateTransaction(id, {
+      qualityRetryGranted: true,
+      qualityRetryReason: String(reason).slice(0, 120),
+      qualityRetryAt: Date.now()
+    });
+    if (updated) emitTransaction('quality_retry', updated);
+    return { success: true, added: 1, credits };
+  }
+  function activateStarterPackForTesting() {
+    return addCredits(12);
+  }
   function cleanOldTransactions(maxAgeDays = 30) {
     const maxAgeMilliseconds =
       Math.max(1, safeInt(maxAgeDays, 30)) *
@@ -530,6 +555,8 @@
     getProcessedTokens,
     getPendingTransactions,
     getTransaction,
+    grantQualityRetry,
+    activateStarterPackForTesting,
     cleanOldTransactions,
 
     get credits() {
