@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="theme-color" content="#090A12">
   <meta name="description" content="PersonaAI הופכת סלפי ל-GIF תגובה אישי ומוכן לשיתוף">
-  <title>PersonaAI V36 - תגובות אישיות לוואטסאפ</title>
+  <title>PersonaAI V37 - תגובות אישיות לוואטסאפ</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -16,7 +16,7 @@
     window.__gifencReady = import('https://cdn.jsdelivr.net/npm/gifenc@1.0.3/dist/gifenc.esm.js');
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js" crossorigin="anonymous"></script>
-  <script src="billing.js?v=36"></script>
+  <script src="billing.js?v=37"></script>
   <style>
     :root{--bg:#080912;--card:#141728;--card2:#1b1f34;--text:#fff;--muted:#a9aec3;--pink:#ff3b9a;--purple:#7c3aed;--blue:#377df8;--green:#1fc86b;--border:#313650;--danger:#ff6177}
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -480,7 +480,7 @@ async function createReactionGif() {
     }
     if (isCustomCreation && ideaCheck.summary) {
       $('ideaUnderstanding').classList.add('show');
-      $('ideaUnderstanding').textContent = `הבנו: ${ideaCheck.summary}`;
+      $('ideaUnderstanding').textContent = `הבנו: ${ideaCheck.summary}${ideaCheck.reaction ? ` | תגובה: ${ideaCheck.reaction}` : ''}`;
     }
 
     if (window.PersonaBilling?.spendCreditsOrRefund) {
@@ -489,7 +489,7 @@ async function createReactionGif() {
     }
 
     setProgress(8, 'יוצרים סצנה חדשה במיוחד בשבילכם...', 'background');
-    const backgroundData = await api({ action: 'generate_background_only', prompt });
+    const backgroundData = await api({ action: 'generate_background_only', prompt, scenePlan: ideaCheck.scenePlan || null });
     if (!backgroundData.imageUrl) throw new Error('מנוע התמונות לא החזיר רקע');
 
     setProgress(28, 'מכניסים אתכם לתוך הסצנה...', 'compose');
@@ -498,7 +498,7 @@ async function createReactionGif() {
     const composedImage = composite.toDataURL('image/jpeg', 0.91);
 
     setProgress(43, 'הסצנה מוכנה. מתחילים להנפיש...', 'animate');
-    const queued = await api({ action: 'generate_animated_reaction', image: composedImage, prompt });
+    const queued = await api({ action: 'generate_animated_reaction', image: composedImage, prompt, scenePlan: ideaCheck.scenePlan || null });
     if (!queued.requestId) throw new Error('מנוע הווידאו לא התחיל את העבודה');
     const videoUrl = await waitForVideo({
       requestId: queued.requestId,
