@@ -1,0 +1,1473 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<meta
+			name="viewport"
+			content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+		<meta name="theme-color" content="#090A12" />
+		<meta name="description" content="PersonaAI הופכת סלפי ל-GIF תגובה אישי ומוכן לשיתוף" />
+		<title>PersonaAI V43 - ספריית התגובות האישית</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+		<script type="module">
+			window.__gifencReady = import('https://cdn.jsdelivr.net/npm/gifenc@1.0.3/dist/gifenc.esm.js');
+		</script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js"
+			crossorigin="anonymous"></script>
+		<script src="billing.js?v=43"></script>
+		<style>
+			:root {
+				--bg: #080912;
+				--card: #141728;
+				--card2: #1b1f34;
+				--text: #fff;
+				--muted: #a9aec3;
+				--pink: #ff3b9a;
+				--purple: #7c3aed;
+				--blue: #377df8;
+				--green: #1fc86b;
+				--border: #313650;
+				--danger: #ff6177;
+			}
+			* {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+				-webkit-tap-highlight-color: transparent;
+			}
+			html {
+				background: var(--bg);
+				scroll-behavior: smooth;
+			}
+			body {
+				font-family: Heebo, Arial, sans-serif;
+				background: radial-gradient(circle at 50% -15%, #29113d 0, #0d0f1b 38%, var(--bg) 70%);
+				color: var(--text);
+				min-height: 100vh;
+				padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+			}
+			button,
+			input {
+				font: inherit;
+			}
+			.app {
+				width: min(100%, 500px);
+				margin: auto;
+				padding: 14px 14px 42px;
+			}
+			.header {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				margin-bottom: 14px;
+			}
+			.brand {
+				font-size: 24px;
+				font-weight: 900;
+				background: linear-gradient(90deg, var(--pink), #ffbd00, #5de7ff);
+				-webkit-background-clip: text;
+				color: transparent;
+			}
+			.credits {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				background: #191c30;
+				border: 1px solid var(--border);
+				border-radius: 999px;
+				padding: 7px 11px;
+				font-size: 12px;
+			}
+			.pro-badge {
+				background: var(--pink);
+				border-radius: 999px;
+				padding: 2px 7px;
+				font-size: 10px;
+				font-weight: 900;
+				display: none;
+			}
+			.hero {
+				background: linear-gradient(145deg, #22132e, #111726);
+				border: 1px solid var(--border);
+				border-radius: 24px;
+				padding: 16px;
+				margin-bottom: 12px;
+				box-shadow: 0 16px 55px #0005;
+			}
+			.eyebrow {
+				font-size: 11px;
+				color: #ff8fc5;
+				font-weight: 900;
+				letter-spacing: 0.4px;
+			}
+			.hero h1 {
+				font-size: 25px;
+				line-height: 1.15;
+				margin-top: 2px;
+			}
+			.hero p {
+				font-size: 13px;
+				color: var(--muted);
+				margin-top: 7px;
+			}
+			.steps {
+				display: flex;
+				gap: 5px;
+				margin-top: 12px;
+			}
+			.step-pill {
+				flex: 1;
+				border-radius: 999px;
+				background: #ffffff0c;
+				border: 1px solid #ffffff12;
+				padding: 5px;
+				text-align: center;
+				font-size: 10px;
+				color: #d8d9e5;
+			}
+			.stage {
+				position: relative;
+				width: 100%;
+				aspect-ratio: 1/1;
+				background: #05060a;
+				border: 1px solid var(--border);
+				border-radius: 25px;
+				overflow: hidden;
+				box-shadow: 0 18px 60px #0009;
+				touch-action: none;
+			}
+			.stage canvas,
+			.stage video {
+				width: 100%;
+				height: 100%;
+				display: block;
+				object-fit: cover;
+			}
+			.stage video.mirror {
+				transform: scaleX(-1);
+			}
+			.stage-badge {
+				position: absolute;
+				top: 10px;
+				right: 10px;
+				background: #000c;
+				border: 1px solid #ffffff2a;
+				border-radius: 999px;
+				padding: 6px 10px;
+				font-size: 11px;
+				backdrop-filter: blur(8px);
+			}
+			.stage-tip {
+				position: absolute;
+				bottom: 12px;
+				left: 50%;
+				transform: translateX(-50%);
+				width: max-content;
+				max-width: 88%;
+				background: #000b;
+				border-radius: 999px;
+				padding: 7px 12px;
+				font-size: 11px;
+				color: #f2f2f6;
+			}
+			.capture {
+				display: flex;
+				gap: 9px;
+				margin: 10px 0;
+			}
+			.btn {
+				border: 1px solid var(--border);
+				border-radius: 16px;
+				background: var(--card2);
+				color: #fff;
+				padding: 12px 14px;
+				font-weight: 800;
+				cursor: pointer;
+				min-height: 49px;
+			}
+			.btn:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+			.btn-primary {
+				border: 0;
+				background: linear-gradient(90deg, var(--pink), var(--purple));
+			}
+			.btn-blue {
+				border: 0;
+				background: linear-gradient(90deg, #2d78f6, #674bef);
+			}
+			.btn-green {
+				border: 0;
+				background: linear-gradient(90deg, #20c96c, #0da95a);
+				font-size: 17px;
+			}
+			.btn-light {
+				background: #fff;
+				color: #111;
+				border: 0;
+			}
+			.btn-wide {
+				width: 100%;
+			}
+			.grow {
+				flex: 1;
+			}
+			.section {
+				background: var(--card);
+				border: 1px solid var(--border);
+				border-radius: 23px;
+				padding: 14px;
+				margin-top: 12px;
+			}
+			.section-title {
+				font-size: 17px;
+				font-weight: 900;
+			}
+			.section-help {
+				font-size: 12px;
+				color: var(--muted);
+				margin: 3px 0 11px;
+			}
+			.reaction-grid {
+				display: grid;
+				grid-template-columns: repeat(2, 1fr);
+				gap: 9px;
+			}
+			.reaction {
+				position: relative;
+				border: 1px solid var(--border);
+				background: linear-gradient(145deg, #20243a, #171a2c);
+				color: #fff;
+				border-radius: 18px;
+				padding: 12px 9px;
+				min-height: 83px;
+				font-size: 12px;
+				font-weight: 800;
+				cursor: pointer;
+				text-align: right;
+				overflow: hidden;
+			}
+			.reaction b {
+				display: block;
+				font-size: 27px;
+				margin-bottom: 2px;
+			}
+			.reaction small {
+				display: block;
+				color: var(--muted);
+				font-size: 10px;
+				font-weight: 600;
+			}
+			.reaction.active {
+				border: 2px solid var(--pink);
+				background: linear-gradient(145deg, #39182f, #21172d);
+				box-shadow: 0 0 0 3px #ff3b9a1c;
+			}
+			.reaction.active:after {
+				content: '✓';
+				position: absolute;
+				left: 9px;
+				top: 8px;
+				width: 22px;
+				height: 22px;
+				display: grid;
+				place-items: center;
+				border-radius: 50%;
+				background: var(--pink);
+				font-size: 12px;
+			}
+			.custom-wrap {
+				margin-top: 12px;
+			}
+			.custom-toggle {
+				background: transparent;
+				color: #b9c7ff;
+				border: 0;
+				font-weight: 800;
+				cursor: pointer;
+				padding: 5px;
+			}
+			.text-input {
+				width: 100%;
+				border: 1px solid var(--border);
+				background: #0d1020;
+				color: #fff;
+				border-radius: 15px;
+				padding: 13px 14px;
+				outline: none;
+				font-size: 15px;
+			}
+			.text-input:focus {
+				border-color: #5e8dff;
+				box-shadow: 0 0 0 3px #3478f625;
+			}
+			.caption-row {
+				margin-top: 9px;
+			}
+			.status {
+				display: none;
+				margin-top: 11px;
+				padding: 12px;
+				border-radius: 15px;
+				background: #101d31;
+				color: #a4dcff;
+				font-size: 12px;
+				text-align: center;
+			}
+			.status.show {
+				display: block;
+			}
+			.progress {
+				height: 7px;
+				background: #272b42;
+				border-radius: 99px;
+				overflow: hidden;
+				margin-top: 9px;
+				display: none;
+			}
+			.progress i {
+				display: block;
+				width: 0;
+				height: 100%;
+				background: linear-gradient(90deg, var(--pink), #5de7ff);
+				transition: width 0.35s;
+			}
+			.phase-list {
+				display: none;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 5px;
+				margin-top: 10px;
+			}
+			.phase-list.show {
+				display: grid;
+			}
+			.phase {
+				padding: 7px 3px;
+				border-radius: 10px;
+				background: #0e1120;
+				color: #747a93;
+				text-align: center;
+				font-size: 10px;
+			}
+			.phase.active {
+				color: #fff;
+				background: #2a2140;
+			}
+			.phase.done {
+				color: #8cf0b5;
+				background: #123122;
+			}
+			.result {
+				display: none;
+			}
+			.result.show {
+				display: block;
+			}
+			.result-media {
+				position: relative;
+			}
+			.result img {
+				width: 100%;
+				border-radius: 20px;
+				border: 1px solid var(--border);
+				display: block;
+				background: #05060a;
+			}
+			.result-chip {
+				position: absolute;
+				right: 10px;
+				top: 10px;
+				background: #000c;
+				border-radius: 999px;
+				padding: 6px 10px;
+				font-size: 10px;
+			}
+			.result-actions {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 9px;
+				margin-top: 10px;
+			}
+			.result-actions .btn-green {
+				grid-column: 1/-1;
+			}
+			.hide {
+				display: none !important;
+			}
+			.toast {
+				position: fixed;
+				z-index: 100;
+				bottom: 22px;
+				left: 50%;
+				transform: translateX(-50%);
+				width: min(90%, 430px);
+				background: #20243a;
+				border: 1px solid var(--border);
+				border-radius: 999px;
+				padding: 11px 15px;
+				text-align: center;
+				font-size: 12px;
+				display: none;
+				box-shadow: 0 10px 40px #0008;
+			}
+			.toast.error {
+				border-color: var(--danger);
+				color: #ffd8df;
+			}
+			.legal {
+				font-size: 10px;
+				color: #74788e;
+				text-align: center;
+				margin-top: 18px;
+				line-height: 1.5;
+			}
+			@media (max-width: 360px) {
+				.reaction-grid {
+					grid-template-columns: 1fr;
+				}
+				.hero h1 {
+					font-size: 22px;
+				}
+			}
+
+			.top-nav {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 8px;
+				margin: 0 0 12px;
+			}
+			.nav-btn {
+				border: 1px solid var(--border);
+				background: #111426;
+				color: #b9bfd4;
+				border-radius: 14px;
+				padding: 10px;
+				font-weight: 900;
+			}
+			.nav-btn.active {
+				color: #fff;
+				border-color: #7957ff;
+				background: linear-gradient(90deg, #236df0, #7047ed);
+			}
+			.library-grid {
+				display: grid;
+				grid-template-columns: repeat(2, 1fr);
+				gap: 10px;
+			}
+			.library-card {
+				background: #0d1020;
+				border: 1px solid var(--border);
+				border-radius: 17px;
+				overflow: hidden;
+			}
+			.library-card img,
+			.library-card video {
+				width: 100%;
+				aspect-ratio: 1;
+				object-fit: cover;
+				display: block;
+				background: #05060a;
+			}
+			.library-meta {
+				padding: 9px;
+			}
+			.library-title {
+				font-size: 12px;
+				font-weight: 900;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+			.library-date {
+				font-size: 9px;
+				color: var(--muted);
+			}
+			.library-actions {
+				display: grid;
+				grid-template-columns: 1fr 1fr 1fr;
+				gap: 5px;
+				margin-top: 7px;
+			}
+			.library-actions button {
+				border: 0;
+				border-radius: 9px;
+				background: #222740;
+				color: #fff;
+				padding: 7px 3px;
+				font-size: 10px;
+			}
+			.empty-state {
+				text-align: center;
+				padding: 25px 10px;
+				color: var(--muted);
+			}
+			.quality-box {
+				margin-top: 10px;
+				padding: 11px;
+				border: 1px solid #47395f;
+				border-radius: 15px;
+				background: #171326;
+			}
+			.quality-box p {
+				font-size: 11px;
+				color: #c8c2d8;
+				margin-bottom: 8px;
+			}
+			.quality-btn {
+				width: 100%;
+				border: 1px solid #ff6f9166;
+				background: #2b1722;
+				color: #ffd6df;
+				border-radius: 12px;
+				padding: 10px;
+				font-weight: 900;
+			}
+			.paywall {
+				position: fixed;
+				inset: 0;
+				background: #000c;
+				z-index: 200;
+				display: none;
+				align-items: flex-end;
+				justify-content: center;
+			}
+			.paywall.show {
+				display: flex;
+			}
+			.paywall-card {
+				width: min(100%, 500px);
+				background: #15182a;
+				border: 1px solid var(--border);
+				border-radius: 25px 25px 0 0;
+				padding: 20px;
+			}
+			.paywall-card h2 {
+				font-size: 22px;
+			}
+			.price {
+				font-size: 34px;
+				font-weight: 900;
+				margin: 8px 0;
+			}
+			.feature-list {
+				list-style: none;
+				margin: 12px 0;
+			}
+			.feature-list li {
+				padding: 5px 0;
+				color: #d8daea;
+			}
+			.feature-list li:before {
+				content: '✓ ';
+				color: #42df88;
+				font-weight: 900;
+			}
+			.close-paywall {
+				float: left;
+				border: 0;
+				background: transparent;
+				color: #aaa;
+				font-size: 22px;
+			}
+			@media (max-width: 360px) {
+				.library-grid {
+					grid-template-columns: 1fr;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<main class="app">
+			<header class="header">
+				<div class="brand">PersonaAI</div>
+				<div class="credits"><span id="creditsCount">3</span> 💎<span id="proBadge" class="pro-badge">PRO</span></div>
+			</header>
+			<section class="hero">
+				<div class="eyebrow">PERSONAL AI REACTIONS</div>
+				<h1>הפנים שלכם. התגובה שלכם.</h1>
+				<p>מצלמים סלפי, בוחרים תגובה או מתארים סצנה משלכם ומשתפים מיד.</p>
+				<div class="steps">
+					<div class="step-pill">1. סלפי</div>
+					<div class="step-pill">2. תגובה</div>
+					<div class="step-pill">3. שיתוף</div>
+				</div>
+			</section>
+			<nav class="top-nav">
+				<button id="createTab" class="nav-btn active">✨ יצירה חדשה</button>
+				<button id="libraryTab" class="nav-btn">🎞️ התגובות שלי <span id="libraryCount">0</span></button>
+			</nav>
+			<section id="librarySection" class="section hide">
+				<div class="section-title">התגובות שלי</div>
+				<div class="section-help">כל התגובות ששמרתם, מוכנות לשיתוף חוזר.</div>
+				<div id="libraryGrid" class="library-grid"></div>
+			</section>
+			<div id="creationFlow">
+				<div id="stage" class="stage">
+					<video id="video" autoplay playsinline muted class="mirror"></video>
+					<canvas id="canvas" width="768" height="768" class="hide"></canvas>
+					<div id="stageBadge" class="stage-badge">מצלמים</div>
+					<div id="stageTip" class="stage-tip">מקמו את הפנים במרכז ובתאורה טובה</div>
+				</div>
+
+				<div id="captureButtons" class="capture">
+					<button id="shootBtn" class="btn btn-primary grow">📸 צלמו סלפי</button>
+					<button id="galleryBtn" class="btn">🖼 גלריה</button>
+					<button id="flipBtn" class="btn" aria-label="החלפת מצלמה">🔄</button>
+				</div>
+				<input id="fileInput" type="file" accept="image/*" hidden />
+
+				<section id="creator" class="section hide">
+					<div class="section-title">מה תרצו להגיד?</div>
+					<div class="section-help">בחרו תגובה מוכנה, או דלגו על הבחירה וכתבו סצנה אישית בתיבה הגדולה.</div>
+					<button id="retakeBtn" class="btn" style="margin-bottom: 12px">📸 החליפו תמונה</button>
+					<div id="reactions" class="reaction-grid"></div>
+					<div class="custom-wrap" style="margin-top: 16px">
+						<div style="margin-bottom: 6px; font-weight: 900; font-size: 17px">או תארו סצנה משלכם</div>
+						<div class="section-help" style="margin-bottom: 8px">
+							אפשר לכתוב גם רעיון קצר כמו "צוללת עתידנית". PersonaAI תרחיב אותו אוטומטית לסצנה מלאה.
+						</div>
+						<textarea
+							id="customPromptInput"
+							class="text-input"
+							maxlength="240"
+							rows="4"
+							placeholder="לדוגמה: צוללת עתידנית"
+							style="resize: vertical; min-height: 112px"></textarea>
+						<div id="customCounter" class="section-help" style="margin-top: 6px; margin-bottom: 0">0 מתוך 240 תווים</div>
+						<input id="mainInput" type="hidden" />
+						<div id="ideaUnderstanding" class="status" style="margin-top: 10px"></div>
+					</div>
+					<button id="createBtn" class="btn btn-blue btn-wide" style="margin-top: 12px; font-size: 18px; padding: 16px">
+						✨ צרו את התגובה שלי
+					</button>
+					<div id="aiStatus" class="status"></div>
+					<div id="progress" class="progress"><i></i></div>
+					<div id="phaseList" class="phase-list">
+						<div class="phase" data-phase="background">יוצרים סצנה</div>
+						<div class="phase" data-phase="compose">מכניסים אתכם</div>
+						<div class="phase" data-phase="animate">מנפישים</div>
+					</div>
+				</section>
+
+				<section id="result" class="section result">
+					<div class="section-title">התגובה שלכם מוכנה 🎉</div>
+					<div id="resultHelp" class="section-help">אפשר לשתף מיד או לשמור למכשיר.</div>
+					<div class="result-media">
+						<img id="gifPreview" alt="תגובה מונפשת שנוצרה ב-PersonaAI" /><video
+							id="videoPreview"
+							class="hide"
+							autoplay
+							muted
+							loop
+							playsinline></video>
+						<div class="result-chip">נוצר ב-PersonaAI</div>
+					</div>
+					<div class="result-actions">
+						<button id="shareBtn" class="btn btn-green">📲 שתפו עכשיו</button>
+						<button id="saveBtn" class="btn btn-light">⬇ שמרו תגובה מונפשת</button>
+						<button id="saveVideoBtn" class="btn">🎬 שמרו וידאו באיכות גבוהה</button>
+						<button id="anotherBtn" class="btn">✨ צרו עוד אחד</button>
+					</div>
+					<div class="quality-box">
+						<p>לא יצא טוב? קבלו ניסיון חוזר אחד ללא חיוב עבור היצירה הזאת.</p>
+						<button id="badResultBtn" class="quality-btn">↻ לא יצא טוב, תנו לי ניסיון חוזר</button>
+					</div>
+				</section>
+			</div>
+			<div class="legal">התמונה נשלחת לשירותי AI לצורך היצירה. אין להעלות תמונה של אדם אחר ללא רשות.</div>
+		</main>
+		<div id="paywall" class="paywall">
+			<div class="paywall-card">
+				<button id="closePaywall" class="close-paywall">×</button>
+				<h2>חבילת התגובות האישית שלי</h2>
+				<div class="price">12 תגובות ב־₪12.90</div>
+				<ul class="feature-list">
+					<li>12 יצירות חדשות</li>
+					<li>שמירה בספריית התגובות</li>
+					<li>ניסיון חוזר אם תוצאה לא טובה</li>
+					<li>הקרדיטים אינם פגים</li>
+				</ul>
+				<button id="buyPackBtn" class="btn btn-primary btn-wide">רכשו את החבילה</button>
+				<div class="section-help" style="margin-top: 8px">
+					מצב MVP: יש לחבר Google Play Billing ולאמת רכישות בשרת לפני מכירה אמיתית.
+				</div>
+			</div>
+		</div>
+		<div id="toast" class="toast"></div>
+
+		<script>
+			'use strict';
+			const WORKER_URL = 'https://billowing-shape-1d81.maty-tsoraro.workers.dev';
+			const OUTPUT_SIZE = 768;
+			const GIF_SIZE = 384;
+			const CREATION_COST = 1;
+			const REACTIONS = [
+				{ emoji: '😱', label: 'מה?!', sub: 'הלם מוחלט בחללית', prompt: 'תגובה של הלם מוחלט בתוך חללית שמיטלטלת' },
+				{ emoji: '😂', label: 'אני מת מצחוק', sub: 'צחוק ברור ומדבק', prompt: 'פורץ בצחוק טבעי וחזק בתוך מסיבה צבעונית' },
+				{ emoji: '😎', label: 'ידעתי!', sub: 'רגע ניצחון קולנועי', prompt: 'תגובה בטוחה של ידעתי עם תאורת ניצחון וקונפטי' },
+				{ emoji: '😩', label: 'אין לי כוח', sub: 'כאוס של יום עבודה', prompt: 'תגובה מותשת ומשעשעת בתוך משרד כאוטי' },
+				{
+					emoji: '🏃',
+					label: 'אני בדרך',
+					sub: 'אקשן מהיר ברקע',
+					prompt: 'תגובה נחושה של אני בדרך בתוך עיר עתידנית דינמית',
+				},
+				{ emoji: '🎉', label: 'ניצחנו!', sub: 'חגיגה וקונפטי', prompt: 'חוגג ניצחון גדול עם קונפטי ואורות חגיגה' },
+				{ emoji: '💼', label: 'עוד ישיבה?!', sub: 'המשרד משתגע', prompt: 'תגובה המומה בישיבת עבודה כאוטית' },
+				{
+					emoji: '🎢',
+					label: 'למה הסכמתי?',
+					sub: 'רכבת הרים לפני הירידה',
+					prompt: 'תגובה מופתעת ברכבת הרים רגע לפני ירידה תלולה',
+				},
+			];
+
+			let stream = null;
+			let facing = 'user';
+			let sourceImage = new Image();
+			let personCanvas = null;
+			let segmentation = null;
+			let segmentationReady = false;
+			let selectedReaction = null;
+			let creationMode = 'preset';
+			let previewFrame = 0;
+			let isBusy = false;
+			let lastGif = null;
+			let lastVideo = null;
+			let currentTransactionId = null;
+			let currentPromptLabel = '';
+			const LIBRARY_DB = 'personaai_library_v1';
+			const $ = (id) => document.getElementById(id);
+			const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+			function toast(message, isError = false) {
+				const element = $('toast');
+				element.textContent = message;
+				element.className = `toast${isError ? ' error' : ''}`;
+				element.style.display = 'block';
+				clearTimeout(element._timer);
+				element._timer = setTimeout(() => {
+					element.style.display = 'none';
+				}, 4200);
+			}
+
+			function setProgress(percent, message, phase) {
+				$('progress').style.display = 'block';
+				$('progress').querySelector('i').style.width = `${Math.max(0, Math.min(100, percent))}%`;
+				$('aiStatus').classList.add('show');
+				$('aiStatus').textContent = message;
+				$('phaseList').classList.add('show');
+				const order = ['background', 'compose', 'animate'];
+				const current = order.indexOf(phase);
+				document.querySelectorAll('.phase').forEach((element, index) => {
+					element.classList.toggle('done', current > index || percent === 100);
+					element.classList.toggle('active', current === index && percent < 100);
+				});
+			}
+
+			function resetProgressLater() {
+				setTimeout(() => {
+					$('progress').style.display = 'none';
+					$('progress').querySelector('i').style.width = '0';
+					$('aiStatus').classList.remove('show');
+					$('phaseList').classList.remove('show');
+				}, 3500);
+			}
+
+			function setPhotoMode(hasPhoto) {
+				$('video').classList.toggle('hide', hasPhoto);
+				$('canvas').classList.toggle('hide', !hasPhoto);
+				$('captureButtons').classList.toggle('hide', hasPhoto);
+				$('creator').classList.toggle('hide', !hasPhoto);
+				$('stageBadge').textContent = hasPhoto ? 'הסלפי שלכם' : 'מצלמים';
+				$('stageTip').classList.toggle('hide', hasPhoto);
+			}
+
+			async function startCamera() {
+				try {
+					if (!navigator.mediaDevices?.getUserMedia) throw new Error('המצלמה אינה זמינה');
+					if (stream) stream.getTracks().forEach((track) => track.stop());
+					stream = await navigator.mediaDevices.getUserMedia({
+						video: { facingMode: facing, width: { ideal: 1280 }, height: { ideal: 1280 } },
+						audio: false,
+					});
+					$('video').srcObject = stream;
+					await $('video').play();
+				} catch (_) {
+					toast('לא הצלחנו לפתוח מצלמה. אפשר לבחור תמונה מהגלריה.', true);
+				}
+			}
+
+			function drawCover(context, image, x, y, width, height) {
+				const sourceWidth = image.videoWidth || image.naturalWidth || image.width;
+				const sourceHeight = image.videoHeight || image.naturalHeight || image.height;
+				if (!sourceWidth || !sourceHeight) return;
+				const scale = Math.max(width / sourceWidth, height / sourceHeight);
+				const drawWidth = sourceWidth * scale;
+				const drawHeight = sourceHeight * scale;
+				context.drawImage(image, x + (width - drawWidth) / 2, y + (height - drawHeight) / 2, drawWidth, drawHeight);
+			}
+
+			function captureSource(source, mirror) {
+				const capture = document.createElement('canvas');
+				capture.width = OUTPUT_SIZE;
+				capture.height = OUTPUT_SIZE;
+				const context = capture.getContext('2d');
+				if (mirror) {
+					context.translate(OUTPUT_SIZE, 0);
+					context.scale(-1, 1);
+				}
+				drawCover(context, source, 0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
+				sourceImage = new Image();
+				sourceImage.onload = async () => {
+					personCanvas = null;
+					setPhotoMode(true);
+					startPreview();
+					setProgress(5, 'מפרידים אתכם מהרקע...', 'compose');
+					const cutout = await createPersonCutout();
+					if (!cutout) toast('לא הצלחנו להסיר את הרקע במדויק. נסו תמונה עם תאורה טובה.', true);
+					$('progress').style.display = 'none';
+					$('aiStatus').classList.remove('show');
+					$('phaseList').classList.remove('show');
+					$('creator').scrollIntoView({ behavior: 'smooth', block: 'start' });
+				};
+				sourceImage.src = capture.toDataURL('image/jpeg', 0.94);
+			}
+
+			function drawPreview() {
+				const context = $('canvas').getContext('2d');
+				context.fillStyle = '#080914';
+				context.fillRect(0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
+				if (sourceImage.naturalWidth) context.drawImage(sourceImage, 0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
+				if (personCanvas) {
+					context.fillStyle = 'rgba(5,6,12,.72)';
+					context.fillRect(0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
+					context.drawImage(personCanvas, 0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
+				}
+			}
+
+			function startPreview() {
+				cancelAnimationFrame(previewFrame);
+				const loop = () => {
+					drawPreview();
+					previewFrame = requestAnimationFrame(loop);
+				};
+				previewFrame = requestAnimationFrame(loop);
+			}
+
+			async function initSegmentation() {
+				if (segmentationReady && segmentation) return true;
+				if (!window.SelfieSegmentation) return false;
+				try {
+					segmentation = new window.SelfieSegmentation({
+						locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`,
+					});
+					segmentation.setOptions({ modelSelection: 1 });
+					segmentationReady = true;
+					return true;
+				} catch (_) {
+					return false;
+				}
+			}
+
+			async function createPersonCutout() {
+				if (!sourceImage.src || !(await initSegmentation())) return null;
+				return new Promise((resolve) => {
+					let settled = false;
+					const timeout = setTimeout(() => {
+						if (!settled) {
+							settled = true;
+							resolve(null);
+						}
+					}, 9000);
+					segmentation.onResults((results) => {
+						if (settled || !results.segmentationMask) return;
+						const cutout = document.createElement('canvas');
+						cutout.width = OUTPUT_SIZE;
+						cutout.height = OUTPUT_SIZE;
+						const context = cutout.getContext('2d');
+						context.drawImage(sourceImage, 0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
+						context.globalCompositeOperation = 'destination-in';
+						context.filter = 'blur(1px)';
+						context.drawImage(results.segmentationMask, 0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
+						context.filter = 'none';
+						context.globalCompositeOperation = 'source-over';
+						personCanvas = cutout;
+						settled = true;
+						clearTimeout(timeout);
+						resolve(cutout);
+					});
+					segmentation.send({ image: sourceImage }).catch(() => {
+						if (!settled) {
+							settled = true;
+							clearTimeout(timeout);
+							resolve(null);
+						}
+					});
+				});
+			}
+
+			function renderReactions() {
+				REACTIONS.forEach((reaction, index) => {
+					const button = document.createElement('button');
+					button.className = 'reaction';
+					button.innerHTML = `<b>${reaction.emoji}</b><span>${reaction.label}</span><small>${reaction.sub}</small>`;
+					button.addEventListener('click', () => selectReaction(index, button));
+					$('reactions').appendChild(button);
+				});
+			}
+
+			function selectReaction(index, button) {
+				creationMode = 'preset';
+				$('customPromptInput').value = '';
+				$('customCounter').textContent = '0 מתוך 240 תווים';
+				$('ideaUnderstanding').classList.remove('show');
+				$('ideaUnderstanding').textContent = '';
+				document.querySelectorAll('.reaction').forEach((item) => item.classList.remove('active'));
+				button.classList.add('active');
+				selectedReaction = REACTIONS[index];
+				$('mainInput').value = selectedReaction.prompt;
+				$('createBtn').textContent = '✨ צרו את התגובה שלי';
+			}
+
+			async function api(body) {
+				const response = await fetch(WORKER_URL, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(body),
+				});
+				let data = {};
+				try {
+					data = await response.json();
+				} catch (_) {}
+				if (!response.ok && response.status !== 202) throw new Error(data.error || `שגיאת שרת ${response.status}`);
+				return data;
+			}
+
+			function proxiedAsset(url) {
+				return `${WORKER_URL}?asset=${encodeURIComponent(url)}`;
+			}
+
+			async function loadImageFromUrl(url) {
+				const response = await fetch(proxiedAsset(url), { cache: 'no-store' });
+				if (!response.ok) throw new Error('לא הצלחנו לטעון את הסצנה החדשה');
+				const blob = await response.blob();
+				const objectUrl = URL.createObjectURL(blob);
+				try {
+					const image = new Image();
+					image.src = objectUrl;
+					await image.decode();
+					return image;
+				} finally {
+					setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+				}
+			}
+
+			async function buildComposite(backgroundUrl) {
+				if (!personCanvas) {
+					personCanvas = await createPersonCutout();
+					if (!personCanvas) throw new Error('לא הצלחנו לזהות את הדמות. נסו סלפי ברור יותר.');
+				}
+				const background = await loadImageFromUrl(backgroundUrl);
+				const canvas = document.createElement('canvas');
+				canvas.width = OUTPUT_SIZE;
+				canvas.height = OUTPUT_SIZE;
+				const context = canvas.getContext('2d');
+				drawCover(context, background, 0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
+				const gradient = context.createLinearGradient(0, 0, 0, OUTPUT_SIZE);
+				gradient.addColorStop(0, 'rgba(0,0,0,.03)');
+				gradient.addColorStop(1, 'rgba(0,0,0,.18)');
+				context.fillStyle = gradient;
+				context.fillRect(0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
+				context.save();
+				context.shadowColor = 'rgba(0,0,0,.45)';
+				context.shadowBlur = 18;
+				context.shadowOffsetY = 8;
+				context.drawImage(personCanvas, 0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
+				context.restore();
+				return canvas;
+			}
+
+			async function waitForVideo(job) {
+				const started = Date.now();
+				const timeout = 180000;
+				let attempt = 0;
+				while (Date.now() - started < timeout) {
+					await sleep(attempt === 0 ? 2500 : 3500);
+					attempt += 1;
+					const seconds = Math.round((Date.now() - started) / 1000);
+					setProgress(Math.min(82, 48 + attempt * 1.4), `מנפישים את התגובה... ${seconds} שניות`, 'animate');
+					try {
+						const data = await api({
+							action: 'check_video',
+							requestId: job.requestId,
+							statusUrl: job.statusUrl,
+							responseUrl: job.responseUrl,
+						});
+						if (data.statusUrl) job.statusUrl = data.statusUrl;
+						if (data.responseUrl) job.responseUrl = data.responseUrl;
+						if (data.videoUrl) return data.videoUrl;
+						if (data.status === 'failed') throw new Error(data.error || 'יצירת הווידאו נכשלה');
+					} catch (error) {
+						if (/נכשלה|failed|cancelled/i.test(error.message)) throw error;
+						if (attempt > 3) console.warn('Polling retry:', error.message);
+					}
+				}
+				throw new Error('היצירה נמשכת זמן רב מדי. הקרדיט הוחזר, אפשר לנסות שוב.');
+			}
+
+			async function fetchVideoBlob(videoUrl) {
+				const response = await fetch(proxiedAsset(videoUrl), { cache: 'no-store' });
+				if (!response.ok) throw new Error('לא הצלחנו להוריד את הווידאו שנוצר');
+				return response.blob();
+			}
+
+			function seekVideo(video, time) {
+				return new Promise((resolve) => {
+					const timer = setTimeout(resolve, 1200);
+					video.addEventListener(
+						'seeked',
+						() => {
+							clearTimeout(timer);
+							resolve();
+						},
+						{ once: true }
+					);
+					video.currentTime = Math.min(time, Math.max(0, (video.duration || time) - 0.03));
+				});
+			}
+
+			async function videoToGif(videoBlob, caption) {
+				const objectUrl = URL.createObjectURL(videoBlob);
+				try {
+					const video = document.createElement('video');
+					video.src = objectUrl;
+					video.muted = true;
+					video.playsInline = true;
+					video.preload = 'auto';
+					await new Promise((resolve, reject) => {
+						const timer = setTimeout(() => reject(new Error('טעינת הווידאו ארכה זמן רב מדי')), 15000);
+						video.onloadedmetadata = () => {
+							clearTimeout(timer);
+							resolve();
+						};
+						video.onerror = () => {
+							clearTimeout(timer);
+							reject(new Error('הווידאו שהתקבל אינו תקין'));
+						};
+					});
+
+					const { GIFEncoder, quantize, applyPalette } = await window.__gifencReady;
+					const encoder = GIFEncoder();
+					const canvas = document.createElement('canvas');
+					canvas.width = GIF_SIZE;
+					canvas.height = GIF_SIZE;
+					const context = canvas.getContext('2d', { willReadFrequently: true });
+					const duration = Math.min(Number.isFinite(video.duration) ? video.duration : 4, 4.2);
+					const frameCount = 22;
+
+					for (let index = 0; index < frameCount; index += 1) {
+						await seekVideo(video, (index / frameCount) * duration);
+						context.clearRect(0, 0, GIF_SIZE, GIF_SIZE);
+						drawCover(context, video, 0, 0, GIF_SIZE, GIF_SIZE);
+						if (caption) {
+							const fontSize = caption.length > 25 ? 24 : 29;
+							context.font = `900 ${fontSize}px Heebo, Arial`;
+							context.textAlign = 'center';
+							context.textBaseline = 'middle';
+							context.lineJoin = 'round';
+							context.lineWidth = 6;
+							context.strokeStyle = '#000';
+							context.fillStyle = '#fff';
+							context.strokeText(caption, GIF_SIZE / 2, GIF_SIZE - 34, GIF_SIZE - 24);
+							context.fillText(caption, GIF_SIZE / 2, GIF_SIZE - 34, GIF_SIZE - 24);
+						}
+						const rgba = context.getImageData(0, 0, GIF_SIZE, GIF_SIZE).data;
+						const palette = quantize(rgba, 96);
+						const indexed = applyPalette(rgba, palette);
+						encoder.writeFrame(indexed, GIF_SIZE, GIF_SIZE, { palette, delay: 110, repeat: index === 0 ? 0 : undefined });
+						setProgress(84 + Math.round((index / frameCount) * 15), 'אורזים את התגובה ל-GIF...', 'animate');
+					}
+					encoder.finish();
+					return new Blob([encoder.bytes()], { type: 'image/gif' });
+				} finally {
+					URL.revokeObjectURL(objectUrl);
+				}
+			}
+
+			function openLibraryDb() {
+				return new Promise((resolve, reject) => {
+					const request = indexedDB.open(LIBRARY_DB, 1);
+					request.onupgradeneeded = () => request.result.createObjectStore('reactions', { keyPath: 'id' });
+					request.onsuccess = () => resolve(request.result);
+					request.onerror = () => reject(request.error);
+				});
+			}
+			async function libraryPut(item) {
+				const db = await openLibraryDb();
+				await new Promise((resolve, reject) => {
+					const tx = db.transaction('reactions', 'readwrite');
+					tx.objectStore('reactions').put(item);
+					tx.oncomplete = resolve;
+					tx.onerror = () => reject(tx.error);
+				});
+				db.close();
+			}
+			async function libraryAll() {
+				const db = await openLibraryDb();
+				const items = await new Promise((resolve, reject) => {
+					const req = db.transaction('reactions').objectStore('reactions').getAll();
+					req.onsuccess = () => resolve(req.result || []);
+					req.onerror = () => reject(req.error);
+				});
+				db.close();
+				return items.sort((a, b) => b.createdAt - a.createdAt);
+			}
+			async function libraryDelete(id) {
+				const db = await openLibraryDb();
+				await new Promise((resolve, reject) => {
+					const tx = db.transaction('reactions', 'readwrite');
+					tx.objectStore('reactions').delete(id);
+					tx.oncomplete = resolve;
+					tx.onerror = () => reject(tx.error);
+				});
+				db.close();
+			}
+			async function saveCurrentToLibrary() {
+				if (!lastGif && !lastVideo) return;
+				const id = `reaction_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+				await libraryPut({
+					id,
+					title: currentPromptLabel || 'תגובה אישית',
+					createdAt: Date.now(),
+					gif: lastGif?.blob || null,
+					video: lastVideo?.blob || null,
+				});
+				await renderLibrary();
+			}
+			async function renderLibrary() {
+				const grid = $('libraryGrid');
+				if (!grid) return;
+				grid.innerHTML = '';
+				let items = [];
+				try {
+					items = await libraryAll();
+				} catch (_) {
+					items = [];
+				}
+				$('libraryCount').textContent = items.length;
+				if (!items.length) {
+					grid.innerHTML =
+						'<div class="empty-state" style="grid-column:1/-1">עוד אין תגובות שמורות.<br>צרו תגובה ראשונה והיא תופיע כאן.</div>';
+					return;
+				}
+				items.forEach((item) => {
+					const card = document.createElement('div');
+					card.className = 'library-card';
+					const blob = item.gif || item.video;
+					const url = URL.createObjectURL(blob);
+					const media = item.gif
+						? `<img src="${url}" alt="תגובה שמורה">`
+						: `<video src="${url}" muted loop playsinline></video>`;
+					card.innerHTML = `${media}<div class="library-meta"><div class="library-title">${escapeHtml(item.title)}</div><div class="library-date">${new Date(item.createdAt).toLocaleDateString('he-IL')}</div><div class="library-actions"><button data-share>שתפו</button><button data-save>שמרו</button><button data-delete>מחקו</button></div></div>`;
+					const file = new File([blob], item.gif ? 'PersonaAI-Reaction.gif' : 'PersonaAI-Reaction.mp4', { type: blob.type });
+					card.querySelector('[data-share]').onclick = async () => {
+						try {
+							if (navigator.canShare?.({ files: [file] }))
+								await navigator.share({ title: 'PersonaAI', text: 'יצרתי תגובת AI אישית ב-PersonaAI', files: [file] });
+							else downloadDirect(blob, item.gif ? 'gif' : 'mp4');
+						} catch (e) {
+							if (e.name !== 'AbortError') toast('השיתוף אינו זמין', true);
+						}
+					};
+					card.querySelector('[data-save]').onclick = () => downloadDirect(blob, item.gif ? 'gif' : 'mp4');
+					card.querySelector('[data-delete]').onclick = async () => {
+						await libraryDelete(item.id);
+						URL.revokeObjectURL(url);
+						renderLibrary();
+					};
+					grid.appendChild(card);
+				});
+			}
+			function escapeHtml(value) {
+				const d = document.createElement('div');
+				d.textContent = String(value || '');
+				return d.innerHTML;
+			}
+			function downloadDirect(blob, extension) {
+				const url = URL.createObjectURL(blob);
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = `PersonaAI-${Date.now()}.${extension}`;
+				a.click();
+				setTimeout(() => URL.revokeObjectURL(url), 1000);
+			}
+			function showTab(name) {
+				const lib = name === 'library';
+				$('librarySection').classList.toggle('hide', !lib);
+				$('creationFlow').classList.toggle('hide', lib);
+				$('createTab').classList.toggle('active', !lib);
+				$('libraryTab').classList.toggle('active', lib);
+				if (lib) renderLibrary();
+				window.scrollTo({ top: 0, behavior: 'smooth' });
+			}
+			function clearPreviousResult() {
+				if (lastGif?.url) URL.revokeObjectURL(lastGif.url);
+				if (lastVideo?.url) URL.revokeObjectURL(lastVideo.url);
+				lastGif = null;
+				lastVideo = null;
+			}
+
+			async function createReactionGif() {
+				if (isBusy) return;
+				const customPrompt = String($('customPromptInput')?.value || '').trim();
+				const presetPrompt = String(selectedReaction?.prompt || $('mainInput')?.value || '').trim();
+				const isCustomCreation = customPrompt.length > 0;
+				const prompt = isCustomCreation ? customPrompt : presetPrompt;
+				currentPromptLabel = isCustomCreation ? customPrompt : selectedReaction?.label || prompt;
+				if (!sourceImage.src) return toast('קודם מצלמים סלפי או בוחרים תמונה', true);
+				if (!prompt) return toast('בחרו תגובה מוכנה או כתבו סצנה אישית בתיבה הגדולה', true);
+				if (isCustomCreation && customPrompt.length < 3) return toast('כתבו לפחות שלושה תווים כדי לתאר את הסצנה', true);
+
+				isBusy = true;
+				$('createBtn').disabled = true;
+				$('createBtn').textContent = '⏳ יוצרים את התגובה...';
+				$('result').classList.remove('show');
+				let transaction = null;
+
+				try {
+					setProgress(3, 'מבינים את הרעיון ומכינים סצנה...', 'background');
+					const ideaCheck = await api({ action: 'analyze_idea', prompt, custom: isCustomCreation });
+					if (ideaCheck.allowed === false) {
+						$('ideaUnderstanding').classList.add('show');
+						$('ideaUnderstanding').textContent = ideaCheck.message || 'לא ניתן ליצור את הרעיון הזה. נסו סצנה אחרת.';
+						throw new Error(ideaCheck.message || 'לא ניתן ליצור את הרעיון הזה. נסו סצנה אחרת.');
+					}
+					if (isCustomCreation && ideaCheck.summary) {
+						$('ideaUnderstanding').classList.add('show');
+						$('ideaUnderstanding').textContent =
+							`הבנו: ${ideaCheck.summary}${ideaCheck.reaction ? ` | תגובה: ${ideaCheck.reaction}` : ''}`;
+					}
+
+					if (window.PersonaBilling?.spendCreditsOrRefund) {
+						transaction = window.PersonaBilling.spendCreditsOrRefund(CREATION_COST, { prompt: currentPromptLabel });
+						currentTransactionId = transaction.id;
+						if (!transaction.success) {
+							$('paywall').classList.add('show');
+							throw new Error('נגמרו הקרדיטים. אפשר לבחור חבילת תגובות.');
+						}
+					}
+
+					setProgress(8, 'יוצרים סצנה חדשה במיוחד בשבילכם...', 'background');
+					const backgroundData = await api({
+						action: 'generate_background_only',
+						prompt,
+						scenePlan: ideaCheck.scenePlan || null,
+					});
+					if (!backgroundData.imageUrl) throw new Error('מנוע התמונות לא החזיר רקע');
+
+					setProgress(28, 'מכניסים אתכם לתוך הסצנה...', 'compose');
+					const composite = await buildComposite(backgroundData.imageUrl);
+					$('canvas').getContext('2d').drawImage(composite, 0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
+					const composedImage = composite.toDataURL('image/jpeg', 0.91);
+
+					setProgress(43, 'הסצנה מוכנה. מתחילים להנפיש...', 'animate');
+					const queued = await api({
+						action: 'generate_animated_reaction',
+						image: composedImage,
+						prompt,
+						scenePlan: ideaCheck.scenePlan || null,
+					});
+					if (!queued.requestId) throw new Error('מנוע הווידאו לא התחיל את העבודה');
+					const videoUrl = await waitForVideo({
+						requestId: queued.requestId,
+						statusUrl: queued.statusUrl,
+						responseUrl: queued.responseUrl,
+					});
+
+					setProgress(83, 'הווידאו מוכן. יוצרים GIF...', 'animate');
+					const videoBlob = await fetchVideoBlob(videoUrl);
+					clearPreviousResult();
+					lastVideo = { blob: videoBlob, url: URL.createObjectURL(videoBlob) };
+
+					$('videoPreview').src = lastVideo.url;
+					let gifBlob = null;
+					try {
+						gifBlob = await videoToGif(videoBlob, '');
+						lastGif = { blob: gifBlob, url: URL.createObjectURL(gifBlob) };
+						$('gifPreview').src = lastGif.url;
+						$('gifPreview').classList.remove('hide');
+						$('videoPreview').classList.add('hide');
+						$('saveBtn').disabled = false;
+						$('resultHelp').textContent = 'התגובה המונפשת מוכנה לשיתוף או לשמירה.';
+					} catch (gifError) {
+						console.error('GIF conversion failed:', gifError);
+						lastGif = null;
+						$('gifPreview').classList.add('hide');
+						$('videoPreview').classList.remove('hide');
+						$('saveBtn').disabled = true;
+						$('resultHelp').textContent = 'הווידאו השקט מוכן. אפשר לשתף או לשמור אותו באיכות גבוהה.';
+						toast('התגובה מוכנה כווידאו שקט באיכות גבוהה.');
+					}
+					transaction?.complete?.({ format: lastGif ? 'animated_reaction_and_video' : 'video' });
+					await saveCurrentToLibrary();
+					$('result').classList.add('show');
+					setProgress(100, 'מוכן! אפשר לשתף עכשיו 🎉', 'animate');
+					$('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+					toast('ה-GIF שלכם מוכן 🎉');
+				} catch (error) {
+					if (transaction?.refund) transaction.refund();
+					setProgress(0, error.message || 'משהו השתבש', 'background');
+					toast(error.message || 'משהו השתבש ביצירה', true);
+				} finally {
+					isBusy = false;
+					$('createBtn').disabled = false;
+					$('createBtn').textContent = '✨ צרו את התגובה שלי';
+					resetProgressLater();
+				}
+			}
+
+			function downloadBlob(blobInfo, extension) {
+				if (!blobInfo) return;
+				const link = document.createElement('a');
+				link.href = blobInfo.url;
+				link.download = `PersonaAI-${Date.now()}.${extension}`;
+				document.body.appendChild(link);
+				link.click();
+				link.remove();
+			}
+
+			async function shareResult() {
+				if (!lastGif && !lastVideo) return;
+				const gifFile = lastGif ? new File([lastGif.blob], 'PersonaAI-Reaction.gif', { type: 'image/gif' }) : null;
+				const videoFile = lastVideo
+					? new File([lastVideo.blob], 'PersonaAI-Reaction.mp4', { type: lastVideo.blob.type || 'video/mp4' })
+					: null;
+				try {
+					if (gifFile && navigator.canShare?.({ files: [gifFile] })) {
+						await navigator.share({ title: 'PersonaAI', text: 'יצרתי תגובת AI אישית ב-PersonaAI', files: [gifFile] });
+					} else if (videoFile && navigator.canShare?.({ files: [videoFile] })) {
+						await navigator.share({ title: 'PersonaAI', text: 'יצרתי תגובת AI אישית ב-PersonaAI', files: [videoFile] });
+					} else {
+						if (lastGif) {
+							downloadBlob(lastGif, 'gif');
+							toast('התגובה המונפשת נשמרה.');
+						} else if (lastVideo) {
+							downloadBlob(lastVideo, 'mp4');
+							toast('הווידאו השקט נשמר.');
+						}
+					}
+				} catch (error) {
+					if (error.name !== 'AbortError') toast('השיתוף בוטל או אינו זמין במכשיר הזה', true);
+				}
+			}
+
+			$('shootBtn').addEventListener('click', () => {
+				if (!$('video').videoWidth) return toast('המצלמה עדיין לא מוכנה', true);
+				captureSource($('video'), facing === 'user');
+				if (stream) stream.getTracks().forEach((track) => track.stop());
+			});
+			$('galleryBtn').addEventListener('click', () => $('fileInput').click());
+			$('fileInput').addEventListener('change', (event) => {
+				const file = event.target.files?.[0];
+				if (!file) return;
+				if (!file.type.startsWith('image/')) return toast('בחרו קובץ תמונה', true);
+				const reader = new FileReader();
+				reader.onload = () => {
+					const image = new Image();
+					image.onload = () => captureSource(image, false);
+					image.onerror = () => toast('לא הצלחנו לפתוח את התמונה', true);
+					image.src = reader.result;
+				};
+				reader.readAsDataURL(file);
+				event.target.value = '';
+			});
+			$('flipBtn').addEventListener('click', () => {
+				facing = facing === 'user' ? 'environment' : 'user';
+				$('video').classList.toggle('mirror', facing === 'user');
+				startCamera();
+			});
+			$('customPromptInput').addEventListener('input', (event) => {
+				creationMode = 'custom';
+				selectedReaction = null;
+				$('mainInput').value = '';
+				$('customCounter').textContent = `${event.target.value.length} מתוך 240 תווים`;
+				$('ideaUnderstanding').classList.remove('show');
+				$('ideaUnderstanding').textContent = '';
+				document.querySelectorAll('.reaction').forEach((item) => item.classList.remove('active'));
+				$('createBtn').textContent = event.target.value.trim() ? '✨ צרו את הרעיון שלי' : '✨ צרו את התגובה שלי';
+			});
+			$('retakeBtn').addEventListener('click', () => {
+				sourceImage = new Image();
+				personCanvas = null;
+				selectedReaction = null;
+				creationMode = 'preset';
+				$('customPromptInput').value = '';
+				$('customCounter').textContent = '0 מתוך 240 תווים';
+				$('ideaUnderstanding').classList.remove('show');
+				$('ideaUnderstanding').textContent = '';
+				$('creator').classList.add('hide');
+				$('result').classList.remove('show');
+				$('captureButtons').classList.remove('hide');
+				$('video').classList.remove('hide');
+				$('canvas').classList.add('hide');
+				startCamera();
+				window.scrollTo({ top: 0, behavior: 'smooth' });
+			});
+			$('createBtn').addEventListener('click', createReactionGif);
+			$('shareBtn').addEventListener('click', shareResult);
+			$('saveBtn').addEventListener('click', () => downloadBlob(lastGif, 'gif'));
+			$('saveVideoBtn').addEventListener('click', () => downloadBlob(lastVideo, 'mp4'));
+			$('anotherBtn').addEventListener('click', () => {
+				$('result').classList.remove('show');
+				selectedReaction = null;
+				creationMode = 'preset';
+				$('mainInput').value = '';
+				$('customPromptInput').value = '';
+				$('customCounter').textContent = '0 מתוך 240 תווים';
+				$('ideaUnderstanding').classList.remove('show');
+				$('ideaUnderstanding').textContent = '';
+				document.querySelectorAll('.reaction').forEach((item) => item.classList.remove('active'));
+				$('createBtn').textContent = '✨ צרו את התגובה שלי';
+				$('creator').scrollIntoView({ behavior: 'smooth', block: 'start' });
+			});
+			window.addEventListener('persona-credits-changed', (event) => {
+				$('creditsCount').textContent = event.detail?.credits ?? 0;
+			});
+
+			$('createTab').addEventListener('click', () => showTab('create'));
+			$('libraryTab').addEventListener('click', () => showTab('library'));
+			$('closePaywall').addEventListener('click', () => $('paywall').classList.remove('show'));
+			$('buyPackBtn').addEventListener('click', () => toast('יש לחבר Google Play Billing לפני הפעלת רכישה אמיתית.', true));
+			$('badResultBtn').addEventListener('click', () => {
+				if (!currentTransactionId) return toast('לא נמצאה יצירה לזיכוי', true);
+				const result = window.PersonaBilling?.grantQualityRetry?.(currentTransactionId, 'user_reported_poor_result');
+				if (result?.success) {
+					$('badResultBtn').disabled = true;
+					$('badResultBtn').textContent = '✓ נוסף ניסיון חוזר ללא חיוב';
+					toast('נוסף לכם קרדיט לניסיון חוזר');
+				} else if (result?.reason === 'already_granted') toast('כבר קיבלתם ניסיון חוזר עבור היצירה הזאת', true);
+				else toast('לא ניתן לזכות את היצירה הזאת', true);
+			});
+			renderReactions();
+			renderLibrary();
+			try {
+				$('creditsCount').textContent = window.PersonaBilling?.getCredits?.() ?? 3;
+				$('proBadge').style.display = window.PersonaBilling?.isPro?.() ? 'inline-block' : 'none';
+			} catch (_) {}
+			if ('serviceWorker' in navigator)
+				navigator.serviceWorker
+					.getRegistrations()
+					.then((registrations) => registrations.forEach((registration) => registration.unregister()));
+			if ('caches' in window) caches.keys().then((keys) => keys.forEach((key) => caches.delete(key)));
+			startCamera();
+		</script>
+	</body>
+</html>

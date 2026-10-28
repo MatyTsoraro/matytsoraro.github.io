@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">PersonaAI</string>
+    <string name="title_activity_main">PersonaAI</string>
+    <string name="package_name">com.personaai.app</string>
+    <string name="custom_url_scheme">com.personaai.app</string>
+</resources>
