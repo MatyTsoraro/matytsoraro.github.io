@@ -1,5 +1,6 @@
 {
   "appId": "com.personaai.app",
   "appName": "PersonaAI",
-  "webDir": "www"
+  "webDir": "www",
+  "bundledWebRuntime": false
 }
