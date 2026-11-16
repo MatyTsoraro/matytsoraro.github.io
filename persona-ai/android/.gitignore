@@ -99,3 +99,10 @@ app/src/main/assets/public
 app/src/main/assets/capacitor.config.json
 app/src/main/assets/capacitor.plugins.json
 app/src/main/res/xml/config.xml
+
+# Keystore - אל תעלה ל-【entity-GitHub¦canonical_name=GitHub】!
+*.keystore
+key.properties
+persona-ai/android/key.properties
+persona-ai/android/*.keystore
+persona-ai/android/app/*.keystore
