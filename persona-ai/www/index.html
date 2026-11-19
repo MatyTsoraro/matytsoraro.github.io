@@ -728,6 +728,12 @@
 					sub: 'רכבת הרים לפני הירידה',
 					prompt: 'תגובה מופתעת ברכבת הרים רגע לפני ירידה תלולה',
 				},
+				{ emoji: '🎂', label: 'יום הולדת!', sub: 'מזל טוב עם עוגה', prompt: 'חוגג יום הולדת שמח עם עוגה ובלונים צבעוניים' },
+				{ emoji: '⚽', label: 'גול!', sub: 'חגיגת גול באצטדיון', prompt: 'חוגג גול מטורף באצטדיון מלא אוהדים' },
+				{ emoji: '💪', label: 'בהצלחה!', sub: 'מעודד עם אנרגיה', prompt: 'תגובה מעודדת של בהצלחה עם קונפטי ואנרגיה' },
+				{ emoji: '🤒', label: 'תרגיש טוב', sub: 'חיבוק מחלים', prompt: 'תגובה מחבקת ומעודדת בבית חמים ונעים' },
+				{ emoji: '🕯️', label: 'שבת שלום', sub: 'ברכה חמה לשבת', prompt: 'מברך שבת שלום עם נרות ואווירה חמה ונעימה' },
+				{ emoji: '❤️', label: 'מתגעגע', sub: 'חיבוק חם מרחוק', prompt: 'שולח חיבוק חם ואוהב עם לבבות' },
 			];
 
 			let stream = null;
@@ -1182,8 +1188,9 @@ function seekVideo(video, time) {
 						? `<img src="${url}" alt="תגובה שמורה">`
 						: `<video src="${url}" muted loop playsinline></video>`;
 					card.innerHTML = `${media}<div class="library-meta"><div class="library-title">${escapeHtml(item.title)}</div><div class="library-date">${new Date(item.createdAt).toLocaleDateString('he-IL')}</div><div class="library-actions"><button data-share>שתפו</button><button data-save>שמרו</button><button data-delete>מחקו</button></div></div>`;
-					const file = new File([blob], item.gif ? 'PersonaAI-' + Date.now() + '.gif' : 'PersonaAI-' + Date.now() + '.mp4', { type: blob.type });
 					card.querySelector('[data-share]').onclick = async () => {
+                                                const uniqueName = 'PersonaAI-' + item.id + '-' + Date.now() + '-' + Math.random().toString(36).slice(2,8) + (item.gif ? '.gif' : '.mp4');
+                                                const file = new File([blob], uniqueName, { type: blob.type });
 						try {
 							if (navigator.canShare?.({ files: [file] }))
 								await navigator.share({ title: 'PersonaAI', text: 'יצרתי תגובת AI אישית ב-PersonaAI', files: [file] });
@@ -1351,9 +1358,10 @@ function seekVideo(video, time) {
 
 			async function shareResult() {
 				if (!lastGif && !lastVideo) return;
-				const gifFile = lastGif ? new File([lastGif.blob], 'PersonaAI-' + Date.now() + '.gif', { type: 'image/gif' }) : null;
+				const stamp = Date.now() + '-' + Math.random().toString(36).slice(2,8) + '-' + (window.__shareCounter = (window.__shareCounter || 0) + 1);
+                                const gifFile = lastGif ? new File([lastGif.blob], 'PersonaAI-' + stamp + '.gif', { type: 'image/gif' }) : null;
 				const videoFile = lastVideo
-					? new File([lastVideo.blob], 'PersonaAI-' + Date.now() + '.mp4', { type: lastVideo.blob.type || 'video/mp4' })
+					? new File([lastVideo.blob], 'PersonaAI-' + stamp + '.mp4', { type: lastVideo.blob.type || 'video/mp4' })
 					: null;
 				try {
 					if (gifFile && navigator.canShare?.({ files: [gifFile] })) {
