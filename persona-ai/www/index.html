@@ -688,7 +688,7 @@
 			<div class="paywall-card">
 				<button id="closePaywall" class="close-paywall">×</button>
 				<h2>חבילת התגובות האישית שלי</h2>
-				<div class="price">12 תגובות ב־₪12.90</div>
+				<div class="price">20 קרדיטים</div>
 				<ul class="feature-list">
 					<li>12 יצירות חדשות</li>
 					<li>שמירה בספריית התגובות</li>
@@ -697,7 +697,7 @@
 				</ul>
 				<button id="buyPackBtn" class="btn btn-primary btn-wide">רכשו את החבילה</button>
 				<div class="section-help" style="margin-top: 8px">
-					מצב MVP: יש לחבר Google Play Billing ולאמת רכישות בשרת לפני מכירה אמיתית.
+					התשלום מתבצע דרך Google Play Billing.
 				</div>
 			</div>
 		</div>
@@ -1030,20 +1030,24 @@
 				return response.blob();
 			}
 
-			function seekVideo(video, time) {
-				return new Promise((resolve) => {
-					const timer = setTimeout(resolve, 1200);
-					video.addEventListener(
-						'seeked',
-						() => {
-							clearTimeout(timer);
-							resolve();
-						},
-						{ once: true }
-					);
-					video.currentTime = Math.min(time, Math.max(0, (video.duration || time) - 0.03));
-				});
-			}
+function seekVideo(video, time) {
+  return new Promise((resolve) => {
+    const target = Math.min(time, Math.max(0, (video.duration || time) - 0.03));
+    if (Math.abs(video.currentTime - target) < 0.05) { resolve(); return; }
+    let done = false;
+    const timer = setTimeout(finish, 800);
+    function finish() {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      video.removeEventListener('seeked', onSeeked);
+      requestAnimationFrame(() => requestAnimationFrame(resolve));
+    }
+    function onSeeked() { finish(); }
+    video.addEventListener('seeked', onSeeked, { once: true });
+    video.currentTime = target;
+  });
+}
 
 			async function videoToGif(videoBlob, caption) {
 				const objectUrl = URL.createObjectURL(videoBlob);
@@ -1178,7 +1182,7 @@
 						? `<img src="${url}" alt="תגובה שמורה">`
 						: `<video src="${url}" muted loop playsinline></video>`;
 					card.innerHTML = `${media}<div class="library-meta"><div class="library-title">${escapeHtml(item.title)}</div><div class="library-date">${new Date(item.createdAt).toLocaleDateString('he-IL')}</div><div class="library-actions"><button data-share>שתפו</button><button data-save>שמרו</button><button data-delete>מחקו</button></div></div>`;
-					const file = new File([blob], item.gif ? 'PersonaAI-Reaction.gif' : 'PersonaAI-Reaction.mp4', { type: blob.type });
+					const file = new File([blob], item.gif ? 'PersonaAI-' + Date.now() + '.gif' : 'PersonaAI-' + Date.now() + '.mp4', { type: blob.type });
 					card.querySelector('[data-share]').onclick = async () => {
 						try {
 							if (navigator.canShare?.({ files: [file] }))
@@ -1347,9 +1351,9 @@
 
 			async function shareResult() {
 				if (!lastGif && !lastVideo) return;
-				const gifFile = lastGif ? new File([lastGif.blob], 'PersonaAI-Reaction.gif', { type: 'image/gif' }) : null;
+				const gifFile = lastGif ? new File([lastGif.blob], 'PersonaAI-' + Date.now() + '.gif', { type: 'image/gif' }) : null;
 				const videoFile = lastVideo
-					? new File([lastVideo.blob], 'PersonaAI-Reaction.mp4', { type: lastVideo.blob.type || 'video/mp4' })
+					? new File([lastVideo.blob], 'PersonaAI-' + Date.now() + '.mp4', { type: lastVideo.blob.type || 'video/mp4' })
 					: null;
 				try {
 					if (gifFile && navigator.canShare?.({ files: [gifFile] })) {
