@@ -710,31 +710,24 @@
 			const GIF_SIZE = 384;
 			const CREATION_COST = 1;
 			const REACTIONS = [
-				{ emoji: '😱', label: 'מה?!', sub: 'הלם מוחלט בחללית', prompt: 'תגובה של הלם מוחלט בתוך חללית שמיטלטלת' },
-				{ emoji: '😂', label: 'אני מת מצחוק', sub: 'צחוק ברור ומדבק', prompt: 'פורץ בצחוק טבעי וחזק בתוך מסיבה צבעונית' },
-				{ emoji: '😎', label: 'ידעתי!', sub: 'רגע ניצחון קולנועי', prompt: 'תגובה בטוחה של ידעתי עם תאורת ניצחון וקונפטי' },
-				{ emoji: '😩', label: 'אין לי כוח', sub: 'כאוס של יום עבודה', prompt: 'תגובה מותשת ומשעשעת בתוך משרד כאוטי' },
-				{
-					emoji: '🏃',
-					label: 'אני בדרך',
-					sub: 'אקשן מהיר ברקע',
-					prompt: 'תגובה נחושה של אני בדרך בתוך עיר עתידנית דינמית',
-				},
-				{ emoji: '🎉', label: 'ניצחנו!', sub: 'חגיגה וקונפטי', prompt: 'חוגג ניצחון גדול עם קונפטי ואורות חגיגה' },
-				{ emoji: '💼', label: 'עוד ישיבה?!', sub: 'המשרד משתגע', prompt: 'תגובה המומה בישיבת עבודה כאוטית' },
-				{
-					emoji: '🎢',
-					label: 'למה הסכמתי?',
-					sub: 'רכבת הרים לפני הירידה',
-					prompt: 'תגובה מופתעת ברכבת הרים רגע לפני ירידה תלולה',
-				},
-				{ emoji: '🎂', label: 'יום הולדת!', sub: 'מזל טוב עם עוגה', prompt: 'חוגג יום הולדת שמח עם עוגה ובלונים צבעוניים' },
-				{ emoji: '⚽', label: 'גול!', sub: 'חגיגת גול באצטדיון', prompt: 'חוגג גול מטורף באצטדיון מלא אוהדים' },
-				{ emoji: '💪', label: 'בהצלחה!', sub: 'מעודד עם אנרגיה', prompt: 'תגובה מעודדת של בהצלחה עם קונפטי ואנרגיה' },
-				{ emoji: '🤒', label: 'תרגיש טוב', sub: 'חיבוק מחלים', prompt: 'תגובה מחבקת ומעודדת בבית חמים ונעים' },
-				{ emoji: '🕯️', label: 'שבת שלום', sub: 'ברכה חמה לשבת', prompt: 'מברך שבת שלום עם נרות ואווירה חמה ונעימה' },
-				{ emoji: '❤️', label: 'מתגעגע', sub: 'חיבוק חם מרחוק', prompt: 'שולח חיבוק חם ואוהב עם לבבות' },
-			];
+                                { id: 'shock', emoji: '😱', label: 'מה?!', sub: 'הלם מוחלט בחללית', prompt: 'תגובה של הלם מוחלט בתוך חללית שמיטלטלת', enLabel: 'What?!', enSub: 'Total shock in a spaceship', enPrompt: 'Reaction of total shock inside a shaking spaceship' },
+                                { id: 'laugh', emoji: '😂', label: 'אני מת מצחוק', sub: 'צחוק ברור ומדבק', prompt: 'פורץ בצחוק טבעי וחזק בתוך מסיבה צבעונית', enLabel: "I'm dying laughing", enSub: 'Clear contagious laughter', enPrompt: 'Bursts into natural loud laughter inside a colorful party' },
+                                { id: 'knew', emoji: '😎', label: 'ידעתי!', sub: 'רגע ניצחון קולנועי', prompt: 'תגובה בטוחה של ידעתי עם תאורת ניצחון וקונפטי', enLabel: 'I knew it!', enSub: 'Cinematic victory moment', enPrompt: 'Confident I-knew-it reaction with victory lighting and confetti' },
+                                { id: 'tired', emoji: '😩', label: 'אין לי כוח', sub: 'כאוס של יום עבודה', prompt: 'תגובה מותשת ומשעשעת בתוך משרד כאוטי', enLabel: "I can't anymore", enSub: 'Workday chaos', enPrompt: 'Exhausted funny reaction inside a chaotic office' },
+                                { id: 'onway', emoji: '🏃', label: 'אני בדרך', sub: 'אקשן מהיר ברקע', prompt: 'תגובה נחושה של אני בדרך בתוך עיר עתידנית דינמית', enLabel: 'On my way', enSub: 'Fast action background', enPrompt: 'Determined on-my-way reaction inside a dynamic futuristic city' },
+                                { id: 'won', emoji: '🎉', label: 'ניצחנו!', sub: 'חגיגה וקונפטי', prompt: 'חוגג ניצחון גדול עם קונפטי ואורות חגיגה', enLabel: 'We won!', enSub: 'Celebration and confetti', enPrompt: 'Celebrating a big win with confetti and party lights' },
+                                { id: 'meeting', emoji: '💼', label: 'עוד ישיבה?!', sub: 'המשרד משתגע', prompt: 'תגובה המומה בישיבת עבודה כאוטית', enLabel: 'Another meeting?!', enSub: 'Office going crazy', enPrompt: 'Shocked reaction in a chaotic work meeting' },
+                                { id: 'coaster', emoji: '🎢', label: 'למה הסכמתי?', sub: 'רכבת הרים לפני הירידה', prompt: 'תגובה מופתעת ברכבת הרים רגע לפני ירידה תלולה', enLabel: 'Why did I agree?', enSub: 'Roller coaster before the drop', enPrompt: 'Surprised reaction on a roller coaster just before a steep drop' },
+                                { id: 'birthday', emoji: '🎂', label: 'יום הולדת!', sub: 'מזל טוב עם עוגה', prompt: 'חוגג יום הולדת שמח עם עוגה ובלונים צבעוניים', enLabel: 'Birthday!', enSub: 'Happy birthday with cake', enPrompt: 'Celebrating a happy birthday with cake and colorful balloons' },
+                                { id: 'goal', emoji: '⚽', label: 'גול!', sub: 'חגיגת גול באצטדיון', prompt: 'חוגג גול מטורף באצטדיון מלא אוהדים', enLabel: 'Goal!', enSub: 'Goal celebration in stadium', enPrompt: 'Celebrating a crazy goal in a stadium full of fans' },
+                                { id: 'luck', emoji: '💪', label: 'בהצלחה!', sub: 'מעודד עם אנרגיה', prompt: 'תגובה מעודדת של בהצלחה עם קונפטי ואנרגיה', enLabel: 'Good luck!', enSub: 'Encouraging with energy', enPrompt: 'Encouraging good-luck reaction with confetti and energy' },
+                                { id: 'feelbetter', emoji: '🤒', label: 'תרגיש טוב', sub: 'חיבוק מחלים', prompt: 'תגובה מחבקת ומעודדת בבית חמים ונעים', enLabel: 'Feel better', enSub: 'Healing hug', enPrompt: 'Hugging encouraging reaction in a warm cozy home' },
+                                { id: 'shabbat', emoji: '🕯', label: 'שבת שלום', sub: 'ברכה חמה לשבת', prompt: 'מברך שבת שלום עם נרות ואווירה חמה ונעימה', enLabel: 'Shabbat Shalom', enSub: 'Warm Shabbat blessing', enPrompt: 'Blessing Shabbat Shalom with candles and a warm cozy atmosphere' },
+                                { id: 'miss', emoji: '❤', label: 'מתגעגע', sub: 'חיבוק חם מרחוק', prompt: 'שולח חיבוק חם ואוהב עם לבבות', enLabel: 'Missing you', enSub: 'Warm hug from afar', enPrompt: 'Sending a warm loving hug with hearts' },
+                                { id: 'thank_you', isPro: true, emoji: '🙏', label: 'תודה רבה!', sub: 'תודה חמה מכל הלב', prompt: 'תגובה חמה של תודה רבה עם חיוך גדול ומחיאת כפיים', enLabel: 'Thank you!', enSub: 'Warm thank you from the heart', enPrompt: 'Warm thank-you reaction with a big smile and clapping' },
+                                { id: 'congratulations', isPro: true, emoji: '🥂', label: 'מזל טוב!', sub: 'חגיגה של הצלחה', prompt: 'חוגג מזל טוב עם קונפטי ושמפניה וחיוך ענק', enLabel: 'Congratulations!', enSub: 'Celebrating success', enPrompt: 'Celebrating congratulations with confetti and champagne and a huge smile' },
+                                { id: 'happy_new_year', isPro: true, emoji: '🎆', label: 'שנה טובה!', sub: 'שנה חדשה מלאת אור', prompt: 'מברך שנה טובה עם זיקוקים ואורות חגיגיים', enLabel: 'Happy New Year!', enSub: 'New year full of light', enPrompt: 'Wishing Happy New Year with fireworks and festive lights' },
+                        ];
 
 			let stream = null;
 			let facing = 'user';
@@ -925,7 +918,7 @@
 				REACTIONS.forEach((reaction, index) => {
 					const button = document.createElement('button');
 					button.className = 'reaction';
-					button.innerHTML = `<b>${reaction.emoji}</b><span>${reaction.label}</span><small>${reaction.sub}</small>`;
+					const _loc = (window.PersonaV11 && window.PersonaV11.localize) ? window.PersonaV11.localize(reaction) : reaction; const _isPro = !!reaction.isPro; const _locked = _isPro && !(window.PersonaV11 && window.PersonaV11.isPro); button.innerHTML = `<b>${reaction.emoji}</b><span>${_loc.label}${_isPro ? ' ⭐ PRO' : ''}</span><small>${_loc.sub}${_locked ? ' • PRO' : ''}</small>`;
 					button.addEventListener('click', () => selectReaction(index, button));
 					$('reactions').appendChild(button);
 				});
@@ -1013,7 +1006,7 @@
 					setProgress(Math.min(82, 48 + attempt * 1.4), `מנפישים את התגובה... ${seconds} שניות`, 'animate');
 					try {
 						const data = await api({
-							action: 'check_video',
+							action: 'check_video', jobId: (typeof window !== 'undefined' && window._v11JobId) ? window._v11JobId : undefined,
 							requestId: job.requestId,
 							statusUrl: job.statusUrl,
 							responseUrl: job.responseUrl,
@@ -1268,14 +1261,27 @@ function seekVideo(video, time) {
 							`הבנו: ${ideaCheck.summary}${ideaCheck.reaction ? ` | תגובה: ${ideaCheck.reaction}` : ''}`;
 					}
 
-					if (window.PersonaBilling?.spendCreditsOrRefund) {
-						transaction = window.PersonaBilling.spendCreditsOrRefund(CREATION_COST, { prompt: currentPromptLabel });
-						currentTransactionId = transaction.id;
-						if (!transaction.success) {
-							$('paywall').classList.add('show');
-							throw new Error('נגמרו הקרדיטים. אפשר לבחור חבילת תגובות.');
-						}
-					}
+					if (selectedReaction && selectedReaction.isPro && window.PersonaV11 && !window.PersonaV11.isPro) {
+                                                $('paywall').classList.add('show');
+                                                throw new Error(window.PersonaV11.getLang() === 'en' ? 'This template is for Pro only.' : 'תבנית זו למנויי פרו בלבד.');
+                                        }
+                                        if (window.PersonaV11 && window.PersonaV11.createServerJob) {
+                                                const _job = await window.PersonaV11.createServerJob(selectedReaction ? selectedReaction.id : 'custom', prompt);
+                                                if (!_job.ok) {
+                                                        $('paywall').classList.add('show');
+                                                        throw new Error(_job.message || 'No credits');
+                                                }
+                                                window._v11JobId = _job.jobId;
+                                                transaction = { id: _job.jobId, success: true, complete: function(){}, refund: function(){ if (window._v11JobId && window.PersonaV11) window.PersonaV11.failJob(window._v11JobId, 'cancelled'); } };
+                                                currentTransactionId = _job.jobId;
+                                        } else if (window.PersonaBilling?.spendCreditsOrRefund) {
+                                                transaction = window.PersonaBilling.spendCreditsOrRefund(CREATION_COST, { prompt: currentPromptLabel });
+                                                currentTransactionId = transaction.id;
+                                                if (!transaction.success) {
+                                                        $('paywall').classList.add('show');
+                                                        throw new Error('נגמרו הקרדיטים. אפשר לבחור חבילת תגובות.');
+                                                }
+                                        }
 
 					setProgress(8, 'יוצרים סצנה חדשה במיוחד בשבילכם...', 'background');
 					const backgroundData = await api({
@@ -1298,6 +1304,7 @@ function seekVideo(video, time) {
 						scenePlan: ideaCheck.scenePlan || null,
 					});
 					if (!queued.requestId) throw new Error('מנוע הווידאו לא התחיל את העבודה');
+                                        if (window._v11JobId && queued.requestId && window.PersonaV11) { await window.PersonaV11.linkJob(window._v11JobId, queued.requestId); }
 					const videoUrl = await waitForVideo({
 						requestId: queued.requestId,
 						statusUrl: queued.statusUrl,
@@ -1483,5 +1490,6 @@ function seekVideo(video, time) {
 			startCamera();
 		</script>
 	<script src="capacitor-fix.js"></script>
+  <script src="billing-v11.js"></script>
 </body>
 </html>

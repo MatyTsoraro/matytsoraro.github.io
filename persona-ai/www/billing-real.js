@@ -7,13 +7,13 @@
     if (!p) throw new Error('NativePurchases plugin not found');
     return p;
   }
-  async function buyRealPack() {
+  async function buyRealPack(productId) { productId = productId || 'credits_20'; {
     const NativePurchases = await getPlugin();
-    const result = await NativePurchases.purchaseProduct({ productIdentifier: 'credits_20' });
+    const result = await NativePurchases.purchaseProduct({ productIdentifier: productId });
     const tx = result.transaction || result;
     const token = tx.purchaseToken || tx.transactionId || tx.id || tx.purchase_token;
     if (window.PersonaBilling && window.PersonaBilling.addCredits) {
-      window.PersonaBilling.addCredits(20, { source: 'google_play', productId: 'credits_20', purchaseToken: token });
+      window.PersonaBilling.addCredits(productId === 'credits_pro' ? 50 : productId === 'credits_5' ? 5 : 20, { source: 'google_play', productId: 'credits_20', purchaseToken: token });
     }
     if (token) {
       try { await NativePurchases.consumePurchase({ purchaseToken: token }); } catch(e) { console.warn('consume failed', e); }
@@ -44,3 +44,8 @@
     });
   });
 })();
+
+// v11 helpers
+async function buyPack(productId) { return buyRealPack(productId); }
+window.buyPack = buyPack;
+window.buyProPack = function() { return buyRealPack('credits_pro'); };
