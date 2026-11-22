@@ -1472,7 +1472,6 @@ function seekVideo(video, time) {
 			$('createTab').addEventListener('click', () => showTab('create'));
 			$('libraryTab').addEventListener('click', () => showTab('library'));
 			$('closePaywall').addEventListener('click', () => $('paywall').classList.remove('show'));
-			$('buyPackBtn').addEventListener('click', () => toast('יש לחבר Google Play Billing לפני הפעלת רכישה אמיתית.', true));
 			$('badResultBtn').addEventListener('click', () => {
 				if (!currentTransactionId) return toast('לא נמצאה יצירה לזיכוי', true);
 				const result = window.PersonaBilling?.grantQualityRetry?.(currentTransactionId, 'user_reported_poor_result');
@@ -1554,6 +1553,91 @@ function seekVideo(video, time) {
   document.addEventListener('DOMContentLoaded', wireProBtn);
   setTimeout(wireProBtn, 800);
   setTimeout(wireProBtn, 2000);
+})();
+</script>
+
+
+<script>
+/* v13-final-qa */
+(function(){
+  function showMsg(msg, isErr){
+    try { if (window.toast) { window.toast(msg, !!isErr); return; } } catch(e){}
+    alert(msg);
+  }
+  function getLangSafe(){
+    try { if (window.PersonaV11 && window.PersonaV11.getLang) return window.PersonaV11.getLang(); } catch(e){}
+    try {
+      var s = localStorage.getItem('persona_lang') || localStorage.getItem('v11_lang') || localStorage.getItem('lang');
+      if (s === 'he' || s === 'en') return s;
+    } catch(e){}
+    return 'he';
+  }
+  function applyLang(){
+    var lang = getLangSafe();
+    try {
+      document.documentElement.lang = lang;
+      document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
+    } catch(e){}
+  }
+  function isProUser(){
+    try {
+      if (window.PersonaV11 && window.PersonaV11.isPro) return !!window.PersonaV11.isPro;
+      if (window.PersonaBilling && window.PersonaBilling.isPro) return !!window.PersonaBilling.isPro();
+      if (localStorage.getItem('persona_pro') === '1') return true;
+    } catch(e){}
+    return false;
+  }
+  async function buyProWithFeedback(){
+    try {
+      if (window.buyProPack) {
+        await window.buyProPack();
+        showMsg('PRO נרכש! תודה רבה', false);
+        setTimeout(function(){ window.location.reload(); }, 800);
+        return;
+      }
+      if (window.buyPack) {
+        await window.buyPack('credits_pro');
+        showMsg('PRO נרכש! תודה רבה', false);
+        setTimeout(function(){ window.location.reload(); }, 800);
+        return;
+      }
+      showMsg('הקנייה לא זמינה כרגע, נסה שוב', true);
+    } catch(e){
+      showMsg('הקנייה נכשלה: ' + (e && e.message ? e.message : e), true);
+    }
+  }
+  function rewireProBtn(){
+    var btn = document.getElementById('proUpgradeBtn');
+    if (!btn) return;
+    if (btn.dataset.v13wired) return;
+    btn.dataset.v13wired = '1';
+    var clone = btn.cloneNode(true);
+    clone.dataset.v13wired = '1';
+    btn.parentNode.replaceChild(clone, btn);
+    clone.addEventListener('click', function(ev){
+      ev.preventDefault(); ev.stopPropagation();
+      if (isProUser()) { showMsg('כבר יש לך PRO, תודה!', false); return; }
+      buyProWithFeedback();
+    });
+  }
+  function guardProTemplates(){
+    document.querySelectorAll('[data-template-id]').forEach(function(el){
+      var id = el.getAttribute('data-template-id');
+      if (id !== 'thank_you' && id !== 'congratulations' && id !== 'happy_new_year') return;
+      if (el.dataset.v13guard) return;
+      el.dataset.v13guard = '1';
+      el.addEventListener('click', function(ev){
+        if (isProUser()) return;
+        ev.preventDefault(); ev.stopPropagation();
+        showMsg('תבנית PRO - לחץ על כפתור PRO למעלה לרכישה', true);
+        setTimeout(buyProWithFeedback, 600);
+      }, true);
+    });
+  }
+  function init(){ applyLang(); rewireProBtn(); guardProTemplates(); }
+  document.addEventListener('DOMContentLoaded', init);
+  setTimeout(init, 800);
+  setTimeout(init, 2000);
 })();
 </script>
 

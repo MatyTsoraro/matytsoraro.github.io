@@ -19,7 +19,7 @@
       const saved = localStorage.getItem(LS_LANG);
       if (saved === 'he' || saved === 'en') return saved;
       const nav = (navigator.language || '').toLowerCase();
-      return nav.startsWith('he') ? 'he' : 'he';
+      return nav.startsWith('he') ? 'he' : 'en';
     } catch (_) { return 'he'; }
   }
   function setLang(lang) {
@@ -114,7 +114,7 @@
       const btn = document.createElement('button');
       btn.id = 'v11-lang-toggle';
       btn.textContent = getLang() === 'he' ? 'EN | עב' : 'HE | EN';
-      btn.style.cssText = 'position:fixed;top:10px;left:10px;z-index:9999;padding:6px 10px;border-radius:20px;border:1px solid #ddd;background:#fff;font-size:13px;cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,0.12);';
+      btn.style.cssText = 'position:fixed;top:calc(env(safe-area-inset-top, 0px) + 54px);left:12px;z-index:9999;padding:6px 10px;border-radius:20px;border:1px solid #ddd;background:#fff;font-size:13px;cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,0.12);';
       btn.onclick = () => setLang(getLang() === 'he' ? 'en' : 'he');
       document.body.appendChild(btn);
     } catch (_) {}

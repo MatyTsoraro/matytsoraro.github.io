@@ -13,9 +13,9 @@
     const tx = result.transaction || result;
     const token = tx.purchaseToken || tx.transactionId || tx.id || tx.purchase_token;
     if (window.PersonaBilling && window.PersonaBilling.addCredits) {
-      window.PersonaBilling.addCredits(productId === 'credits_pro' ? 50 : productId === 'credits_5' ? 5 : 20, { source: 'google_play', productId: 'credits_20', purchaseToken: token });
+      window.PersonaBilling.addCredits(productId === 'credits_pro' ? 50 : productId === 'credits_5' ? 5 : 20, { source: 'google_play', productId: productId, purchaseToken: token });
     }
-    if (token) {
+    if (token && productId !== 'credits_pro') {
       try { await NativePurchases.consumePurchase({ purchaseToken: token }); } catch(e) { console.warn('consume failed', e); }
     }
     return true;
