@@ -1567,7 +1567,7 @@ function seekVideo(video, time) {
   function getLangSafe(){
     try { if (window.PersonaV11 && window.PersonaV11.getLang) return window.PersonaV11.getLang(); } catch(e){}
     try {
-      var s = localStorage.getItem('persona_lang') || localStorage.getItem('v11_lang') || localStorage.getItem('lang');
+      var s = localStorage.getItem('persona_lang_v11') || localStorage.getItem('persona_lang') || localStorage.getItem('v11_lang') || localStorage.getItem('lang');
       if (s === 'he' || s === 'en') return s;
     } catch(e){}
     return 'he';
@@ -1577,6 +1577,39 @@ function seekVideo(video, time) {
     try {
       document.documentElement.lang = lang;
       document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
+    } catch(e){}
+    if (lang !== 'en') return;
+    var DICT = {
+      'הפנים שלכם. התגובה שלכם.': 'Your face. Your reaction.',
+      '✨ יצירה חדשה': '✨ New Creation',
+      '📸 צלמו סלפי': '📸 Take a Selfie',
+      '🖼 גלריה': '🖼 Gallery',
+      '📸 החליפו תמונה': '📸 Change Photo',
+      '📲 שתפו עכשיו': '📲 Share Now',
+      '⬇ שמרו תגובה מונפשת': '⬇ Save Animated Reaction',
+      '🎬 שמרו וידאו באיכות גבוהה': '🎬 Save High-Quality Video',
+      '✨ צרו עוד אחד': '✨ Create Another One',
+      '↻ לא יצא טוב, תנו לי ניסיון חוזר': '↻ Not good, give me a retry',
+      'חבילת התגובות האישית שלי': 'My Personal Reaction Pack',
+      'רכשו את החבילה': 'Buy the Pack'
+    };
+    try {
+      document.querySelectorAll('body *').forEach(function(el){
+        if (el.children.length !== 0) return;
+        var txt = (el.textContent || '').trim();
+        if (DICT[txt]) el.textContent = DICT[txt];
+      });
+      var lib = document.getElementById('libraryTab');
+      if (lib) {
+        var cnt = document.getElementById('libraryCount');
+        var cntVal = cnt ? cnt.textContent : '0';
+        lib.innerHTML = '🎞 My Reactions <span id="libraryCount">' + cntVal + '</span>';
+      }
+      document.querySelectorAll('[placeholder]').forEach(function(el){
+        if (el.getAttribute('placeholder') === 'לדוגמה: צוללת עתידנית') el.setAttribute('placeholder', 'Example: futuristic submarine');
+      });
+      var flip = document.getElementById('flipBtn');
+      if (flip) flip.setAttribute('aria-label', 'Switch Camera');
     } catch(e){}
   }
   function isProUser(){
@@ -1591,19 +1624,19 @@ function seekVideo(video, time) {
     try {
       if (window.buyProPack) {
         await window.buyProPack();
-        showMsg('PRO נרכש! תודה רבה', false);
+        showMsg(getLangSafe() === 'en' ? 'PRO purchased! Thank you!' : 'PRO נרכש! תודה רבה', false);
         setTimeout(function(){ window.location.reload(); }, 800);
         return;
       }
       if (window.buyPack) {
         await window.buyPack('credits_pro');
-        showMsg('PRO נרכש! תודה רבה', false);
+        showMsg(getLangSafe() === 'en' ? 'PRO purchased! Thank you!' : 'PRO נרכש! תודה רבה', false);
         setTimeout(function(){ window.location.reload(); }, 800);
         return;
       }
-      showMsg('הקנייה לא זמינה כרגע, נסה שוב', true);
+      showMsg(getLangSafe() === 'en' ? 'Purchase is not available right now, try again' : 'הקנייה לא זמינה כרגע, נסה שוב', true);
     } catch(e){
-      showMsg('הקנייה נכשלה: ' + (e && e.message ? e.message : e), true);
+      showMsg((getLangSafe() === 'en' ? 'Purchase failed: ' : 'הקנייה נכשלה: ') + (e && e.message ? e.message : e), true);
     }
   }
   function rewireProBtn(){
@@ -1616,7 +1649,7 @@ function seekVideo(video, time) {
     btn.parentNode.replaceChild(clone, btn);
     clone.addEventListener('click', function(ev){
       ev.preventDefault(); ev.stopPropagation();
-      if (isProUser()) { showMsg('כבר יש לך PRO, תודה!', false); return; }
+      if (isProUser()) { showMsg(getLangSafe() === 'en' ? 'You already have PRO, thanks!' : 'כבר יש לך PRO, תודה!', false); return; }
       buyProWithFeedback();
     });
   }
@@ -1629,7 +1662,7 @@ function seekVideo(video, time) {
       el.addEventListener('click', function(ev){
         if (isProUser()) return;
         ev.preventDefault(); ev.stopPropagation();
-        showMsg('תבנית PRO - לחץ על כפתור PRO למעלה לרכישה', true);
+        showMsg(getLangSafe() === 'en' ? 'PRO template - tap the PRO button above to purchase' : 'תבנית PRO - לחץ על כפתור PRO למעלה לרכישה', true);
         setTimeout(buyProWithFeedback, 600);
       }, true);
     });

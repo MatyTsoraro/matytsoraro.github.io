@@ -7,7 +7,7 @@
     if (!p) throw new Error('NativePurchases plugin not found');
     return p;
   }
-  async function buyRealPack(productId) { productId = productId || 'credits_20'; {
+  async function buyRealPack(productId) { productId = productId || 'credits_20';
     const NativePurchases = await getPlugin();
     const result = await NativePurchases.purchaseProduct({ productIdentifier: productId });
     const tx = result.transaction || result;
@@ -46,6 +46,6 @@
 })();
 
 // v11 helpers
-async function buyPack(productId) { return buyRealPack(productId); }
+async function buyPack(productId) { return window.buyRealPack(productId); }
 window.buyPack = buyPack;
-window.buyProPack = function() { return buyRealPack('credits_pro'); };
+window.buyProPack = function() { return window.buyRealPack('credits_pro'); };
