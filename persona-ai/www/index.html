@@ -582,7 +582,14 @@
 					grid-template-columns: 1fr;
 				}
 			}
-		</style>
+		
+/* v12-pro-fix */
+.reaction.locked { opacity: 0.62; filter: grayscale(0.25); }
+.reaction-locked b { opacity: 0.85; }
+.pro-upgrade-btn { margin-inline-start: 8px; padding: 5px 12px; border-radius: 999px; border: 1px solid #f5c518; background: linear-gradient(135deg, #fff7cc, #ffe27a); color: #1a1a1a; font-weight: 700; font-size: 13px; cursor: pointer; }
+.pro-upgrade-btn:active { transform: scale(0.97); }
+
+</style>
 	</head>
 	<body>
 		<main class="app">
@@ -1491,5 +1498,64 @@ function seekVideo(video, time) {
 		</script>
 	<script src="capacitor-fix.js"></script>
   <script src="billing-v11.js"></script>
+
+<script>
+/* v12-pro-fix */
+(function(){
+  try {
+    if (window.TEMPLATES && Array.isArray(window.TEMPLATES)) {
+      var have = {};
+      window.TEMPLATES.forEach(function(t){ have[t.id || t.key || t.name] = true; });
+      var proTemplates = [
+        {id:'thank_you', key:'thank_you', name:'Thank You', he:'\u05ea\u05d5\u05d3\u05d4 \u05e8\u05d1\u05d4', pro:true, locked:true},
+        {id:'congratulations', key:'congratulations', name:'Congratulations', he:'\u05de\u05d6\u05dc \u05d8\u05d5\u05d1', pro:true, locked:true},
+        {id:'happy_new_year', key:'happy_new_year', name:'Happy New Year', he:'\u05e9\u05e0\u05d4 \u05d8\u05d5\u05d1\u05d4', pro:true, locked:true}
+      ];
+      proTemplates.forEach(function(pt){ if (!have[pt.id]) window.TEMPLATES.push(pt); });
+    }
+  } catch(e){}
+  function wireProBtn(){
+    var btn = document.getElementById('proUpgradeBtn');
+    if (!btn) {
+      var header = document.querySelector('header') || document.body;
+      if (header) {
+        btn = document.createElement('button');
+        btn.id = 'proUpgradeBtn';
+        btn.className = 'pro-upgrade-btn';
+        btn.textContent = 'PRO \u2b50';
+        header.appendChild(btn);
+      }
+    }
+    if (btn && !btn.dataset.v12wired) {
+      btn.dataset.v12wired = '1';
+      btn.addEventListener('click', function(){
+        try {
+          if (window.buyProPack) { window.buyProPack(); return; }
+          if (window.buyPack) { window.buyPack('credits_pro'); return; }
+        } catch(e){}
+      });
+    }
+    try {
+      document.querySelectorAll('[data-template-id]').forEach(function(el){
+        var id = el.getAttribute('data-template-id');
+        if (id==='thank_you' || id==='congratulations' || id==='happy_new_year') {
+          el.classList.add('reaction-locked');
+          if (!el.querySelector('.pro-upgrade-btn')) {
+            var b = document.createElement('button');
+            b.className = 'pro-upgrade-btn';
+            b.textContent = 'PRO';
+            b.addEventListener('click', function(ev){ ev.stopPropagation(); var pb=document.getElementById('proUpgradeBtn'); if(pb) pb.click(); });
+            el.appendChild(b);
+          }
+        }
+      });
+    } catch(e){}
+  }
+  document.addEventListener('DOMContentLoaded', wireProBtn);
+  setTimeout(wireProBtn, 800);
+  setTimeout(wireProBtn, 2000);
+})();
+</script>
+
 </body>
 </html>
