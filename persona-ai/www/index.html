@@ -467,6 +467,9 @@
 				border: 1px solid var(--border);
 				border-radius: 17px;
 				overflow: hidden;
+			transform: translateZ(0);
+			backface-visibility: hidden;
+			contain: layout paint;
 			}
 			.library-card img,
 			.library-card video {
@@ -1237,8 +1240,8 @@ function seekVideo(video, time) {
 			                        libraryUrlCache.set(item.id, url);
 			                }
 			                const media = item.gif
-			                        ? `<img src="${url}" alt="תגובה שמורה" loading="lazy" decoding="async" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;background:#111">`
-			                        : `<video src="${url}" muted loop playsinline preload="metadata" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;background:#111"></video>`;
+			                        ? `<img src="${url}" alt="תגובה שמורה" decoding="sync" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;background:#0d1020;transform:translateZ(0)">`
+			                        : `<video src="${url}" muted loop playsinline preload="auto" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;background:#0d1020;transform:translateZ(0)"></video>`;
 			                const safeIdAttr = escapeHtml(item.id);
 			                card.innerHTML = `${media}<div class="library-meta"><div class="library-title">${escapeHtml(item.title)}</div><div class="library-date">${new Date(item.createdAt).toLocaleDateString('he-IL')}</div><div class="library-actions"><button type="button" data-share data-share-id="${safeIdAttr}">שתפו</button><button type="button" data-save data-save-id="${safeIdAttr}">שמרו</button><button type="button" data-delete data-delete-id="${safeIdAttr}">מחקו</button></div></div>`;
 			                const shareBtnEl = card.querySelector('[data-share]');
@@ -1284,7 +1287,9 @@ function seekVideo(video, time) {
 			                                try { URL.revokeObjectURL(cachedUrl); } catch (_) {}
 			                                libraryUrlCache.delete(targetId);
 			                        }
-			                        renderLibrary();
+			                        card.remove();
+				$('libraryCount').textContent = grid.children.length;
+				if (!grid.children.length) renderLibrary();
 			                };
 			                frag.appendChild(card);
 			        });
@@ -1314,7 +1319,7 @@ function seekVideo(video, time) {
 				$('createTab').classList.toggle('active', !lib);
 				$('libraryTab').classList.toggle('active', lib);
 				if (lib) renderLibrary();
-				window.scrollTo({ top: 0, behavior: 'smooth' });
+				window.scrollTo(0, 0);
 			}
 			function clearPreviousResult() {
 				if (lastGif?.url) URL.revokeObjectURL(lastGif.url);
