@@ -1221,7 +1221,10 @@ function seekVideo(video, time) {
 			                        '<div class="empty-state" style="grid-column:1/-1">עוד אין תגובות שמורות.<br>צרו תגובה ראשונה והיא תופיע כאן.</div>';
 			                return;
 			        }
-			        const frag = document.createDocumentFragment();
+			        const __ex = Array.from(grid.children).map((el) => el.getAttribute('data-id')).join(',');
+                                const __nx = items.filter((it) => it.gif || it.video).map((it) => it.id).join(',');
+                                if (__ex === __nx && __nx !== '') return;
+                                const frag = document.createDocumentFragment();
 			        items.forEach((item) => {
 			                const previewBlob = item.gif || item.video;
 			                if (!previewBlob) return;
@@ -1234,8 +1237,8 @@ function seekVideo(video, time) {
 			                        libraryUrlCache.set(item.id, url);
 			                }
 			                const media = item.gif
-			                        ? `<img src="${url}" alt="תגובה שמורה">`
-			                        : `<video src="${url}" muted loop playsinline></video>`;
+			                        ? `<img src="${url}" alt="תגובה שמורה" loading="lazy" decoding="async" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;background:#111">`
+			                        : `<video src="${url}" muted loop playsinline preload="metadata" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;background:#111"></video>`;
 			                const safeIdAttr = escapeHtml(item.id);
 			                card.innerHTML = `${media}<div class="library-meta"><div class="library-title">${escapeHtml(item.title)}</div><div class="library-date">${new Date(item.createdAt).toLocaleDateString('he-IL')}</div><div class="library-actions"><button type="button" data-share data-share-id="${safeIdAttr}">שתפו</button><button type="button" data-save data-save-id="${safeIdAttr}">שמרו</button><button type="button" data-delete data-delete-id="${safeIdAttr}">מחקו</button></div></div>`;
 			                const shareBtnEl = card.querySelector('[data-share]');
