@@ -1133,81 +1133,163 @@ function seekVideo(video, time) {
 				db.close();
 			}
 			async function libraryAll() {
-				const db = await openLibraryDb();
-				const items = await new Promise((resolve, reject) => {
-					const req = db.transaction('reactions').objectStore('reactions').getAll();
-					req.onsuccess = () => resolve(req.result || []);
-					req.onerror = () => reject(req.error);
-				});
-				db.close();
-				return items.sort((a, b) => b.createdAt - a.createdAt);
+			        const db = await openLibraryDb();
+			        const items = await new Promise((resolve, reject) => {
+			                const req = db.transaction('reactions').objectStore('reactions').getAll();
+			                req.onsuccess = () => resolve(req.result || []);
+			                req.onerror = () => reject(req.error);
+			        });
+			        db.close();
+			        return items.sort((a, b) => b.createdAt - a.createdAt);
+			}
+			async function libraryGet(id) {
+			        if (!id) return null;
+			        const db = await openLibraryDb();
+			        const item = await new Promise((resolve, reject) => {
+			                const req = db.transaction('reactions').objectStore('reactions').get(id);
+			                req.onsuccess = () => resolve(req.result || null);
+			                req.onerror = () => reject(req.error);
+			        });
+			        db.close();
+			        return item;
 			}
 			async function libraryDelete(id) {
-				const db = await openLibraryDb();
-				await new Promise((resolve, reject) => {
-					const tx = db.transaction('reactions', 'readwrite');
-					tx.objectStore('reactions').delete(id);
-					tx.oncomplete = resolve;
-					tx.onerror = () => reject(tx.error);
-				});
-				db.close();
+			        const db = await openLibraryDb();
+			        await new Promise((resolve, reject) => {
+			                const tx = db.transaction('reactions', 'readwrite');
+			                tx.objectStore('reactions').delete(id);
+			                tx.oncomplete = resolve;
+			                tx.onerror = () => reject(tx.error);
+			        });
+			        db.close();
 			}
+			const libraryUrlCache = new Map();
+			let libraryRenderGen = 0;
 			async function saveCurrentToLibrary() {
-				if (!lastGif && !lastVideo) return;
-				const id = `reaction_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-				await libraryPut({
-					id,
-					title: currentPromptLabel || 'תגובה אישית',
-					createdAt: Date.now(),
-					gif: lastGif?.blob || null,
-					video: lastVideo?.blob || null,
-				});
-				await renderLibrary();
+			        if (!lastGif && !lastVideo) return;
+			        const id = `gif_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+			        await libraryPut({
+			                id,
+			                title: currentPromptLabel || 'תגובה אישית',
+			                createdAt: Date.now(),
+			                gif: lastGif?.blob || null,
+			                video: lastVideo?.blob || null,
+			        });
+			        await renderLibrary();
+			}
+			async function shareMediaBlob(blob, id, ext) {
+			        if (!blob) return;
+			        const extension = ext || (blob.type && blob.type.includes('gif') ? 'gif' : 'mp4');
+			        const mimeType = blob.type || (extension === 'gif' ? 'image/gif' : 'video/mp4');
+			        const safeId = String(id || 'item').replace(/[^a-zA-Z0-9_-]/g, '');
+			        if (window.PersonaNativeShare && typeof window.PersonaNativeShare.shareBlob === 'function') {
+			                await window.PersonaNativeShare.shareBlob(blob, safeId, extension);
+			                return;
+			        }
+			        const stamp = safeId + '-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+			        const file = new File([blob], 'PersonaAI-' + stamp + '.' + extension, { type: mimeType });
+			        if (navigator.canShare?.({ files: [file] })) {
+			                await navigator.share({ title: 'PersonaAI', text: 'יצרתי תגובת AI אישית ב-PersonaAI', files: [file] });
+			        } else {
+			                await saveMediaBlob(blob, safeId, extension);
+			        }
+			}
+			async function saveMediaBlob(blob, id, ext) {
+			        if (!blob) return;
+			        const extension = ext || (blob.type && blob.type.includes('gif') ? 'gif' : 'mp4');
+			        const safeId = String(id || 'item').replace(/[^a-zA-Z0-9_-]/g, '');
+			        if (window.PersonaNativeShare && typeof window.PersonaNativeShare.saveBlob === 'function') {
+			                await window.PersonaNativeShare.saveBlob(blob, safeId, extension);
+			                return;
+			        }
+			        downloadDirect(blob, extension);
 			}
 			async function renderLibrary() {
-				const grid = $('libraryGrid');
-				if (!grid) return;
-				grid.innerHTML = '';
-				let items = [];
-				try {
-					items = await libraryAll();
-				} catch (_) {
-					items = [];
-				}
-				$('libraryCount').textContent = items.length;
-				if (!items.length) {
-					grid.innerHTML =
-						'<div class="empty-state" style="grid-column:1/-1">עוד אין תגובות שמורות.<br>צרו תגובה ראשונה והיא תופיע כאן.</div>';
-					return;
-				}
-				items.forEach((item) => {
-					const card = document.createElement('div');
-					card.className = 'library-card';
-					const blob = item.gif || item.video;
-					const url = URL.createObjectURL(blob);
-					const media = item.gif
-						? `<img src="${url}" alt="תגובה שמורה">`
-						: `<video src="${url}" muted loop playsinline></video>`;
-					card.innerHTML = `${media}<div class="library-meta"><div class="library-title">${escapeHtml(item.title)}</div><div class="library-date">${new Date(item.createdAt).toLocaleDateString('he-IL')}</div><div class="library-actions"><button data-share>שתפו</button><button data-save>שמרו</button><button data-delete>מחקו</button></div></div>`;
-					card.querySelector('[data-share]').onclick = async () => {
-                                                const uniqueName = 'PersonaAI-' + item.id + '-' + Date.now() + '-' + Math.random().toString(36).slice(2,8) + (item.gif ? '.gif' : '.mp4');
-                                                const file = new File([blob], uniqueName, { type: blob.type });
-						try {
-							if (navigator.canShare?.({ files: [file] }))
-								await navigator.share({ title: 'PersonaAI', text: 'יצרתי תגובת AI אישית ב-PersonaAI', files: [file] });
-							else downloadDirect(blob, item.gif ? 'gif' : 'mp4');
-						} catch (e) {
-							if (e.name !== 'AbortError') toast('השיתוף אינו זמין', true);
-						}
-					};
-					card.querySelector('[data-save]').onclick = () => downloadDirect(blob, item.gif ? 'gif' : 'mp4');
-					card.querySelector('[data-delete]').onclick = async () => {
-						await libraryDelete(item.id);
-						URL.revokeObjectURL(url);
-						renderLibrary();
-					};
-					grid.appendChild(card);
-				});
+			        const grid = $('libraryGrid');
+			        if (!grid) return;
+			        const gen = ++libraryRenderGen;
+			        let items = [];
+			        try {
+			                items = await libraryAll();
+			        } catch (_) {
+			                items = [];
+			        }
+			        if (gen !== libraryRenderGen) return;
+			        $('libraryCount').textContent = items.length;
+			        if (!items.length) {
+			                grid.innerHTML =
+			                        '<div class="empty-state" style="grid-column:1/-1">עוד אין תגובות שמורות.<br>צרו תגובה ראשונה והיא תופיע כאן.</div>';
+			                return;
+			        }
+			        const frag = document.createDocumentFragment();
+			        items.forEach((item) => {
+			                const previewBlob = item.gif || item.video;
+			                if (!previewBlob) return;
+			                const card = document.createElement('div');
+			                card.className = 'library-card reaction-card';
+			                card.setAttribute('data-id', item.id);
+			                let url = libraryUrlCache.get(item.id);
+			                if (!url) {
+			                        url = URL.createObjectURL(previewBlob);
+			                        libraryUrlCache.set(item.id, url);
+			                }
+			                const media = item.gif
+			                        ? `<img src="${url}" alt="תגובה שמורה">`
+			                        : `<video src="${url}" muted loop playsinline></video>`;
+			                const safeIdAttr = escapeHtml(item.id);
+			                card.innerHTML = `${media}<div class="library-meta"><div class="library-title">${escapeHtml(item.title)}</div><div class="library-date">${new Date(item.createdAt).toLocaleDateString('he-IL')}</div><div class="library-actions"><button type="button" data-share data-share-id="${safeIdAttr}">שתפו</button><button type="button" data-save data-save-id="${safeIdAttr}">שמרו</button><button type="button" data-delete data-delete-id="${safeIdAttr}">מחקו</button></div></div>`;
+			                const shareBtnEl = card.querySelector('[data-share]');
+			                shareBtnEl.onclick = async (ev) => {
+			                        ev.preventDefault();
+			                        ev.stopPropagation();
+			                        const targetId = shareBtnEl.getAttribute('data-share-id') || card.getAttribute('data-id');
+			                        shareBtnEl.disabled = true;
+			                        try {
+			                                const record = (await libraryGet(targetId)) || item;
+			                                const shareBlob = record?.gif || record?.video;
+			                                if (!shareBlob) {
+			                                        toast('הקובץ לא נמצא בספרייה', true);
+			                                        return;
+			                                }
+			                                await shareMediaBlob(shareBlob, targetId, record.gif ? 'gif' : 'mp4');
+			                        } catch (e) {
+			                                const msg = String(e?.message || e || '');
+			                                if (e?.name !== 'AbortError' && !/cancel/i.test(msg)) {
+			                                        toast('השיתוף אינו זמין', true);
+			                                }
+			                        } finally {
+			                                shareBtnEl.disabled = false;
+			                        }
+			                };
+			                const saveBtnEl = card.querySelector('[data-save]');
+			                saveBtnEl.onclick = async (ev) => {
+			                        ev.preventDefault();
+			                        ev.stopPropagation();
+			                        const targetId = saveBtnEl.getAttribute('data-save-id') || card.getAttribute('data-id');
+			                        const record = (await libraryGet(targetId)) || item;
+			                        const saveBlobData = record?.gif || record?.video;
+			                        if (saveBlobData) await saveMediaBlob(saveBlobData, targetId, record.gif ? 'gif' : 'mp4');
+			                };
+			                const deleteBtnEl = card.querySelector('[data-delete]');
+			                deleteBtnEl.onclick = async (ev) => {
+			                        ev.preventDefault();
+			                        ev.stopPropagation();
+			                        const targetId = deleteBtnEl.getAttribute('data-delete-id') || card.getAttribute('data-id');
+			                        await libraryDelete(targetId);
+			                        const cachedUrl = libraryUrlCache.get(targetId);
+			                        if (cachedUrl) {
+			                                try { URL.revokeObjectURL(cachedUrl); } catch (_) {}
+			                                libraryUrlCache.delete(targetId);
+			                        }
+			                        renderLibrary();
+			                };
+			                frag.appendChild(card);
+			        });
+			        const existingIds = Array.from(grid.children).map((el) => el.getAttribute('data-id')).join(',');
+                                const nextIds = items.filter((it) => it.gif || it.video).map((it) => it.id).join(',');
+                                if (existingIds !== nextIds) {
+                                        grid.replaceChildren(frag);
+                                }
 			}
 			function escapeHtml(value) {
 				const d = document.createElement('div');
