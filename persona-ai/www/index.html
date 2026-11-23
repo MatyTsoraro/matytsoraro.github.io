@@ -1041,17 +1041,29 @@
 			}
 
 function seekVideo(video, time) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const target = Math.min(time, Math.max(0, (video.duration || time) - 0.03));
-    if (Math.abs(video.currentTime - target) < 0.05) { resolve(); return; }
+    if (Math.abs(video.currentTime - target) < 0.05) {
+      if (typeof video.requestVideoFrameCallback === 'function') {
+        video.requestVideoFrameCallback(() => resolve());
+      } else {
+        requestAnimationFrame(() => requestAnimationFrame(resolve));
+      }
+      return;
+    }
     let done = false;
-    const timer = setTimeout(finish, 800);
-    function finish() {
+    const timer = setTimeout(() => finish(new Error('seek timeout')), 3000);
+    function finish(err) {
       if (done) return;
       done = true;
       clearTimeout(timer);
       video.removeEventListener('seeked', onSeeked);
-      requestAnimationFrame(() => requestAnimationFrame(resolve));
+      if (err) { reject(err); return; }
+      if (typeof video.requestVideoFrameCallback === 'function') {
+        video.requestVideoFrameCallback(() => resolve());
+      } else {
+        requestAnimationFrame(() => requestAnimationFrame(resolve));
+      }
     }
     function onSeeked() { finish(); }
     video.addEventListener('seeked', onSeeked, { once: true });
