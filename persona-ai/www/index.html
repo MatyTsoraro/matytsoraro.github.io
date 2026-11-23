@@ -2121,5 +2121,138 @@ function seekVideo(video, time) {
 })();
 </script>
 
+
+<!-- v17-force-chooser -->
+<script>
+(function(){
+  'use strict';
+  var PRO_PRICE_HE = '67 \u20aa / $19.99';
+  var PRO_PRICE_EN = '$19.99 / 67 \u20aa';
+  var PROPLUS_PRICE_HE = '119 \u20aa / $34.99';
+  var PROPLUS_PRICE_EN = '$34.99 / 119 \u20aa';
+  function getLang(){
+    try { if (window.PersonaV11 && window.PersonaV11.getLang) return window.PersonaV11.getLang(); } catch(e){}
+    try { var s = localStorage.getItem('persona_lang_v11'); if (s==='en'||s==='he') return s; } catch(e){}
+    return 'he';
+  }
+  function buyPack(pid){
+    try {
+      if (window.buyPack) { var pr = window.buyPack(pid); if (pr && pr.then) pr.then(function(){ try{setTimeout(function(){location.reload();},900);}catch(e){} }).catch(function(){}); return; }
+      if (window.buyRealPack) { var pr2 = window.buyRealPack(pid); if (pr2 && pr2.then) pr2.then(function(){ try{setTimeout(function(){location.reload();},900);}catch(e){} }).catch(function(){}); return; }
+    } catch(e){}
+  }
+  function buildChooserV17(reason){
+    try {
+      var lang = getLang();
+      var isHe = lang !== 'en';
+      var title = isHe ? 'בחר חבילה' : 'Choose a pack';
+      var expl = isHe ? 'כל חבילה נותנת קרדיטים ליצירת GIFs. PRO פותח 3 תבניות לתמיד. PRO+ פותח גם מלל חופשי לתמיד.' : 'Every pack gives you credits to create GIFs. PRO unlocks 3 templates forever. PRO+ also unlocks custom text forever.';
+      if (reason === 'custom' || reason === 'proplus') expl = isHe ? 'מלל חופשי הוא רק למנויי PRO+. בחר חבילה כדי להמשיך.' : 'Custom text is for PRO+ only. Choose a pack to continue.';
+      else if (reason === 'pro') expl = isHe ? 'תבנית זו למנויי PRO בלבד. בחר חבילה כדי להמשיך.' : 'This template is for PRO only. Choose a pack to continue.';
+      var closeTxt = isHe ? 'סגור' : 'Close';
+      var old = document.getElementById('v17-chooser');
+      if (old) old.remove();
+      // Remove any old chooser that is open so we don't get two
+      try {
+        document.querySelectorAll('#paywall, #packChooser, #chooser').forEach(function(el){ try{ el.style.display='none'; el.classList.remove('show'); }catch(e){} });
+      } catch(e){}
+      var overlay = document.createElement('div');
+      overlay.id = 'v17-chooser';
+      overlay.style.cssText = 'position:fixed;inset:0;z-index:999999;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;padding:16px;';
+      var card = document.createElement('div');
+      card.style.cssText = 'background:#fff;border-radius:16px;max-width:420px;width:100%;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,0.25);color:#111;';
+      card.innerHTML = '<h3 style="margin:0 0 8px;">'+title+'</h3><p style="margin:0 0 12px;color:#444;font-size:14px;line-height:1.5;">'+expl+'</p>';
+      function mkBtn(pid, label, sub){
+        var b = document.createElement('button');
+        b.setAttribute('data-buy', pid);
+        b.setAttribute('data-v17', '1');
+        b.style.cssText = 'display:block;width:100%;margin:8px 0;padding:12px;border-radius:12px;border:1px solid #ddd;background:#f9f9f9;font-weight:700;cursor:pointer;text-align:start;color:#111;';
+        if (pid==='credits_pro') b.style.cssText += 'background:#fff7cc;border-color:#f5c518;';
+        if (pid==='credits_pro_plus') b.style.cssText += 'background:#ede9fe;border-color:#7c3aed;';
+        b.innerHTML = '<b>'+label+'</b><br><small style="font-weight:400;color:#555;">'+sub+'</small>';
+        b.onclick = function(ev){ try{ev.preventDefault(); ev.stopPropagation();}catch(e){} buyPack(pid); };
+        return b;
+      }
+      card.appendChild(mkBtn('credits_5', isHe ? '5 קרדיטים - $4.99' : '5 Credits - $4.99', isHe ? 'לכמה GIFs בודדים' : 'For a few GIFs'));
+      card.appendChild(mkBtn('credits_20', isHe ? '20 קרדיטים - $9.99' : '20 Credits - $9.99', isHe ? 'הכי פופולרי' : 'Most popular'));
+      card.appendChild(mkBtn('credits_pro', 'PRO - ' + (isHe ? PRO_PRICE_HE : PRO_PRICE_EN), isHe ? '50 קרדיטים + 3 תבניות PRO לתמיד' : '50 credits + 3 PRO templates forever'));
+      card.appendChild(mkBtn('credits_pro_plus', 'PRO+ - ' + (isHe ? PROPLUS_PRICE_HE : PROPLUS_PRICE_EN), isHe ? '100 קרדיטים + 3 תבניות PRO לתמיד + מלל חופשי לתמיד' : '100 credits + 3 PRO templates forever + custom text forever'));
+      var close = document.createElement('button');
+      close.textContent = closeTxt;
+      close.style.cssText = 'display:block;width:100%;margin-top:10px;padding:12px;border-radius:12px;border:none;background:#eee;font-weight:700;cursor:pointer;color:#111;';
+      close.onclick = function(){ overlay.remove(); };
+      card.appendChild(close);
+      overlay.appendChild(card);
+      overlay.addEventListener('click', function(e){ if (e.target===overlay) overlay.remove(); });
+      document.body.appendChild(overlay);
+    } catch(e){}
+  }
+  window.openPackChooserV17 = buildChooserV17;
+  window.openPackChooserV16 = buildChooserV17;
+  window.openPackChooser = buildChooserV17;
+  window.openProPaywall = buildChooserV17;
+  window.openPaywall = buildChooserV17;
+  window.showPaywall = buildChooserV17;
+  window.showPackChooser = buildChooserV17;
+
+  // 1) Capture-phase intercept: any click that would open the OLD chooser -> open v17 instead
+  document.addEventListener('click', function(e){
+    try {
+      // Don't intercept clicks inside our own v17 chooser
+      if (e.target && e.target.closest && e.target.closest('#v17-chooser')) return;
+      // Don't intercept clicks on buy buttons inside any chooser (let them buy)
+      if (e.target && e.target.closest && e.target.closest('[data-buy]')) return;
+      var t = e.target && e.target.closest ? e.target.closest('button, a, [role="button"], [data-pro], [data-paywall], [data-pack]') : null;
+      if (!t) return;
+      var txt = (t.textContent||'').trim();
+      var id = (t.id||'').toLowerCase();
+      var cls = (t.className||'').toString().toLowerCase();
+      var isTopProBtn = /\bPRO\b/.test(txt) && txt.length < 20;
+      var isPaywallTrigger = /paywall|packchooser|pack-chooser|open.*pro|pro.*pay|buy.*pro/i.test(id + ' ' + cls) || t.hasAttribute('data-pro') || t.hasAttribute('data-paywall');
+      // PRO template cards have PRO badge and are clickable - they should open chooser with reason=pro
+      var isProTemplate = t.hasAttribute('data-template-id') || (t.closest && t.closest('[data-template-id]'));
+      if (isTopProBtn || isPaywallTrigger) {
+        e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+        buildChooserV17('pro');
+        return;
+      }
+      // If a PRO template card was clicked and user is not PRO, the old code would open old chooser - intercept via timeout check:
+      // We let the click through, but MutationObserver below will convert any old chooser that appears.
+    } catch(err){}
+  }, true);
+
+  // 2) MutationObserver: if OLD chooser (3 options, no PRO+) appears, replace it with v17 chooser
+  function checkForOldChooser(){
+    try {
+      // Find any visible modal/dialog that contains 5 credits + PRO but no PRO+
+      var candidates = document.querySelectorAll('div, section, dialog');
+      for (var i=0;i<candidates.length;i++){
+        var el = candidates[i];
+        if (el.id === 'v17-chooser') continue;
+        if (!el.offsetParent && el.style && el.style.display === 'none') continue;
+        var t = el.textContent || '';
+        if (t.indexOf('5 קרדיטים') !== -1 || t.indexOf('5 Credits') !== -1) {
+          if (t.indexOf('PRO+') !== -1 || t.indexOf('PRO +') !== -1) continue;
+          // This looks like the old chooser - check it has PRO and close button and is a modal (fixed/absolute)
+          var cs = window.getComputedStyle ? window.getComputedStyle(el) : null;
+          if (cs && (cs.position === 'fixed' || cs.position === 'absolute')) {
+            // Hide old, show v17
+            try { el.style.display = 'none'; } catch(e){}
+            buildChooserV17();
+            return;
+          }
+        }
+      }
+    } catch(e){}
+  }
+  try {
+    var obs = new MutationObserver(function(){ setTimeout(checkForOldChooser, 50); });
+    obs.observe(document.documentElement, { childList: true, subtree: true });
+  } catch(e){}
+  // Also poll as fallback
+  setInterval(checkForOldChooser, 1000);
+})();
+</script>
+
 </body>
 </html>
