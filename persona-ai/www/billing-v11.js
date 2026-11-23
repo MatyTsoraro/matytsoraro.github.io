@@ -49,7 +49,7 @@
       const b = await serverCall('get_balance', {});
       if (b && typeof b.credits === 'number') {
         window.PersonaV11.balance = b.credits;
-        window.PersonaV11.isPro = !!b.isPro;
+        window.PersonaV11.isPro = !!b.isPro; window.PersonaV11.isProPlus = !!b.isProPlus; try{ localStorage.setItem('persona_is_pro_plus', b.isProPlus ? '1' : '0'); }catch(_){}
         window.PersonaV11.freeClaimed = !!b.freeClaimed;
         syncLocalCredits(b.credits);
         return b;
@@ -98,7 +98,7 @@
   }
   async function verifyPurchase(productId, purchaseToken) {
     const r = await serverCall('verify_purchase', { productId, purchaseToken });
-    if (r && typeof r.credits === 'number') { syncLocalCredits(r.credits); window.PersonaV11.isPro = !!r.isPro; }
+    if (r && typeof r.credits === 'number') { syncLocalCredits(r.credits); window.PersonaV11.isPro = !!r.isPro; window.PersonaV11.isProPlus = !!r.isProPlus; try{ localStorage.setItem('persona_is_pro_plus', r.isProPlus ? '1' : '0'); }catch(_){} }
     return r;
   }
   async function restorePurchases(purchases) {
@@ -106,7 +106,7 @@
     if (r && typeof r.credits === 'number') syncLocalCredits(r.credits);
     return r;
   }
-  window.PersonaV11 = { getUserId, getLang, setLang, serverCall, syncBalance, ensureFree, createServerJob, linkJob, failJob, verifyPurchase, restorePurchases, localize, balance: null, isPro: false, freeClaimed: false, WORKER_URL };
+  window.PersonaV11 = { getUserId, getLang, setLang, serverCall, syncBalance, ensureFree, createServerJob, linkJob, failJob, verifyPurchase, restorePurchases, localize, balance: null, isPro: false, isProPlus: false, freeClaimed: false, WORKER_URL };
   document.addEventListener('DOMContentLoaded', () => { setTimeout(() => { syncBalance().then(() => ensureFree()).catch(() => {}); }, 300); });
   document.addEventListener('DOMContentLoaded', () => {
     try {

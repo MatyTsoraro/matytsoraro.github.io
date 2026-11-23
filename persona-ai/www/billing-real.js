@@ -49,3 +49,6 @@
 async function buyPack(productId) { return window.buyRealPack(productId); }
 window.buyPack = buyPack;
 window.buyProPack = function() { return window.buyRealPack('credits_pro'); };
+
+// v16 PRO+
+window.buyProPlusPack = function(){ return buyRealPack('credits_pro_plus'); };

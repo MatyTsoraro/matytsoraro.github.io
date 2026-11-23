@@ -1681,7 +1681,7 @@ function seekVideo(video, time) {
     }
     box.appendChild(makeOpt(en ? '5 Credits - $4.99' : '5 קרדיטים - $4.99', en ? 'For a few GIFs' : 'לכמה GIFים בודדים', 'credits_5', false));
     box.appendChild(makeOpt(en ? '20 Credits - $9.99' : '20 קרדיטים - $9.99', en ? 'Most popular' : 'הכי פופולרי', 'credits_20', false));
-    box.appendChild(makeOpt(en ? 'PRO - $19.99 / 67 NIS' : 'PRO - 67 ₪', en ? '50 credits + 3 PRO templates forever - Thank You, Congratulations, Happy New Year' : '50 קרדיטים + 3 תבניות PRO לתמיד - תודה רבה, מזל טוב, שנה טובה', 'credits_pro', true));
+    box.appendChild(makeOpt(en ? 'PRO - $19.99 / 67 ₪' : 'PRO - 67 ₪ / $19.99', en ? '50 credits + 3 PRO templates forever - Thank You, Congratulations, Happy New Year' : '50 קרדיטים + 3 תבניות PRO לתמיד - תודה רבה, מזל טוב, שנה טובה', 'credits_pro', true));
     var closeBtn = document.createElement('button');
     closeBtn.textContent = en ? 'Close' : 'סגור';
     closeBtn.style.cssText = 'display:block;width:100%;padding:10px;border:none;border-radius:12px;background:#eee;cursor:pointer;margin-top:4px;';
@@ -1722,6 +1722,402 @@ function seekVideo(video, time) {
   document.addEventListener('DOMContentLoaded', init);
   setTimeout(init, 800);
   setTimeout(init, 2000);
+})();
+</script>
+
+
+<!-- v16-fix-all -->
+<script>
+(function(){
+  'use strict';
+  // ===== v16: FIX ALL =====
+  // 1) WhatsApp share must send CURRENT gif, never yesterday's
+  // 2) PRO+ tier: 119 NIS / $34.99, 100 credits + Pro templates + free text forever
+  // 3) Unified prices: PRO 67 NIS / $19.99 in BOTH languages, PRO+ 119 NIS / $34.99 in BOTH
+  var PRO_PRICE_HE = '67 \u20aa / $19.99';
+  var PRO_PRICE_EN = '$19.99 / 67 \u20aa';
+  var PROPLUS_PRICE_HE = '119 \u20aa / $34.99';
+  var PROPLUS_PRICE_EN = '$34.99 / 119 \u20aa';
+
+  function getLangV16(){
+    try { if (window.PersonaV11 && window.PersonaV11.getLang) return window.PersonaV11.getLang(); } catch(e){}
+    try { var s = localStorage.getItem('persona_lang_v11'); if (s==='en'||s==='he') return s; } catch(e){}
+    return 'he';
+  }
+  function isProV16(){
+    try { if (window.PersonaV11 && window.PersonaV11.isPro) return true; } catch(e){}
+    try { if (window.PersonaBilling && window.PersonaBilling.isPro && window.PersonaBilling.isPro()) return true; } catch(e){}
+    try { if (localStorage.getItem('persona_is_pro')==='1') return true; } catch(e){}
+    return false;
+  }
+  function isProPlusV16(){
+    try { if (window.PersonaV11 && window.PersonaV11.isProPlus) return true; } catch(e){}
+    try { if (window.PersonaBilling && window.PersonaBilling.isProPlus && window.PersonaBilling.isProPlus()) return true; } catch(e){}
+    try { if (localStorage.getItem('persona_is_pro_plus')==='1') return true; } catch(e){}
+    return false;
+  }
+  window.PersonaV16 = window.PersonaV16 || {};
+  window.PersonaV16.getLang = getLangV16;
+  window.PersonaV16.isPro = isProV16;
+  window.PersonaV16.isProPlus = isProPlusV16;
+  window.PersonaV16.PRO_PRICE_HE = PRO_PRICE_HE;
+  window.PersonaV16.PRO_PRICE_EN = PRO_PRICE_EN;
+  window.PersonaV16.PROPLUS_PRICE_HE = PROPLUS_PRICE_HE;
+  window.PersonaV16.PROPLUS_PRICE_EN = PROPLUS_PRICE_EN;
+
+  // ----- Fix chooser prices in DOM (runs repeatedly, fixes any stale chooser) -----
+  function fixChooserPrices(){
+    try {
+      var lang = getLangV16();
+      var wantPro = lang==='en' ? PRO_PRICE_EN : PRO_PRICE_HE;
+      var wantPlus = lang==='en' ? PROPLUS_PRICE_EN : PROPLUS_PRICE_HE;
+      // Find elements that mention PRO and a price, normalize them
+      var els = document.querySelectorAll('[data-buy], [data-product], .pack-option, .pack, .paywall-option, .chooser-option, button, div, span');
+      els.forEach(function(el){
+        try {
+          var t = el.textContent || '';
+          // Only leaf-ish elements to avoid rewriting whole containers
+          if (el.children.length > 2) return;
+          if (/PRO\+|PRO Plus|PRO\u002b/i.test(t) && /119|34\.99/.test(t)) {
+            if (t.indexOf(wantPlus) === -1) {
+              el.innerHTML = el.innerHTML.replace(/119[^<]{0,20}|\$34\.99[^<]{0,20}/, wantPlus);
+            }
+          } else if (/\bPRO\b/.test(t) && /67|19\.99/.test(t) && !/PRO\+/.test(t)) {
+            if (t.indexOf(wantPro) === -1) {
+              // Replace first price occurrence with unified price
+              el.innerHTML = el.innerHTML.replace(/67[^<]{0,20}NIS|\$19\.99[^<]{0,20}|67\s*\u20aa[^<]{0,20}/, wantPro);
+            }
+          }
+        } catch(e){}
+      });
+    } catch(e){}
+  }
+  setInterval(fixChooserPrices, 1500);
+  document.addEventListener('DOMContentLoaded', function(){ setTimeout(fixChooserPrices, 500); });
+
+  // ----- PRO+ chooser: 4 options -----
+  window.openPackChooserV16 = function(reason){
+    try {
+      var lang = getLangV16();
+      var isHe = lang !== 'en';
+      var title = isHe ? 'בחר חבילה' : 'Choose a pack';
+      var expl = isHe ? 'כל חבילה נותנת קרדיטים ליצירת GIFs. PRO פותח 3 תבניות לתמיד. PRO+ פותח גם מלל חופשי לתמיד.' : 'Every pack gives you credits to create GIFs. PRO unlocks 3 templates forever. PRO+ also unlocks custom text forever.';
+      if (reason === 'custom' || reason === 'proplus') {
+        expl = isHe ? 'מלל חופשי הוא רק למנויי PRO+. בחר חבילה כדי להמשיך.' : 'Custom text is for PRO+ only. Choose a pack to continue.';
+      } else if (reason === 'pro') {
+        expl = isHe ? 'תבנית זו למנויי PRO בלבד. בחר חבילה כדי להמשיך.' : 'This template is for PRO only. Choose a pack to continue.';
+      }
+      var closeTxt = isHe ? 'סגור' : 'Close';
+      // Reuse existing paywall/chooser if it exists, else build one
+      var existing = document.getElementById('paywall') || document.getElementById('packChooser') || document.getElementById('chooser');
+      if (existing) {
+        // Try to inject PRO+ button if missing
+        if (!existing.querySelector('[data-buy="credits_pro_plus"], [data-product="credits_pro_plus"]')) {
+          var plusBtn = document.createElement('button');
+          plusBtn.setAttribute('data-buy', 'credits_pro_plus');
+          plusBtn.setAttribute('data-product', 'credits_pro_plus');
+          plusBtn.style.cssText = 'display:block;width:100%;margin:8px 0;padding:12px;border-radius:12px;border:2px solid #7c3aed;background:#ede9fe;font-weight:800;cursor:pointer;text-align:start;';
+          plusBtn.innerHTML = '<b>PRO+ - ' + (isHe ? PROPLUS_PRICE_HE : PROPLUS_PRICE_EN) + '</b><br><small>' + (isHe ? '100 קרדיטים + 3 תבניות PRO לתמיד + מלל חופשי לתמיד' : '100 credits + 3 PRO templates forever + custom text forever') + '</small>';
+          plusBtn.onclick = function(ev){ try{ev.preventDefault();}catch(e){} buyPackV16('credits_pro_plus'); };
+          existing.appendChild(plusBtn);
+        }
+        // Update explanation if there is a dedicated element
+        var explEl = existing.querySelector('.chooser-expl, .paywall-expl, [data-expl]');
+        if (explEl) explEl.textContent = expl;
+        existing.classList.add('show');
+        if (existing.style) existing.style.display = 'block';
+        fixChooserPrices();
+        return;
+      }
+      // Build standalone chooser
+      var old = document.getElementById('v16-chooser');
+      if (old) old.remove();
+      var overlay = document.createElement('div');
+      overlay.id = 'v16-chooser';
+      overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;padding:16px;';
+      var card = document.createElement('div');
+      card.style.cssText = 'background:#fff;border-radius:16px;max-width:420px;width:100%;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,0.25);';
+      card.innerHTML = '<h3 style="margin:0 0 8px;">'+title+'</h3><p style="margin:0 0 12px;color:#444;font-size:14px;line-height:1.5;">'+expl+'</p>';
+      function mkBtn(pid, label, sub){
+        var b = document.createElement('button');
+        b.setAttribute('data-buy', pid);
+        b.style.cssText = 'display:block;width:100%;margin:8px 0;padding:12px;border-radius:12px;border:1px solid #ddd;background:#f9f9f9;font-weight:700;cursor:pointer;text-align:start;';
+        if (pid==='credits_pro') b.style.cssText += 'background:#fff7cc;border-color:#f5c518;';
+        if (pid==='credits_pro_plus') b.style.cssText += 'background:#ede9fe;border-color:#7c3aed;';
+        b.innerHTML = '<b>'+label+'</b><br><small style="font-weight:400;color:#555;">'+sub+'</small>';
+        b.onclick = function(ev){ try{ev.preventDefault();}catch(e){} buyPackV16(pid); };
+        return b;
+      }
+      card.appendChild(mkBtn('credits_5', isHe ? '5 קרדיטים - $4.99' : '5 Credits - $4.99', isHe ? 'לכמה GIFs בודדים' : 'For a few GIFs'));
+      card.appendChild(mkBtn('credits_20', isHe ? '20 קרדיטים - $9.99' : '20 Credits - $9.99', isHe ? 'הכי פופולרי' : 'Most popular'));
+      card.appendChild(mkBtn('credits_pro', 'PRO - ' + (isHe ? PRO_PRICE_HE : PRO_PRICE_EN), isHe ? '50 קרדיטים + 3 תבניות PRO לתמיד - תודה רבה, מזל טוב, שנה טובה' : '50 credits + 3 PRO templates forever - Thank You, Congratulations, Happy New Year'));
+      card.appendChild(mkBtn('credits_pro_plus', 'PRO+ - ' + (isHe ? PROPLUS_PRICE_HE : PROPLUS_PRICE_EN), isHe ? '100 קרדיטים + 3 תבניות PRO לתמיד + מלל חופשי לתמיד' : '100 credits + 3 PRO templates forever + custom text forever'));
+      var close = document.createElement('button');
+      close.textContent = closeTxt;
+      close.style.cssText = 'display:block;width:100%;margin-top:10px;padding:12px;border-radius:12px;border:none;background:#eee;font-weight:700;cursor:pointer;';
+      close.onclick = function(){ overlay.remove(); };
+      card.appendChild(close);
+      overlay.appendChild(card);
+      overlay.addEventListener('click', function(e){ if (e.target===overlay) overlay.remove(); });
+      document.body.appendChild(overlay);
+    } catch(e){}
+  };
+  function buyPackV16(pid){
+    try {
+      if (window.buyPack) { var p = window.buyPack(pid); if (p && p.then) p.then(function(){ try{setTimeout(function(){window.location.reload();},900);}catch(e){} }).catch(function(){}); return; }
+      if (window.buyRealPack) { var p2 = window.buyRealPack(pid); if (p2 && p2.then) p2.then(function(){ try{setTimeout(function(){window.location.reload();},900);}catch(e){} }).catch(function(){}); return; }
+      if (window.buyProPack && pid==='credits_pro') { window.buyProPack(); return; }
+    } catch(e){}
+    // Fallback: open old paywall
+    try { var pw = document.getElementById('paywall'); if (pw) pw.classList.add('show'); } catch(e){}
+  }
+  window.buyPackV16 = buyPackV16;
+  // Make old openProPaywall / openPackChooser point to v16 chooser (keeps old buttons working, but with 4 options)
+  window.openProPaywall = window.openPackChooserV16;
+  window.openPackChooser = window.openPackChooserV16;
+
+  // ----- Custom / free-text gating: PRO+ only -----
+  function findCustomInput(){
+    // Try common ids / placeholders
+    var cands = [];
+    try {
+      cands = Array.prototype.slice.call(document.querySelectorAll('textarea, input[type="text"], input:not([type])'));
+    } catch(e){}
+    for (var i=0;i<cands.length;i++){
+      var el = cands[i];
+      var hay = ((el.id||'') + ' ' + (el.name||'') + ' ' + (el.placeholder||'') + ' ' + (el.getAttribute && el.getAttribute('aria-label')||'')).toLowerCase();
+      if (/custom|free|idea|prompt|רעיון|מלל|חופשי|כתוב|תאר/.test(hay)) return el;
+    }
+    // Fallback: last textarea on page is usually the custom box
+    if (cands.length) {
+      var tas = document.querySelectorAll('textarea');
+      if (tas.length) return tas[tas.length-1];
+    }
+    return null;
+  }
+  function guardCustomSubmit(e){
+    try {
+      if (isProPlusV16()) return true;
+      var input = findCustomInput();
+      var val = input ? (input.value||'').trim() : '';
+      // If user typed custom text and is not PRO+, block and open PRO+ chooser
+      // We detect custom mode by: input has text AND no template selected, OR input is focused / has text
+      if (val.length > 0) {
+        // Check if a template is selected - if a template button has .selected, allow it (it is not custom)
+        var hasSelectedTemplate = !!document.querySelector('.reaction.selected, .reaction.active, [data-template-id].selected');
+        // If input text looks like a template prompt (exact match), allow - otherwise treat as custom
+        // Heuristic: if input is non-empty, treat as custom unless user explicitly picked a template in this session
+        // To avoid false blocks, only block when the create button was clicked while custom input is the active element or has text and no template selected
+        if (!hasSelectedTemplate) {
+          if (e) { try{e.preventDefault(); e.stopPropagation();}catch(_){} }
+          window.openPackChooserV16('custom');
+          return false;
+        }
+      }
+    } catch(e){}
+    return true;
+  }
+  // Capture-phase guard on all create buttons
+  document.addEventListener('click', function(e){
+    try {
+      var t = e.target && e.target.closest ? e.target.closest('button, [role="button"], a') : null;
+      if (!t) return;
+      var txt = (t.textContent||'').trim().toLowerCase();
+      var id = (t.id||'').toLowerCase();
+      if (/צור|create|generate|המשך|יצירה|create gif/.test(txt) || /create|generate/.test(id)) {
+        var input = findCustomInput();
+        if (input && (input.value||'').trim().length>0 && !isProPlusV16()) {
+          var hasSel = !!document.querySelector('.reaction.selected, .reaction.active');
+          if (!hasSel) {
+            e.preventDefault(); e.stopPropagation();
+            window.openPackChooserV16('custom');
+            return;
+          }
+        }
+      }
+    } catch(e){}
+  }, true);
+
+  // ----- SHARE FIX: never share yesterday's GIF -----
+  window.__personaCurrentShare = window.__personaCurrentShare || null;
+  window.__personaShareFixInstalled = true;
+
+  function uniqName(base){
+    var ext = '.mp4';
+    try { if (base && base.indexOf('.gif')!==-1) ext='.gif'; } catch(e){}
+    return 'persona_' + Date.now() + '_' + Math.random().toString(36).slice(2,8) + ext;
+  }
+  function withCacheBust(url){
+    try {
+      if (!url || typeof url!=='string') return url;
+      if (url.indexOf('?')===-1) return url + '?t=' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
+      return url + '&t=' + Date.now();
+    } catch(e){ return url; }
+  }
+  // Wrap Capacitor Share + navigator.share to add cache-bust + unique filename
+  try {
+    if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Share) {
+      var origShare = window.Capacitor.Plugins.Share.share.bind(window.Capacitor.Plugins.Share);
+      if (!window.Capacitor.Plugins.Share.__v16wrapped) {
+        window.Capacitor.Plugins.Share.share = function(opts){
+          try {
+            if (opts) {
+              if (opts.url) opts.url = withCacheBust(opts.url);
+              if (opts.files && opts.files.length) {
+                opts.files = opts.files.map(function(f){ return withCacheBust(f); });
+              }
+              // Force fresh file name if files are local
+              if (opts.fileName) opts.fileName = uniqName(opts.fileName);
+              if (opts.filename) opts.filename = uniqName(opts.filename);
+            }
+          } catch(e){}
+          return origShare(opts);
+        };
+        window.Capacitor.Plugins.Share.__v16wrapped = true;
+      }
+    }
+  } catch(e){}
+  try {
+    if (navigator.share && !navigator.share.__v16wrapped) {
+      var origNavShare = navigator.share.bind(navigator);
+      var wrappedNav = function(data){
+        try { if (data && data.url) data.url = withCacheBust(data.url); } catch(e){}
+        return origNavShare(data);
+      };
+      wrappedNav.__v16wrapped = true;
+      navigator.share = wrappedNav;
+    }
+  } catch(e){}
+
+  // Find item by id from all known stores
+  function findItemById(id){
+    if (!id) return null;
+    try {
+      var pools = [];
+      if (window.savedReactions) pools.push(window.savedReactions);
+      if (window.myReactions) pools.push(window.myReactions);
+      if (window.reactions) pools.push(window.reactions);
+      if (window.__personaMyReactions) pools.push(window.__personaMyReactions);
+      // localStorage pools
+      try {
+        ['persona_my_reactions','my_reactions','persona_saved','saved_reactions','persona_myReactions'].forEach(function(k){
+          try { var raw = localStorage.getItem(k); if (raw) { var arr = JSON.parse(raw); if (Array.isArray(arr)) pools.push(arr); } } catch(e){}
+        });
+      } catch(e){}
+      for (var i=0;i<pools.length;i++){
+        var arr = pools[i];
+        for (var j=0;j<arr.length;j++){
+          var it = arr[j];
+          if (!it) continue;
+          if (String(it.id)===String(id) || String(it.jobId)===String(id) || String(it.timestamp)===String(id) || String(it.url)===String(id) || String(it.videoUrl)===String(id)) return it;
+        }
+      }
+    } catch(e){}
+    return null;
+  }
+  function itemToShareUrl(item){
+    if (!item) return null;
+    return item.videoUrl || item.url || item.gifUrl || item.src || item.file || item.path || null;
+  }
+  // Main fixed share: MUST be called with explicit item/id, never uses global last item
+  window.shareGifFixed = function(itemOrId){
+    try {
+      var item = null;
+      if (typeof itemOrId === 'string') item = findItemById(itemOrId);
+      else if (itemOrId && typeof itemOrId === 'object') item = itemOrId;
+      // If no explicit item, use current share (set on creation success) - NOT first item in list
+      if (!item) item = window.__personaCurrentShare;
+      if (!item) {
+        alert(getLangV16()==='en' ? 'No GIF selected. Open the GIF you want to share and tap Share again.' : 'לא נבחר GIF. פתח את ה-GIF שברצונך לשתף ולחץ שוב על שיתוף.');
+        return;
+      }
+      var url = itemToShareUrl(item);
+      if (!url) {
+        alert(getLangV16()==='en' ? 'This GIF has no file to share yet.' : 'ל-GIF הזה אין עדיין קובץ לשיתוף.');
+        return;
+      }
+      // Always share with fresh cache-bust + unique filename so WhatsApp cannot return yesterday's cached file
+      var freshUrl = withCacheBust(url);
+      var fname = uniqName(url);
+      // Prefer Capacitor Share with files if available, else navigator.share, else open WhatsApp with fresh URL
+      if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Share) {
+        window.Capacitor.Plugins.Share.share({ title: 'PersonaAI', url: freshUrl, dialogTitle: getLangV16()==='en' ? 'Share GIF' : 'שיתוף GIF' }).catch(function(){ window.open('https://wa.me/?text=' + encodeURIComponent(freshUrl), '_blank'); });
+        return;
+      }
+      if (navigator.share) {
+        navigator.share({ title: 'PersonaAI', url: freshUrl }).catch(function(){});
+        return;
+      }
+      window.open('https://wa.me/?text=' + encodeURIComponent(freshUrl), '_blank');
+    } catch(e){}
+  };
+
+  // Intercept ALL share clicks: resolve the EXACT card/item that was clicked, not list[0]
+  document.addEventListener('click', function(e){
+    try {
+      var btn = e.target && e.target.closest ? e.target.closest('button, a, [role="button"]') : null;
+      if (!btn) return;
+      var txt = (btn.textContent||'').toLowerCase();
+      var isShareBtn = /שתף|share|whatsapp|ווטסאפ|וואטסאפ/.test(txt) || (btn.getAttribute && /share|whatsapp/.test((btn.getAttribute('aria-label')||'') + ' ' + (btn.id||'') + ' ' + (btn.className||'')));
+      if (!isShareBtn) return;
+      // If button already has explicit share id, use it
+      var explicitId = btn.getAttribute('data-share-id') || btn.getAttribute('data-id') || btn.getAttribute('data-gif-id') || btn.getAttribute('data-job-id');
+      // Else, find closest card
+      var card = btn.closest ? btn.closest('[data-id], [data-gif-id], [data-job-id], .reaction-card, .my-reaction, .saved-item, .gif-card, li, .card') : null;
+      var cardId = card ? (card.getAttribute('data-id') || card.getAttribute('data-gif-id') || card.getAttribute('data-job-id')) : null;
+      var useId = explicitId || cardId;
+      if (useId) {
+        e.preventDefault(); e.stopPropagation();
+        window.shareGifFixed(useId);
+        return;
+      }
+      // No id: if this is the main result-screen share, use current share (set on creation), NOT list[0]
+      // Let it fall through only if __personaCurrentShare is set; otherwise block to avoid sharing yesterday's
+      if (window.__personaCurrentShare) {
+        // Do NOT let old handler run with stale global - use fixed path
+        e.preventDefault(); e.stopPropagation();
+        window.shareGifFixed(window.__personaCurrentShare);
+        return;
+      }
+      // If we are in My Reactions and no id found, block and warn - prevents yesterday bug
+      if (document.querySelector('#myReactions, .my-reactions, [data-my-reactions]')) {
+        e.preventDefault(); e.stopPropagation();
+        alert(getLangV16()==='en' ? 'Could not identify this GIF. Please reopen My Reactions and tap Share on the GIF again.' : 'לא הצלחנו לזהות את ה-GIF. פתח שוב את My Reactions ולחץ שיתוף על ה-GIF הרצוי.');
+        return;
+      }
+    } catch(e){}
+  }, true);
+
+  // Keep __personaCurrentShare updated on every successful creation
+  // Hook into common globals via polling: if window.lastVideoUrl / currentVideoUrl changes, update current share
+  var lastSeenUrl = '';
+  setInterval(function(){
+    try {
+      var cand = window.currentVideoUrl || window.lastVideoUrl || window.lastCreatedUrl || window.__lastGifUrl || '';
+      if (cand && cand !== lastSeenUrl) {
+        lastSeenUrl = cand;
+        window.__personaCurrentShare = { url: cand, videoUrl: cand, id: 'current_' + Date.now(), timestamp: Date.now() };
+      }
+      // Also fix My Reactions share buttons: give each button the card's id
+      var cards = document.querySelectorAll('[data-id], [data-gif-id]');
+      cards.forEach(function(card){
+        try {
+          var cid = card.getAttribute('data-id') || card.getAttribute('data-gif-id');
+          if (!cid) return;
+          var btns = card.querySelectorAll('button, a');
+          btns.forEach(function(b){
+            var t = (b.textContent||'').toLowerCase();
+            if (/שתף|share|whatsapp|ווטסאפ|וואטסאפ/.test(t)) {
+              if (!b.getAttribute('data-share-id')) b.setAttribute('data-share-id', cid);
+            }
+          });
+        } catch(e){}
+      });
+    } catch(e){}
+  }, 1000);
+
+  // Expose setter for app code to call after generation: window.PersonaV16.setCurrentGif({id, url})
+  window.PersonaV16.setCurrentGif = function(item){ window.__personaCurrentShare = item; };
 })();
 </script>
 
