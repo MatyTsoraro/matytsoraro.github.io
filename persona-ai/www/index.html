@@ -1329,6 +1329,9 @@ function seekVideo(video, time) {
 					try {
 						gifBlob = await videoToGif(videoBlob, '');
 						lastGif = { blob: gifBlob, url: URL.createObjectURL(gifBlob) };
+                                          window.lastGif = lastGif; window.__lastGif = lastGif;
+                                          window.__personaCurrentShare = { blob: gifBlob, url: lastGif.url, videoUrl: lastGif.url, id: 'current_' + Date.now(), timestamp: Date.now() };
+
 						$('gifPreview').src = lastGif.url;
 						$('gifPreview').classList.remove('hide');
 						$('videoPreview').classList.add('hide');
@@ -1938,187 +1941,22 @@ function seekVideo(video, time) {
     } catch(e){}
   }, true);
 
-  // ----- SHARE FIX: never share yesterday's GIF -----
+
+  // ===== v18 FIX: WhatsApp share must send CURRENT gif =====
+  // No global click interceptor. No navigator.share wrapper.
+  // shareResult() and library [data-share] already use File blobs with unique names - let them run.
   window.__personaCurrentShare = window.__personaCurrentShare || null;
-  window.__personaShareFixInstalled = true;
-
-  function uniqName(base){
-    var ext = '.mp4';
-    try { if (base && base.indexOf('.gif')!==-1) ext='.gif'; } catch(e){}
-    return 'persona_' + Date.now() + '_' + Math.random().toString(36).slice(2,8) + ext;
-  }
-  function withCacheBust(url){
-    try {
-      if (!url || typeof url!=='string') return url;
-      if (url.indexOf('?')===-1) return url + '?t=' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
-      return url + '&t=' + Date.now();
-    } catch(e){ return url; }
-  }
-  // Wrap Capacitor Share + navigator.share to add cache-bust + unique filename
-  try {
-    if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Share) {
-      var origShare = window.Capacitor.Plugins.Share.share.bind(window.Capacitor.Plugins.Share);
-      if (!window.Capacitor.Plugins.Share.__v16wrapped) {
-        window.Capacitor.Plugins.Share.share = function(opts){
-          try {
-            if (opts) {
-              if (opts.url) opts.url = withCacheBust(opts.url);
-              if (opts.files && opts.files.length) {
-                opts.files = opts.files.map(function(f){ return withCacheBust(f); });
-              }
-              // Force fresh file name if files are local
-              if (opts.fileName) opts.fileName = uniqName(opts.fileName);
-              if (opts.filename) opts.filename = uniqName(opts.filename);
-            }
-          } catch(e){}
-          return origShare(opts);
-        };
-        window.Capacitor.Plugins.Share.__v16wrapped = true;
-      }
-    }
-  } catch(e){}
-  try {
-    if (navigator.share && !navigator.share.__v16wrapped) {
-      var origNavShare = navigator.share.bind(navigator);
-      var wrappedNav = function(data){
-        try { if (data && data.url) data.url = withCacheBust(data.url); } catch(e){}
-        return origNavShare(data);
-      };
-      wrappedNav.__v16wrapped = true;
-      navigator.share = wrappedNav;
-    }
-  } catch(e){}
-
-  // Find item by id from all known stores
-  function findItemById(id){
-    if (!id) return null;
-    try {
-      var pools = [];
-      if (window.savedReactions) pools.push(window.savedReactions);
-      if (window.myReactions) pools.push(window.myReactions);
-      if (window.reactions) pools.push(window.reactions);
-      if (window.__personaMyReactions) pools.push(window.__personaMyReactions);
-      // localStorage pools
-      try {
-        ['persona_my_reactions','my_reactions','persona_saved','saved_reactions','persona_myReactions'].forEach(function(k){
-          try { var raw = localStorage.getItem(k); if (raw) { var arr = JSON.parse(raw); if (Array.isArray(arr)) pools.push(arr); } } catch(e){}
-        });
-      } catch(e){}
-      for (var i=0;i<pools.length;i++){
-        var arr = pools[i];
-        for (var j=0;j<arr.length;j++){
-          var it = arr[j];
-          if (!it) continue;
-          if (String(it.id)===String(id) || String(it.jobId)===String(id) || String(it.timestamp)===String(id) || String(it.url)===String(id) || String(it.videoUrl)===String(id)) return it;
-        }
-      }
-    } catch(e){}
-    return null;
-  }
-  function itemToShareUrl(item){
-    if (!item) return null;
-    return item.videoUrl || item.url || item.gifUrl || item.src || item.file || item.path || null;
-  }
-  // Main fixed share: MUST be called with explicit item/id, never uses global last item
-  window.shareGifFixed = function(itemOrId){
-    try {
-      var item = null;
-      if (typeof itemOrId === 'string') item = findItemById(itemOrId);
-      else if (itemOrId && typeof itemOrId === 'object') item = itemOrId;
-      // If no explicit item, use current share (set on creation success) - NOT first item in list
-      if (!item) item = window.__personaCurrentShare;
-      if (!item) {
-        alert(getLangV16()==='en' ? 'No GIF selected. Open the GIF you want to share and tap Share again.' : 'לא נבחר GIF. פתח את ה-GIF שברצונך לשתף ולחץ שוב על שיתוף.');
-        return;
-      }
-      var url = itemToShareUrl(item);
-      if (!url) {
-        alert(getLangV16()==='en' ? 'This GIF has no file to share yet.' : 'ל-GIF הזה אין עדיין קובץ לשיתוף.');
-        return;
-      }
-      // Always share with fresh cache-bust + unique filename so WhatsApp cannot return yesterday's cached file
-      var freshUrl = withCacheBust(url);
-      var fname = uniqName(url);
-      // Prefer Capacitor Share with files if available, else navigator.share, else open WhatsApp with fresh URL
-      if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Share) {
-        window.Capacitor.Plugins.Share.share({ title: 'PersonaAI', url: freshUrl, dialogTitle: getLangV16()==='en' ? 'Share GIF' : 'שיתוף GIF' }).catch(function(){ window.open('https://wa.me/?text=' + encodeURIComponent(freshUrl), '_blank'); });
-        return;
-      }
-      if (navigator.share) {
-        navigator.share({ title: 'PersonaAI', url: freshUrl }).catch(function(){});
-        return;
-      }
-      window.open('https://wa.me/?text=' + encodeURIComponent(freshUrl), '_blank');
-    } catch(e){}
-  };
-
-  // Intercept ALL share clicks: resolve the EXACT card/item that was clicked, not list[0]
-  document.addEventListener('click', function(e){
-    try {
-      var btn = e.target && e.target.closest ? e.target.closest('button, a, [role="button"]') : null;
-      if (!btn) return;
-      var txt = (btn.textContent||'').toLowerCase();
-      var isShareBtn = /שתף|share|whatsapp|ווטסאפ|וואטסאפ/.test(txt) || (btn.getAttribute && /share|whatsapp/.test((btn.getAttribute('aria-label')||'') + ' ' + (btn.id||'') + ' ' + (btn.className||'')));
-      if (!isShareBtn) return;
-      // If button already has explicit share id, use it
-      var explicitId = btn.getAttribute('data-share-id') || btn.getAttribute('data-id') || btn.getAttribute('data-gif-id') || btn.getAttribute('data-job-id');
-      // Else, find closest card
-      var card = btn.closest ? btn.closest('[data-id], [data-gif-id], [data-job-id], .reaction-card, .my-reaction, .saved-item, .gif-card, li, .card') : null;
-      var cardId = card ? (card.getAttribute('data-id') || card.getAttribute('data-gif-id') || card.getAttribute('data-job-id')) : null;
-      var useId = explicitId || cardId;
-      if (useId) {
-        e.preventDefault(); e.stopPropagation();
-        window.shareGifFixed(useId);
-        return;
-      }
-      // No id: if this is the main result-screen share, use current share (set on creation), NOT list[0]
-      // Let it fall through only if __personaCurrentShare is set; otherwise block to avoid sharing yesterday's
-      if (window.__personaCurrentShare) {
-        // Do NOT let old handler run with stale global - use fixed path
-        e.preventDefault(); e.stopPropagation();
-        window.shareGifFixed(window.__personaCurrentShare);
-        return;
-      }
-      // If we are in My Reactions and no id found, block and warn - prevents yesterday bug
-      if (document.querySelector('#myReactions, .my-reactions, [data-my-reactions]')) {
-        e.preventDefault(); e.stopPropagation();
-        alert(getLangV16()==='en' ? 'Could not identify this GIF. Please reopen My Reactions and tap Share on the GIF again.' : 'לא הצלחנו לזהות את ה-GIF. פתח שוב את My Reactions ולחץ שיתוף על ה-GIF הרצוי.');
-        return;
-      }
-    } catch(e){}
-  }, true);
-
-  // Keep __personaCurrentShare updated on every successful creation
-  // Hook into common globals via polling: if window.lastVideoUrl / currentVideoUrl changes, update current share
-  var lastSeenUrl = '';
+  window.PersonaV18 = window.PersonaV18 || {};
+  window.PersonaV18.setCurrentGif = function(item){ window.__personaCurrentShare = item; window.lastGif = item; };
   setInterval(function(){
     try {
-      var cand = window.currentVideoUrl || window.lastVideoUrl || window.lastCreatedUrl || window.__lastGifUrl || '';
-      if (cand && cand !== lastSeenUrl) {
-        lastSeenUrl = cand;
-        window.__personaCurrentShare = { url: cand, videoUrl: cand, id: 'current_' + Date.now(), timestamp: Date.now() };
+      var g = window.lastGif || window.__lastGif || null;
+      if (g && g !== window.__personaCurrentShare) {
+        if (g.blob || g.url || g.videoUrl) window.__personaCurrentShare = g;
       }
-      // Also fix My Reactions share buttons: give each button the card's id
-      var cards = document.querySelectorAll('[data-id], [data-gif-id]');
-      cards.forEach(function(card){
-        try {
-          var cid = card.getAttribute('data-id') || card.getAttribute('data-gif-id');
-          if (!cid) return;
-          var btns = card.querySelectorAll('button, a');
-          btns.forEach(function(b){
-            var t = (b.textContent||'').toLowerCase();
-            if (/שתף|share|whatsapp|ווטסאפ|וואטסאפ/.test(t)) {
-              if (!b.getAttribute('data-share-id')) b.setAttribute('data-share-id', cid);
-            }
-          });
-        } catch(e){}
-      });
     } catch(e){}
-  }, 1000);
+  }, 500);
 
-  // Expose setter for app code to call after generation: window.PersonaV16.setCurrentGif({id, url})
-  window.PersonaV16.setCurrentGif = function(item){ window.__personaCurrentShare = item; };
-})();
 </script>
 
 
