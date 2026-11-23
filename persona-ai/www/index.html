@@ -925,6 +925,7 @@
 				REACTIONS.forEach((reaction, index) => {
 					const button = document.createElement('button');
 					button.className = 'reaction';
+                                        button.setAttribute('data-template-id', reaction.id);
 					const _loc = (window.PersonaV11 && window.PersonaV11.localize) ? window.PersonaV11.localize(reaction) : reaction; const _isPro = !!reaction.isPro; const _locked = _isPro && !(window.PersonaV11 && window.PersonaV11.isPro); button.innerHTML = `<b>${reaction.emoji}</b><span>${_loc.label}${_isPro ? ' ⭐ PRO' : ''}</span><small>${_loc.sub}${_locked ? ' • PRO' : ''}</small>`;
 					button.addEventListener('click', () => selectReaction(index, button));
 					$('reactions').appendChild(button);
@@ -1639,6 +1640,57 @@ function seekVideo(video, time) {
       showMsg((getLangSafe() === 'en' ? 'Purchase failed: ' : 'הקנייה נכשלה: ') + (e && e.message ? e.message : e), true);
     }
   }
+  function openPackChooser(){
+    var lang = getLangSafe();
+    var en = (lang === 'en');
+    var existing = document.getElementById('packChooser');
+    if (existing) { existing.style.display = 'flex'; return; }
+    var overlay = document.createElement('div');
+    overlay.id = 'packChooser';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:10000;display:flex;align-items:center;justify-content:center;padding:16px;';
+    var box = document.createElement('div');
+    box.style.cssText = 'background:#fff;border-radius:16px;max-width:380px;width:100%;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,0.25);direction:' + (en ? 'ltr' : 'rtl') + ';text-align:' + (en ? 'left' : 'right') + ';';
+    var title = document.createElement('h3');
+    title.textContent = en ? 'Choose a Pack' : 'בחר חבילה';
+    title.style.cssText = 'margin:0 0 6px 0;font-size:20px;';
+    box.appendChild(title);
+    var sub = document.createElement('p');
+    sub.textContent = en ? 'Every pack gives you credits to create GIFs. PRO also unlocks 3 templates forever.' : 'כל חבילה נותנת קרדיטים ליצירת GIFים. PRO גם פותח 3 תבניות לתמיד.';
+    sub.style.cssText = 'margin:0 0 16px 0;font-size:14px;color:#555;line-height:1.5;';
+    box.appendChild(sub);
+    function makeOpt(titleTxt, subTxt, productId, isPro){
+      var b = document.createElement('button');
+      b.style.cssText = 'display:block;width:100%;text-align:' + (en ? 'left' : 'right') + ';padding:12px 14px;margin:0 0 10px 0;border:1px solid #ddd;border-radius:12px;background:' + (isPro ? '#fff7e0' : '#fff') + ';cursor:pointer;';
+      var tt = document.createElement('div');
+      tt.textContent = titleTxt;
+      tt.style.cssText = 'font-weight:700;font-size:16px;';
+      var ss = document.createElement('div');
+      ss.textContent = subTxt;
+      ss.style.cssText = 'font-size:13px;color:#555;margin-top:2px;line-height:1.4;';
+      b.appendChild(tt); b.appendChild(ss);
+      b.addEventListener('click', function(){
+        overlay.style.display = 'none';
+        if (isPro) { buyProWithFeedback(); return; }
+        try {
+          if (window.buyPack) {
+            window.buyPack(productId).then(function(){ showMsg(en ? 'Purchased! Thank you!' : 'נרכש! תודה רבה', false); setTimeout(function(){ window.location.reload(); }, 800); }).catch(function(e){ showMsg((en ? 'Purchase failed: ' : 'הקנייה נכשלה: ') + (e && e.message ? e.message : e), true); });
+          } else { showMsg(en ? 'Purchase is not available right now, try again' : 'הקנייה לא זמינה כרגע, נסה שוב', true); }
+        } catch(e){ showMsg((en ? 'Purchase failed: ' : 'הקנייה נכשלה: ') + (e && e.message ? e.message : e), true); }
+      });
+      return b;
+    }
+    box.appendChild(makeOpt(en ? '5 Credits - $4.99' : '5 קרדיטים - $4.99', en ? 'For a few GIFs' : 'לכמה GIFים בודדים', 'credits_5', false));
+    box.appendChild(makeOpt(en ? '20 Credits - $9.99' : '20 קרדיטים - $9.99', en ? 'Most popular' : 'הכי פופולרי', 'credits_20', false));
+    box.appendChild(makeOpt(en ? 'PRO - $19.99 / 67 NIS' : 'PRO - 67 ₪', en ? '50 credits + 3 PRO templates forever - Thank You, Congratulations, Happy New Year' : '50 קרדיטים + 3 תבניות PRO לתמיד - תודה רבה, מזל טוב, שנה טובה', 'credits_pro', true));
+    var closeBtn = document.createElement('button');
+    closeBtn.textContent = en ? 'Close' : 'סגור';
+    closeBtn.style.cssText = 'display:block;width:100%;padding:10px;border:none;border-radius:12px;background:#eee;cursor:pointer;margin-top:4px;';
+    closeBtn.addEventListener('click', function(){ overlay.style.display = 'none'; });
+    box.appendChild(closeBtn);
+    overlay.appendChild(box);
+    overlay.addEventListener('click', function(ev){ if (ev.target === overlay) overlay.style.display = 'none'; });
+    document.body.appendChild(overlay);
+  }
   function rewireProBtn(){
     var btn = document.getElementById('proUpgradeBtn');
     if (!btn) return;
@@ -1650,22 +1702,21 @@ function seekVideo(video, time) {
     clone.addEventListener('click', function(ev){
       ev.preventDefault(); ev.stopPropagation();
       if (isProUser()) { showMsg(getLangSafe() === 'en' ? 'You already have PRO, thanks!' : 'כבר יש לך PRO, תודה!', false); return; }
-      buyProWithFeedback();
+      openPackChooser();
     });
   }
   function guardProTemplates(){
-    document.querySelectorAll('[data-template-id]').forEach(function(el){
+    if (document.body && document.body.dataset.v15proGuard) return;
+    if (document.body) document.body.dataset.v15proGuard = '1';
+    document.addEventListener('click', function(ev){
+      var el = ev.target && ev.target.closest ? ev.target.closest('[data-template-id]') : null;
+      if (!el) return;
       var id = el.getAttribute('data-template-id');
       if (id !== 'thank_you' && id !== 'congratulations' && id !== 'happy_new_year') return;
-      if (el.dataset.v13guard) return;
-      el.dataset.v13guard = '1';
-      el.addEventListener('click', function(ev){
-        if (isProUser()) return;
-        ev.preventDefault(); ev.stopPropagation();
-        showMsg(getLangSafe() === 'en' ? 'PRO template - tap the PRO button above to purchase' : 'תבנית PRO - לחץ על כפתור PRO למעלה לרכישה', true);
-        setTimeout(buyProWithFeedback, 600);
-      }, true);
-    });
+      if (isProUser()) return;
+      ev.preventDefault(); ev.stopPropagation();
+      openPackChooser();
+    }, true);
   }
   function init(){ applyLang(); rewireProBtn(); guardProTemplates(); }
   document.addEventListener('DOMContentLoaded', init);
