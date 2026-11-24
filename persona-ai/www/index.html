@@ -1378,6 +1378,7 @@ function seekVideo(video, time) {
                                         if (window.PersonaV11 && window.PersonaV11.createServerJob) {
                                                 const _job = await window.PersonaV11.createServerJob(selectedReaction ? selectedReaction.id : 'custom', prompt);
                                                 if (!_job.ok) {
+                                                        try { alert('DIAG job failed\ncode=' + (_job.code||'?') + '\nmsg=' + (_job.message||'?') + '\nuserId=' + (window.PersonaV11 && window.PersonaV11.getUserId ? window.PersonaV11.getUserId() : (localStorage.getItem('persona_user_id_v11')||'?'))); } catch(e){}
                                                         $('paywall').classList.add('show');
                                                         throw new Error(_job.message || 'No credits');
                                                 }
