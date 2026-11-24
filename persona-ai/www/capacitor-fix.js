@@ -76,3 +76,6 @@
     },
   };
 })();
+
+// v25 - Share by ID fix - never share first GIF
+if(window.PersonaBackground && window.PersonaBackground.shareGifById){ window.shareGifById = window.PersonaBackground.shareGifById; }
