@@ -75,9 +75,11 @@
     }
     return reaction;
   }
-  async function createServerJob(templateId, prompt) {
+  async function createServerJob(templateId, prompt, image) {
     try {
-      const r = await serverCall('create_job', { templateId: templateId || 'custom', prompt: prompt || '' });
+      const payload = { templateId: templateId || 'custom', prompt: prompt || '' };
+      if (image) payload.image = image; // v28: optional, Worker v47 ignores it
+      const r = await serverCall('create_job', payload);
       if (r && r.status === 'ok' && r.jobId) {
         window._v11JobId = r.jobId;
         window.PersonaV11.balance = r.credits;
@@ -85,6 +87,7 @@
         return { ok: true, jobId: r.jobId, credits: r.credits };
       }
       if (r && r.code === 'PRO_REQUIRED') return { ok: false, code: 'PRO_REQUIRED', message: r.error || 'Pro only' };
+      if (r && r.code === 'PRO_PLUS_REQUIRED') return { ok: false, code: 'PRO_PLUS_REQUIRED', message: r.error || 'Pro+ only' };
       if (r && r.code === 'NO_CREDITS') return { ok: false, code: 'NO_CREDITS', message: r.error || 'No credits' };
       return { ok: false, code: r && r.code ? r.code : 'SERVER_ERROR', message: (r && r.error) || 'Server error' };
     } catch (e) { return { ok: false, code: 'OFFLINE', message: 'No connection' }; }

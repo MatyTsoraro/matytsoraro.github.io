@@ -1379,7 +1379,10 @@ function seekVideo(video, time) {
                                                 const _job = await window.PersonaV11.createServerJob(selectedReaction ? selectedReaction.id : 'custom', prompt);
                                                 if (!_job.ok) {
                                                         try { alert('DIAG job failed\ncode=' + (_job.code||'?') + '\nmsg=' + (_job.message||'?') + '\nuserId=' + (window.PersonaV11 && window.PersonaV11.getUserId ? window.PersonaV11.getUserId() : (localStorage.getItem('persona_user_id_v11')||'?'))); } catch(e){}
-                                                        $('paywall').classList.add('show');
+                                                        // v28: paywall ONLY on credit/PRO codes. 400/500 errors (e.g. SERVER_ERROR, MISSING_PROMPT) must NOT open paywall.
+                                                        if (_job.code === 'NO_CREDITS' || _job.code === 'PRO_REQUIRED' || _job.code === 'PRO_PLUS_REQUIRED') {
+                                                                $('paywall').classList.add('show');
+                                                        }
                                                         throw new Error(_job.message || 'No credits');
                                                 }
                                                 window._v11JobId = _job.jobId;
