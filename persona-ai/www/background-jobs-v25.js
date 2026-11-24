@@ -10,11 +10,34 @@
   const USER_KEY = 'personaai_user_id_v25';
 
   function getUserId(){
-    let id = localStorage.getItem(USER_KEY) || localStorage.getItem('personaai_user_id') || localStorage.getItem('userId');
-    if(!id){
-      id = 'user_' + Math.random().toString(36).slice(2,10) + Date.now().toString(36);
-      localStorage.setItem(USER_KEY, id);
-    }
+    // V25-FIX2: NEVER create a new ID if app already has one. Scan EVERYTHING first.
+    // 1) Window globals the main app might use
+    const winCandidates = [window.__PERSONAAI_USER_ID__, window.USER_ID, window.userId, window.personaUserId, window.appUserId, window.PERSONAAI_USER_ID, window.deviceId];
+    for(const c of winCandidates){ if(c && typeof c==='string' && c.length>3) return c; }
+    // 2) Known keys
+    const knownKeys = ['persona_user_id_v11', USER_KEY, 'personaai_user_id', 'userId', 'user_id', 'uid', 'deviceId', 'device_id', 'personaai_device_id', 'persona_user_id', 'personaai_user', 'accountId', 'personaai_account', 'app_user_id'];
+    for(const k of knownKeys){ const v = localStorage.getItem(k); if(v && typeof v==='string' && v.length>3 && v!=='null' && v!=='undefined') return v; }
+    // 3) SCAN all localStorage keys - app might use a key we never guessed
+    try{
+      for(let i=0;i<localStorage.length;i++){
+        const k = localStorage.key(i);
+        if(!k) continue;
+        const lk = k.toLowerCase();
+        if(lk.includes('user') || lk.includes('device') || lk.includes('uid') || lk.includes('account') || lk.includes('persona') || lk.includes('client')){
+          const v = localStorage.getItem(k);
+          if(v && typeof v==='string' && v.length>3 && v!=='null' && v!=='undefined'){
+            // value might be JSON like {"userId":"..."} - try parse
+            try{ const j = JSON.parse(v); const inner = j.userId || j.user_id || j.uid || j.id || j.deviceId; if(inner && typeof inner==='string' && inner.length>3) return inner; }catch(e){}
+            // plain string - if it looks like an ID (not a number-only credit count)
+            if(v.length>5 && !/^\d+$/.test(v)) return v;
+          }
+        }
+      }
+    }catch(e){}
+    // 4) Only if REALLY nothing exists - create once and store under ALL known keys so both systems share it
+    const id = 'user_' + Math.random().toString(36).slice(2,10) + Date.now().toString(36);
+    for(const k of knownKeys){ try{ localStorage.setItem(k, id); }catch(e){} }
+    localStorage.setItem(USER_KEY, id);
     return id;
   }
   function getPending(){
