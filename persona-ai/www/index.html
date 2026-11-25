@@ -1453,6 +1453,18 @@ function seekVideo(video, time) {
 						toast('התגובה מוכנה כווידאו שקט באיכות גבוהה.');
 					}
 					transaction?.complete?.({ format: lastGif ? 'animated_reaction_and_video' : 'video' });
+                                        // v29: finalize server job -> Worker deducts 1 credit ONLY in get_job on completed.
+                                        // Foreground flow never called get_job, so credits stayed 1. Retry up to 3x.
+                                        if (window._v11JobId && window.PersonaV11 && window.PersonaV11.serverCall) {
+                                                try {
+                                                        for (let attempt = 0; attempt < 3; attempt++) {
+                                                                const fin = await window.PersonaV11.serverCall('get_job', { jobId: window._v11JobId });
+                                                                if (fin && fin.status === 'completed') { try { await window.PersonaV11.syncBalance(); } catch (_) {} break; }
+                                                                if (fin && fin.status === 'failed') break;
+                                                                if (attempt < 2) await new Promise(r => setTimeout(r, 3000));
+                                                        }
+                                                } catch (_) {}
+                                        }
 					await saveCurrentToLibrary();
 					$('result').classList.add('show');
 					setProgress(100, 'מוכן! אפשר לשתף עכשיו 🎉', 'animate');
@@ -1482,6 +1494,15 @@ function seekVideo(video, time) {
 
 			async function shareResult() {
 				if (!lastGif && !lastVideo) return;
+                                // v29: use native share first, like library shareMediaBlob does.
+                                // Web Share canShare(gif) returns false on this device, so without this
+                                // it fell through to download + "saved" toast.
+                                if (window.PersonaNativeShare && typeof window.PersonaNativeShare.shareBlob === 'function') {
+                                        try {
+                                                if (lastGif) { await window.PersonaNativeShare.shareBlob(lastGif.blob, 'current', 'gif'); return; }
+                                                if (lastVideo) { await window.PersonaNativeShare.shareBlob(lastVideo.blob, 'current', 'mp4'); return; }
+                                        } catch (_) { /* fall through to Web Share */ }
+                                }
 				const stamp = Date.now() + '-' + Math.random().toString(36).slice(2,8) + '-' + (window.__shareCounter = (window.__shareCounter || 0) + 1);
                                 const gifFile = lastGif ? new File([lastGif.blob], 'PersonaAI-' + stamp + '.gif', { type: 'image/gif' }) : null;
 				const videoFile = lastVideo
