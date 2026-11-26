@@ -12,10 +12,14 @@
     const result = await NativePurchases.purchaseProduct({ productIdentifier: productId });
     const tx = result.transaction || result;
     const token = tx.purchaseToken || tx.transactionId || tx.id || tx.purchase_token;
-    if (window.PersonaBilling && window.PersonaBilling.addCredits) {
-      window.PersonaBilling.addCredits(productId === 'credits_pro' ? 50 : productId === 'credits_5' ? 5 : 20, { source: 'google_play', productId: productId, purchaseToken: token });
+    // v49 FIX: Server is source of truth. No local addCredits. Verify token on Worker first.
+    if (window.PersonaV11 && window.PersonaV11.verifyPurchase) {
+      const vr = await window.PersonaV11.verifyPurchase(productId, token);
+      if (!vr || vr.error) { throw new Error((vr && vr.error) || 'Server verify failed'); }
+    } else {
+      throw new Error('Server verify not available');
     }
-    if (token && productId !== 'credits_pro') {
+    if (token && productId !== 'credits_pro' && productId !== 'credits_pro_plus' && productId !== 'credits_proplus' && productId !== 'pro_plus' && productId !== 'proplus') {
       try { await NativePurchases.consumePurchase({ purchaseToken: token }); } catch(e) { console.warn('consume failed', e); }
     }
     return true;

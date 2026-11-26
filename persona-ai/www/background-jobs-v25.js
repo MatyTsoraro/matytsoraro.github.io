@@ -4,7 +4,7 @@
 (function(){
   if (window.__PERSONAAI_V25__) return;
   window.__PERSONAAI_V25__ = true;
-  const WORKER_URL = window.PERSONAAI_WORKER_URL || localStorage.getItem('personaai_worker_url') || 'https://personaai.matysoraro.workers.dev';
+  const WORKER_URL = 'https://billowing-shape-1d81.maty-tsoraro.workers.dev';
   const PENDING_KEY = 'personaai_pending_jobs_v25';
   const REACTIONS_KEY = 'personaai_reactions_v25';
   const USER_KEY = 'personaai_user_id_v25';
