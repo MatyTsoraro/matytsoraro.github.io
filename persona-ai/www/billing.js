@@ -172,6 +172,8 @@
   }
 
   function setLocalPro(value) {
+    // v49 FIX: Local PRO disabled. PRO only from server verify.
+    if (value) { return isPro(); }
     try {
       if (value) {
         localStorage.setItem(STORAGE.PRO, '1');
@@ -433,6 +435,13 @@
       throw new Error('Missing Google Play purchase token');
     }
 
+    // v49 FIX: Local consume disabled. Must use server verify via PersonaV11.verifyPurchase.
+    return {
+      success: false,
+      reason: 'server_verify_required',
+      credits: getCredits()
+    };
+
     if (hasProcessedToken(normalizedToken)) {
       return {
         success: false,
@@ -507,7 +516,8 @@
     return { success: true, added: 1, credits };
   }
   function activateStarterPackForTesting() {
-    return addCredits(12);
+    // v49 FIX: Testing starter pack disabled. No local credits.
+    return { success: false, reason: 'disabled_in_v49', credits: getCredits() };
   }
   function cleanOldTransactions(maxAgeDays = 30) {
     const maxAgeMilliseconds =
@@ -531,14 +541,8 @@
   }
 
   function resetLocalBillingForTesting() {
-    try {
-      Object.values(STORAGE).forEach(key => {
-        localStorage.removeItem(key);
-      });
-    } catch (_) {}
-
-    emitCredits(DEFAULT_CREDITS);
-    return DEFAULT_CREDITS;
+    // v49 FIX: Testing reset disabled. Does not clear billing storage.
+    return getCredits();
   }
 
   const PersonaBilling = Object.freeze({
